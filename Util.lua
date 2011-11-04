@@ -12,18 +12,18 @@
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 ]]
 
-if( luavsq == nil )then
+if( nil == luavsq )then
     luavsq = {};
 end
 
-if( luavsq.Util == nil )then
+if( nil == luavsq.Util )then
 
     luavsq.Util = {};
 
     ---
     -- value で指定された文字列を、splitter で区切る
-    -- @param value String
-    -- @param splitter table
+    -- @param value string
+    -- @param splitter string
     -- @return table 区切られた文字列のテーブル
     function luavsq.Util.split( value, splitter )
         local init = 1;
@@ -44,7 +44,7 @@ if( luavsq.Util == nil )then
     end
 
     ---
-    -- 指定された個数のnil要素を含む配列を取得する
+    -- 指定された個数の false 要素を含む配列を取得する
     -- @param count integer
     -- @return table
     function luavsq.Util.array( count )

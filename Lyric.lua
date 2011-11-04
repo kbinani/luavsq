@@ -12,13 +12,14 @@
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 ]]
 
--- requires Util.lua
+-- requires( Util.lua )
+-- requires( VsqPhoneticSymbol.lua )
 
-if( not luavsq )then
+if( nil == luavsq )then
     luavsq = {};
 end
 
-if( not luavsq.Lyric )then
+if( nil == luavsq.Lyric )then
 
     luavsq.Lyric = {};
 
@@ -130,9 +131,9 @@ if( not luavsq.Lyric )then
         -- @param phoneticSymbol String
         function this:_init_2( phrase, phoneticSymbol )
             self.phrase = phrase;
+            self._consonantAdjustment = nil;
             self:setPhoneticSymbol( phoneticSymbol );
             self.lengthRatio = 0.0;
-            self._consonantAdjustment = {};
             self.isProtected = false;
         end
 
@@ -143,9 +144,6 @@ if( not luavsq.Lyric )then
         -- @param item [Lyric]
         -- @return [bool]
         function this:equalsForSynth( item )
-            if( self.isProtected ~= item.isProtected )then
-                return false;
-            end
             if( self:getPhoneticSymbol() ~= item:getPhoneticSymbol() )then
                 return false;
             end
@@ -161,6 +159,9 @@ if( not luavsq.Lyric )then
         -- @return [bool]
         function this:equals( item )
             if( not self:equalsForSynth( item ) )then
+                return false;
+            end
+            if( self.isProtected ~= item.isProtected )then
                 return false;
             end
             if( self.phrase ~= item.phrase )then
@@ -195,7 +196,7 @@ if( not luavsq.Lyric )then
             local spl = luavsq.Util.split( value, "," );
             local arr = luavsq.Util.array( #spl );
             for i = 1, #spl, 1 do
-                arr[i] = spl[i];
+                arr[i] = tonumber( spl[i] );
             end
             self:setConsonantAdjustmentList( arr );
         end
@@ -297,20 +298,20 @@ if( not luavsq.Lyric )then
 
         ---
         -- このインスタンスを文字列に変換します
-        -- @param add_quatation_mark [bool]
+        -- @param addQuateMark [bool]
         -- @return 変換後の文字列 [String]
-        function this:toString( add_quatation_mark )
+        function this:toString( addQuateMark )
             local quot;
-            if( add_quatation_mark )then
+            if( addQuateMark )then
                 quot = "\"";
             else
                 quot = "";
             end
             local result;
-            result = quot + self.phrase + quot + ",";
-            local symbol = self.getPhoneticSymbolList();
-            local strSymbol = self.getPhoneticSymbol();
-            if( not add_quatation_mark )then
+            result = quot .. self.phrase .. quot .. ",";
+            local symbol = self:getPhoneticSymbolList();
+            local strSymbol = self:getPhoneticSymbol();
+            if( not addQuateMark )then
                 if( (strSymbol == null) or (strSymbol ~= null and strSymbol == "" ) )then
                     strSymbol = "u:";
                 end
