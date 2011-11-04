@@ -20,15 +20,10 @@ function testSplitNotSplitted()
     assert_equal( value, actual[1] )
 end
 
-function testFoo()
-    local a = { 1 }
-    assert_equal( 1, #a )
-    local b = { nil }
-    assert_equal( 1, #a )
-    assert_equal( 0, #{} )
-
-    local c = {}
-    c.foo = { 1, 2 }
-    c.bar = "a"
-    assert_equal( 2, #c.foo )
+function testArray()
+    local array = luavsq.Util.array( 2 )
+    assert_table( array )
+    assert_equal( 2, #array )
+    assert_false( array[1] )
+    assert_false( array[2] )
 end

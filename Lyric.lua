@@ -12,15 +12,13 @@
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 ]]
 
+-- requires Util.lua
+
 if( not luavsq )then
     luavsq = {};
 end
 
 if( not luavsq.Lyric )then
-
-    if( not luavsq.Util )then
-        dofile( "Util.lua" )
-    end
 
     luavsq.Lyric = {};
 
@@ -31,22 +29,22 @@ if( not luavsq.Lyric )then
     -- @param phonetic_symbol String 発音記号
     -- overload2
     -- 文字列(ex."a","a",0.0000,0.0)からのコンストラクタ
-    luavsq.Lyric.new = function( ... )
+    function luavsq.Lyric.new( ... )
         local arguments = { ... }
         local this = {};
-        this.Phrase = "a";
-        this.UnknownFloat = 1.0;
-        this.m_consonant_adjustment = {};
+        this.phrase = "a";
+        this.lengthRatio = 1.0;
         this.isProtected = false;
-        this.m_phonetic_symbol = {};
+        this._phoneticSymbol = {};
+        this._consonantAdjustment = {};
 
         ---
         -- @param line String
         function this:_init_1( line )
             if( line == nil or (line ~= nil and line:len() == 0) )then
-                self.Phrase = "a";
+                self.phrase = "a";
                 self:setPhoneticSymbol( "a" );
-                self.UnknownFloat = 1.0;
+                self.lengthRatio = 1.0;
                 self.isProtected = false;
                 self:setConsonantAdjustment( "0" );
                 return;
@@ -55,32 +53,35 @@ if( not luavsq.Lyric )then
             local indx = 0;
             local dquote_count = 0;
             local work = "";
-            local consonant_adjustment = "";
+            local consonantAdjustment = "";
             for i = 1, len, 1 do
                 local c = line:sub( i, i );
-                if( c == ',' )then
+                if( c == ',' or i == len )then
+                    if( i == len )then
+                        work = work .. c;
+                    end
                     if( dquote_count % 2 == 0 )then
                         -- ,の左側に偶数個の"がある場合→,は区切り文字
                         indx = indx + 1;
                         local search = "\"";
                         if( indx == 1 )then
-                            -- Phrase
+                            -- phrase
                             work = work:gsub( "\"\"", "\"" );  -- "は""として保存される
-                            if( work:find( search ) == 0 and work.lastIndexOf( search ) == (work.length - search.length) )then
+                            if( work:find( search ) == 0 and work.lastIndexOf( search ) == (work:len() - search:len()) )then
                                 local l = work:len();
                                 if( l > 2 )then
-                                    self.Phrase = work:sub( 1, l - 3 );
+                                    self.phrase = work:sub( 1, l - 3 );
                                 else
-                                    self.Phrase = "a";
+                                    self.phrase = "a";
                                 end
                             else
-                                self.Phrase = work;
+                                self.phrase = work;
                             end
                             work = "";
                         elseif( indx == 2 )then
                             -- symbols
                             local symbols = "";
-                            if( (work:find( search ) == 0) and (work.lastIndexOf( search ) == (work.length - search.length)) )then
+                            if( (work:find( search ) == 0) and (work.lastIndexOf( search ) == (work:len() - search:len())) )then
                                 local l = work:len();
                                 if( l > 2 )then
                                     symbols = work:sub( 1, l - 3 );
@@ -93,16 +94,16 @@ if( not luavsq.Lyric )then
                             self:setPhoneticSymbol( symbols );
                             work = "";
                         elseif( indx == 3 )then
-                            -- UnknownFloat
-                            self.UnknownFloat = work + 0.0;
+                            -- lengthRatio
+                            self.lengthRatio = work + 0.0;
                             work = "";
                         else
-                            if( indx - 4 < #self.m_phonetic_symbol )then
+                            if( indx - 3 <= #self._phoneticSymbol )then
                                 -- consonant adjustment
-                                if( indx - 4 == 0 )then
-                                    consonant_adjustment = consonant_adjustment .. work;
+                                if( indx - 3 == 1 )then
+                                    consonantAdjustment = consonantAdjustment .. work;
                                 else
-                                    consonant_adjustment = consonant_adjustment .. "," .. work;
+                                    consonantAdjustment = consonantAdjustment .. "," .. work;
                                 end
                             else
                                 -- protected
@@ -121,17 +122,17 @@ if( not luavsq.Lyric )then
                     end
                 end
             end
-            self:setConsonantAdjustment( consonant_adjustment );
+            self:setConsonantAdjustment( consonantAdjustment );
         end
 
         ---
         -- @param phrase String
         -- @param phoneticSymbol String
-        this._init_2 = function( self, phrase, phoneticSymbol )
-            self.Phrase = phrase;
+        function this:_init_2( phrase, phoneticSymbol )
+            self.phrase = phrase;
             self:setPhoneticSymbol( phoneticSymbol );
-            self.UnknownFloat = 0.0;
-            self.m_consonant_adjustment = {};
+            self.lengthRatio = 0.0;
+            self._consonantAdjustment = {};
             self.isProtected = false;
         end
 
@@ -141,7 +142,7 @@ if( not luavsq.Lyric )then
         -- たとえば、isProtectedがthisとitemで違っていても、他が同一であればtrueが返る。
         -- @param item [Lyric]
         -- @return [bool]
-        this.equalsForSynth = function( self, item )
+        function this:equalsForSynth( item )
             if( self.isProtected ~= item.isProtected )then
                 return false;
             end
@@ -158,14 +159,14 @@ if( not luavsq.Lyric )then
         -- このオブジェクトのインスタンスと、指定されたオブジェクトが同じかどうかを調べます。
         -- @param item [Lyric]
         -- @return [bool]
-        this.equals = function( self, item )
+        function this:equals( item )
             if( not self:equalsForSynth( item ) )then
                 return false;
             end
-            if( self.Phrase ~= item.Phrase )then
+            if( self.phrase ~= item.phrase )then
                 return false;
             end
-            if( self.UnknownFloat ~= item.UnknownFloat )then
+            if( self.lengthRatio ~= item.lengthRatio )then
                 return false;
             end
             return true;
@@ -174,7 +175,7 @@ if( not luavsq.Lyric )then
         ---
         -- Consonant Adjustmentの文字列形式を取得します。
         -- @return [String]
-        this.getConsonantAdjustment = function( self )
+        function this:getConsonantAdjustment()
             local arr = self:getConsonantAdjustmentList();
             if( #arr == 0 )then
                 return "";
@@ -190,7 +191,7 @@ if( not luavsq.Lyric )then
         -- Consonant Adjustmentを文字列形式で設定します。
         -- @param value [String]
         -- @return [void]
-        this.setConsonantAdjustment = function( self, value )
+        function this:setConsonantAdjustment( value )
             local spl = luavsq.Util.split( value, "," );
             local arr = luavsq.Util.array( #spl );
             for i = 1, #spl, 1 do
@@ -202,54 +203,54 @@ if( not luavsq.Lyric )then
         ---
         -- Consonant Adjustmentを、整数配列で取得します。
         -- @return int[]
-        this.getConsonantAdjustmentList = function( self )
-            if( self.m_consonant_adjustment == nil )then
-                if( self.m_phonetic_symbol == nil )then
-                    self.m_consonant_adjustment = {};
+        function this:getConsonantAdjustmentList()
+            if( self._consonantAdjustment == nil )then
+                if( self._phoneticSymbol == nil )then
+                    self._consonantAdjustment = {};
                 else
-                    self.m_consonant_adjustment = luavsq.Util.array( #self.m_phonetic_symbol );
-                    for i = 1, #self.m_phonetic_symbol, 1 do
+                    self._consonantAdjustment = luavsq.Util.array( #self._phoneticSymbol );
+                    for i = 1, #self._phoneticSymbol, 1 do
                         local consonantAdjustment;
-                        if( luavsq.VsqPhoneticSymbol.isConsonant( self.m_phonetic_symbol[i] ) )then
+                        if( luavsq.VsqPhoneticSymbol.isConsonant( self._phoneticSymbol[i] ) )then
                             consonantAdjustment = 64;
                         else
                             consonantAdjustment = 0;
                         end
-                        self.m_consonant_adjustment[i] = consonantAdjustment;
+                        self._consonantAdjustment[i] = consonantAdjustment;
                     end
                 end
             end
-            return self.m_consonant_adjustment;
+            return self._consonantAdjustment;
         end
 
         ---
         -- Consonant Adjustmentを、整数配列形式で設定します。
         -- @param value int[]
-        this.setConsonantAdjustmentList = function( self, value )
+        function this:setConsonantAdjustmentList( value )
             if( value == nil )then
                 return;
             end
-            self.m_consonant_adjustment = luavsq.Util.array( #value );
+            self._consonantAdjustment = luavsq.Util.array( #value );
             for i = 1, #value, 1 do
-                self.m_consonant_adjustment[i] = value[i];
+                self._consonantAdjustment[i] = value[i];
             end
         end
 
         ---
         -- このオブジェクトの簡易コピーを取得します。
         -- @return [object] このインスタンスの簡易コピー
-        this.clone = function( self )
+        function this:clone()
             local result = luavsq.Lyric.new();
-            result.Phrase = self.Phrase;
-            result.m_phonetic_symbol = luavsq.Util.array( #self.m_phonetic_symbol );
-            for i = 1, #self.m_phonetic_symbol, 1 do
-                result.m_phonetic_symbol[i] = self.m_phonetic_symbol[i];
+            result.phrase = self.phrase;
+            result._phoneticSymbol = luavsq.Util.array( #self._phoneticSymbol );
+            for i = 1, #self._phoneticSymbol, 1 do
+                result._phoneticSymbol[i] = self._phoneticSymbol[i];
             end
-            result.UnknownFloat = self.UnknownFloat;
-            if( self.m_consonant_adjustment ~= nil )then
-                result.m_consonant_adjustment = luavsq.Util.array( #self.m_consonant_adjustment );
-                for i = 1, #self.m_consonant_adjustment, 1 do
-                    result.m_consonant_adjustment[i] = self.m_consonant_adjustment[i];
+            result.lengthRatio = self.lengthRatio;
+            if( self._consonantAdjustment ~= nil )then
+                result._consonantAdjustment = luavsq.Util.array( #self._consonantAdjustment );
+                for i = 1, #self._consonantAdjustment, 1 do
+                    result._consonantAdjustment[i] = self._consonantAdjustment[i];
                 end
             end
             result.isProtected = self.isProtected;
@@ -259,7 +260,7 @@ if( not luavsq.Lyric )then
         ---
         -- この歌詞の発音記号を取得します。
         -- @return [String]
-        this.getPhoneticSymbol = function( self )
+        function this:getPhoneticSymbol()
             local symbol = self:getPhoneticSymbolList();
             if( #symbol == 0 )then
                 return "";
@@ -275,20 +276,21 @@ if( not luavsq.Lyric )then
         -- この歌詞の発音記号を設定します。
         -- @param value [String]
         -- @return [void]
-        this.setPhoneticSymbol = function( self, value )
+        function this:setPhoneticSymbol( value )
             local s = value:gsub( "  ", " " );
-            self.m_phonetic_symbol = luavsq.Util.split( s, " " );
-            for i = 1, #self.m_phonetic_symbol, 1 do
-                self.m_phonetic_symbol[i] = self.m_phonetic_symbol[i]:gsub( "\\" .. "\\", "\\" );
+            self._phoneticSymbol = luavsq.Util.split( s, " " );
+            for i = 1, #self._phoneticSymbol, 1 do
+                self._phoneticSymbol[i] = self._phoneticSymbol[i]:gsub( "\\" .. "\\", "\\" );
             end
         end
 
         ---
-        -- @return String[]
-        this.getPhoneticSymbolList = function( self )
-            local ret = luavsq.Util.array( #self.m_phonetic_symbol );
-            for i = 1, #self.m_phonetic_symbol, 1 do
-                ret[i] = self.m_phonetic_symbol[i];
+        -- この歌詞の発音記号の配列を取得する
+        -- @return array<String>
+        function this:getPhoneticSymbolList()
+            local ret = luavsq.Util.array( #self._phoneticSymbol );
+            for i = 1, #self._phoneticSymbol, 1 do
+                ret[i] = self._phoneticSymbol[i];
             end
             return ret;
         end
@@ -297,7 +299,7 @@ if( not luavsq.Lyric )then
         -- このインスタンスを文字列に変換します
         -- @param add_quatation_mark [bool]
         -- @return 変換後の文字列 [String]
-        this.toString = function( self, add_quatation_mark )
+        function this:toString( add_quatation_mark )
             local quot;
             if( add_quatation_mark )then
                 quot = "\"";
@@ -305,7 +307,7 @@ if( not luavsq.Lyric )then
                 quot = "";
             end
             local result;
-            result = quot + self.Phrase + quot + ",";
+            result = quot + self.phrase + quot + ",";
             local symbol = self.getPhoneticSymbolList();
             local strSymbol = self.getPhoneticSymbol();
             if( not add_quatation_mark )then
@@ -313,10 +315,10 @@ if( not luavsq.Lyric )then
                     strSymbol = "u:";
                 end
             end
-            result = result .. quot .. strSymbol .. quot .. "," .. self.UnknownFloat;
+            result = result .. quot .. strSymbol .. quot .. "," .. self.lengthRatio;
             result = result:gsub( "\\" .. "\\", "\\" );
-            if( self.m_consonant_adjustment == nil )then
-                self.m_consonant_adjustment = luavsq.Util.array( #symbol );
+            if( self._consonantAdjustment == nil )then
+                self._consonantAdjustment = luavsq.Util.array( #symbol );
                 for i = 1, #symbol, 1 do
                     local consonantAdjustment;
                     if( luavsq.VsqPhoneticSymbol.isConsonant( symbol[i] ) )then
@@ -324,11 +326,11 @@ if( not luavsq.Lyric )then
                     else
                         consonantAdjustment = 0;
                     end
-                    self.m_consonant_adjustment[i] = consonantAdjustment;
+                    self._consonantAdjustment[i] = consonantAdjustment;
                 end
             end
-            for i = 1, #self.m_consonant_adjustment, 1 do
-                result = result .. "," .. self.m_consonant_adjustment[i];
+            for i = 1, #self._consonantAdjustment, 1 do
+                result = result .. "," .. self._consonantAdjustment[i];
             end
             if( self.isProtected )then
                 result = result .. ",1";

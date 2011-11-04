@@ -25,7 +25,7 @@ if( luavsq.Util == nil )then
     -- @param value String
     -- @param splitter table
     -- @return table 区切られた文字列のテーブル
-    luavsq.Util.split = function( value, splitter )
+    function luavsq.Util.split( value, splitter )
         local init = 1;
         local result = {};
         local token = "";
@@ -47,10 +47,10 @@ if( luavsq.Util == nil )then
     -- 指定された個数のnil要素を含む配列を取得する
     -- @param count integer
     -- @return table
-    luavsq.Util.array = function( count )
+    function luavsq.Util.array( count )
         local result = {};
         for i = 1, count, 1 do
-            table.insert( result, nil );
+            result[i] = false
         end
         return result;
     end
