@@ -1,6 +1,6 @@
 require( "lunit" );
 dofile( "../Util.lua" );
-dofile( "../VsqPhoneticSymbol.lua" );
+dofile( "../PhoneticSymbol.lua" );
 dofile( "../Lyric.lua" );
 module( "enhanced", package.seeall, lunit.testcase );
 

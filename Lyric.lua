@@ -36,8 +36,8 @@ if( nil == luavsq.Lyric )then
         this.phrase = "a";
         this.lengthRatio = 1.0;
         this.isProtected = false;
-        this._phoneticSymbol = {};
-        this._consonantAdjustment = {};
+        this._phoneticSymbol = { "a" };
+        this._consonantAdjustment = { 0 };
 
         ---
         -- @param line String
@@ -185,7 +185,7 @@ if( nil == luavsq.Lyric )then
             for i = 2, #arr, 1 do
                 ret = ret .. " " .. arr[i];
             end
-            return ret;
+            return "" .. ret;
         end
 
         ---
@@ -212,7 +212,7 @@ if( nil == luavsq.Lyric )then
                     self._consonantAdjustment = luavsq.Util.array( #self._phoneticSymbol );
                     for i = 1, #self._phoneticSymbol, 1 do
                         local consonantAdjustment;
-                        if( luavsq.VsqPhoneticSymbol.isConsonant( self._phoneticSymbol[i] ) )then
+                        if( luavsq.PhoneticSymbol.isConsonant( self._phoneticSymbol[i] ) )then
                             consonantAdjustment = 64;
                         else
                             consonantAdjustment = 0;
@@ -248,7 +248,9 @@ if( nil == luavsq.Lyric )then
                 result._phoneticSymbol[i] = self._phoneticSymbol[i];
             end
             result.lengthRatio = self.lengthRatio;
-            if( self._consonantAdjustment ~= nil )then
+            if( nil == self._consonantAdjustment )then
+                result._consonantAdjustment = nil;
+            else
                 result._consonantAdjustment = luavsq.Util.array( #self._consonantAdjustment );
                 for i = 1, #self._consonantAdjustment, 1 do
                     result._consonantAdjustment[i] = self._consonantAdjustment[i];
@@ -275,8 +277,7 @@ if( nil == luavsq.Lyric )then
 
         ---
         -- この歌詞の発音記号を設定します。
-        -- @param value [String]
-        -- @return [void]
+        -- @param value (string)
         function this:setPhoneticSymbol( value )
             local s = value:gsub( "  ", " " );
             self._phoneticSymbol = luavsq.Util.split( s, " " );
@@ -322,7 +323,7 @@ if( nil == luavsq.Lyric )then
                 self._consonantAdjustment = luavsq.Util.array( #symbol );
                 for i = 1, #symbol, 1 do
                     local consonantAdjustment;
-                    if( luavsq.VsqPhoneticSymbol.isConsonant( symbol[i] ) )then
+                    if( luavsq.PhoneticSymbol.isConsonant( symbol[i] ) )then
                         consonantAdjustment = 64;
                     else
                         consonantAdjustment = 0;
