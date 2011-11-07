@@ -193,6 +193,9 @@ if( nil == luavsq.Handle )then
                     self.iconID = spl[2];
                 elseif( search == "IDS" )then
                     self.ids = spl[2];
+                    for i = 3, #spl, 1 do
+                        self.ids = self.ids .. "=" .. spl[i];
+                    end
                 elseif( search == "Original" )then
                     self.original = tonumber( spl[2], 10 );
                 elseif( search == "Caption" )then

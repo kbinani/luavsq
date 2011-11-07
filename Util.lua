@@ -49,10 +49,26 @@ if( nil == luavsq.Util )then
     -- @return table
     function luavsq.Util.array( count )
         local result = {};
+        local i;
         for i = 1, count, 1 do
             result[i] = false
         end
         return result;
     end
 
+    ---
+    -- @param array (table)
+    -- @param value (object)
+    function luavsq.Util.searchArray( array, value )
+        if( nil == array )then
+            return -1;
+        end
+        local i;
+        for i = 1, #array, 1 do
+            if( value == array[i] )then
+                return i;
+            end
+        end
+        return -1;
+    end
 end

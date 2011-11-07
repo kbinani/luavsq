@@ -27,3 +27,10 @@ function testArray()
     assert_false( array[1] )
     assert_false( array[2] )
 end
+
+function testSearchArray()
+    local array = { "a", "b", "c" };
+    assert_equal( 2, luavsq.Util.searchArray( array, "b" ) );
+    assert_equal( -1, luavsq.Util.searchArray( array, "A" ) );
+    assert_equal( -1, luavsq.Util.searchArray( nil, "a" ) );
+end

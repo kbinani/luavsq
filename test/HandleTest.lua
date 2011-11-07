@@ -46,7 +46,7 @@ end
 function getSingerStream()
     local stream = luavsq.TextStream.new();
     stream:writeLine( "IconID=$07010002" );
-    stream:writeLine( "IDS=Miku3" );
+    stream:writeLine( "IDS=Miku3=God" );
     stream:writeLine( "Original=2" );
     stream:writeLine( "Caption=" );
     stream:writeLine( "Length=1" );
@@ -198,7 +198,7 @@ function testConstructSingerFromTextStream()
     assert_equal( index, handle.index );
     assert_equal( luavsq.HandleType.Singer, handle._type );
     assert_equal( "$07010002", handle.iconID );
-    assert_equal( "Miku3", handle.ids );
+    assert_equal( "Miku3=God", handle.ids );
     assert_equal( 2, handle.original );
     assert_equal( "", handle.caption );
     assert_equal( 1, handle:getLength() );
@@ -290,7 +290,7 @@ function testCastToIconHandle()
     assert_equal( index, casted.index );
     assert_equal( "", casted.caption );
     assert_equal( "$07010002", casted.iconID );
-    assert_equal( "Miku3", casted.ids );
+    assert_equal( "Miku3=God", casted.ids );
     assert_equal( 1, casted.language );
     assert_equal( 1, casted:getLength() );
     assert_equal( 2, casted.original );
@@ -391,7 +391,7 @@ function testSingerToString()
     local expected =
         "[h#0002]\n" ..
         "IconID=$07010002\n" ..
-        "IDS=Miku3\n" ..
+        "IDS=Miku3=God\n" ..
         "Original=2\n" ..
         "Caption=\n" ..
         "Length=1\n" ..
