@@ -231,7 +231,9 @@ if( nil == luavsq.ID )then
         return this;
     end
 
-    luavsq.ID.EOS = luavsq.ID.new();
+    function luavsq.ID.getEOS()
+        return luavsq.ID.new();
+    end
 
     ---
     -- ミリ秒で表した、音符の最大長さ

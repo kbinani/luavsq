@@ -336,7 +336,7 @@ if( nil == luavsq.Event )then
             local spl = luavsq.Util.split( line, '=' );
             self.clock = tonumber( spl[1], 10 );
             if( spl[2] == "EOS" )then
-                self.ID = luavsq.ID.EOS:clone();
+                self.ID = luavsq.ID.getEOS();
             end
         end
 
