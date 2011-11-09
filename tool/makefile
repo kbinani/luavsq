@@ -4,4 +4,4 @@ luavsq.lua: ../*.lua ../test/*.lua SourceFilePacker.class
 	java SourceFilePacker
 
 SourceFilePacker.class: SourceFilePacker.java
-	javac SourceFilePacker.java
+	javac SourceFilePacker.java -encoding UTF8

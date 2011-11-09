@@ -5,7 +5,7 @@ dofile( "../IconDynamicsHandle.lua" );
 dofile( "../ArticulationType.lua" );
 dofile( "../IconParameter.lua" );
 dofile( "../VibratoBPList.lua" );
-dofile( "../VibratoBPPair.lua" );
+dofile( "../VibratoBP.lua" );
 dofile( "../HandleType.lua" );
 module( "enhanced", package.seeall, lunit.testcase );
 

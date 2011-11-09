@@ -2,7 +2,7 @@ require( "lunit" );
 dofile( "../Util.lua" );
 dofile( "../ArticulationType.lua" );
 dofile( "../IconParameter.lua" );
-dofile( "../VibratoBPPair.lua" );
+dofile( "../VibratoBP.lua" );
 dofile( "../VibratoBPList.lua" );
 dofile( "../VibratoHandle.lua" );
 dofile( "../Handle.lua" );

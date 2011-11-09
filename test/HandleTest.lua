@@ -5,7 +5,7 @@ dofile( "../TextStream.lua" );
 dofile( "../HandleType.lua" );
 dofile( "../Lyric.lua" );
 dofile( "../VibratoBPList.lua" );
-dofile( "../VibratoBPPair.lua" );
+dofile( "../VibratoBP.lua" );
 dofile( "../LyricHandle.lua" );
 dofile( "../ArticulationType.lua" );
 dofile( "../VibratoHandle.lua" );

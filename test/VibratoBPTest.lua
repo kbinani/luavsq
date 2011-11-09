@@ -1,6 +1,6 @@
 require( "lunit" );
 dofile( "../Util.lua" );
-dofile( "../VibratoBPPair.lua" );
+dofile( "../VibratoBP.lua" );
 module( "enhanced", package.seeall, lunit.testcase );
 
 function testConstruct()
