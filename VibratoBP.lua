@@ -1,5 +1,5 @@
 --[[
-  VibratoBPPair.lua
+  VibratoBP.lua
   Copyright © 2011 kbinani
 
   This file is part of luavsq.
@@ -16,11 +16,11 @@ if( nil == luavsq )then
     luavsq = {};
 end
 
-if( nil == luavsq.VibratoBPPair )then
+if( nil == luavsq.VibratoBP )then
 
-    luavsq.VibratoBPPair = {};
+    luavsq.VibratoBP = {};
 
-    function luavsq.VibratoBPPair.new( ... )
+    function luavsq.VibratoBP.new( ... )
         local arguments = { ... };
         local this = {};
         this.x = 0.0;
@@ -31,8 +31,8 @@ if( nil == luavsq.VibratoBPPair )then
         end
 
         ---
-        -- この VibratoBPPair のインスタンスと、引数で指定されたインスタンスを比較する
-        -- @param item (luavsq.VibratoBPPair)
+        -- この VibratoBP のインスタンスと、引数で指定されたインスタンスを比較する
+        -- @param item (luavsq.VibratoBP)
         -- @return (integer)
         function this:compareTo( item )
             local v = self.x - item.x;
@@ -50,10 +50,10 @@ if( nil == luavsq.VibratoBPPair )then
     ---
     -- 引数で与えられた 2 つのインスタンスの順序比較し、第 1 引数のものが第 2 引数のものより大きければ 1 を返す。
     -- 小さければ -1 を返す。同順であれば 0 を返す。
-    -- @param a (luavsq.VibratoBPPair)
-    -- @param b (luavsq.VibratoBPPair)
+    -- @param a (luavsq.VibratoBP)
+    -- @param b (luavsq.VibratoBP)
     -- @return (integer)
-    function luavsq.VibratoBPPair.compare( a, b )
+    function luavsq.VibratoBP.compare( a, b )
         return a:compareTo( b );
     end
 

@@ -13,7 +13,7 @@
 ]]
 
 -- requires( Util.lua )
--- requires( VibratoBPPair.lua )
+-- requires( VibratoBP.lua )
 
 if( nil == luavsq )then
     luavsq = {};
@@ -50,7 +50,7 @@ if( nil == luavsq.VibratoBPList )then
 
                 local len = math.min( #x, #y );
                 for i = 1, len, 1 do
-                    self._list[i] = luavsq.VibratoBPPair.new( x[i], y[i] );
+                    self._list[i] = luavsq.VibratoBP.new( x[i], y[i] );
                 end
                 table.sort( self._list, luavsq.VibratoBPList._comparator );
             end
@@ -62,7 +62,7 @@ if( nil == luavsq.VibratoBPList )then
         function this:_init_2( x, y )
             local len = math.min( #x, #y );
             for i = 1, len, 1 do
-                self._list[i] = luavsq.VibratoBPPair.new( x[i], y[i] );
+                self._list[i] = luavsq.VibratoBP.new( x[i], y[i] );
             end
             local comparator = function( a, b )
                 if( a:compareTo( b ) < 0 )then
@@ -101,7 +101,7 @@ if( nil == luavsq.VibratoBPList )then
         function this:clone()
             local ret = luavsq.VibratoBPList.new();
             for i = 1, #self._list, 1 do
-                ret._list[i] = luavsq.VibratoBPPair.new( self._list[i].x, self._list[i].y );
+                ret._list[i] = luavsq.VibratoBP.new( self._list[i].x, self._list[i].y );
             end
             return ret;
         end
@@ -114,14 +114,14 @@ if( nil == luavsq.VibratoBPList )then
 
         ---
         -- @param index (integer) 0から始まるインデックス
-        -- @return (luavsq.VibratoBPPair)
+        -- @return (luavsq.VibratoBP)
         function this:getElement( index )
             return self._list[index + 1];
         end
 
         ---
         -- @param index (integer) 0から始まるインデックス
-        -- @param value (luavsq.VibratoBPPair)
+        -- @param value (luavsq.VibratoBP)
         function this:setElement( index, value )
             self._list[index + 1] = value;
         end
@@ -149,7 +149,7 @@ if( nil == luavsq.VibratoBPList )then
             for i = 1, #spl, 1 do
                 local spl2 = luavsq.Util.split( spl[i], '=' );
                 if( #spl2 >= 2 )then
-                    self._list[j] = luavsq.VibratoBPPair.new( tonumber( spl2[1] ), tonumber( spl2[2] ) );
+                    self._list[j] = luavsq.VibratoBP.new( tonumber( spl2[1] ), tonumber( spl2[2] ) );
                     j = j + 1
                 end
             end
@@ -166,8 +166,8 @@ if( nil == luavsq.VibratoBPList )then
     end
 
     ---
-    -- @param a (luavsq.VibratoBPPair)
-    -- @param b (luavsq.VibratoBPPair)
+    -- @param a (luavsq.VibratoBP)
+    -- @param b (luavsq.VibratoBP)
     function luavsq.VibratoBPList._comparator( a, b )
         if( a:compareTo( b ) < 0 )then
             return true;

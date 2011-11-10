@@ -71,4 +71,18 @@ if( nil == luavsq.Util )then
         end
         return -1;
     end
+
+    ---
+    -- @param bytes (table<number>)
+    -- @return number
+    function luavsq.Util.makeUInt16BE( bytes )
+        return bytes[1] * 0x100 + bytes[2];
+    end
+
+    ---
+    -- @param bytes (table<number>)
+    -- @return number
+    function luavsq.Util.makeUInt32BE( bytes )
+        return bytes[1] * 0x1000000 + bytes[2] * 0x10000 + bytes[3] * 0x100 + bytes[4];
+    end
 end

@@ -47,7 +47,7 @@ end
 
 function testSetElement()
     local list = luavsq.VibratoBPList.new( { 0.0, 0.4, 1.0 }, { 1, 64, 128 } );
-    list:setElement( 1, luavsq.VibratoBPPair.new( 0.2, 32 ) );
+    list:setElement( 1, luavsq.VibratoBP.new( 0.2, 32 ) );
     assert_equal( 0.2, list:getElement( 1 ).x );
     assert_equal( 32, list:getElement( 1 ).y );
 end

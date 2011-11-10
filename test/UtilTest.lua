@@ -34,3 +34,13 @@ function testSearchArray()
     assert_equal( -1, luavsq.Util.searchArray( array, "A" ) );
     assert_equal( -1, luavsq.Util.searchArray( nil, "a" ) );
 end
+
+function testMakeUInt16BE()
+    local bytes = { 0x12, 0x34 };
+    assert_equal( 0x1234, luavsq.Util.makeUInt16BE( bytes ) );
+end
+
+function testMakeUInt32BE()
+    local bytes = { 0x12, 0x34, 0x56, 0x78 };
+    assert_equal( 0x12345678, luavsq.Util.makeUInt32BE( bytes ) );
+end
