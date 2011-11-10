@@ -2,7 +2,7 @@ import java.io.*;
 import java.util.*;
 import java.util.regex.*;
 
-class SourceFilePacker
+class SourceFilePacker implements Comparator<File>
 {
     public static void main( String[] args )
     {
@@ -11,10 +11,8 @@ class SourceFilePacker
         try{
             writer = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( "luavsq.lua" ), "UTF-8" ) );
             writeHeader( writer );
-            for( File file : directory.listFiles() ){
-                if( false == file.getAbsolutePath().endsWith( ".lua" ) ){
-                    continue;
-                }
+            File[] files = sortSourceFiles( directory.listFiles() );
+            for( File file : files ){
                 concatFile( file.getAbsolutePath(), writer );
             }
         }catch( Exception e ){
@@ -26,6 +24,21 @@ class SourceFilePacker
                 }catch( Exception e ){}
             }
         }
+    }
+
+    private static File[] sortSourceFiles( File[] files )
+    {
+        Vector<File> paths = new Vector<File>();
+        for( File file : files ){
+            if( false == file.getAbsolutePath().endsWith( ".lua" ) ){
+                continue;
+            }
+            paths.add( file );
+        }
+
+        Collections.sort( paths, new SourceFilePacker() );
+
+        return paths.toArray( new File[0] );
     }
 
     private static void writeHeader( BufferedWriter writer )
@@ -150,5 +163,22 @@ class SourceFilePacker
             source = matcher.replaceAll( "" );
         }
         return source;
+    }
+
+    public int compare( File a, File b )
+    {
+        if( a != null && b != null && a instanceof File && b instanceof File ){
+            String pathA = ((File)a).getName();
+            String pathB = ((File)b).getName();
+            if( pathA.endsWith( ".lua" ) ){
+                pathA = pathA.substring( 0, pathA.length() - 4 );
+            }
+            if( pathB.endsWith( ".lua" ) ){
+                pathB = pathB.substring( 0, pathB.length() - 4 );
+            }
+            return pathA.compareTo( pathB );
+        }else{
+            return 0;
+        }
     }
 }

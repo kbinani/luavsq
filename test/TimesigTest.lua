@@ -1,5 +1,4 @@
-require( "lunit" );
-dofile( "../Timesig.lua" );
+dofile( "./test_bootstrap.lua" );
 module( "enhanced", package.seeall, lunit.testcase );
 
 function testConstructor()

@@ -1,12 +1,4 @@
-require( "lunit" );
-dofile( "../Util.lua" );
-dofile( "../Handle.lua" );
-dofile( "../IconDynamicsHandle.lua" );
-dofile( "../ArticulationType.lua" );
-dofile( "../IconParameter.lua" );
-dofile( "../VibratoBPList.lua" );
-dofile( "../VibratoBP.lua" );
-dofile( "../HandleType.lua" );
+dofile( "./test_bootstrap.lua" );
 module( "enhanced", package.seeall, lunit.testcase );
 
 function testConstruct()

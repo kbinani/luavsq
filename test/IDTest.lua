@@ -1,16 +1,4 @@
-require( "lunit" );
-dofile( "../IDType.lua" );
-dofile( "../ID.lua" );
-dofile( "../IconHandle.lua" );
-dofile( "../LyricHandle.lua" );
-dofile( "../ArticulationType.lua" );
-dofile( "../Lyric.lua" );
-dofile( "../VibratoHandle.lua" );
-dofile( "../IconParameter.lua" );
-dofile( "../VibratoBPList.lua" );
-dofile( "../NoteHeadHandle.lua" );
-dofile( "../IconDynamicsHandle.lua" );
-dofile( "../Util.lua" );
+dofile( "./test_bootstrap.lua" );
 module( "enhanced", package.seeall, lunit.testcase );
 
 function testConstructWithValue()

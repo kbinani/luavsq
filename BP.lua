@@ -28,7 +28,7 @@ if( nil == luavsq.BP )then
         ---
         -- @return [object]
         function this:clone()
-            return luavsq.BP( self.value, self.id );
+            return luavsq.BP.new( self.value, self.id );
         end
 
         return this;

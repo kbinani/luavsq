@@ -1,5 +1,4 @@
-require( "lunit" );
-dofile( "../NRPN.lua" );
+dofile( "./test_bootstrap.lua" );
 module( "enhanced", package.seeall, lunit.testcase );
 
 function testGetVoiceChangeParameterID()

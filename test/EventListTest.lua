@@ -1,8 +1,4 @@
-require( "lunit" );
-dofile( "../EventList.lua" );
-dofile( "../Event.lua" );
-dofile( "../ID.lua" );
-dofile( "../IDType.lua" );
+dofile( "./test_bootstrap.lua" );
 module( "enhanced", package.seeall, lunit.testcase );
 
 function testConstruct()

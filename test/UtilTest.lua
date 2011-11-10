@@ -1,6 +1,5 @@
-require( "lunit" )
-dofile( "../Util.lua" )
-module( "enhanced", package.seeall, lunit.testcase )
+dofile( "./test_bootstrap.lua" );
+module( "enhanced", package.seeall, lunit.testcase );
 
 function testSplit()
     local value = "\t\tfoo\t\tbar"
