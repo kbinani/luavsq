@@ -8,12 +8,12 @@ end
 
 function testConstructWithArguments()
     local ids = "foo";
-    local iconID = "$05030000";
+    local iconId = "$05030000";
     local index = 1000;
-    local handle = luavsq.NoteHeadHandle.new( ids, iconID, index );
+    local handle = luavsq.NoteHeadHandle.new( ids, iconId, index );
     assert_equal( luavsq.ArticulationType.NoteAttack, handle.articulation );
     assert_equal( ids, handle.ids );
-    assert_equal( iconID, handle.iconID );
+    assert_equal( iconId, handle.iconId );
     assert_equal( index, handle.index );
 end
 
@@ -66,7 +66,7 @@ end
 function testClone()
     local handle = luavsq.NoteHeadHandle.new();
     handle.index = 1;
-    handle.iconID = "$05010000";
+    handle.iconId = "$05010000";
     handle.ids = "dwango";
     handle.original = 2;
     handle.caption = "niwango";
@@ -76,7 +76,7 @@ function testClone()
 
     local copy = handle:clone();
     assert_equal( 1, copy.index );
-    assert_equal( "$05010000", copy.iconID );
+    assert_equal( "$05010000", copy.iconId );
     assert_equal( "dwango", copy.ids );
     assert_equal( 2, copy.original );
     assert_equal( "niwango", copy.caption );
@@ -88,7 +88,7 @@ end
 function testCastToHandle()
     local handle = luavsq.NoteHeadHandle.new();
     handle.index = 1;
-    handle.iconID = "$05010000";
+    handle.iconId = "$05010000";
     handle.ids = "dwango";
     handle.original = 2;
     handle.caption = "niwango";
@@ -99,7 +99,7 @@ function testCastToHandle()
     local casted = handle:castToHandle();
     assert_equal( luavsq.HandleType.NoteHeadHandle, casted._type );
     assert_equal( 1, casted.index );
-    assert_equal( "$05010000", casted.iconID );
+    assert_equal( "$05010000", casted.iconId );
     assert_equal( "dwango", casted.ids );
     assert_equal( 2, casted.original );
     assert_equal( "niwango", casted.caption );

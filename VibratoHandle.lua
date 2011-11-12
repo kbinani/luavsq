@@ -127,7 +127,7 @@ if( nil == luavsq.VibratoHandle )then
         function this:clone()
             local result = luavsq.VibratoHandle.new();
             result.index = self.index;
-            result.iconID = self.iconID;
+            result.iconId = self.iconId;
             result.ids = self.ids;
             result.original = self.original;
             result:setCaption( self.caption );
@@ -149,7 +149,7 @@ if( nil == luavsq.VibratoHandle )then
             local ret = luavsq.Handle.new();
             ret._type = luavsq.HandleType.Vibrato;
             ret.index = self.index;
-            ret.iconID = self.iconID;
+            ret.iconId = self.iconId;
             ret.ids = self.ids;
             ret.original = self.original;
             ret.caption = self.caption;

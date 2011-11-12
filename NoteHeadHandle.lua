@@ -26,7 +26,7 @@ if( nil == luavsq.NoteHeadHandle )then
 
         this.articulation = luavsq.ArticulationType.NoteAttack;
         this.index = 0;
-        this.iconID = "";
+        this.iconId = "";
         this.ids = "";
         this.original = 0;
 
@@ -99,7 +99,7 @@ if( nil == luavsq.NoteHeadHandle )then
         function this:clone()
             local result = luavsq.NoteHeadHandle.new();
             result.index = self.index;
-            result.iconID = self.iconID;
+            result.iconId = self.iconId;
             result.ids = self.ids;
             result.original = self.original;
             result:setCaption( self:getCaption() );
@@ -115,7 +115,7 @@ if( nil == luavsq.NoteHeadHandle )then
             local ret = luavsq.Handle.new();
             ret._type = luavsq.HandleType.NoteHeadHandle;
             ret.index = self.index;
-            ret.iconID = self.iconID;
+            ret.iconId = self.iconId;
             ret.ids = self.ids;
             ret.original = self.original;
             ret.caption = self:getCaption();
@@ -127,7 +127,7 @@ if( nil == luavsq.NoteHeadHandle )then
 
         if( #arguments == 3 )then
             this.ids = arguments[1];
-            this.iconID = arguments[2];
+            this.iconId = arguments[2];
             this.index = arguments[3];
         end
 

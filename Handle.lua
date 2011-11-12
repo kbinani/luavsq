@@ -27,7 +27,7 @@ if( nil == luavsq.Handle )then
         local this = {};
         this._type = luavsq.HandleType.Lyric;
         this.index = 0;
-        this.iconID = "";
+        this.iconId = "";
         this.ids = "";
         this.lyrics = {};
         this.original = 0;
@@ -78,7 +78,7 @@ if( nil == luavsq.Handle )then
             ret.index = self.index;
             ret:setCaption( self.caption );
             ret:setDepthBP( self.depthBP );
-            ret.iconID = self.iconID;
+            ret.iconId = self.iconId;
             ret.ids = self.ids;
             ret:setLength( self.length );
             ret.original = self.original;
@@ -94,7 +94,7 @@ if( nil == luavsq.Handle )then
             local ret = luavsq.IconHandle.new();
             ret.index = self.index;
             ret.caption = self.caption;
-            ret.iconID = self.iconID;
+            ret.iconId = self.iconId;
             ret.ids = self.ids;
             ret.language = self.language;
             ret:setLength( self.length );
@@ -110,7 +110,7 @@ if( nil == luavsq.Handle )then
             ret:setCaption( self.caption );
             ret:setDepth( self.depth );
             ret:setDuration( self.duration );
-            ret.iconID = self.iconID;
+            ret.iconId = self.iconId;
             ret.ids = self.ids;
             ret:setLength( self:getLength() );
             ret.original = self.original;
@@ -122,7 +122,7 @@ if( nil == luavsq.Handle )then
         function this:castToIconDynamicsHandle()
             local ret = luavsq.IconDynamicsHandle.new();
             ret.ids = self.ids;
-            ret.iconID = self.iconID;
+            ret.iconId = self.iconId;
             ret.original = self.original;
             ret:setCaption( self.caption );
             ret:setDynBP( self.dynBP );
@@ -152,7 +152,7 @@ if( nil == luavsq.Handle )then
 
             -- default値で埋める
             self._type = luavsq.HandleType.Vibrato;
-            self.iconID = "";
+            self.iconId = "";
             self.ids = "normal";
             self.lyrics = { luavsq.Lyric.new( "" ) };
             self.original = 0;
@@ -190,7 +190,7 @@ if( nil == luavsq.Handle )then
                 elseif( search == "Program" )then
                     self.program = tonumber( spl[2], 10 );
                 elseif( search == "IconID" )then
-                    self.iconID = spl[2];
+                    self.iconId = spl[2];
                 elseif( search == "IDS" )then
                     self.ids = spl[2];
                     for i = 3, #spl, 1 do
@@ -291,7 +291,7 @@ if( nil == luavsq.Handle )then
                     result = result .. "\n" .. "L" .. (i - 1) .. "=" .. self.lyrics[i]:toString( self.addQuotationMark );
                 end
             elseif( self._type == luavsq.HandleType.Vibrato )then
-                result = result .. "\n" .. "IconID=" .. self.iconID .. "\n";
+                result = result .. "\n" .. "IconID=" .. self.iconId .. "\n";
                 result = result .. "IDS=" .. self.ids .. "\n";
                 result = result .. "Original=" .. self.original .. "\n";
                 result = result .. "Caption=" .. self.caption .. "\n";
@@ -322,7 +322,7 @@ if( nil == luavsq.Handle )then
                     end
                 end
             elseif( self._type == luavsq.HandleType.Singer )then
-                result = result .. "\n" .. "IconID=" .. self.iconID .. "\n";
+                result = result .. "\n" .. "IconID=" .. self.iconId .. "\n";
                 result = result .. "IDS=" .. self.ids .. "\n";
                 result = result .. "Original=" .. self.original .. "\n";
                 result = result .. "Caption=" .. self.caption .. "\n";
@@ -330,7 +330,7 @@ if( nil == luavsq.Handle )then
                 result = result .. "Language=" .. self.language .. "\n";
                 result = result .. "Program=" .. self.program;
             elseif( self._type == luavsq.HandleType.NoteHead )then
-                result = result .. "\n" .. "IconID=" .. self.iconID .. "\n";
+                result = result .. "\n" .. "IconID=" .. self.iconId .. "\n";
                 result = result .. "IDS=" .. self.ids .. "\n";
                 result = result .. "Original=" .. self.original .. "\n";
                 result = result .. "Caption=" .. self.caption .. "\n";
@@ -338,7 +338,7 @@ if( nil == luavsq.Handle )then
                 result = result .. "Duration=" .. self.duration .. "\n";
                 result = result .. "Depth=" .. self.depth;
             elseif( self._type == luavsq.HandleType.Dynamics )then
-                result = result .. "\n" .. "IconID=" .. self.iconID .. "\n";
+                result = result .. "\n" .. "IconID=" .. self.iconId .. "\n";
                 result = result .. "IDS=" .. self.ids .. "\n";
                 result = result .. "Original=" .. self.original .. "\n";
                 result = result .. "Caption=" .. self.caption .. "\n";

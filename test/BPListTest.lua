@@ -30,7 +30,7 @@ function testGetterAndSetterDefaultValue()
     assert_equal( 62, list:getDefault() );
 end
 
-function testRenumberIDs()
+function testRenumberIds()
 --    fail();
 end
 
@@ -232,7 +232,7 @@ function testAdd()
     assert_equal( 12, list:getElementB( 1 ).value );
 end
 
-function testAddWithID()
+function testAddWithId()
     local list = luavsq.BPList.new( "foo", 63, -10, 1000 );
     local idA = list:addWithId( 480, 11, 3 );
     assert_equal( 3, idA );
@@ -257,7 +257,7 @@ function testAddWithID()
     assert_equal( 12, list:getElementB( 1 ).value );
 end
 
-function testRemoveWithID()
+function testRemoveWithId()
 --    fail();
 end
 

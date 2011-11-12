@@ -32,8 +32,8 @@ if( nil == luavsq.IconHandle )then
         this.caption = "";
 
         ---
-        -- この歌手設定を一意に識別するためのIDです。
-        this.iconID = "";
+        -- この歌手設定を一意に識別するための ID です。
+        this.iconId = "";
 
         ---
         -- ユーザ・フレンドリー名。
@@ -73,7 +73,7 @@ if( nil == luavsq.IconHandle )then
             if( nil == item )then
                 return false;
             else
-                return self.iconID == item.iconID;
+                return self.iconId == item.iconId;
             end
         end
 
@@ -83,7 +83,7 @@ if( nil == luavsq.IconHandle )then
         function this:clone()
             local ret = luavsq.IconHandle.new();
             ret.caption = self.caption;
-            ret.iconID = self.iconID;
+            ret.iconId = self.iconId;
             ret.ids = self.ids;
             ret.index = self.index;
             ret.language = self.language;
@@ -100,7 +100,7 @@ if( nil == luavsq.IconHandle )then
             local ret = luavsq.Handle.new();
             ret._type = luavsq.HandleType.Singer;
             ret.caption = self.caption;
-            ret.iconID = self.iconID;
+            ret.iconId = self.iconId;
             ret.ids = self.ids;
             ret.index = self.index;
             ret.language = self.language;

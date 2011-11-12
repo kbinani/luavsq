@@ -116,10 +116,10 @@ if( nil == luavsq.BPList )then
         end
 
         --[[
-        -- データ点のIDを一度クリアし，新たに番号付けを行います．
-        -- IDは，Redo,Undo用コマンドが使用するため，このメソッドを呼ぶとRedo,Undo操作が破綻する．XMLからのデシリアライズ直後のみ使用するべき．
+        -- データ点の ID を一度クリアし，新たに番号付けを行います．
+        -- ID は，Redo, Undo 用コマンドが使用するため，このメソッドを呼ぶと Redo, Undo 操作が破綻する．XML からのデシリアライズ直後のみ使用するべき．
         -- @return [void]
-        function this:renumberIDs()
+        function this:renumberIds()
             self.maxId = 0;
             local i;
             for i = 1, self._length, 1 do
@@ -574,7 +574,7 @@ if( nil == luavsq.BPList )then
         --[[
         -- @param id [long]
         -- @return [void]
-        function this:removeWithID( id )
+        function this:removeWithId( id )
             local i;
             for i = 1, self._length, 1 do
                 if( self.items[i].id == id )then

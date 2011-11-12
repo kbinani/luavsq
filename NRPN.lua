@@ -444,7 +444,7 @@ if( nil == luavsq.NRPN )then
     -- 指定したコントロールに対応するVoice Change Parameter IDの値を調べます
     -- @param curve_name [string]
     -- @return [byte]
-    function luavsq.NRPN.getVoiceChangeParameterID( curveName )
+    function luavsq.NRPN.getVoiceChangeParameterId( curveName )
         local lsb = 0x31;
         if( nil == curveName )then
             return nil;

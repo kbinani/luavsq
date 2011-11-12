@@ -21,15 +21,15 @@ if( nil == luavsq.IconDynamicsHandle )then
     luavsq.IconDynamicsHandle = {};
 
     ---
-    -- 強弱記号の場合の、IconIDの最初の5文字。
+    -- 強弱記号の場合の、IconId の最初の5文字。
     luavsq.IconDynamicsHandle.ICONID_HEAD_DYNAFF = "$0501";
 
     ---
-    -- クレッシェンドの場合の、IconIDの最初の5文字。
+    -- クレッシェンドの場合の、IconId の最初の5文字。
     luavsq.IconDynamicsHandle.ICONID_HEAD_CRESCEND = "$0502";
 
     ---
-    -- デクレッシェンドの場合の、IconIDの最初の5文字。
+    -- デクレッシェンドの場合の、IconId の最初の5文字。
     luavsq.IconDynamicsHandle.ICONID_HEAD_DECRESCEND = "$0503";
 
     function luavsq.IconDynamicsHandle.new()
@@ -41,8 +41,8 @@ if( nil == luavsq.IconDynamicsHandle )then
         -- このハンドルが強弱記号を表すものかどうかを表すブール値を取得します。
         -- @return [bool]
         function this:isDynaffType()
-            if( nil ~= self.iconID )then
-                return self.iconID:find( luavsq.IconDynamicsHandle.ICONID_HEAD_DYNAFF ) == 1;
+            if( nil ~= self.iconId )then
+                return self.iconId:find( luavsq.IconDynamicsHandle.ICONID_HEAD_DYNAFF ) == 1;
             else
                 return false;
             end
@@ -52,8 +52,8 @@ if( nil == luavsq.IconDynamicsHandle )then
         -- このハンドルがクレッシェンドを表すものかどうかを表すブール値を取得します。
         -- @return [bool]
         function this:isCrescendType()
-            if( nil ~= self.iconID )then
-                return self.iconID:find( luavsq.IconDynamicsHandle.ICONID_HEAD_CRESCEND ) == 1;
+            if( nil ~= self.iconId )then
+                return self.iconId:find( luavsq.IconDynamicsHandle.ICONID_HEAD_CRESCEND ) == 1;
             else
                 return false;
             end
@@ -63,8 +63,8 @@ if( nil == luavsq.IconDynamicsHandle )then
         -- このハンドルがデクレッシェンドを表すものかどうかを表すブール値を取得します。
         -- @return [bool]
         function this:isDecrescendType()
-            if( nil ~= self.iconID )then
-                return self.iconID:find( luavsq.IconDynamicsHandle.ICONID_HEAD_DECRESCEND ) == 1;
+            if( nil ~= self.iconId )then
+                return self.iconId:find( luavsq.IconDynamicsHandle.ICONID_HEAD_DECRESCEND ) == 1;
             else
                 return false;
             end
@@ -75,7 +75,7 @@ if( nil == luavsq.IconDynamicsHandle )then
         -- @return [object]
         function this:clone()
             local ret = luavsq.IconDynamicsHandle.new();
-            ret.iconID = self.iconID;
+            ret.iconId = self.iconId;
             ret.ids = self.ids;
             ret.original = self.original;
             ret:setCaption( self:getCaption() );
@@ -94,7 +94,7 @@ if( nil == luavsq.IconDynamicsHandle )then
         function this:castToHandle()
             local ret = luavsq.Handle.new();
             ret._type = luavsq.HandleType.DynamicsHandle;
-            ret.iconID = self.iconID;
+            ret.iconId = self.iconId;
             ret.ids = self.ids;
             ret.original = self.original;
             ret.caption = self:getCaption();

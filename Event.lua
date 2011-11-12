@@ -30,13 +30,13 @@ if( nil == luavsq.Event )then
         ---
         -- 内部で使用するインスタンス固有のID
         -- @var (integer)
-        this.internalID = -1;
+        this.internalId = -1;
 
         this.clock = 0;
 
         ---
-        -- @var (luavsq.ID)
-        this.ID = nil;
+        -- @var (luavsq.Id)
+        this.id = nil;
 
         ---
         -- @var (luavsq.UstEvent)
@@ -49,83 +49,83 @@ if( nil == luavsq.Event )then
             if( self.clock ~= item.clock )then
                 return false;
             end
-            if( self.ID.type ~= item.ID.type )then
+            if( self.id.type ~= item.id.type )then
                 return false;
             end
-            if( self.ID.type == luavsq.IDType.Anote )then
-                if( self.ID.note ~= item.ID.note )then
+            if( self.id.type == luavsq.idType.Anote )then
+                if( self.id.note ~= item.id.note )then
                     return false;
                 end
-                if( self.ID:getLength() ~= item.ID:getLength() )then
+                if( self.id:getLength() ~= item.id:getLength() )then
                     return false;
                 end
-                if( self.ID.d4mean ~= item.ID.d4mean )then
+                if( self.id.d4mean ~= item.id.d4mean )then
                     return false;
                 end
-                if( self.ID.demAccent ~= item.ID.demAccent )then
+                if( self.id.demAccent ~= item.id.demAccent )then
                     return false;
                 end
-                if( self.ID.demDecGainRate ~= item.ID.demDecGainRate )then
+                if( self.id.demDecGainRate ~= item.id.demDecGainRate )then
                     return false;
                 end
-                if( self.ID.dynamics ~= item.ID.dynamics )then
+                if( self.id.dynamics ~= item.id.dynamics )then
                     return false;
                 end
-                if( self.ID.lyricHandle ~= nil and item.ID.lyricHandle ~= nil )then
+                if( self.id.lyricHandle ~= nil and item.id.lyricHandle ~= nil )then
                     return false;
                 end
-                if( self.ID.lyricHandle ~= nil and item.ID.lyricHandle == nil )then
+                if( self.id.lyricHandle ~= nil and item.id.lyricHandle == nil )then
                     return false;
                 end
-                if( self.ID.lyricHandle ~= nil and item.ID.lyricHandle ~= nil )then
-                    if( self.ID.lyricHandle:getCount() ~= item.ID.lyricHandle:getCount() )then
+                if( self.id.lyricHandle ~= nil and item.id.lyricHandle ~= nil )then
+                    if( self.id.lyricHandle:getCount() ~= item.id.lyricHandle:getCount() )then
                         return false;
                     end
-                    local count = self.ID.lyricHandle:getCount();
+                    local count = self.id.lyricHandle:getCount();
                     local k;
                     for k = 0, count - 1, 1 do
-                        if( not self.ID.lyricHandle:getLyricAt( k ):equalsForSynth( item.ID.lyricHandle:getLyricAt( k ) ) )then
+                        if( not self.id.lyricHandle:getLyricAt( k ):equalsForSynth( item.id.lyricHandle:getLyricAt( k ) ) )then
                             return false;
                         end
                     end
                 end
-                if( self.ID.noteHeadHandle == nil and item.ID.noteHeadHandle ~= nil )then
+                if( self.id.noteHeadHandle == nil and item.id.noteHeadHandle ~= nil )then
                     return false;
                 end
-                if( self.ID.noteHeadHandle ~= nil and item.ID.noteHeadHandle == nil )then
+                if( self.id.noteHeadHandle ~= nil and item.id.noteHeadHandle == nil )then
                     return false;
                 end
-                if( self.ID.noteHeadHandle ~= nil and item.ID.noteHeadHandle ~= nil )then
-                    if( self.ID.NoteHeadHandle.iconID ~= item.ID.noteHeadHandle.iconID )then
+                if( self.id.noteHeadHandle ~= nil and item.id.noteHeadHandle ~= nil )then
+                    if( self.id.NoteHeadHandle.iconId ~= item.id.noteHeadHandle.iconId )then
                         return false;
                     end
-                    if( self.ID.noteHeadHandle:getDepth() ~= item.ID.noteHeadHandle:getDepth() )then
+                    if( self.id.noteHeadHandle:getDepth() ~= item.id.noteHeadHandle:getDepth() )then
                         return false;
                     end
-                    if( self.ID.noteHeadHandle:getDuration() ~= item.ID.noteHeadHandle:getDuration() )then
+                    if( self.id.noteHeadHandle:getDuration() ~= item.id.noteHeadHandle:getDuration() )then
                         return false;
                     end
-                    if( self.ID.noteHeadHandle:getLength() ~= item.ID.noteHeadHandle:getLength() )then
+                    if( self.id.noteHeadHandle:getLength() ~= item.id.noteHeadHandle:getLength() )then
                         return false;
                     end
                 end
-                if( self.ID.pmBendDepth ~= item.ID.pmBendDepth )then
+                if( self.id.pmBendDepth ~= item.id.pmBendDepth )then
                     return false;
                 end
-                if( self.ID.pmBendLength ~= item.ID.pmBendLength )then
+                if( self.id.pmBendLength ~= item.id.pmBendLength )then
                     return false;
                 end
-                if( self.ID.pmbPortamentoUse ~= item.ID.pmbPortamentoUse )then
+                if( self.id.pmbPortamentoUse ~= item.id.pmbPortamentoUse )then
                     return false;
                 end
-                if( self.ID.pMeanEndingNote ~= item.ID.pMeanEndingNote )then
+                if( self.id.pMeanEndingNote ~= item.id.pMeanEndingNote )then
                     return false;
                 end
-                if( self.ID.pMeanOnsetFirstNote ~= item.ID.pMeanOnsetFirstNote )then
+                if( self.id.pMeanOnsetFirstNote ~= item.id.pMeanOnsetFirstNote )then
                     return false;
                 end
-                local hVibratoThis = self.ID.vibratoHandle;
-                local hVibratoItem = item.ID.vibratoHandle;
+                local hVibratoThis = self.id.vibratoHandle;
+                local hVibratoItem = item.id.vibratoHandle;
                 if( hVibratoThis == nil and hVibratoItem ~= nil )then
                     return false;
                 end
@@ -133,10 +133,10 @@ if( nil == luavsq.Event )then
                     return false;
                 end
                 if( hVibratoThis ~= nil and hVibratoItem ~= nil )then
-                    if( self.ID.vibratoDelay ~= item.ID.vibratoDelay )then
+                    if( self.id.vibratoDelay ~= item.id.vibratoDelay )then
                         return false;
                     end
-                    if( hVibratoThis.iconID ~= hVibratoItem.iconID )then
+                    if( hVibratoThis.iconId ~= hVibratoItem.iconId )then
                         return false;
                     end
                     if( hVibratoThis:getStartDepth() ~= hVibratoItem:getStartDepth() )then
@@ -196,23 +196,23 @@ if( nil == luavsq.Event )then
                         end
                     end
                 end
-                if( self.ID.vMeanNoteTransition ~= item.ID.vMeanNoteTransition )then
+                if( self.id.vMeanNoteTransition ~= item.id.vMeanNoteTransition )then
                     return false;
                 end
-            elseif( self.ID.type == luavsq.IDType.Singer )then
+            elseif( self.id.type == luavsq.IdType.Singer )then
                 -- シンガーイベントの比較
-                if( self.ID.iconHandle.program ~= item.ID.iconHandle.program )then
+                if( self.id.iconHandle.program ~= item.id.iconHandle.program )then
                     return false;
                 end
-            elseif( self.ID.type == luavsq.IDType.Aicon )then
-                if( self.ID.iconDynamicsHandle.iconID ~= item.ID.iconDynamicsHandle.iconID )then
+            elseif( self.id.type == luavsq.IdType.Aicon )then
+                if( self.id.iconDynamicsHandle.iconId ~= item.id.iconDynamicsHandle.iconId )then
                     return false;
                 end
-                if( self.ID.iconDynamicsHandle:isDynaffType() )then
+                if( self.id.iconDynamicsHandle:isDynaffType() )then
                     -- 強弱記号
                 else
                     -- クレッシェンド・デクレッシェンド
-                    if( self.ID:getLength() ~= item.ID:getLength() )then
+                    if( self.id:getLength() ~= item.id:getLength() )then
                         return false;
                     end
                 end
@@ -249,32 +249,32 @@ if( nil == luavsq.Event )then
         -- @param writer [ITextWriter]
         -- @param print_targets [vector<string>]
         function this:_write_2( writer, print_targets )
-            writer:writeLine( "[ID#" .. string.format( "%04d", self.ID.value ) .. "]" );
-            writer:writeLine( "Type=" .. luavsq.IDType.toString( self.ID.type ) );
-            if( self.ID.type == luavsq.IDType.Anote )then
+            writer:writeLine( "[ID#" .. string.format( "%04d", self.id.value ) .. "]" );
+            writer:writeLine( "Type=" .. luavsq.IdType.toString( self.id.type ) );
+            if( self.id.type == luavsq.IdType.Anote )then
                 if( luavsq.Util.searchArray( print_targets, "Length" ) >= 1 )then
-                    writer:writeLine( "Length=" .. self.ID:getLength() );
+                    writer:writeLine( "Length=" .. self.id:getLength() );
                 end
                 if( luavsq.Util.searchArray( print_targets, "Note#" ) >= 1 )then
-                    writer:writeLine( "Note#=" .. self.ID.note );
+                    writer:writeLine( "Note#=" .. self.id.note );
                 end
                 if( luavsq.Util.searchArray( print_targets, "Dynamics" ) >= 1 )then
-                    writer:writeLine( "Dynamics=" .. self.ID.dynamics );
+                    writer:writeLine( "Dynamics=" .. self.id.dynamics );
                 end
                 if( luavsq.Util.searchArray( print_targets, "PMBendDepth" ) >= 1 )then
-                    writer:writeLine( "PMBendDepth=" .. self.ID.pmBendDepth );
+                    writer:writeLine( "PMBendDepth=" .. self.id.pmBendDepth );
                 end
                 if( luavsq.Util.searchArray( print_targets, "PMBendLength" ) >= 1 )then
-                    writer:writeLine( "PMBendLength=" .. self.ID.pmBendLength );
+                    writer:writeLine( "PMBendLength=" .. self.id.pmBendLength );
                 end
                 if( luavsq.Util.searchArray( print_targets, "PMbPortamentoUse" ) >= 1 )then
-                    writer:writeLine( "PMbPortamentoUse=" .. self.ID.pmbPortamentoUse );
+                    writer:writeLine( "PMbPortamentoUse=" .. self.id.pmbPortamentoUse );
                 end
                 if( luavsq.Util.searchArray( print_targets, "DEMdecGainRate" ) >= 1 )then
-                    writer:writeLine( "DEMdecGainRate=" .. self.ID.demDecGainRate );
+                    writer:writeLine( "DEMdecGainRate=" .. self.id.demDecGainRate );
                 end
                 if( luavsq.Util.searchArray( print_targets, "DEMaccent" ) >= 1 )then
-                    writer:writeLine( "DEMaccent=" .. self.ID.demAccent );
+                    writer:writeLine( "DEMaccent=" .. self.id.demAccent );
                 end
                 if( luavsq.Util.searchArray( print_targets, "PreUtterance" ) >= 1 )then
                     writer:writeLine( "PreUtterance=" .. self.ustEvent.preUtterance );
@@ -282,21 +282,21 @@ if( nil == luavsq.Event )then
                 if( luavsq.Util.searchArray( print_targets, "VoiceOverlap" ) >= 1 )then
                     writer:writeLine( "VoiceOverlap=" .. self.ustEvent.voiceOverlap );
                 end
-                if( self.ID.lyricHandle ~= nil )then
-                    writer:writeLine( "LyricHandle=h#" .. string.format( "%04d", self.ID.lyricHandleIndex ) );
+                if( self.id.lyricHandle ~= nil )then
+                    writer:writeLine( "LyricHandle=h#" .. string.format( "%04d", self.id.lyricHandleIndex ) );
                 end
-                if( self.ID.vibratoHandle ~= nil )then
-                    writer:writeLine( "VibratoHandle=h#" .. string.format( "%04d", self.ID.vibratoHandleIndex ) );
-                    writer:writeLine( "VibratoDelay=" .. self.ID.vibratoDelay );
+                if( self.id.vibratoHandle ~= nil )then
+                    writer:writeLine( "VibratoHandle=h#" .. string.format( "%04d", self.id.vibratoHandleIndex ) );
+                    writer:writeLine( "VibratoDelay=" .. self.id.vibratoDelay );
                 end
-                if( self.ID.noteHeadHandle ~= nil )then
-                    writer:writeLine( "NoteHeadHandle=h#" .. string.format( "%04d", self.ID.noteHeadHandleIndex ) );
+                if( self.id.noteHeadHandle ~= nil )then
+                    writer:writeLine( "NoteHeadHandle=h#" .. string.format( "%04d", self.id.noteHeadHandleIndex ) );
                 end
-            elseif( self.ID.type == luavsq.IDType.Singer )then
-                writer:writeLine( "IconHandle=h#" .. string.format( "%04d", self.ID.iconHandleIndex ) );
-            elseif( self.ID.type == luavsq.IDType.Aicon )then
-                writer:writeLine( "IconHandle=h#" .. string.format( "%04d", self.ID.iconHandleIndex ) );
-                writer:writeLine( "Note#=" .. self.ID.note );
+            elseif( self.id.type == luavsq.IdType.Singer )then
+                writer:writeLine( "IconHandle=h#" .. string.format( "%04d", self.id.iconHandleIndex ) );
+            elseif( self.id.type == luavsq.IdType.Aicon )then
+                writer:writeLine( "IconHandle=h#" .. string.format( "%04d", self.id.iconHandleIndex ) );
+                writer:writeLine( "Note#=" .. self.id.note );
             end
         end
 
@@ -304,8 +304,8 @@ if( nil == luavsq.Event )then
         -- このオブジェクトのコピーを作成します
         -- @return [object]
         function this:clone()
-            local ret = luavsq.Event.new( self.clock, self.ID:clone() );
-            ret.internalID = self.internalID;
+            local ret = luavsq.Event.new( self.clock, self.id:clone() );
+            ret.internalId = self.internalId;
             if( self.ustEvent ~= nil )then
                 ret.ustEvent = self.ustEvent:clone();
             end
@@ -319,8 +319,8 @@ if( nil == luavsq.Event )then
         function this:compareTo( item )
             local ret = self.clock - item.clock;
             if( ret == 0 )then
-                if( self.ID ~= nil and item.ID ~= nil )then
-                    return self.ID.type - item.ID.type;
+                if( self.id ~= nil and item.id ~= nil )then
+                    return self.id.type - item.id.type;
                 else
                     return ret;
                 end
@@ -336,24 +336,24 @@ if( nil == luavsq.Event )then
             local spl = luavsq.Util.split( line, '=' );
             self.clock = tonumber( spl[1], 10 );
             if( spl[2] == "EOS" )then
-                self.ID = luavsq.ID.getEOS();
+                self.id = luavsq.id.getEOS();
             end
         end
 
         function this:_init_0()
             self.clock = 0;
-            self.ID = luavsq.ID.new();
-            self.internalID = 0;
+            self.id = luavsq.Id.new();
+            self.internalId = 0;
         end
 
         ---
-        -- @param clcok [int]
-        -- @param id [VsqID]
-        -- @return [VsqEvent]
+        -- @param clcok (number)
+        -- @param id (luavsq.Id)
+        -- @return (luavsq.Event)
         function this:_init_2( clock, id )
             self.clock = clock;
-            self.ID = id;
-            self.internalID = 0;
+            self.id = id;
+            self.internalId = 0;
         end
 
         if( #arguments == 0 )then

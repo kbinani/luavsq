@@ -1,70 +1,70 @@
 dofile( "./test_bootstrap.lua" );
 module( "enhanced", package.seeall, lunit.testcase );
 
-function getNoteID()
-    local noteID = luavsq.ID.new( 1 );
-    noteID.type = luavsq.IDType.Anote;
-    noteID:setLength( 2 );
-    noteID.note = 6;
-    noteID.dynamics = 21;
-    noteID.pmBendDepth = 4;
-    noteID.pmBendLength = 5;
-    noteID.pmbPortamentoUse = 3;
-    noteID.demDecGainRate = 7;
-    noteID.demAccent = 8;
-    noteID.preUtterance = 9;
-    noteID.voiceOverlap = 10;
-    noteID.lyricHandle = nil;
-    noteID.lyricHandleIndex = 11;
-    noteID.vibratoHandle = nil;
-    noteID.vibratoHandleIndex = 12;
-    noteID.vibratoDelay = 13;
-    noteID.noteHeadHandle = nil;
-    noteID.noteHeadHandleIndex = 14;
-    return noteID;
+function getNoteId()
+    local noteId = luavsq.Id.new( 1 );
+    noteId.type = luavsq.IdType.Anote;
+    noteId:setLength( 2 );
+    noteId.note = 6;
+    noteId.dynamics = 21;
+    noteId.pmBendDepth = 4;
+    noteId.pmBendLength = 5;
+    noteId.pmbPortamentoUse = 3;
+    noteId.demDecGainRate = 7;
+    noteId.demAccent = 8;
+    noteId.preUtterance = 9;
+    noteId.voiceOverlap = 10;
+    noteId.lyricHandle = nil;
+    noteId.lyricHandleIndex = 11;
+    noteId.vibratoHandle = nil;
+    noteId.vibratoHandleIndex = 12;
+    noteId.vibratoDelay = 13;
+    noteId.noteHeadHandle = nil;
+    noteId.noteHeadHandleIndex = 14;
+    return noteId;
 end
 
-function getSingerID()
-    local singerID = luavsq.ID.new( 15 );
-    singerID.type = luavsq.IDType.Singer;
-    singerID.iconHandle = nil;
-    singerID.iconHandleIndex = 16;
-    return singerID;
+function getSingerId()
+    local singerId = luavsq.Id.new( 15 );
+    singerId.type = luavsq.IdType.Singer;
+    singerId.iconHandle = nil;
+    singerId.iconHandleIndex = 16;
+    return singerId;
 end
 
-function getIconID()
-    local iconID = luavsq.ID.new( 17 );
-    iconID.type = luavsq.IDType.Aicon;
-    iconID.iconHandle = nil;
-    iconID.iconHandleIndex = 18;
-    iconID.note = 19;
-    return iconID;
+function getIconId()
+    local iconId = luavsq.Id.new( 17 );
+    iconId.type = luavsq.IdType.Aicon;
+    iconId.iconHandle = nil;
+    iconId.iconHandleIndex = 18;
+    iconId.note = 19;
+    return iconId;
 end
 
 function testConstruct()
     local event = luavsq.Event.new();
     assert_equal( 0, event.clock );
-    assert_not_nil( event.ID );
-    assert_equal( 0, event.internalID );
+    assert_not_nil( event.id );
+    assert_equal( 0, event.internalId );
 end
 
 function testConstructWithLine()
     local event = luavsq.Event.new( "123=ID#0001" );
     assert_equal( 123, event.clock );
-    assert_nil( event.ID );
+    assert_nil( event.id );
 
     event = luavsq.Event.new( "1230=EOS" );
     assert_equal( 1230, event.clock );
-    assert_not_nil( event.ID );
+    assert_not_nil( event.id );
 end
 
-function testConstructWithClockAndID()
-    local id = luavsq.ID.new( 12 );
+function testConstructWithClockAndId()
+    local id = luavsq.Id.new( 12 );
     id.note = 60;
     local event = luavsq.Event.new( 1, id );
     assert_equal( 1, event.clock );
-    assert_equal( 12, event.ID.value );
-    assert_equal( 60, event.ID.note );
+    assert_equal( 12, event.id.value );
+    assert_equal( 60, event.id.note );
 end
 
 function testEquals()
@@ -72,9 +72,9 @@ function testEquals()
 end
 
 function testWriteNoteWithOption()
-    local noteID = getNoteID();
+    local noteId = getNoteId();
 
-    local event = luavsq.Event.new( 20, noteID );
+    local event = luavsq.Event.new( 20, noteId );
     local optionAll = {
         "Length",
         "Note#",
@@ -111,10 +111,10 @@ function testWriteNoteWithOption()
     --現在、PreUtteranceとVoiceOverlapは扱わないようにしているので、
     --オプション全指定と、オプションが無い場合の動作が全くおなじになってしまっている。
     --ustEventをちゃんと処理するようになったら、TODOコメントのところを外すこと
-    noteID.lyricHandle = luavsq.LyricHandle.new( "わ", "w a" );
-    noteID.vibratoHandle = luavsq.VibratoHandle.new();
-    noteID.noteHeadHandle = luavsq.NoteHeadHandle.new();
-    event.ID = noteID;
+    noteId.lyricHandle = luavsq.LyricHandle.new( "わ", "w a" );
+    noteId.vibratoHandle = luavsq.VibratoHandle.new();
+    noteId.noteHeadHandle = luavsq.NoteHeadHandle.new();
+    event.id = noteId;
     stream = luavsq.TextStream.new();
     event:write( stream, optionAll );
     expected =
@@ -170,8 +170,8 @@ function testWriteNoteWithOption()
 end
 
 function testWriteSinger()
-    local singerID = getSingerID();
-    local event = luavsq.Event.new( 1, singerID );
+    local singerId = getSingerId();
+    local event = luavsq.Event.new( 1, singerId );
     local stream = luavsq.TextStream.new();
     event:write( stream );
     local expected =
@@ -182,8 +182,8 @@ function testWriteSinger()
 end
 
 function testWriteIcon()
-    local iconID = getIconID();
-    local event = luavsq.Event.new( 2, iconID );
+    local iconId = getIconId();
+    local event = luavsq.Event.new( 2, iconId );
     local stream = luavsq.TextStream.new();
     event:write( stream );
     local expected =
@@ -195,21 +195,21 @@ function testWriteIcon()
 end
 
 function testClone()
-    local singerID = getSingerID();
-    singerID.iconHandle = luavsq.IconHandle.new();
-    singerID.iconHandle.index = 12;
-    local event = luavsq.Event.new( 40, singerID );
-    event.internalID = 4;
+    local singerId = getSingerId();
+    singerId.iconHandle = luavsq.IconHandle.new();
+    singerId.iconHandle.index = 12;
+    local event = luavsq.Event.new( 40, singerId );
+    event.internalId = 4;
     local copy = event:clone();
     assert_equal( 40, copy.clock );
-    assert_equal( 4, copy.internalID );
-    assert_equal( 12, copy.ID.iconHandle.index );
+    assert_equal( 4, copy.internalId );
+    assert_equal( 12, copy.id.iconHandle.index );
 --TODO: ustEventのclone
 end
 
 function testCompareTo()
-    local singerEvent = luavsq.Event.new( 1920, getSingerID() );
-    local noteEvent = luavsq.Event.new( 1920, getNoteID() );
+    local singerEvent = luavsq.Event.new( 1920, getSingerId() );
+    local noteEvent = luavsq.Event.new( 1920, getNoteId() );
     assert_equal( 0, singerEvent:compareTo( singerEvent ) );
     assert_true( 0 > singerEvent:compareTo( noteEvent ) );
     assert_true( 0 < noteEvent:compareTo( singerEvent ) );
@@ -219,15 +219,15 @@ function testCompareTo()
     assert_true( 0 < singerEvent:compareTo( noteEvent ) );
 
     singerEvent.clock = 2000;
-    singerEvent.ID = nil;
+    singerEvent.id = nil;
     noteEvent.clock = 2001;
-    noteEvent.ID = nil;
+    noteEvent.id = nil;
     assert_equal( 1, noteEvent:compareTo( singerEvent ) );
 end
 
 function testCompare()
-    local singerEvent = luavsq.Event.new( 1920, getSingerID() );
-    local noteEvent = luavsq.Event.new( 1920, getNoteID() );
+    local singerEvent = luavsq.Event.new( 1920, getSingerId() );
+    local noteEvent = luavsq.Event.new( 1920, getNoteId() );
     assert_equal( 0, luavsq.Event.compare( singerEvent, singerEvent ) );
     assert_true( 0 > luavsq.Event.compare( singerEvent, noteEvent ) );
     assert_true( 0 < luavsq.Event.compare( noteEvent, singerEvent ) );
@@ -237,8 +237,8 @@ function testCompare()
     assert_true( 0 < luavsq.Event.compare( singerEvent, noteEvent ) );
 
     singerEvent.clock = 2000;
-    singerEvent.ID = nil;
+    singerEvent.id = nil;
     noteEvent.clock = 2001;
-    noteEvent.ID = nil;
+    noteEvent.id = nil;
     assert_equal( 1, luavsq.Event.compare( noteEvent, singerEvent ) );
 end

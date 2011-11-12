@@ -64,7 +64,7 @@ end
 function testClone()
     local handle = luavsq.VibratoHandle.new();
     handle.index = 1;
-    handle.iconID = "hahaha";
+    handle.iconId = "hahaha";
     handle.ids = "baka";
     handle.original = 2;
     handle:setCaption( "aho" );
@@ -75,7 +75,7 @@ function testClone()
     handle:setRateBP( luavsq.VibratoBPList.new( { 0.0, 1.0 }, { 64, 128 } ) );
     local copy = handle:clone();
     assert_equal( 1, copy.index );
-    assert_equal( "hahaha", copy.iconID );
+    assert_equal( "hahaha", copy.iconId );
     assert_equal( "baka", copy.ids );
     assert_equal( 2, copy.original );
     assert_equal( "aho", copy:getCaption() );
@@ -89,7 +89,7 @@ end
 function testCastToHandle()
     local vibratoHandle = luavsq.VibratoHandle.new();
     vibratoHandle.index = 1;
-    vibratoHandle.iconID = "hahaha";
+    vibratoHandle.iconId = "hahaha";
     vibratoHandle.ids = "baka";
     vibratoHandle.original = 2;
     vibratoHandle:setCaption( "aho" );
@@ -102,7 +102,7 @@ function testCastToHandle()
     local handle = vibratoHandle:castToHandle();
     assert_equal( luavsq.HandleType.Vibrato, handle._type );
     assert_equal( 1, handle.index );
-    assert_equal( "hahaha", handle.iconID );
+    assert_equal( "hahaha", handle.iconId );
     assert_equal( "baka", handle.ids );
     assert_equal( 2, handle.original );
     assert_equal( "aho", handle.caption );

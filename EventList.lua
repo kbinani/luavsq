@@ -21,7 +21,7 @@ if( nil == luavsq.EventList )then
     luavsq.EventList = {};
 
     ---
-    -- 固有ID付きのVsqEventのリストを取り扱う
+    -- 固有 ID 付きの luavsq.Event のリストを取り扱う
     function luavsq.EventList.new()
         local this = {};
 
@@ -34,14 +34,14 @@ if( nil == luavsq.EventList )then
         this._ids = {};
 
         ---
-        -- @param internalID (integer)
+        -- @param internalId (integer)
         -- @return (integer) 0から始まるインデックス
-        function this:findIndexFromID( internalID )
+        function this:findIndexFromId( internalId )
             local c = #self._events;
             local i;
             for i = 1, c, 1 do
                 local item = self._events[i];
-                if( item.internalID == internalID )then
+                if( item.internalId == internalId )then
                     return i - 1;
                 end
             end
@@ -51,8 +51,8 @@ if( nil == luavsq.EventList )then
         ---
         -- @param internal_id [int]
         -- @return [VsqEvent]
-        function this:findFromID( internal_id )
-            local index = self:findIndexFromID( internal_id );
+        function this:findFromId( internal_id )
+            local index = self:findIndexFromId( internal_id );
             if( 0 <= index and index < #self._events )then
                 return self._events[index + 1];
             else
@@ -64,12 +64,12 @@ if( nil == luavsq.EventList )then
         -- @param internal_id [int]
         -- @param value [VsqEvent]
         -- @return [void]
-        function this:setForID( internalID, value )
+        function this:setForId( internalId, value )
             local c = #self._events;
             local i;
             for i = 1, c, 1 do
-                if( self._events[i].internalID == internalID )then
-                    value.internalID = internalID;
+                if( self._events[i].internalId == internalId )then
+                    value.internalId = internalId;
                     self._events[i] = value;
                     break;
                 end
@@ -80,7 +80,7 @@ if( nil == luavsq.EventList )then
         -- @return [void]
         function this:sort()
             table.sort( self._events, luavsq.EventList._comparator );
-            self:updateIDList();
+            self:updateIdList();
         end
 
         ---
@@ -93,7 +93,7 @@ if( nil == luavsq.EventList )then
         --[[
         -- @return [ArrayIterator(VsqEven)]
         function this:iterator()
-            self:updateIDList();
+            self:updateIdList();
             return new org.kbinani.ArrayIterator( self._events );
         end]]
 
@@ -123,33 +123,33 @@ if( nil == luavsq.EventList )then
             local count = #self._events;
             local i;
             for i = 1, count, 1 do
-                self._ids[i] = self._events[i].internalID;
+                self._ids[i] = self._events[i].internalId;
             end
             return id;
         end
 
-        function this:_add_2( item, internalID )
-            self:_addCor( item, internalID );
+        function this:_add_2( item, internalId )
+            self:_addCor( item, internalId );
             table.sort( self._events, luavsq.EventList._comparator );
-            return internalID;
+            return internalId;
         end
 
         ---
         -- @param item [VsqEvent]
         -- @param internal_id [int]
         -- @return [void]
-        function this:_addCor( item, internalID )
-            self:updateIDList();
-            item.internalID = internalID;
+        function this:_addCor( item, internalId )
+            self:updateIdList();
+            item.internalId = internalId;
             table.insert( self._events, item );
-            table.insert( self._ids, internalID );
+            table.insert( self._ids, internalId );
         end
 
         ---
         -- @param index [int]
         -- @return [void]
         function this:removeAt( index )
-            self:updateIDList();
+            self:updateIdList();
             table.remove( self._events, index + 1 );
             table.remove( self._ids, index + 1 );
         end
@@ -158,7 +158,7 @@ if( nil == luavsq.EventList )then
         -- @param next [int]
         -- @return [int]
         function this:_getNextId( next )
-            self:updateIDList();
+            self:updateIdList();
             local max = -1;
             local i;
             for i = 1, #self._ids, 1 do
@@ -185,20 +185,20 @@ if( nil == luavsq.EventList )then
         -- @param value [VsqEvent]
         -- @return [void]
         function this:setElement( index, value )
-            value.internalID = self._events[index + 1].internalID;
+            value.internalId = self._events[index + 1].internalId;
             self._events[index + 1] = value;
         end
 
         ---
         -- @return [void]
-        function this:updateIDList()
+        function this:updateIdList()
             if( #self._ids ~= #self._events )then
                 self._ids = {};
             end
             local count = #self._events;
             local i;
             for i = 1, count, 1 do
-                self._ids[i] = self._events[i].internalID;
+                self._ids[i] = self._events[i].internalId;
             end
         end
 

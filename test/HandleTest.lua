@@ -141,7 +141,7 @@ function testConstructVibratoFromTextStream()
     local handle = luavsq.Handle.new( stream, index, lastLine );
 
     assert_equal( luavsq.HandleType.Vibrato, handle._type );
-    assert_equal( "$04040004", handle.iconID );
+    assert_equal( "$04040004", handle.iconId );
     assert_equal( "normal-da-yo", handle.ids );
     assert_equal( "キャプションです=あ", handle.caption );
     assert_equal( 5, handle.original );
@@ -183,7 +183,7 @@ function testConstructSingerFromTextStream()
     local handle = luavsq.Handle.new( stream, index, lastLine );
     assert_equal( index, handle.index );
     assert_equal( luavsq.HandleType.Singer, handle._type );
-    assert_equal( "$07010002", handle.iconID );
+    assert_equal( "$07010002", handle.iconId );
     assert_equal( "Miku3=God", handle.ids );
     assert_equal( 2, handle.original );
     assert_equal( "", handle.caption );
@@ -199,7 +199,7 @@ function testConstructAttackFromTextStream()
     local handle = luavsq.Handle.new( stream, index, lastLine );
     assert_equal( luavsq.HandleType.NoteHead, handle._type );
     assert_equal( index, handle.index );
-    assert_equal( "$01010002", handle.iconID );
+    assert_equal( "$01010002", handle.iconId );
     assert_equal( "accent", handle.ids );
     assert_equal( 2, handle.original );
     assert_equal( "Accent", handle.caption );
@@ -215,7 +215,7 @@ function testConstructCrescendFromTextStream()
     local handle = luavsq.Handle.new( stream, index, lastLine );
     assert_equal( index, handle.index );
     assert_equal( luavsq.HandleType.Dynamics, handle._type );
-    assert_equal( "$05020001", handle.iconID );
+    assert_equal( "$05020001", handle.iconId );
     assert_equal( "Crescendo", handle.ids );
     assert_equal( 4, handle.original );
     assert_equal( "Zero Crescendo Curve", handle.caption );
@@ -257,7 +257,7 @@ function testCastToVibratoHandle()
     assert_equal( index, casted.index );
     assert_equal( "キャプションです=あ", casted:getCaption() );
     assert_equal( "0.5=64,0.75=32,1=0", casted:getDepthBP():getData() );
-    assert_equal( "$04040004", casted.iconID );
+    assert_equal( "$04040004", casted.iconId );
     assert_equal( "normal-da-yo", casted.ids );
     assert_equal( 120, casted:getLength() );
     assert_equal( 5, casted.original );
@@ -275,7 +275,7 @@ function testCastToIconHandle()
     local casted = handle:castToIconHandle();
     assert_equal( index, casted.index );
     assert_equal( "", casted.caption );
-    assert_equal( "$07010002", casted.iconID );
+    assert_equal( "$07010002", casted.iconId );
     assert_equal( "Miku3=God", casted.ids );
     assert_equal( 1, casted.language );
     assert_equal( 1, casted:getLength() );
@@ -292,7 +292,7 @@ function testCastToNoteHeadHandle()
     assert_equal( "Accent", casted:getCaption() );
     assert_equal( 63, casted:getDepth() );
     assert_equal( 64, casted:getDuration() );
-    assert_equal( "$01010002", casted.iconID );
+    assert_equal( "$01010002", casted.iconId );
     assert_equal( "accent", casted.ids );
     assert_equal( 120, casted:getLength() );
     assert_equal( 2, casted.original );
@@ -305,7 +305,7 @@ function testCastToIconDynamicsHandle()
     local handle = luavsq.Handle.new( stream, index, lastLine );
     local casted = handle:castToIconDynamicsHandle();
     assert_equal( "Crescendo", casted.ids );
-    assert_equal( "$05020001", casted.iconID );
+    assert_equal( "$05020001", casted.iconId );
     assert_equal( 4, casted.original );
     assert_equal( "Zero Crescendo Curve", casted:getCaption() );
     assert_equal( "0.5=11", casted.dynBP:getData() );

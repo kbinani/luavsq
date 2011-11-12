@@ -4,7 +4,7 @@ module( "enhanced", package.seeall, lunit.testcase );
 function getIconHandle()
     local handle = luavsq.IconHandle.new();
     handle.caption = "bar";
-    handle.iconID = "$07010001";
+    handle.iconId = "$07010001";
     handle.ids = "foo";
     handle.index = 1;
     handle.length = 2;
@@ -26,8 +26,8 @@ function testEqual()
     local a = getIconHandle();
     local b = getIconHandle();
     assert_true( a:equals( b ) );
-    a.iconID = "$07010001";
-    b.iconID = "$07010002";
+    a.iconId = "$07010001";
+    b.iconId = "$07010002";
     assert_false( a:equals( b ) );
 end
 
@@ -35,7 +35,7 @@ function testClone()
     local handle = getIconHandle();
     local copy = handle:clone();
     assert_equal( handle.caption, copy.caption );
-    assert_equal( handle.iconID, copy.iconID );
+    assert_equal( handle.iconId, copy.iconId );
     assert_equal( handle.ids, copy.ids );
     assert_equal( handle.index, copy.index );
     assert_equal( handle.language, copy.language );
@@ -49,7 +49,7 @@ function testCastToHandle()
     local casted = handle:castToHandle();
     assert_equal( luavsq.HandleType.Singer, casted._type );
     assert_equal( "bar", casted.caption );
-    assert_equal( "$07010001", casted.iconID );
+    assert_equal( "$07010001", casted.iconId );
     assert_equal( "foo", casted.ids );
     assert_equal( 1, casted.index );
     assert_equal( 5, casted.language );

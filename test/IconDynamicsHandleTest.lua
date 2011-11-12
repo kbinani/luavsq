@@ -8,37 +8,37 @@ end
 
 function testIsDynaffType()
     local handle = luavsq.IconDynamicsHandle.new();
-    handle.iconID = nil;
+    handle.iconId = nil;
     assert_false( handle:isDynaffType() );
-    handle.iconID = "$05000000";
+    handle.iconId = "$05000000";
     assert_false( handle:isDynaffType() );
-    handle.iconID = "$05010000";
+    handle.iconId = "$05010000";
     assert_true( handle:isDynaffType() );
 end
 
 function testIsCrescendType()
     local handle = luavsq.IconDynamicsHandle.new();
-    handle.iconID = nil;
+    handle.iconId = nil;
     assert_false( handle:isCrescendType() );
-    handle.iconID = "$05000000";
+    handle.iconId = "$05000000";
     assert_false( handle:isCrescendType() );
-    handle.iconID = "$05020000";
+    handle.iconId = "$05020000";
     assert_true( handle:isCrescendType() );
 end
 
 function testIsDecrescendType()
     local handle = luavsq.IconDynamicsHandle.new();
-    handle.iconID = nil;
+    handle.iconId = nil;
     assert_false( handle:isDecrescendType() );
-    handle.iconID = "$05000000";
+    handle.iconId = "$05000000";
     assert_false( handle:isDecrescendType() );
-    handle.iconID = "$05030000";
+    handle.iconId = "$05030000";
     assert_true( handle:isDecrescendType() );
 end
 
 function testClone()
     local handle = luavsq.IconDynamicsHandle.new();
-    handle.iconID = "$05010000";
+    handle.iconId = "$05010000";
     handle.ids = "foo";
     handle.original = 1;
     handle.caption = "bar";
@@ -47,7 +47,7 @@ function testClone()
     handle.length = 4;
     handle.dynBP = nil;
     local copy = handle:clone();
-    assert_equal( "$05010000", copy.iconID );
+    assert_equal( "$05010000", copy.iconId );
     assert_equal( "foo", copy.ids );
     assert_equal( 1, copy.original );
     assert_equal( "bar", copy.caption );
@@ -64,7 +64,7 @@ end
 
 function testCastToHandle()
     local handle = luavsq.IconDynamicsHandle.new();
-    handle.iconID = "$05010000";
+    handle.iconId = "$05010000";
     handle.ids = "foo";
     handle.original = 1;
     handle.caption = "bar";
@@ -73,7 +73,7 @@ function testCastToHandle()
     handle.endDyn = 3;
     handle.length = 4;
     local casted = handle:castToHandle();
-    assert_equal( "$05010000", casted.iconID );
+    assert_equal( "$05010000", casted.iconId );
     assert_equal( "foo", casted.ids );
     assert_equal( 1, casted.original );
     assert_equal( "bar", casted.caption );
