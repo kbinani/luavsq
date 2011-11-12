@@ -195,6 +195,14 @@ if( nil == luavsq.Id )then
             return result;
         end
 
+        function this:isEOS()
+            if( self.value == -1 )then
+                return true;
+            else
+                return false;
+            end
+        end
+
         --[[
         -- @return [string]
         function this:toString()

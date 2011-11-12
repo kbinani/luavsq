@@ -1,4 +1,9 @@
-dofile( "./test_bootstrap.lua" );
+require( "lunit" );
+dofile( "../NoteHeadHandle.lua" );
+dofile( "../IconParameter.lua" );
+dofile( "../ArticulationType.lua" );
+dofile( "../Handle.lua" );
+dofile( "../HandleType.lua" );
 module( "enhanced", package.seeall, lunit.testcase );
 
 function testConstruct()

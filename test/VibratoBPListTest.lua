@@ -1,4 +1,7 @@
-dofile( "./test_bootstrap.lua" );
+require( "lunit" );
+dofile( "../VibratoBPList.lua" );
+dofile( "../VibratoBP.lua" );
+dofile( "../Util.lua" );
 module( "enhanced", package.seeall, lunit.testcase );
 
 function testConstructWithString()

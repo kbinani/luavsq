@@ -1,4 +1,9 @@
-dofile( "./test_bootstrap.lua" );
+require( "lunit" );
+dofile( "../Common.lua" );
+dofile( "../DynamicsMode.lua" );
+dofile( "../PlayMode.lua" );
+dofile( "../TextStream.lua" );
+dofile( "../Util.lua" );
 module( "enhanced", package.seeall, lunit.testcase );
 
 function testConstructFromStream()

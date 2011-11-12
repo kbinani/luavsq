@@ -1,4 +1,8 @@
-dofile( "./test_bootstrap.lua" );
+require( "lunit" );
+dofile( "../Mixer.lua" );
+dofile( "../MixerEntry.lua" );
+dofile( "../TextStream.lua" );
+dofile( "../Util.lua" );
 module( "enhanced", package.seeall, lunit.testcase );
 
 function testConstruct()

@@ -1,4 +1,11 @@
-dofile( "./test_bootstrap.lua" );
+require( "lunit" );
+dofile( "../VibratoHandle.lua" );
+dofile( "../IconParameter.lua" );
+dofile( "../ArticulationType.lua" );
+dofile( "../VibratoBPList.lua" );
+dofile( "../VibratoBP.lua" );
+dofile( "../Handle.lua" );
+dofile( "../HandleType.lua" );
 module( "enhanced", package.seeall, lunit.testcase );
 
 function testToString()

@@ -1,4 +1,16 @@
-dofile( "./test_bootstrap.lua" );
+require( "lunit" );
+dofile( "../Id.lua" );
+dofile( "../IdType.lua" );
+dofile( "../IconHandle.lua" );
+dofile( "../LyricHandle.lua" );
+dofile( "../ArticulationType.lua" );
+dofile( "../Lyric.lua" );
+dofile( "../VibratoHandle.lua" );
+dofile( "../IconParameter.lua" );
+dofile( "../VibratoBPList.lua" );
+dofile( "../NoteHeadHandle.lua" );
+dofile( "../IconDynamicsHandle.lua" );
+dofile( "../Util.lua" );
 module( "enhanced", package.seeall, lunit.testcase );
 
 function testConstructWithValue()
@@ -100,4 +112,11 @@ function testClone()
     assert_equal( "aho", copy.vibratoHandle.iconId );
     assert_equal( "baka", copy.noteHeadHandle.ids );
     assert_equal( 183635, copy.iconDynamicsHandle:getStartDyn() );
+end
+
+function testIsEOS()
+    local id = luavsq.Id.new();
+    assert_true( id:isEOS() );
+    assert_true( luavsq.Id.getEOS():isEOS() );
+    assert_false( luavsq.Id.new( 0 ):isEOS() );
 end

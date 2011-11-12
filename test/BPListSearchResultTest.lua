@@ -1,4 +1,6 @@
-dofile( "./test_bootstrap.lua" );
+require( "lunit" );
+dofile( "../BPListSearchResult.lua" );
+dofile( "../BP.lua" );
 module( "enhanced", package.seeall, lunit.testcase );
 
 function testConstruct()

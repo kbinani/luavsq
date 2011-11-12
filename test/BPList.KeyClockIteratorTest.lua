@@ -1,4 +1,8 @@
-dofile( "./test_bootstrap.lua" );
+require( "lunit" );
+dofile( "../BPList.lua" );
+dofile( "../BPList.KeyClockIterator.lua" );
+dofile( "../BP.lua" );
+dofile( "../Util.lua" );
 module( "enhanced", package.seeall, lunit.testcase );
 
 function test()

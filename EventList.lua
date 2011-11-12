@@ -79,7 +79,7 @@ if( nil == luavsq.EventList )then
         ---
         -- @return [void]
         function this:sort()
-            table.sort( self._events, luavsq.EventList._comparator );
+            table.sort( self._events, luavsq.EventList.comparator );
             self:updateIdList();
         end
 
@@ -119,7 +119,7 @@ if( nil == luavsq.EventList )then
         function this:_add_1( item )
             local id = self:_getNextId( 0 );
             self:_addCor( item, id );
-            table.sort( self._events, luavsq.EventList._comparator );
+            table.sort( self._events, luavsq.EventList.comparator );
             local count = #self._events;
             local i;
             for i = 1, count, 1 do
@@ -130,7 +130,7 @@ if( nil == luavsq.EventList )then
 
         function this:_add_2( item, internalId )
             self:_addCor( item, internalId );
-            table.sort( self._events, luavsq.EventList._comparator );
+            table.sort( self._events, luavsq.EventList.comparator );
             return internalId;
         end
 
@@ -208,7 +208,7 @@ if( nil == luavsq.EventList )then
     ---
     -- @param a (luavsq.Event)
     -- @param b (luavsq.Event)
-    function luavsq.EventList._comparator( a, b )
+    function luavsq.EventList.comparator( a, b )
         if( a:compareTo( b ) < 0 )then
             return true;
         else

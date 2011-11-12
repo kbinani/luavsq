@@ -1,4 +1,7 @@
-dofile( "./test_bootstrap.lua" );
+require( "lunit" );
+dofile( "../Master.lua" );
+dofile( "../TextStream.lua" );
+dofile( "../Util.lua" );
 module( "enhanced", package.seeall, lunit.testcase );
 
 function testConstructWithoutArgument()

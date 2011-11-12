@@ -1,4 +1,18 @@
-dofile( "./test_bootstrap.lua" );
+require( "lunit" );
+dofile( "../Handle.lua" );
+dofile( "../TextStream.lua" );
+dofile( "../HandleType.lua" );
+dofile( "../Lyric.lua" );
+dofile( "../Util.lua" );
+dofile( "../VibratoBPList.lua" );
+dofile( "../VibratoBP.lua" );
+dofile( "../IconHandle.lua" );
+dofile( "../VibratoHandle.lua" );
+dofile( "../IconDynamicsHandle.lua" );
+dofile( "../IconParameter.lua" );
+dofile( "../ArticulationType.lua" );
+dofile( "../NoteHeadHandle.lua" );
+dofile( "../LyricHandle.lua" );
 module( "enhanced", package.seeall, lunit.testcase );
 
 function getLyricStream()

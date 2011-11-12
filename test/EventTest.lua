@@ -1,4 +1,17 @@
-dofile( "./test_bootstrap.lua" );
+require( "lunit" );
+dofile( "../Event.lua" );
+dofile( "../Id.lua" );
+dofile( "../Util.lua" );
+dofile( "../IdType.lua" );
+dofile( "../IconHandle.lua" );
+dofile( "../TextStream.lua" );
+dofile( "../LyricHandle.lua" );
+dofile( "../ArticulationType.lua" );
+dofile( "../Lyric.lua" );
+dofile( "../VibratoHandle.lua" );
+dofile( "../IconParameter.lua" );
+dofile( "../VibratoBPList.lua" );
+dofile( "../NoteHeadHandle.lua" );
 module( "enhanced", package.seeall, lunit.testcase );
 
 function getNoteId()
