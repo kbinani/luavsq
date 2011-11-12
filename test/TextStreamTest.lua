@@ -1,6 +1,6 @@
 require( "lunit" );
 dofile( "../TextStream.lua" );
-module( "enhanced", package.seeall, lunit.testcase );
+module( "TextStreamTest", package.seeall, lunit.testcase );
 
 function testConstruct()
     local stream = luavsq.TextStream.new();

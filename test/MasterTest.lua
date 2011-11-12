@@ -2,7 +2,7 @@ require( "lunit" );
 dofile( "../Master.lua" );
 dofile( "../TextStream.lua" );
 dofile( "../Util.lua" );
-module( "enhanced", package.seeall, lunit.testcase );
+module( "MasterTest", package.seeall, lunit.testcase );
 
 function testConstructWithoutArgument()
     local master = luavsq.Master.new();

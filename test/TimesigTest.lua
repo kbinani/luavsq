@@ -1,6 +1,6 @@
 require( "lunit" );
 dofile( "../Timesig.lua" );
-module( "enhanced", package.seeall, lunit.testcase );
+module( "TimesigTest", package.seeall, lunit.testcase );
 
 function testConstructor()
     local timesig = luavsq.Timesig.new();

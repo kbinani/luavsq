@@ -6,7 +6,7 @@ dofile( "../VibratoBPList.lua" );
 dofile( "../VibratoBP.lua" );
 dofile( "../Handle.lua" );
 dofile( "../HandleType.lua" );
-module( "enhanced", package.seeall, lunit.testcase );
+module( "VibratoHandleTest", package.seeall, lunit.testcase );
 
 function testToString()
     local handle = luavsq.VibratoHandle.new();

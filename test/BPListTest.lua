@@ -5,7 +5,7 @@ dofile( "../Util.lua" );
 dofile( "../BPList.KeyClockIterator.lua" );
 dofile( "../TextStream.lua" );
 dofile( "../BPListSearchResult.lua" );
-module( "enhanced", package.seeall, lunit.testcase );
+module( "BPListTest", package.seeall, lunit.testcase );
 
 function testConstruct()
     local list = luavsq.BPList.new( "foo", 63, -10, 1000 );

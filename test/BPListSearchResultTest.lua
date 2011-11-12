@@ -1,7 +1,7 @@
 require( "lunit" );
 dofile( "../BPListSearchResult.lua" );
 dofile( "../BP.lua" );
-module( "enhanced", package.seeall, lunit.testcase );
+module( "BPListSearchResultTest", package.seeall, lunit.testcase );
 
 function testConstruct()
     local result = luavsq.BPListSearchResult.new();

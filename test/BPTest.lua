@@ -1,6 +1,6 @@
 require( "lunit" );
 dofile( "../BP.lua" );
-module( "enhanced", package.seeall, lunit.testcase );
+module( "BPTest", package.seeall, lunit.testcase );
 
 function testConstruct()
     local value = 64;

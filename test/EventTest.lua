@@ -12,7 +12,7 @@ dofile( "../VibratoHandle.lua" );
 dofile( "../IconParameter.lua" );
 dofile( "../VibratoBPList.lua" );
 dofile( "../NoteHeadHandle.lua" );
-module( "enhanced", package.seeall, lunit.testcase );
+module( "EventTest", package.seeall, lunit.testcase );
 
 function getNoteId()
     local noteId = luavsq.Id.new( 1 );

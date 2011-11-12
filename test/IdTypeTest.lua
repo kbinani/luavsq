@@ -1,6 +1,6 @@
 require( "lunit" );
 dofile( "../IdType.lua" );
-module( "enhanced", package.seeall, lunit.testcase );
+module( "IdTypeTest", package.seeall, lunit.testcase );
 
 function testToString()
     assert_equal( "Singer", luavsq.IdType.toString( luavsq.IdType.Singer ) );

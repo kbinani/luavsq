@@ -1,6 +1,6 @@
 require( "lunit" );
 dofile( "../VibratoBP.lua" );
-module( "enhanced", package.seeall, lunit.testcase );
+module( "VibratoBPTest", package.seeall, lunit.testcase );
 
 function testConstruct()
     local point = luavsq.VibratoBP.new();

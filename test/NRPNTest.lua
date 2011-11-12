@@ -1,6 +1,6 @@
 require( "lunit" );
 dofile( "../NRPN.lua" );
-module( "enhanced", package.seeall, lunit.testcase );
+module( "NRPNTest", package.seeall, lunit.testcase );
 
 function testGetVoiceChangeParameterId()
     assert_equal( 0x30, luavsq.NRPN.getVoiceChangeParameterId( "HarMoNiCS" ) );

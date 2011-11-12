@@ -1,6 +1,6 @@
 require( "lunit" );
 dofile( "../PhoneticSymbol.lua" );
-module( "enhanced", package.seeall, lunit.testcase );
+module( "PhoneticSymbolTest", package.seeall, lunit.testcase );
 
 function testIsConsonant()
     assert_true( luavsq.PhoneticSymbol.isConsonant( "k'" ) );

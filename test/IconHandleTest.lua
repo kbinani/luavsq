@@ -2,7 +2,7 @@ require( "lunit" );
 dofile( "../IconHandle.lua" );
 dofile( "../Handle.lua" );
 dofile( "../HandleType.lua" );
-module( "enhanced", package.seeall, lunit.testcase );
+module( "IconHandleTest", package.seeall, lunit.testcase );
 
 function getIconHandle()
     local handle = luavsq.IconHandle.new();

@@ -2,7 +2,7 @@ require( "lunit" );
 dofile( "../VibratoBPList.lua" );
 dofile( "../VibratoBP.lua" );
 dofile( "../Util.lua" );
-module( "enhanced", package.seeall, lunit.testcase );
+module( "VibratoBPListTest", package.seeall, lunit.testcase );
 
 function testConstructWithString()
     local list = luavsq.VibratoBPList.new( "2", "1.0,0.0", "128,1" );

@@ -2,7 +2,7 @@ require( "lunit" );
 dofile( "../Lyric.lua" );
 dofile( "../Util.lua" );
 dofile( "../PhoneticSymbol.lua" );
-module( "enhanced", package.seeall, lunit.testcase );
+module( "LyricTest", package.seeall, lunit.testcase );
 
 function testConstructWithLine()
     local line = "あ,a,0.4,0,0";

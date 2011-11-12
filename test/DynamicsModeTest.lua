@@ -1,6 +1,6 @@
 require( "lunit" );
 dofile( "../DynamicsMode.lua" );
-module( "enhanced", package.seeall, lunit.testcase );
+module( "DynamicsModeTest", package.seeall, lunit.testcase );
 
 function test()
     assert_equal( 0, luavsq.DynamicsMode.Standard );

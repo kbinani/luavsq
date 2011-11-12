@@ -1,6 +1,6 @@
 require( "lunit" );
 dofile( "../PlayMode.lua" );
-module( "enhanced", package.seeall, lunit.testcase );
+module( "PlayModeTest", package.seeall, lunit.testcase );
 
 function test()
     assert_equal( -1, luavsq.PlayMode.Off );

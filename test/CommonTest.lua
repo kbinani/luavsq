@@ -4,7 +4,7 @@ dofile( "../DynamicsMode.lua" );
 dofile( "../PlayMode.lua" );
 dofile( "../TextStream.lua" );
 dofile( "../Util.lua" );
-module( "enhanced", package.seeall, lunit.testcase );
+module( "CommonTest", package.seeall, lunit.testcase );
 
 function testConstructFromStream()
     local stream = luavsq.TextStream.new();

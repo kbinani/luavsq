@@ -3,7 +3,7 @@ dofile( "../BPList.lua" );
 dofile( "../BPList.KeyClockIterator.lua" );
 dofile( "../BP.lua" );
 dofile( "../Util.lua" );
-module( "enhanced", package.seeall, lunit.testcase );
+module( "BPList.KeyClockIteratorTest", package.seeall, lunit.testcase );
 
 function test()
     local list = luavsq.BPList.new( "foo", 63, -10, 1000 );

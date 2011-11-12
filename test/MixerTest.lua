@@ -3,7 +3,7 @@ dofile( "../Mixer.lua" );
 dofile( "../MixerEntry.lua" );
 dofile( "../TextStream.lua" );
 dofile( "../Util.lua" );
-module( "enhanced", package.seeall, lunit.testcase );
+module( "MixerTest", package.seeall, lunit.testcase );
 
 function testConstruct()
     local mixer = luavsq.Mixer.new( 1, 2, 3, 4 );

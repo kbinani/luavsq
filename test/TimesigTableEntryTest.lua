@@ -1,6 +1,6 @@
 require( "lunit" );
 dofile( "../TimesigTableEntry.lua" );
-module( "enhanced", package.seeall, lunit.testcase );
+module( "TimesigTableEntryTest", package.seeall, lunit.testcase );
 
 function testConstruct()
     local item = luavsq.TimesigTableEntry.new();

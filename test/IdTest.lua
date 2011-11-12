@@ -11,7 +11,7 @@ dofile( "../VibratoBPList.lua" );
 dofile( "../NoteHeadHandle.lua" );
 dofile( "../IconDynamicsHandle.lua" );
 dofile( "../Util.lua" );
-module( "enhanced", package.seeall, lunit.testcase );
+module( "IdTest", package.seeall, lunit.testcase );
 
 function testConstructWithValue()
     local id = luavsq.Id.new( 1 );

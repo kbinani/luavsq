@@ -6,7 +6,7 @@ dofile( "../Handle.lua" );
 dofile( "../VibratoBPList.lua" );
 dofile( "../HandleType.lua" );
 dofile( "../VibratoBP.lua" );
-module( "enhanced", package.seeall, lunit.testcase );
+module( "IconDynamicsHandleTest", package.seeall, lunit.testcase );
 
 function testConstruct()
     local handle = luavsq.IconDynamicsHandle.new();

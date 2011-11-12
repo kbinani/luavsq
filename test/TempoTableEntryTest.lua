@@ -1,6 +1,6 @@
 require( "lunit" );
 dofile( "../TempoTableEntry.lua" );
-module( "enhanced", package.seeall, lunit.testcase );
+module( "TempoTableEntryTest", package.seeall, lunit.testcase );
 
 function testConstructor()
     local entry = luavsq.TempoTableEntry.new();

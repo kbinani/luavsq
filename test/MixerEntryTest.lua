@@ -1,6 +1,6 @@
 require( "lunit" );
 dofile( "../MixerEntry.lua" );
-module( "enhanced", package.seeall, lunit.testcase );
+module( "MixerEntryTest", package.seeall, lunit.testcase );
 
 function testConstruct()
     local mixerEntry = luavsq.MixerEntry.new( 1, 2, 3, 4 );

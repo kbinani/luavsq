@@ -3,7 +3,7 @@ dofile( "../EventList.lua" );
 dofile( "../Event.lua" );
 dofile( "../Id.lua" );
 dofile( "../IdType.lua" );
-module( "enhanced", package.seeall, lunit.testcase );
+module( "EventListTest", package.seeall, lunit.testcase );
 
 function testConstruct()
     local list = luavsq.EventList.new();

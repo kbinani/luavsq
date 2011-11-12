@@ -6,7 +6,7 @@ dofile( "../Util.lua" );
 dofile( "../PhoneticSymbol.lua" );
 dofile( "../Handle.lua" );
 dofile( "../HandleType.lua" );
-module( "enhanced", package.seeall, lunit.testcase );
+module( "LyricHandleTest", package.seeall, lunit.testcase );
 
 function testConstruct()
     local handle = luavsq.LyricHandle.new();
