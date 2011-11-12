@@ -85,4 +85,20 @@ if( nil == luavsq.Util )then
     function luavsq.Util.makeUInt32BE( bytes )
         return bytes[1] * 0x1000000 + bytes[2] * 0x10000 + bytes[3] * 0x100 + bytes[4];
     end
+
+    ---
+    -- @param array (table) 並び替えるテーブル
+    -- @param startIndex (number) 並び替える範囲の開始位置(先頭が0)
+    -- @param length (number) 並び替える範囲の長さ
+    function luavsq.Util.sort( array, startIndex, length )
+        local spliced = {};
+        local i;
+        for i = startIndex + 1, startIndex + 1 + length, 1 do
+            table.insert( spliced, array[i] );
+        end
+        table.sort( spliced );
+        for i = startIndex + 1, startIndex + 1 + length, 1 do
+            array[i] = spliced[i - startIndex];
+        end
+    end
 end

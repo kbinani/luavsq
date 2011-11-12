@@ -43,3 +43,13 @@ function testMakeUInt32BE()
     local bytes = { 0x12, 0x34, 0x56, 0x78 };
     assert_equal( 0x12345678, luavsq.Util.makeUInt32BE( bytes ) );
 end
+
+function testSort()
+    local array = { 1, 2, 3, 8, 7, 6, 5, 4, 9 };
+    luavsq.Util.sort( array, 3, 5 );
+    local expected = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+    local i;
+    for i = 1, #expected, 1 do
+        assert_equal( expected[i], array[i] );
+    end
+end

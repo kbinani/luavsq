@@ -65,7 +65,7 @@ if( nil == luavsq.Mixer )then
             local spl;
             local buffer = "";
             last_line.value = stream:readLine();
-            while ( last_line.value:sub( 1, 1 ) ~= "[" )do
+            while( last_line.value:sub( 1, 1 ) ~= "[" )do
                 spl = luavsq.Util.split( last_line.value, "=" );
                 if( spl[1] == "MasterFeder" )then
                     self.masterFeder = tonumber( spl[2], 10 );
