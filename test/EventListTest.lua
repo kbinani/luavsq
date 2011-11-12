@@ -3,7 +3,7 @@ module( "enhanced", package.seeall, lunit.testcase );
 
 function testConstruct()
     local list = luavsq.EventList.new();
-    assert_equal( 0, list:getCount() );
+    assert_equal( 0, list:size() );
 end
 
 function testFindIndexFromId()
@@ -87,12 +87,12 @@ function testClear()
     list:add( b, 14 );
     list:add( a, 20 );
 
-    assert_equal( 2, list:getCount() );
+    assert_equal( 2, list:size() );
     assert_equal( 20, list:getElement( 0 ).internalId );
 
     list:clear();
 
-    assert_equal( 0, list:getCount() );
+    assert_equal( 0, list:size() );
 end
 
 function testIterator()
@@ -138,21 +138,21 @@ function testRemoveAt()
     list:add( b, 2 );
     assert_equal( 100, list:getElement( 0 ).internalId );
     assert_equal( 2, list:getElement( 1 ).internalId );
-    assert_equal( 2, list:getCount() );
+    assert_equal( 2, list:size() );
 
     list:removeAt( 0 );
 
-    assert_equal( 1, list:getCount() );
+    assert_equal( 1, list:size() );
     assert_equal( 2, list:getElement( 0 ).internalId );
 end
 
 function testGetCount()
     local list = luavsq.EventList.new();
-    assert_equal( 0, list:getCount() );
+    assert_equal( 0, list:size() );
     local event = luavsq.Event.new( 0, luavsq.Id.new( 0 ) );
     event.id.type = luavsq.IdType.Anote;
     list:add( event );
-    assert_equal( 1, list:getCount() );
+    assert_equal( 1, list:size() );
 end
 
 function testGetAndSetElement()

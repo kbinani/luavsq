@@ -169,7 +169,7 @@ if( nil == luavsq.EventList )then
 
         ---
         -- @return [int]
-        function this:getCount()
+        function this:size()
             return #self._events;
         end
 

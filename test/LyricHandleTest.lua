@@ -4,7 +4,7 @@ module( "enhanced", package.seeall, lunit.testcase );
 function testConstruct()
     local handle = luavsq.LyricHandle.new();
     assert_equal( 0, handle.index );
-    assert_equal( 1, handle:getCount() );
+    assert_equal( 1, handle:size() );
     assert_equal( "a", handle:getLyricAt( 0 ).phrase );
     assert_equal( "a", handle:getLyricAt( 0 ):getPhoneticSymbol() );
 end
@@ -12,7 +12,7 @@ end
 function testConstructWithPhrase()
     local handle = luavsq.LyricHandle.new( "は", "h a" );
     assert_equal( 0, handle.index );
-    assert_equal( 1, handle:getCount() );
+    assert_equal( 1, handle:size() );
     assert_equal( "は", handle:getLyricAt( 0 ).phrase );
     assert_equal( "h a", handle:getLyricAt( 0 ):getPhoneticSymbol() );
 end
@@ -21,7 +21,7 @@ function testGetterAndSetterLyric()
     local handle = luavsq.LyricHandle.new( "は", "h a" );
     local lyric = luavsq.Lyric.new( "ら", "4 a" );
     handle:setLyricAt( 1, lyric );
-    assert_equal( 2, handle:getCount() );
+    assert_equal( 2, handle:size() );
     assert_true( handle:getLyricAt( 1 ):equals( lyric ) );
 end
 

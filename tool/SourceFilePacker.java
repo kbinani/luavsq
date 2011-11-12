@@ -71,7 +71,7 @@ class SourceFilePacker implements Comparator<File>
             "-- See tool/makefile and tool/SourceFilePacker.java.",
             "",
             "if( nil == luavsq )then",
-            "    luavsq = {};",
+            "\tluavsq = {};",
             "end"
         };
         for( String line : license ){
@@ -144,6 +144,28 @@ class SourceFilePacker implements Comparator<File>
                 break;
             }
             source = matcher.replaceAll( "\n" );
+        }
+
+        // インデントをタブでやるようにする
+        int tabCount = 0;
+        while( true ){
+            String patternString = "^";
+            for( int i = 0; i < tabCount; i++ ){
+                patternString += "\\t";
+            }
+            tabCount++;
+            patternString += "[ ]{4}";
+            pattern = Pattern.compile( patternString, Pattern.MULTILINE );
+            matcher = pattern.matcher( source );
+            if( matcher.find() ){
+                String replace = "";
+                for( int i = 0; i < tabCount; i++ ){
+                    replace += "\t";
+                }
+                source = matcher.replaceAll( replace );
+            }else{
+                break;
+            }
         }
 
         return source;

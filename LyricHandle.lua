@@ -65,7 +65,7 @@ if( nil == luavsq.LyricHandle )then
 
         ---
         -- @return (integer)
-        function this:getCount()
+        function this:size()
             return #self.lyrics;
         end
 

@@ -108,7 +108,7 @@ if( nil == luavsq.VibratoBPList )then
 
         ---
         -- @return (integer)
-        function this:getCount()
+        function this:size()
             return #self._list;
         end
 

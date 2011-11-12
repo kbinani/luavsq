@@ -78,10 +78,10 @@ if( nil == luavsq.Event )then
                     return false;
                 end
                 if( self.id.lyricHandle ~= nil and item.id.lyricHandle ~= nil )then
-                    if( self.id.lyricHandle:getCount() ~= item.id.lyricHandle:getCount() )then
+                    if( self.id.lyricHandle:size() ~= item.id.lyricHandle:size() )then
                         return false;
                     end
-                    local count = self.id.lyricHandle:getCount();
+                    local count = self.id.lyricHandle:size();
                     local k;
                     for k = 0, count - 1, 1 do
                         if( not self.id.lyricHandle:getLyricAt( k ):equalsForSynth( item.id.lyricHandle:getLyricAt( k ) ) )then
@@ -154,8 +154,8 @@ if( nil == luavsq.Event )then
                         return false;
                     end
                     if( vibRateThis ~= nil and vibRateItem ~= nil )then
-                        local numRateCount = vibRateThis:getCount();
-                        if( numRateCount ~= vibRateItem:getCount() )then
+                        local numRateCount = vibRateThis:size();
+                        if( numRateCount ~= vibRateItem:size() )then
                             return false;
                         end
                         local k;
@@ -179,8 +179,8 @@ if( nil == luavsq.Event )then
                         return false;
                     end
                     if( vibDepthThis ~= nil and vibDepthItem ~= nil )then
-                        local numDepthCount = vibDepthThis:getCount();
-                        if( numDepthCount ~= vibDepthItem:getCount() )then
+                        local numDepthCount = vibDepthThis:size();
+                        if( numDepthCount ~= vibDepthItem:size() )then
                             return false;
                         end
                         local k;

@@ -118,11 +118,11 @@ function testConstructLyricFromTextStreamStopWithNextHandle()
     assert_equal( 1, #handle.lyrics );
 
     assert_not_nil( handle.rateBP );
-    assert_equal( 0, handle.rateBP:getCount() );
+    assert_equal( 0, handle.rateBP:size() );
     assert_not_nil( handle.depthBP );
-    assert_equal( 0, handle.depthBP:getCount() );
+    assert_equal( 0, handle.depthBP:size() );
     assert_not_nil( handle.dynBP );
-    assert_equal( 0, handle.dynBP:getCount() );
+    assert_equal( 0, handle.dynBP:size() );
 
     local lyric = handle.lyrics[1];
     assert_equal( "あ", lyric.phrase );
@@ -171,9 +171,9 @@ function testConstructVibratoFromTextStreamWithoutBP()
     local handle = luavsq.Handle.new( stream, index, lastLine );
 
     assert_not_nil( handle.rateBP );
-    assert_equal( 0, handle.rateBP:getCount() );
+    assert_equal( 0, handle.rateBP:size() );
     assert_not_nil( handle.depthBP );
-    assert_equal( 0, handle.depthBP:getCount() );
+    assert_equal( 0, handle.depthBP:size() );
 end
 
 function testConstructSingerFromTextStream()
