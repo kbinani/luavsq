@@ -101,4 +101,102 @@ if( nil == luavsq.Util )then
             array[i] = spliced[i - startIndex];
         end
     end
+
+    ---
+    -- ビット演算 AND
+    -- @param a (number)
+    -- @param b (number)
+    -- @return (number)
+    function luavsq.Util.band( ... )
+        local arguments = { ... };
+        if( #arguments == 0 )then
+            return nil;
+        end
+        local j;
+        for j = 1, #arguments, 1 do
+            if( type( arguments[j] ) ~= "number" )then
+                return nil;
+            end
+            arguments[j] = math.floor( arguments[j] );
+        end
+        local result = 0;
+        local i = 0;
+        while( true )do
+            local p = 2 ^ i;
+
+            local exitHere = true;
+            for j = 1, #arguments, 1 do
+                if( arguments[j] >= p )then
+                    exitHere = false;
+                    break;
+                end
+            end
+            if( exitHere )then
+                break;
+            end
+
+            local p2 = p + p;
+            local add = true;
+            for j = 1, #arguments, 1 do
+                if( arguments[j] % p2 < p )then
+                    add = false;
+                    break;
+                end
+            end
+            if( add )then
+                result = result + p;
+            end
+            i = i + 1;
+        end
+        return result;
+    end
+
+    ---
+    -- ビット演算 OR
+    -- @param a (number)
+    -- @param b (number)
+    -- @return (number)
+    function luavsq.Util.bor( ... )
+        local arguments = { ... };
+        if( #arguments == 0 )then
+            return nil;
+        end
+        local j;
+        for j = 1, #arguments, 1 do
+            if( type( arguments[j] ) ~= "number" )then
+                return nil;
+            end
+            arguments[j] = math.floor( arguments[j] );
+        end
+        local result = 0;
+        local i = 0;
+        while( true )do
+            local p = 2 ^ i;
+
+            local exitHere = true;
+            for j = 1, #arguments, 1 do
+                if( arguments[j] >= p )then
+                    exitHere = false;
+                    break;
+                end
+            end
+            if( exitHere )then
+                break;
+            end
+
+            local p2 = p + p;
+            local add = false;
+            for j = 1, #arguments, 1 do
+                if( arguments[j] % p2 >= p )then
+                    add = true;
+                    break;
+                end
+            end
+            if( add )then
+                result = result + p;
+            end
+            i = i + 1;
+        end
+        return result;
+    end
 end

@@ -9,4 +9,3 @@ SourceFilePacker.class: SourceFilePacker.java
 clean:
 	rm luavsq.lua
 	rm SourceFilePacker.class
-

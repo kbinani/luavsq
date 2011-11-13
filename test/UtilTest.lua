@@ -1,6 +1,6 @@
 require( "lunit" );
 dofile( "../Util.lua" );
-module( "enhanced", package.seeall, lunit.testcase );
+module( "UtilTest", package.seeall, lunit.testcase );
 
 function testSplit()
     local value = "\t\tfoo\t\tbar"
@@ -53,4 +53,18 @@ function testSort()
     for i = 1, #expected, 1 do
         assert_equal( expected[i], array[i] );
     end
+end
+
+function testAnd()
+    assert_equal( 0, luavsq.Util.band( 0x1, 0x2 ) );
+    assert_equal( 1, luavsq.Util.band( 0x1, 0x1 ) );
+    assert_equal( 0x6, luavsq.Util.band( 0xf, 0x6 ) );
+    assert_equal( 0x80000000, luavsq.Util.band( 0xC0000000, 0x80000000 ) );
+    assert_equal( 0x0, luavsq.Util.band( 0x0, 0xC0000000, 0x80000000 ) );
+    assert_nil( luavsq.Util.band() );
+end
+
+function testOr()
+    assert_equal( 0xC0000000, luavsq.Util.bor( 0x0, 0x40000000, 0x80000000 ) );
+    assert_nil( luavsq.Util.bor() );
 end

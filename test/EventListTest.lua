@@ -150,7 +150,7 @@ function testRemoveAt()
     assert_equal( 2, list:getElement( 0 ).internalId );
 end
 
-function testGetCount()
+function testSize()
     local list = luavsq.EventList.new();
     assert_equal( 0, list:size() );
     local event = luavsq.Event.new( 0, luavsq.Id.new( 0 ) );

@@ -55,8 +55,6 @@ class SourceFilePacker implements Comparator<File>
             "  luavsq.lua",
             "  Copyright © " + year + " kbinani, All Rights Reserved.",
             "",
-            "  This file is part of luavsq.",
-            "",
             "  luavsq is free software; you can redistribute it and/or",
             "  modify it under the terms of the BSD License.",
             "",
