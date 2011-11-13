@@ -3,7 +3,7 @@ dofile( "../Id.lua" );
 dofile( "../IdType.lua" );
 dofile( "../IconHandle.lua" );
 dofile( "../LyricHandle.lua" );
-dofile( "../ArticulationType.lua" );
+dofile( "../ArticulationEnum.lua" );
 dofile( "../Lyric.lua" );
 dofile( "../VibratoHandle.lua" );
 dofile( "../IconParameter.lua" );
@@ -20,7 +20,7 @@ function testConstructWithValue()
     assert_equal( 0, id.lyricHandleIndex );
     assert_equal( 0, id.vibratoHandleIndex );
     assert_equal( 0, id.noteHeadHandleIndex );
-    assert_equal( luavsq.IdType.Note, id.type );
+    assert_equal( luavsq.IdTypeEnum.Note, id.type );
     assert_nil( id.iconHandle );
     assert_equal( 0, id.note );
     assert_equal( 0, id.dynamics );
@@ -55,7 +55,7 @@ end
 function testClone()
     local id = luavsq.Id.new( 0 );
     id.value = 1;
-    id.type = luavsq.IdType.Note;
+    id.type = luavsq.IdTypeEnum.Note;
     id.note = 6;
     id.dynamics = 7;
     id.pmBendDepth = 8;
@@ -76,7 +76,7 @@ function testClone()
 
     local copy = id:clone();
     assert_equal( 1, copy.value );
-    assert_equal( luavsq.IdType.Note, copy.type );
+    assert_equal( luavsq.IdTypeEnum.Note, copy.type );
     assert_equal( 6, copy.note );
     assert_equal( 7, copy.dynamics );
     assert_equal( 8, copy.pmBendDepth );

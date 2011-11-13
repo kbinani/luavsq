@@ -1,6 +1,6 @@
 require( "lunit" );
 dofile( "../LyricHandle.lua" );
-dofile( "../ArticulationType.lua" );
+dofile( "../ArticulationEnum.lua" );
 dofile( "../Lyric.lua" );
 dofile( "../Util.lua" );
 dofile( "../PhoneticSymbol.lua" );
@@ -44,7 +44,7 @@ function testCastToHandle()
     local lyricHandle = luavsq.LyricHandle.new( "ら", "4 a" );
     lyricHandle.index = 10;
     local handle = lyricHandle:castToHandle();
-    assert_equal( luavsq.HandleType.Lyric, handle._type );
+    assert_equal( luavsq.HandleTypeEnum.Lyric, handle._type );
     assert_equal( 1, #handle.lyrics );
     assert_equal( "ら", handle.lyrics[1].phrase );
     assert_equal( "4 a", handle.lyrics[1]:getPhoneticSymbol() );

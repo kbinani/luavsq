@@ -199,12 +199,12 @@ if( nil == luavsq.Event )then
                 if( self.id.vMeanNoteTransition ~= item.id.vMeanNoteTransition )then
                     return false;
                 end
-            elseif( self.id.type == luavsq.IdType.Singer )then
+            elseif( self.id.type == luavsq.IdTypeEnum.Singer )then
                 -- シンガーイベントの比較
                 if( self.id.iconHandle.program ~= item.id.iconHandle.program )then
                     return false;
                 end
-            elseif( self.id.type == luavsq.IdType.Aicon )then
+            elseif( self.id.type == luavsq.IdTypeEnum.Aicon )then
                 if( self.id.iconDynamicsHandle.iconId ~= item.id.iconDynamicsHandle.iconId )then
                     return false;
                 end
@@ -250,8 +250,8 @@ if( nil == luavsq.Event )then
         -- @param print_targets [vector<string>]
         function this:_write_2( writer, print_targets )
             writer:writeLine( "[ID#" .. string.format( "%04d", self.id.value ) .. "]" );
-            writer:writeLine( "Type=" .. luavsq.IdType.toString( self.id.type ) );
-            if( self.id.type == luavsq.IdType.Anote )then
+            writer:writeLine( "Type=" .. luavsq.IdTypeEnum.toString( self.id.type ) );
+            if( self.id.type == luavsq.IdTypeEnum.Anote )then
                 if( luavsq.Util.searchArray( print_targets, "Length" ) >= 1 )then
                     writer:writeLine( "Length=" .. self.id:getLength() );
                 end
@@ -292,9 +292,9 @@ if( nil == luavsq.Event )then
                 if( self.id.noteHeadHandle ~= nil )then
                     writer:writeLine( "NoteHeadHandle=h#" .. string.format( "%04d", self.id.noteHeadHandleIndex ) );
                 end
-            elseif( self.id.type == luavsq.IdType.Singer )then
+            elseif( self.id.type == luavsq.IdTypeEnum.Singer )then
                 writer:writeLine( "IconHandle=h#" .. string.format( "%04d", self.id.iconHandleIndex ) );
-            elseif( self.id.type == luavsq.IdType.Aicon )then
+            elseif( self.id.type == luavsq.IdTypeEnum.Aicon )then
                 writer:writeLine( "IconHandle=h#" .. string.format( "%04d", self.id.iconHandleIndex ) );
                 writer:writeLine( "Note#=" .. self.id.note );
             end

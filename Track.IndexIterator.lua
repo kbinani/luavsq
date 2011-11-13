@@ -37,28 +37,28 @@ if( nil == luavsq.Track.IndexIterator )then
         this._kindSinger =
             luavsq.Util.band(
                 iteratorKind,
-                luavsq.Track.IndexIteratorKind.SINGER
-            ) == luavsq.Track.IndexIteratorKind.SINGER;
+                luavsq.Track.IndexIteratorKindEnum.SINGER
+            ) == luavsq.Track.IndexIteratorKindEnum.SINGER;
         this._kindNote =
             luavsq.Util.band(
                 iteratorKind,
-                luavsq.Track.IndexIteratorKind.NOTE
-            ) == luavsq.Track.IndexIteratorKind.NOTE;
+                luavsq.Track.IndexIteratorKindEnum.NOTE
+            ) == luavsq.Track.IndexIteratorKindEnum.NOTE;
         this._kindCrescend =
             luavsq.Util.band(
                 iteratorKind,
-                luavsq.Track.IndexIteratorKind.CRESCEND
-            ) == luavsq.Track.IndexIteratorKind.CRESCEND;
+                luavsq.Track.IndexIteratorKindEnum.CRESCEND
+            ) == luavsq.Track.IndexIteratorKindEnum.CRESCEND;
         this._kindDecrescend =
             luavsq.Util.band(
                 iteratorKind,
-                luavsq.Track.IndexIteratorKind.DECRESCEND
-            ) == luavsq.Track.IndexIteratorKind.DECRESCEND;
+                luavsq.Track.IndexIteratorKindEnum.DECRESCEND
+            ) == luavsq.Track.IndexIteratorKindEnum.DECRESCEND;
         this._kindDynaff =
             luavsq.Util.band(
                 iteratorKind,
-                luavsq.Track.IndexIteratorKind.DYNAFF
-            ) == luavsq.Track.IndexIteratorKind.DYNAFF;
+                luavsq.Track.IndexIteratorKindEnum.DYNAFF
+            ) == luavsq.Track.IndexIteratorKindEnum.DYNAFF;
 
         ---
         -- @return [int]
@@ -86,17 +86,17 @@ if( nil == luavsq.Track.IndexIterator )then
             for i = self._pos + 1, count, 1 do
                 local item = self._list:getElement( i - 1 );
                 if( self._kindSinger )then
-                    if( item.id.type == luavsq.IdType.Singer )then
+                    if( item.id.type == luavsq.IdTypeEnum.Singer )then
                         return i;
                     end
                 end
                 if( self._kindNote )then
-                    if( item.id.type == luavsq.IdType.Anote )then
+                    if( item.id.type == luavsq.IdTypeEnum.Anote )then
                         return i;
                     end
                 end
                 if( self._kindDynaff or self._kindCrescend or self._kindDecrescend )then
-                    if( item.id.type == luavsq.IdType.Aicon and item.id.iconDynamicsHandle ~= nil and item.id.iconDynamicsHandle.iconId ~= nil )then
+                    if( item.id.type == luavsq.IdTypeEnum.Aicon and item.id.iconDynamicsHandle ~= nil and item.id.iconDynamicsHandle.iconId ~= nil )then
                         local iconid = item.id.iconDynamicsHandle.iconId;
                         if( self._kindDynaff )then
                             if( iconid:find( luavsq.IconDynamicsHandle.ICONID_HEAD_DYNAFF ) == 1 )then

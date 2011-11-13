@@ -24,7 +24,7 @@ if( nil == luavsq.NoteHeadHandle )then
         local arguments = { ... };
         local this = luavsq.IconParameter.new();
 
-        this.articulation = luavsq.ArticulationType.NoteAttack;
+        this.articulation = luavsq.ArticulationTypeEnum.NoteAttack;
         this.index = 0;
         this.iconId = "";
         this.ids = "";
@@ -113,7 +113,7 @@ if( nil == luavsq.NoteHeadHandle )then
         -- @return [VsqHandle]
         function this:castToHandle()
             local ret = luavsq.Handle.new();
-            ret._type = luavsq.HandleType.NoteHeadHandle;
+            ret._type = luavsq.HandleTypeEnum.NoteHead;
             ret.index = self.index;
             ret.iconId = self.iconId;
             ret.ids = self.ids;

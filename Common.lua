@@ -42,13 +42,13 @@ if( nil == luavsq.Common )then
         this.color = "179,181,123";
 
         -- Dynamicsカーブを表示するモード(Expert)なら1、しない(Standard)なら0。
-        this.dynamicsMode = luavsq.DynamicsMode.Expert;
+        this.dynamicsMode = luavsq.DynamicsModeEnum.Expert;
 
         -- Play With Synthesisなら1、Play After Synthesiなら0、Offなら-1。
-        this.playMode = luavsq.PlayMode.PlayWithSynth;
+        this.playMode = luavsq.PlayModeEnum.PlayWithSynth;
 
         -- PlayModeがOff(-1)にされる直前に，PlayAfterSynthかPlayWithSynthのどちらが指定されていたかを記憶しておく．
-        this.lastPlayMode = luavsq.PlayMode.PlayWithSynth;
+        this.lastPlayMode = luavsq.PlayModeEnum.PlayWithSynth;
 
         ---
         -- @param sr [TextStream]

@@ -31,7 +31,7 @@ if( nil == luavsq.LyricHandle )then
     function luavsq.LyricHandle.new( ... )
         local arguments = { ... };
         local this = {};
-        this.articulation = luavsq.ArticulationType.Vibrato;
+        this.articulation = luavsq.ArticulationTypeEnum.Vibrato;
 
         ---
         -- @var index (integer)
@@ -86,7 +86,7 @@ if( nil == luavsq.LyricHandle )then
         -- @return (luavsq.Handle)
         function this:castToHandle()
             local result = luavsq.Handle.new();
-            result._type = luavsq.HandleType.Lyric;
+            result._type = luavsq.HandleTypeEnum.Lyric;
             result.lyrics = self.lyrics;
             result.index = self.index;
             return result;

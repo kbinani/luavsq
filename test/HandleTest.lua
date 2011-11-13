@@ -10,7 +10,7 @@ dofile( "../IconHandle.lua" );
 dofile( "../VibratoHandle.lua" );
 dofile( "../IconDynamicsHandle.lua" );
 dofile( "../IconParameter.lua" );
-dofile( "../ArticulationType.lua" );
+dofile( "../ArticulationEnum.lua" );
 dofile( "../NoteHeadHandle.lua" );
 dofile( "../LyricHandle.lua" );
 module( "HandleTest", package.seeall, lunit.testcase );
@@ -95,7 +95,7 @@ function testConstructLyricFromTextStreamStopWithEOF()
     local index = 100;
 
     local handle = luavsq.Handle.new( stream, index, lastLine );
-    assert_equal( luavsq.HandleType.Lyric, handle._type );
+    assert_equal( luavsq.HandleTypeEnum.Lyric, handle:getHandleType() );
     assert_equal( index, handle.index );
     assert_equal( 2, #handle.lyrics );
 
@@ -127,7 +127,7 @@ function testConstructLyricFromTextStreamStopWithNextHandle()
     local index = 100;
 
     local handle = luavsq.Handle.new( stream, index, lastLine );
-    assert_equal( luavsq.HandleType.Lyric, handle._type );
+    assert_equal( luavsq.HandleTypeEnum.Lyric, handle:getHandleType() );
     assert_equal( index, handle.index );
     assert_equal( 1, #handle.lyrics );
 
@@ -154,7 +154,7 @@ function testConstructVibratoFromTextStream()
     local index = 101;
     local handle = luavsq.Handle.new( stream, index, lastLine );
 
-    assert_equal( luavsq.HandleType.Vibrato, handle._type );
+    assert_equal( luavsq.HandleTypeEnum.Vibrato, handle:getHandleType() );
     assert_equal( "$04040004", handle.iconId );
     assert_equal( "normal-da-yo", handle.ids );
     assert_equal( "キャプションです=あ", handle.caption );
@@ -196,7 +196,7 @@ function testConstructSingerFromTextStream()
     local lastLine = { ["value"] = "" };
     local handle = luavsq.Handle.new( stream, index, lastLine );
     assert_equal( index, handle.index );
-    assert_equal( luavsq.HandleType.Singer, handle._type );
+    assert_equal( luavsq.HandleTypeEnum.Singer, handle:getHandleType() );
     assert_equal( "$07010002", handle.iconId );
     assert_equal( "Miku3=God", handle.ids );
     assert_equal( 2, handle.original );
@@ -211,7 +211,7 @@ function testConstructAttackFromTextStream()
     local lastLine = { ["value"] = "" };
     local index = 204;
     local handle = luavsq.Handle.new( stream, index, lastLine );
-    assert_equal( luavsq.HandleType.NoteHead, handle._type );
+    assert_equal( luavsq.HandleTypeEnum.NoteHead, handle:getHandleType() );
     assert_equal( index, handle.index );
     assert_equal( "$01010002", handle.iconId );
     assert_equal( "accent", handle.ids );
@@ -228,7 +228,7 @@ function testConstructCrescendFromTextStream()
     local index = 204;
     local handle = luavsq.Handle.new( stream, index, lastLine );
     assert_equal( index, handle.index );
-    assert_equal( luavsq.HandleType.Dynamics, handle._type );
+    assert_equal( luavsq.HandleTypeEnum.Dynamics, handle:getHandleType() );
     assert_equal( "$05020001", handle.iconId );
     assert_equal( "Crescendo", handle.ids );
     assert_equal( 4, handle.original );

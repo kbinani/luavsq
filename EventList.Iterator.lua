@@ -1,5 +1,5 @@
 --[[
-  Track.EventIterator.lua
+  EventList.Iterator.lua
   Copyright © 2011 kbinani
 
   This file is part of luavsq.
@@ -16,15 +16,15 @@ if( nil == luavsq )then
     luavsq = {};
 end
 
-if( nil == luavsq.Track )then
-    luavsq.Track = {};
+if( nil == luavsq.EventList )then
+    luavsq.EventList = {};
 end
 
-if( nil == luavsq.Track.EventIterator )then
+if( nil == luavsq.EventList.Iterator )then
 
-    luavsq.Track.EventIterator = {};
+    luavsq.EventList.Iterator = {};
 
-    function luavsq.Track.EventIterator.new( list )
+    function luavsq.EventList.Iterator.new( list )
         local this = {};
         this._list = list;
         this._pos = -1;

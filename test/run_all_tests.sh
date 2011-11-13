@@ -3,7 +3,7 @@ luavsqPath=$thisDirectory/../tool/luavsq.lua
 (
     cd $thisDirectory/../tool/
     make
-) > /dev/null
+) 1> /dev/null
 
 files=`ls $thisDirectory/*Test.lua`
 
@@ -13,12 +13,11 @@ for filePath in $files
 do
     file=`basename $filePath`
     {
-        echo "require( \"lunit\" );";
-        echo "dofile( \"$luavsqPath\" );";
-        cat $filePath | sed -e "s/^dofile.*$//g" | sed -e "s/^require.*;$//g";
-    } > /tmp/$file
+        echo "require( \"lunit\" );dofile( \"$luavsqPath\" );";
+        cat $filePath | sed -e '1d' | sed -e "s/^dofile.*$//g" | sed -e "s/^require.*;$//g";
+    } 1> /tmp/$file
     tmpTestFiles="$tmpTestFiles /tmp/$file"
 done
 
-lunit $tmpTestFiles
+lunit $tmpTestFiles | sed -e "s/^\\/tmp\\///g"
 rm $tmpTestFiles

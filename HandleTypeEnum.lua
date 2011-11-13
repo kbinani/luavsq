@@ -1,5 +1,5 @@
 --[[
-  HandleType.lua
+  HandleTypeEnum.lua
   Copyright © 2011 kbinani
 
   This file is part of luavsq.
@@ -16,14 +16,14 @@ if( nil == luavsq )then
     luavsq = {};
 end
 
-if( nil == luavsq.HandleType )then
+if( nil == luavsq.HandleTypeEnum )then
 
-    luavsq.HandleType = {};
+    luavsq.HandleTypeEnum = {};
 
-    luavsq.HandleType.Lyric = 0;
-    luavsq.HandleType.Vibrato = 1;
-    luavsq.HandleType.Singer = 2;
-    luavsq.HandleType.NoteHead = 3;
-    luavsq.HandleType.Dynamics = 4;
+    luavsq.HandleTypeEnum.Lyric = 0;
+    luavsq.HandleTypeEnum.Vibrato = 1;
+    luavsq.HandleTypeEnum.Singer = 2;
+    luavsq.HandleTypeEnum.NoteHead = 3;
+    luavsq.HandleTypeEnum.Dynamics = 4;
 
 end

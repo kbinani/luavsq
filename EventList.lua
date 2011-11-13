@@ -90,12 +90,12 @@ if( nil == luavsq.EventList )then
             self._ids = {};
         end
 
-        --[[
+        --
         -- @return [ArrayIterator(VsqEven)]
         function this:iterator()
             self:updateIdList();
-            return new org.kbinani.ArrayIterator( self._events );
-        end]]
+            return luavsq.EventList.Iterator.new( self );
+        end
 
         ---
         -- overload1
@@ -200,6 +200,101 @@ if( nil == luavsq.EventList )then
             for i = 1, count, 1 do
                 self._ids[i] = self._events[i].internalId;
             end
+        end
+
+        ---
+        -- @param writer [ITextWriter]
+        -- @param eos [int]
+        -- @return [Vector<VsqHandle>]
+        function this:write( writer, eos )
+            local handles = self:_buildHandleList();
+            writer:writeLine( "[EventList]" );
+            local temp = {};--new Vector<VsqEvent>();
+            local itr = self:iterator();
+            while( itr:hasNext() )do
+                table.insert( temp, itr:next() );
+            end
+            table.sort( temp, luavsq.EventList.comparator );--Collections.sort( temp );
+            local i = 1;
+            while( i <= #temp )do
+                local item = temp[i];
+                if( not item.id:isEOS() )then
+                    local ids = "ID#" .. string.format( "%04d", item.id.value );
+                    local clock = temp[i].clock;
+                    while( i + 1 <= #temp and clock == temp[i + 1].clock )do
+                        i = i + 1;
+                        ids = ids .. ",ID#" .. string.format( "%04d", temp[i].id.value );
+                    end
+                    writer:writeLine( clock .. "=" .. ids );
+                end
+                i = i + 1;
+            end
+            writer:writeLine( eos .. "=EOS" );
+            return handles;
+        end
+
+        ---
+        -- このインスタンスから、Handleのリストを作成すると同時に、
+        -- Eventsに登録されているVsqEventのvalue値および各ハンドルのvalue値を更新します
+        --
+        -- @return [Vector<VsqHandle>]
+        function this:_buildHandleList()
+            local handle = {};
+            local current_id = -1;
+            local current_handle = -1;
+            local add_quotation_mark = true;
+            local itr = self:iterator();
+            while( itr:hasNext() )do
+                local item = itr:next();
+                current_id = current_id + 1;
+                item.id.value = current_id;
+                -- IconHandle
+                if( item.id.iconHandle ~= nil )then
+                    local ish = item.id.iconHandle;
+                    current_handle = current_handle + 1;
+                    local handle_item = ish:castToHandle();
+                    handle_item.index = current_handle;
+                    table.insert( handle, handle_item );
+                    item.id.iconHandleIndex = current_handle;
+                    local lang = luavsq.VoiceLanguageEnum.valueFromSingerName( ish.ids );
+                    add_quotation_mark = lang == luavsq.VoiceLanguageEnum.Japanese;
+                end
+                -- LyricHandle
+                if( item.id.lyricHandle ~= nil )then
+                    current_handle = current_handle + 1;
+                    local handle_item = item.id.lyricHandle:castToHandle();
+                    handle_item.index = current_handle;
+                    handle_item.addQuotationMark = add_quotation_mark;
+                    table.insert( handle, handle_item );
+                    item.id.lyricHandleIndex = current_handle;
+                end
+                -- VibratoHandle
+                if( item.id.vibratoHandle ~= nil )then
+                    current_handle = current_handle + 1;
+                    local handle_item = item.id.vibratoHandle:castToHandle();
+                    handle_item.index = current_handle;
+                    table.insert( handle, handle_item );
+                    item.id.vibratoHandleIndex = current_handle;
+                end
+                -- NoteHeadHandle
+                if( item.id.noteHeadHandle ~= nil )then
+                    current_handle = current_handle + 1;
+                    local handle_item = item.id.noteHeadHandle:castToHandle();
+                    handle_item.index = current_handle;
+                    table.insert( handle, handle_item );
+                    item.id.noteHeadHandleIndex = current_handle;
+                end
+                -- IconDynamicsHandle
+                if( item.id.iconDynamicsHandle ~= nil )then
+                    current_handle = current_handle + 1;
+                    local handle_item = item.id.iconDynamicsHandle:castToHandle();
+                    handle_item.index = current_handle;
+                    handle_item:setLength( item.id:getLength() );
+                    table.insert( handle, handle_item );
+                    item.id.iconHandleIndex = current_handle;
+                end
+            end
+            return handle;
         end
 
         return this;

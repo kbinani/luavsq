@@ -3,6 +3,6 @@ dofile( "../DynamicsMode.lua" );
 module( "DynamicsModeTest", package.seeall, lunit.testcase );
 
 function test()
-    assert_equal( 0, luavsq.DynamicsMode.Standard );
-    assert_equal( 1, luavsq.DynamicsMode.Expert );
+    assert_equal( 0, luavsq.DynamicsModeEnum.Standard );
+    assert_equal( 1, luavsq.DynamicsModeEnum.Expert );
 end

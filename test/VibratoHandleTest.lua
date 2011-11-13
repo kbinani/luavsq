@@ -1,7 +1,7 @@
 require( "lunit" );
 dofile( "../VibratoHandle.lua" );
 dofile( "../IconParameter.lua" );
-dofile( "../ArticulationType.lua" );
+dofile( "../ArticulationEnum.lua" );
 dofile( "../VibratoBPList.lua" );
 dofile( "../VibratoBP.lua" );
 dofile( "../Handle.lua" );
@@ -107,7 +107,7 @@ function testCastToHandle()
     vibratoHandle:setRateBP( luavsq.VibratoBPList.new( { 0.0, 1.0 }, { 64, 128 } ) );
 
     local handle = vibratoHandle:castToHandle();
-    assert_equal( luavsq.HandleType.Vibrato, handle._type );
+    assert_equal( luavsq.HandleTypeEnum.Vibrato, handle._type );
     assert_equal( 1, handle.index );
     assert_equal( "hahaha", handle.iconId );
     assert_equal( "baka", handle.ids );

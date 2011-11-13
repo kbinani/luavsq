@@ -1,5 +1,5 @@
 --[[
-  DynamicsMode.lua
+  DynamicsModeEnum.lua
   Copyright © 2011 kbinani
 
   This file is part of luavsq.
@@ -16,18 +16,18 @@ if( nil == luavsq )then
     luavsq = {};
 end
 
-if( nil == luavsq.DynamicsMode )then
+if( nil == luavsq.DynamicsModeEnum )then
 
     ---
     -- VOCALOID1における、ダイナミクスモードを表す定数を格納するためのクラスです。
-    luavsq.DynamicsMode = {};
+    luavsq.DynamicsModeEnum = {};
 
     ---
     -- デフォルトのダイナミクスモードです。DYNカーブが非表示になるモードです。
-    luavsq.DynamicsMode.Standard = 0;
+    luavsq.DynamicsModeEnum.Standard = 0;
 
     ---
     -- エキスパートモードです。DYNカーブが表示されます。
-    luavsq.DynamicsMode.Expert = 1;
+    luavsq.DynamicsModeEnum.Expert = 1;
 
 end

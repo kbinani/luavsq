@@ -25,7 +25,7 @@ if( nil == luavsq.Handle )then
     function luavsq.Handle.new( ... )
         local arguments = { ... };
         local this = {};
-        this._type = luavsq.HandleType.Lyric;
+        this._type = luavsq.HandleTypeEnum.Lyric;
         this.index = 0;
         this.iconId = "";
         this.ids = "";
@@ -60,6 +60,13 @@ if( nil == luavsq.Handle )then
         -- @return [void]
         function this:setLength( value )
             self.length = value;
+        end
+
+        ---
+        -- このハンドルのタイプを取得する
+        -- @return (luavsq.HandleTypeEnum)
+        function this:getHandleType()
+            return self._type;
         end
 
         ---
@@ -151,7 +158,7 @@ if( nil == luavsq.Handle )then
             local spl2;
 
             -- default値で埋める
-            self._type = luavsq.HandleType.Vibrato;
+            self._type = luavsq.HandleTypeEnum.Vibrato;
             self.iconId = "";
             self.ids = "normal";
             self.lyrics = { luavsq.Lyric.new( "" ) };
@@ -185,7 +192,7 @@ if( nil == luavsq.Handle )then
                 spl = luavsq.Util.split( last_line.value, '=' );
                 local search = spl[1];
                 if( search == "Language" )then
-                    self._type = luavsq.HandleType.Singer;
+                    self._type = luavsq.HandleTypeEnum.Singer;
                     self.language = tonumber( spl[2], 10 );
                 elseif( search == "Program" )then
                     self.program = tonumber( spl[2], 10 );
@@ -214,7 +221,7 @@ if( nil == luavsq.Handle )then
                 elseif( search == "DepthBPY" )then
                     tmpDepthBPY = spl[2];
                 elseif( search == "StartRate" )then
-                    self._type = luavsq.HandleType.Vibrato;
+                    self._type = luavsq.HandleTypeEnum.Vibrato;
                     self.startRate = tonumber( spl[2], 10 );
                 elseif( search == "RateBPNum" )then
                     tmpRateBPNum = spl[2];
@@ -223,15 +230,15 @@ if( nil == luavsq.Handle )then
                 elseif( search == "RateBPY" )then
                     tmpRateBPY = spl[2];
                 elseif( search == "Duration" )then
-                    self._type = luavsq.HandleType.NoteHead;
+                    self._type = luavsq.HandleTypeEnum.NoteHead;
                     self.duration = tonumber( spl[2], 10 );
                 elseif( search == "Depth" )then
                     self.depth = tonumber( spl[2], 10 );
                 elseif( search == "StartDyn" )then
-                    self._type = luavsq.HandleType.Dynamics;
+                    self._type = luavsq.HandleTypeEnum.Dynamics;
                     self.startDyn = tonumber( spl[2], 10 );
                 elseif( search == "EndDyn" )then
-                    self._type = luavsq.HandleType.Dynamics;
+                    self._type = luavsq.HandleTypeEnum.Dynamics;
                     self.endDyn = tonumber( spl[2], 10 );
                 elseif( search == "DynBPNum" )then
                     tmpDynBPNum = spl[2];
@@ -243,7 +250,7 @@ if( nil == luavsq.Handle )then
                     local num = search:sub( 2, 2 );
                     if( nil ~= tonumber( num ) )then
                         local lyric = luavsq.Lyric.new( spl[2] );
-                        self._type = luavsq.HandleType.Lyric;
+                        self._type = luavsq.HandleTypeEnum.Lyric;
                         local index = tonumber( num );
                         self.lyrics[index + 1] = lyric;
                     end
@@ -255,7 +262,7 @@ if( nil == luavsq.Handle )then
             end
 
             -- RateBPX, RateBPYの設定
-            if( self._type == luavsq.HandleType.Vibrato )then
+            if( self._type == luavsq.HandleTypeEnum.Vibrato )then
                 if( tmpRateBPNum ~= "" )then
                     self.rateBP = luavsq.VibratoBPList.new( tmpRateBPNum, tmpRateBPX, tmpRateBPY );
                 else
@@ -286,11 +293,11 @@ if( nil == luavsq.Handle )then
         function this:toString()
             local result = "";
             result = result .. "[h#" .. string.format( "%04d", self.index ) .. "]";
-            if( self._type == luavsq.HandleType.Lyric )then
+            if( self._type == luavsq.HandleTypeEnum.Lyric )then
                 for i = 1, #self.lyrics, 1 do
                     result = result .. "\n" .. "L" .. (i - 1) .. "=" .. self.lyrics[i]:toString( self.addQuotationMark );
                 end
-            elseif( self._type == luavsq.HandleType.Vibrato )then
+            elseif( self._type == luavsq.HandleTypeEnum.Vibrato )then
                 result = result .. "\n" .. "IconID=" .. self.iconId .. "\n";
                 result = result .. "IDS=" .. self.ids .. "\n";
                 result = result .. "Original=" .. self.original .. "\n";
@@ -321,7 +328,7 @@ if( nil == luavsq.Handle )then
                         result = result .. "," .. self.rateBP:getElement( i ).y;
                     end
                 end
-            elseif( self._type == luavsq.HandleType.Singer )then
+            elseif( self._type == luavsq.HandleTypeEnum.Singer )then
                 result = result .. "\n" .. "IconID=" .. self.iconId .. "\n";
                 result = result .. "IDS=" .. self.ids .. "\n";
                 result = result .. "Original=" .. self.original .. "\n";
@@ -329,7 +336,7 @@ if( nil == luavsq.Handle )then
                 result = result .. "Length=" .. self.length .. "\n";
                 result = result .. "Language=" .. self.language .. "\n";
                 result = result .. "Program=" .. self.program;
-            elseif( self._type == luavsq.HandleType.NoteHead )then
+            elseif( self._type == luavsq.HandleTypeEnum.NoteHead )then
                 result = result .. "\n" .. "IconID=" .. self.iconId .. "\n";
                 result = result .. "IDS=" .. self.ids .. "\n";
                 result = result .. "Original=" .. self.original .. "\n";
@@ -337,7 +344,7 @@ if( nil == luavsq.Handle )then
                 result = result .. "Length=" .. self.length .. "\n";
                 result = result .. "Duration=" .. self.duration .. "\n";
                 result = result .. "Depth=" .. self.depth;
-            elseif( self._type == luavsq.HandleType.Dynamics )then
+            elseif( self._type == luavsq.HandleTypeEnum.Dynamics )then
                 result = result .. "\n" .. "IconID=" .. self.iconId .. "\n";
                 result = result .. "IDS=" .. self.ids .. "\n";
                 result = result .. "Original=" .. self.original .. "\n";

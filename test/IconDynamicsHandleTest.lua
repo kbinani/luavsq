@@ -1,7 +1,7 @@
 require( "lunit" );
 dofile( "../IconDynamicsHandle.lua" );
 dofile( "../IconParameter.lua" );
-dofile( "../ArticulationType.lua" );
+dofile( "../ArticulationEnum.lua" );
 dofile( "../Handle.lua" );
 dofile( "../VibratoBPList.lua" );
 dofile( "../HandleType.lua" );
@@ -10,7 +10,7 @@ module( "IconDynamicsHandleTest", package.seeall, lunit.testcase );
 
 function testConstruct()
     local handle = luavsq.IconDynamicsHandle.new();
-    assert_equal( luavsq.ArticulationType.Dynaff, handle.articulation );
+    assert_equal( luavsq.ArticulationTypeEnum.Dynaff, handle.articulation );
 end
 
 function testIsDynaffType()

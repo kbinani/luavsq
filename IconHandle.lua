@@ -98,7 +98,7 @@ if( nil == luavsq.IconHandle )then
         -- @return (luavsq.Handle)
         function this:castToHandle()
             local ret = luavsq.Handle.new();
-            ret._type = luavsq.HandleType.Singer;
+            ret._type = luavsq.HandleTypeEnum.Singer;
             ret.caption = self.caption;
             ret.iconId = self.iconId;
             ret.ids = self.ids;

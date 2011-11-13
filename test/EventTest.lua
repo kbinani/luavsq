@@ -6,7 +6,7 @@ dofile( "../IdType.lua" );
 dofile( "../IconHandle.lua" );
 dofile( "../TextStream.lua" );
 dofile( "../LyricHandle.lua" );
-dofile( "../ArticulationType.lua" );
+dofile( "../ArticulationEnum.lua" );
 dofile( "../Lyric.lua" );
 dofile( "../VibratoHandle.lua" );
 dofile( "../IconParameter.lua" );
@@ -16,7 +16,7 @@ module( "EventTest", package.seeall, lunit.testcase );
 
 function getNoteId()
     local noteId = luavsq.Id.new( 1 );
-    noteId.type = luavsq.IdType.Anote;
+    noteId.type = luavsq.IdTypeEnum.Anote;
     noteId:setLength( 2 );
     noteId.note = 6;
     noteId.dynamics = 21;
@@ -39,7 +39,7 @@ end
 
 function getSingerId()
     local singerId = luavsq.Id.new( 15 );
-    singerId.type = luavsq.IdType.Singer;
+    singerId.type = luavsq.IdTypeEnum.Singer;
     singerId.iconHandle = nil;
     singerId.iconHandleIndex = 16;
     return singerId;
@@ -47,7 +47,7 @@ end
 
 function getIconId()
     local iconId = luavsq.Id.new( 17 );
-    iconId.type = luavsq.IdType.Aicon;
+    iconId.type = luavsq.IdTypeEnum.Aicon;
     iconId.iconHandle = nil;
     iconId.iconHandleIndex = 18;
     iconId.note = 19;

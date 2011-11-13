@@ -9,7 +9,7 @@ module( "Track.NoteEventIteratorTest", package.seeall, lunit.testcase );
 function test()
     local list = luavsq.EventList.new();
     local a = luavsq.Event.new( 1920, luavsq.Id.new( 0 ) );
-    a.id.type = luavsq.IdType.Aicon;
+    a.id.type = luavsq.IdTypeEnum.Aicon;
     local idA = list:add( a, 1 );
 
     -- note イベントがひとつも無いので、最初から hasNext が false を返す
@@ -18,19 +18,19 @@ function test()
 
     -- note イベントをひとつ足してテスト
     local b = luavsq.Event.new( 480, luavsq.Id.new( 0 ) );
-    b.id.type = luavsq.IdType.Anote;
+    b.id.type = luavsq.IdTypeEnum.Anote;
     local idB = list:add( b, 2 );
     iterator = luavsq.Track.NoteEventIterator.new( list );
     assert_true( iterator:hasNext() );
     local event = iterator:next();
     assert_equal( 480, event.clock );
     assert_equal( 2, event.internalId );
-    assert_equal( luavsq.IdType.Anote, event.id.type );
+    assert_equal( luavsq.IdTypeEnum.Anote, event.id.type );
     assert_false( iterator:hasNext() );
 
     -- remove 後の残っているイベントをチェック
     local c = luavsq.Event.new( 2000, luavsq.Id.new( 0 ) );
-    c.id.type = luavsq.IdType.Anote;
+    c.id.type = luavsq.IdTypeEnum.Anote;
     list:add( c, 3 );
     iterator = luavsq.Track.NoteEventIterator.new( list );
     iterator:next(); --clock=480のを取得
@@ -42,5 +42,5 @@ function test()
     assert_false( iterator:hasNext() );
     assert_equal( 1, list:size() );
     assert_equal( 1920, list:getElement( 0 ).clock );
-    assert_equal( luavsq.IdType.Aicon, list:getElement( 0 ).id.type );
+    assert_equal( luavsq.IdTypeEnum.Aicon, list:getElement( 0 ).id.type );
 end

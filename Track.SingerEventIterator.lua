@@ -35,7 +35,7 @@ if( nil == luavsq.Track.SingerEventIterator )then
             local num = self._list:size();
             local i;
             for i = self._pos + 1, num, 1 do
-                if( self._list:getElement( i - 1 ).id.type == luavsq.IdType.Singer )then
+                if( self._list:getElement( i - 1 ).id.type == luavsq.IdTypeEnum.Singer )then
                     return true;
                 end
             end
@@ -49,7 +49,7 @@ if( nil == luavsq.Track.SingerEventIterator )then
             local i;
             for i = self._pos + 1, num, 1 do
                 local item = self._list:getElement( i - 1 );
-                if( item.id.type == luavsq.IdType.Singer )then
+                if( item.id.type == luavsq.IdTypeEnum.Singer )then
                     self._pos = i;
                     return item;
                 end

@@ -12,7 +12,7 @@
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 ]]
 
--- requires( ArticulationType.lua )
+-- requires( ArticulationEnum.lua )
 
 if( nil == luavsq )then
     luavsq = {};
@@ -30,8 +30,8 @@ if( nil == luavsq.IconParameter )then
 
         ---
         -- アイコン設定の種類
-        -- @var (luavsq.ArticulationType)
-        this.articulation = luavsq.ArticulationType.Dynaff;
+        -- @var (luavsq.ArticulationTypeEnum)
+        this.articulation = luavsq.ArticulationTypeEnum.Dynaff;
 
         ---
         -- アイコンのボタンに使用される画像ファイルへの相対パス

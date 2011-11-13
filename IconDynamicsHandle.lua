@@ -35,7 +35,7 @@ if( nil == luavsq.IconDynamicsHandle )then
     function luavsq.IconDynamicsHandle.new()
         local this = luavsq.IconParameter.new();
 
-        this.articulation = luavsq.ArticulationType.Dynaff;
+        this.articulation = luavsq.ArticulationTypeEnum.Dynaff;
 
         ---
         -- このハンドルが強弱記号を表すものかどうかを表すブール値を取得します。
@@ -93,7 +93,7 @@ if( nil == luavsq.IconDynamicsHandle )then
         -- @return [VsqHandle]
         function this:castToHandle()
             local ret = luavsq.Handle.new();
-            ret._type = luavsq.HandleType.DynamicsHandle;
+            ret._type = luavsq.HandleTypeEnum.Dynamics;
             ret.iconId = self.iconId;
             ret.ids = self.ids;
             ret.original = self.original;

@@ -1,5 +1,5 @@
 --[[
-  Track.IndexItertorKind.lua
+  Track.IndexItertorKindEnum.lua
   Copyright © 2011 kbinani
 
   This file is part of luavsq.
@@ -20,14 +20,14 @@ if( nil == luavsq.Track )then
     luavsq.Track = {};
 end
 
-if( nil == luavsq.Track.IndexIteratorKind )then
+if( nil == luavsq.Track.IndexIteratorKindEnum )then
 
-    luavsq.Track.IndexIteratorKind = {};
+    luavsq.Track.IndexIteratorKindEnum = {};
 
-    luavsq.Track.IndexIteratorKind.SINGER = 1;
-    luavsq.Track.IndexIteratorKind.NOTE = 2;
-    luavsq.Track.IndexIteratorKind.CRESCEND = 4;
-    luavsq.Track.IndexIteratorKind.DECRESCEND = 8;
-    luavsq.Track.IndexIteratorKind.DYNAFF = 16;
+    luavsq.Track.IndexIteratorKindEnum.SINGER = 1;
+    luavsq.Track.IndexIteratorKindEnum.NOTE = 2;
+    luavsq.Track.IndexIteratorKindEnum.CRESCEND = 4;
+    luavsq.Track.IndexIteratorKindEnum.DECRESCEND = 8;
+    luavsq.Track.IndexIteratorKindEnum.DYNAFF = 16;
 
 end

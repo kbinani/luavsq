@@ -35,7 +35,7 @@ if( nil == luavsq.Track.NoteEventIterator )then
             local count = self._list:size();
             local i;
             for i = self._pos + 1, count, 1 do
-                if( self._list:getElement( i - 1 ).id.type == luavsq.IdType.Anote )then
+                if( self._list:getElement( i - 1 ).id.type == luavsq.IdTypeEnum.Anote )then
                     return true;
                 end
             end
@@ -49,7 +49,7 @@ if( nil == luavsq.Track.NoteEventIterator )then
             local i;
             for i = self._pos + 1, count, 1 do
                 local item = self._list:getElement( i - 1 );
-                if( item.id.type == luavsq.IdType.Anote )then
+                if( item.id.type == luavsq.IdTypeEnum.Anote )then
                     self._pos = i;
                     return item;
                 end

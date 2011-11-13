@@ -1,5 +1,5 @@
 --[[
-  PlayMode.lua
+  PlayModeEnum.lua
   Copyright © 2011 kbinani
 
   This file is part of luavsq.
@@ -16,20 +16,20 @@ if( nil == luavsq )then
     luavsq = {};
 end
 
-if( nil == luavsq.PlayMode )then
+if( nil == luavsq.PlayModeEnum )then
 
-    luavsq.PlayMode = {};
+    luavsq.PlayModeEnum = {};
 
     ---
     -- トラックはミュートされる．(-1)
-    luavsq.PlayMode.Off = -1;
+    luavsq.PlayModeEnum.Off = -1;
 
     ---
     -- トラックは合成された後再生される(0)
-    luavsq.PlayMode.PlayAfterSynth = 0;
+    luavsq.PlayModeEnum.PlayAfterSynth = 0;
 
     ---
     -- トラックは合成しながら再生される(1)
-    luavsq.PlayMode.PlayWithSynth = 1;
+    luavsq.PlayModeEnum.PlayWithSynth = 1;
 
 end

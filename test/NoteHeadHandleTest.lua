@@ -1,14 +1,14 @@
 require( "lunit" );
 dofile( "../NoteHeadHandle.lua" );
 dofile( "../IconParameter.lua" );
-dofile( "../ArticulationType.lua" );
+dofile( "../ArticulationEnum.lua" );
 dofile( "../Handle.lua" );
 dofile( "../HandleType.lua" );
 module( "NoteHeadHandleTest", package.seeall, lunit.testcase );
 
 function testConstruct()
     local handle = luavsq.NoteHeadHandle.new();
-    assert_equal( luavsq.ArticulationType.NoteAttack, handle.articulation );
+    assert_equal( luavsq.ArticulationTypeEnum.NoteAttack, handle.articulation );
 end
 
 function testConstructWithArguments()
@@ -16,7 +16,7 @@ function testConstructWithArguments()
     local iconId = "$05030000";
     local index = 1000;
     local handle = luavsq.NoteHeadHandle.new( ids, iconId, index );
-    assert_equal( luavsq.ArticulationType.NoteAttack, handle.articulation );
+    assert_equal( luavsq.ArticulationTypeEnum.NoteAttack, handle.articulation );
     assert_equal( ids, handle.ids );
     assert_equal( iconId, handle.iconId );
     assert_equal( index, handle.index );
@@ -102,7 +102,7 @@ function testCastToHandle()
     handle:setDepth( 5 );
 
     local casted = handle:castToHandle();
-    assert_equal( luavsq.HandleType.NoteHeadHandle, casted._type );
+    assert_equal( luavsq.HandleTypeEnum.NoteHead, casted._type );
     assert_equal( 1, casted.index );
     assert_equal( "$05010000", casted.iconId );
     assert_equal( "dwango", casted.ids );

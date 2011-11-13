@@ -1,5 +1,5 @@
 --[[
-  IdType.lua
+  IdTypeEnum.lua
   Copyright © 2011 kbinani
 
   This file is part of luavsq.
@@ -16,21 +16,21 @@ if( nil == luavsq )then
     luavsq = {};
 end
 
-if( nil == luavsq.IdType )then
+if( nil == luavsq.IdTypeEnum )then
 
-    luavsq.IdType = {};
+    luavsq.IdTypeEnum = {};
 
-    luavsq.IdType.Singer = 0;
-    luavsq.IdType.Anote = 1;
-    luavsq.IdType.Aicon = 2;
-    luavsq.IdType.Unknown = -1;
+    luavsq.IdTypeEnum.Singer = 0;
+    luavsq.IdTypeEnum.Anote = 1;
+    luavsq.IdTypeEnum.Aicon = 2;
+    luavsq.IdTypeEnum.Unknown = -1;
 
-    function luavsq.IdType.toString( value )
-        if( value == luavsq.IdType.Singer )then
+    function luavsq.IdTypeEnum.toString( value )
+        if( value == luavsq.IdTypeEnum.Singer )then
             return "Singer";
-        elseif( value == luavsq.IdType.Anote )then
+        elseif( value == luavsq.IdTypeEnum.Anote )then
             return "Anote";
-        elseif( value == luavsq.IdType.Aicon )then
+        elseif( value == luavsq.IdTypeEnum.Aicon )then
             return "Aicon";
         else
             return "Unknown";

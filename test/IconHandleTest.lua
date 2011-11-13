@@ -50,7 +50,7 @@ end
 function testCastToHandle()
     local handle = getIconHandle();
     local casted = handle:castToHandle();
-    assert_equal( luavsq.HandleType.Singer, casted._type );
+    assert_equal( luavsq.HandleTypeEnum.Singer, casted._type );
     assert_equal( "bar", casted.caption );
     assert_equal( "$07010001", casted.iconId );
     assert_equal( "foo", casted.ids );

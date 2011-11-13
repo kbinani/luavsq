@@ -1,5 +1,5 @@
 --[[
-  IconParameter.lua
+  ArticulationTypeEnum.lua
   Copyright © 2011 kbinani
 
   This file is part of luavsq.
@@ -16,29 +16,29 @@ if( nil == luavsq )then
     luavsq = {};
 end
 
-if( nil == luavsq.ArticulationType )then
+if( nil == luavsq.ArticulationTypeEnum )then
     ---
     -- アイコン設定の種類を表します。
-    luavsq.ArticulationType = {};
+    luavsq.ArticulationTypeEnum = {};
 
     ---
     -- ビブラート
-    luavsq.ArticulationType.Vibrato = 0;
+    luavsq.ArticulationTypeEnum.Vibrato = 0;
 
     ---
     -- クレッシェンド、またはデクレッシェンド
-    luavsq.ArticulationType.Crescendo = 1;
+    luavsq.ArticulationTypeEnum.Crescendo = 1;
 
     ---
     -- ピアノ、フォルテ等の強弱記号
-    luavsq.ArticulationType.Dynaff = 2;
+    luavsq.ArticulationTypeEnum.Dynaff = 2;
 
     ---
     -- アタック
-    luavsq.ArticulationType.NoteAttack = 3;
+    luavsq.ArticulationTypeEnum.NoteAttack = 3;
 
     ---
     -- NoteTransition(詳細不明)
-    luavsq.ArticulationType.NoteTransition = 4;
+    luavsq.ArticulationTypeEnum.NoteTransition = 4;
 
 end

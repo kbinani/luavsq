@@ -30,7 +30,7 @@ if( nil == luavsq.Id )then
         this.lyricHandleIndex = 0;
         this.vibratoHandleIndex = 0;
         this.noteHeadHandleIndex = 0;
-        this.type = luavsq.IdType.Note;
+        this.type = luavsq.IdTypeEnum.Note;
 
         ---
         -- [IconHandle]
@@ -83,7 +83,7 @@ if( nil == luavsq.Id )then
         function this:_init_3( sr, value, last_line )
             local spl;
             self.value = value;
-            self.type = luavsq.IdType.Unknown;
+            self.type = luavsq.IdTypeEnum.Unknown;
             self.iconHandleIndex = -2;
             self.lyricHandleIndex = -1;
             self.vibratoHandleIndex = -1;
@@ -103,13 +103,13 @@ if( nil == luavsq.Id )then
                 local search = spl[1];
                 if( search == "Type" )then
                     if( spl[2] == "Anote" )then
-                        self.type = luavsq.IdType.Anote;
+                        self.type = luavsq.IdTypeEnum.Anote;
                     elseif( spl[2] == "Singer" )then
-                        self.type = luavsq.IdType.Singer;
+                        self.type = luavsq.IdTypeEnum.Singer;
                     elseif( spl[2] == "Aicon" )then
-                        self.type = luavsq.IdType.Aicon;
+                        self.type = luavsq.IdTypeEnum.Aicon;
                     else
-                        self.type = luavsq.IdType.Unknown;
+                        self.type = luavsq.IdTypeEnum.Unknown;
                     end
                 elseif( search == "Length" )then
                     self:setLength( tonumber( spl[2], 10 ) );
@@ -207,7 +207,7 @@ if( nil == luavsq.Id )then
         -- @return [string]
         function this:toString()
             local ret = "{Type=" .. self.type;
-            if( self.type == luavsq.IdType.Anote )then
+            if( self.type == luavsq.IdTypeEnum.Anote )then
                 ret = ret .. ", Length=" .. self:getLength();
                 ret = ret .. ", Note#=" .. self.note;
                 ret = ret .. ", Dynamics=" .. self.dynamics;
@@ -223,7 +223,7 @@ if( nil == luavsq.Id )then
                     ret = ret .. ", VibratoHandle=h#" .. string.format( "%04d", self.vibratoHandleIndex );
                     ret = ret .. ", VibratoDelay=" .. self.vibratoDelay;
                 end
-            elseif( self.type == luavsq.IdType.Singer )then
+            elseif( self.type == luavsq.IdTypeEnum.Singer )then
                 ret = ret .. ", IconHandle=h#" .. string.format( "%04d", self.iconHandleIndex );
             end
             ret = ret .. "}";
