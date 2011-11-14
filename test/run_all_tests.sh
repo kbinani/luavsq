@@ -14,7 +14,7 @@ do
     file=`basename $filePath`
     {
         echo "require( \"lunit\" );dofile( \"$luavsqPath\" );";
-        cat $filePath | sed -e '1d' | sed -e "s/^dofile.*$//g" | sed -e "s/^require.*;$//g";
+        cat $filePath | sed -e "s/^dofile.*$//g" | sed -e "s/^require.*;$//g" | sed -e '1d';
     } 1> /tmp/$file
     tmpTestFiles="$tmpTestFiles /tmp/$file"
 done
