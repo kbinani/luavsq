@@ -1,9 +1,9 @@
 require( "lunit" );
 dofile( "../Id.lua" );
-dofile( "../IdType.lua" );
+dofile( "../IdTypeEnum.lua" );
 dofile( "../IconHandle.lua" );
 dofile( "../LyricHandle.lua" );
-dofile( "../ArticulationEnum.lua" );
+dofile( "../ArticulationTypeEnum.lua" );
 dofile( "../Lyric.lua" );
 dofile( "../VibratoHandle.lua" );
 dofile( "../IconParameter.lua" );

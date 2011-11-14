@@ -12,7 +12,7 @@
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 ]]
 
--- requires( VsqHandleType.lua )
+-- requires( VsqHandleTypeEnum.lua )
 -- requires( VsqHandle.lua )
 -- requires( Lyric.lua )
 

@@ -1,7 +1,7 @@
 require( "lunit" );
 dofile( "../Common.lua" );
-dofile( "../DynamicsMode.lua" );
-dofile( "../PlayMode.lua" );
+dofile( "../DynamicsModeEnum.lua" );
+dofile( "../PlayModeEnum.lua" );
 dofile( "../TextStream.lua" );
 dofile( "../Util.lua" );
 module( "CommonTest", package.seeall, lunit.testcase );

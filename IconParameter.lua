@@ -12,7 +12,7 @@
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 ]]
 
--- requires( ArticulationEnum.lua )
+-- requires( ArticulationTypeEnum.lua )
 
 if( nil == luavsq )then
     luavsq = {};

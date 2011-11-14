@@ -1,7 +1,7 @@
 require( "lunit" );
 dofile( "../IconHandle.lua" );
 dofile( "../Handle.lua" );
-dofile( "../HandleType.lua" );
+dofile( "../HandleTypeEnum.lua" );
 module( "IconHandleTest", package.seeall, lunit.testcase );
 
 function getIconHandle()

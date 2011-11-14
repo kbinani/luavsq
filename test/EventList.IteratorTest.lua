@@ -1,9 +1,9 @@
 require( "lunit" );
-dofile( "../Track.EventIterator.lua" );
 dofile( "../EventList.lua" );
+dofile( "../EventList.Iterator.lua" );
 dofile( "../Event.lua" );
 dofile( "../Id.lua" );
-dofile( "../IdType.lua" );
+dofile( "../IdTypeEnum.lua" );
 module( "EventList.IteratorTest", package.seeall, lunit.testcase );
 
 function test()

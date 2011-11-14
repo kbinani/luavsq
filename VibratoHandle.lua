@@ -13,7 +13,7 @@
 ]]
 
 -- requires( IconParameter.lua )
--- requires( ArticulationEnum.lua )
+-- requires( ArticulationTypeEnum.lua )
 -- requires( VibratoBPList.lua )
 
 if( nil == luavsq )then
@@ -27,6 +27,10 @@ if( nil == luavsq.VibratoHandle )then
     function luavsq.VibratoHandle.new()
         local this = luavsq.IconParameter.new();
         this.articulation = luavsq.ArticulationTypeEnum.Vibrato;
+        this.index = 0;
+        this.iconId = "";
+        this.ids = "";
+        this.original = 0;
         this.startRate = 64;
         this.startDepth = 64;
         this.rateBP = luavsq.VibratoBPList.new();

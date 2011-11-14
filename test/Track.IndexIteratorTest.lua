@@ -3,11 +3,11 @@ dofile( "../Track.IndexIterator.lua" );
 dofile( "../EventList.lua" );
 dofile( "../Event.lua" );
 dofile( "../Id.lua" );
-dofile( "../IdType.lua" );
+dofile( "../IdTypeEnum.lua" );
 dofile( "../IconDynamicsHandle.lua" );
 dofile( "../IconParameter.lua" );
-dofile( "../ArticulationEnum.lua" );
-dofile( "../Track.IndexIteratorKind.lua" );
+dofile( "../ArticulationTypeEnum.lua" );
+dofile( "../Track.IndexIteratorKindEnum.lua" );
 dofile( "../Util.lua" );
 module( "Track.IndexIteratorTest", package.seeall, lunit.testcase );
 

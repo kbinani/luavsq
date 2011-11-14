@@ -38,6 +38,19 @@ if( nil == luavsq.IconDynamicsHandle )then
         this.articulation = luavsq.ArticulationTypeEnum.Dynaff;
 
         ---
+        -- この強弱記号設定を一意に識別するためのIDです。
+        this.iconId = "";
+
+        ---
+        -- ユーザ・フレンドリー名です。
+        -- このフィールドの値は、他の強弱記号設定のユーザ・フレンドリー名と重複する場合があります。
+        this.ids = "";
+
+        ---
+        -- この強弱記号設定が他の強弱記号設定から派生したものである場合、派生元を特定するための番号です。
+        this.original = 0;
+
+        ---
         -- このハンドルが強弱記号を表すものかどうかを表すブール値を取得します。
         -- @return [bool]
         function this:isDynaffType()

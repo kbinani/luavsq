@@ -1,5 +1,5 @@
 require( "lunit" );
-dofile( "../IdType.lua" );
+dofile( "../IdTypeEnum.lua" );
 module( "IdTypeTest", package.seeall, lunit.testcase );
 
 function testToString()

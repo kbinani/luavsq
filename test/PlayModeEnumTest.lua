@@ -1,6 +1,6 @@
 require( "lunit" );
-dofile( "../PlayMode.lua" );
-module( "PlayModeTest", package.seeall, lunit.testcase );
+dofile( "../PlayModeEnum.lua" );
+module( "PlayModeEnumTest", package.seeall, lunit.testcase );
 
 function test()
     assert_equal( -1, luavsq.PlayModeEnum.Off );

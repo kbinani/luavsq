@@ -1,11 +1,11 @@
 require( "lunit" );
 dofile( "../LyricHandle.lua" );
-dofile( "../ArticulationEnum.lua" );
+dofile( "../ArticulationTypeEnum.lua" );
 dofile( "../Lyric.lua" );
 dofile( "../Util.lua" );
 dofile( "../PhoneticSymbol.lua" );
 dofile( "../Handle.lua" );
-dofile( "../HandleType.lua" );
+dofile( "../HandleTypeEnum.lua" );
 module( "LyricHandleTest", package.seeall, lunit.testcase );
 
 function testConstruct()

@@ -3,7 +3,7 @@ dofile( "../Track.DynamicsEventIterator.lua" );
 dofile( "../EventList.lua" );
 dofile( "../Event.lua" );
 dofile( "../Id.lua" );
-dofile( "../IdType.lua" );
+dofile( "../IdTypeEnum.lua" );
 module( "Track.DynamicsEventIteratorTest", package.seeall, lunit.testcase );
 
 function test()

@@ -1,9 +1,9 @@
 require( "lunit" );
 dofile( "../NoteHeadHandle.lua" );
 dofile( "../IconParameter.lua" );
-dofile( "../ArticulationEnum.lua" );
+dofile( "../ArticulationTypeEnum.lua" );
 dofile( "../Handle.lua" );
-dofile( "../HandleType.lua" );
+dofile( "../HandleTypeEnum.lua" );
 module( "NoteHeadHandleTest", package.seeall, lunit.testcase );
 
 function testConstruct()

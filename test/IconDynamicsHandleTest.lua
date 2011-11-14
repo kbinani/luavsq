@@ -1,10 +1,10 @@
 require( "lunit" );
 dofile( "../IconDynamicsHandle.lua" );
 dofile( "../IconParameter.lua" );
-dofile( "../ArticulationEnum.lua" );
+dofile( "../ArticulationTypeEnum.lua" );
 dofile( "../Handle.lua" );
 dofile( "../VibratoBPList.lua" );
-dofile( "../HandleType.lua" );
+dofile( "../HandleTypeEnum.lua" );
 dofile( "../VibratoBP.lua" );
 module( "IconDynamicsHandleTest", package.seeall, lunit.testcase );
 

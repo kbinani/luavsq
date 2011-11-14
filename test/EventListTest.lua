@@ -2,16 +2,22 @@ require( "lunit" );
 dofile( "../EventList.lua" );
 dofile( "../Event.lua" );
 dofile( "../Id.lua" );
-dofile( "../IdType.lua" );
+dofile( "../IdTypeEnum.lua" );
 dofile( "../IconDynamicsHandle.lua" );
 dofile( "../IconParameter.lua" );
-dofile( "../ArticulationEnum.lua" );
+dofile( "../ArticulationTypeEnum.lua" );
 dofile( "../IconHandle.lua" );
 dofile( "../LyricHandle.lua" );
 dofile( "../Lyric.lua" );
 dofile( "../Util.lua" );
 dofile( "../NoteHeadHandle.lua" );
 dofile( "../TextStream.lua" );
+dofile( "../EventList.Iterator.lua" );
+dofile( "../VibratoHandle.lua" );
+dofile( "../VibratoBPList.lua" );
+dofile( "../Handle.lua" );
+dofile( "../HandleTypeEnum.lua" );
+dofile( "../VoiceLanguageEnum.lua" );
 module( "EventListTest", package.seeall, lunit.testcase );
 
 function testConstruct()

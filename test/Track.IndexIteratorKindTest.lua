@@ -1,5 +1,5 @@
 require( "lunit" );
-dofile( "../Track.IndexIteratorKind.lua" );
+dofile( "../Track.IndexIteratorKindEnum.lua" );
 module( "Track.IndexIteratorKindTest", package.seeall, lunit.testcase );
 
 function test()

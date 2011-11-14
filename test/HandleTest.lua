@@ -1,7 +1,7 @@
 require( "lunit" );
 dofile( "../Handle.lua" );
 dofile( "../TextStream.lua" );
-dofile( "../HandleType.lua" );
+dofile( "../HandleTypeEnum.lua" );
 dofile( "../Lyric.lua" );
 dofile( "../Util.lua" );
 dofile( "../VibratoBPList.lua" );
@@ -10,7 +10,7 @@ dofile( "../IconHandle.lua" );
 dofile( "../VibratoHandle.lua" );
 dofile( "../IconDynamicsHandle.lua" );
 dofile( "../IconParameter.lua" );
-dofile( "../ArticulationEnum.lua" );
+dofile( "../ArticulationTypeEnum.lua" );
 dofile( "../NoteHeadHandle.lua" );
 dofile( "../LyricHandle.lua" );
 module( "HandleTest", package.seeall, lunit.testcase );
