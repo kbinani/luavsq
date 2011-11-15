@@ -50,7 +50,7 @@ end
 function testCompare()
     local a = luavsq.TempoTableEntry.new();
     local b = luavsq.TempoTableEntry.new( 480, 500000, 0.5 );
-    assert_true( 0 < luavsq.TempoTableEntry.compare( b, a ) );
-    assert_equal( 0, luavsq.TempoTableEntry.compare( a, a ) );
-    assert_true( 0 > luavsq.TempoTableEntry.compare( a, b ) );
+    assert_false( luavsq.TempoTableEntry.compare( b, a ) );
+    assert_false( luavsq.TempoTableEntry.compare( a, a ) );
+    assert_true( luavsq.TempoTableEntry.compare( a, b ) );
 end

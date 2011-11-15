@@ -1,6 +1,6 @@
 require( "lunit" );
 dofile( "../Track.IndexIteratorKindEnum.lua" );
-module( "Track.IndexIteratorKindTest", package.seeall, lunit.testcase );
+module( "Track.IndexIteratorKindEnumTest", package.seeall, lunit.testcase );
 
 function test()
     assert_equal( 1, luavsq.Track.IndexIteratorKindEnum.SINGER );

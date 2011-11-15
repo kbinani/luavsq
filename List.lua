@@ -20,19 +20,31 @@ if( nil == luavsq.List )then
 
     luavsq.List = {};
 
-    function luavsq.List.new()
+    ---
+    -- リスト機能を提供する。
+    -- インデックスは0から始まる
+    -- 例えば、長さ 3 のリストに順次アクセする場合次のようにすれば良い。
+    -- 配列の値として nil を入れることも出来る
+    -- for i = 0, list:size() - 1, 1 do
+    --     print( list[i] );
+    -- end
+    function luavsq.List.new( ... )
         local this = {};
+        local arguments = { ... };
         this._array = {};
 
         ---
-        -- @return [Iterator<TempoTableEntry>]
+        -- リスト内のデータを順番に返すイテレータを取得する
+        -- @access public
+        -- @return (luavsq.List.Iterator)
         function this:iterator()
             return luavsq.List.Iterator.new( self );
         end
 
         ---
-        -- データ点を時刻順に並べ替えます
-        -- @return [void]
+        -- リスト内のデータを並べ替える
+        -- @access public
+        -- @param (function) comparator <optional> データの比較に使う比較関数
         function this:sort( ... )
             local arguments = { ... };
             local wrappedComparator = nil;
@@ -54,43 +66,46 @@ if( nil == luavsq.List )then
         end
 
         ---
-        -- データ点を追加します
-        -- @param value [TempoTableEntry]
-        -- @return [void]
-        function this:add( value )
+        -- データを追加する
+        -- @access public
+        -- @param value (anything)
+        function this:push( value )
             table.insert( self._array, { ["value"] = value } );
         end
 
         ---
-        -- データ点を追加します
-        -- @param value [TempoTableEntry]
-        -- @return [void]
-        function this:push( value )
-            self:add( value );
-        end
-
-        ---
-        -- テンポ・テーブルに登録されているデータ点の個数を調べます
-        -- @return [int]
+        -- データの個数を取得する
+        -- @access public
+        -- @return (number)
         function this:size()
             return #self._array;
         end
 
         ---
-        -- 第index番目のデータ点を取得します
-        -- @param index [int] 0 から始まるインデックス
-        -- @return [TempoTableEntry]
-        function this:get( index )
-            return self._array[index + 1]["value"];
+        -- メタテーブルをセットアップする
+        -- @access private
+        function this:_setupMetaTable()
+            local metaTable = {};
+
+            metaTable.__index = function( _table, _key )
+                return _table._array[_key + 1]["value"];
+            end
+
+            metaTable.__newindex = function( _table, _key, _value )
+                _table._array[_key + 1] = { ["value"] = _value };
+            end
+
+            setmetatable( self, metaTable );
         end
 
-        ---
-        -- データ点を設定します
-        -- @param index [int]
-        -- @param value [TempoTableEntry]
-        -- @return [void]
-        function this:set( index, value )
-            self._array[index + 1] = { ["value"] = value };
+        this:_setupMetaTable();
+
+        if( #arguments > 0 )then
+            local count = arguments[1];
+            local i;
+            for i = 1, count, 1 do
+                this:push( nil );
+            end
         end
 
         return this;
@@ -109,7 +124,7 @@ if( nil == luavsq.List )then
 
         function this:next()
             self._pos = self._pos + 1;
-            return self._list:get( self._pos );
+            return self._list[self._pos];
         end
 
         return this;

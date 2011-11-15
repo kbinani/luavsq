@@ -84,7 +84,11 @@ if( nil == luavsq.TempoTableEntry )then
     -- @param b [TempoTableEntry]
     -- @return [int]
     function luavsq.TempoTableEntry.compare( a, b )
-        return a:compareTo( b );
+        if( a:compareTo( b ) < 0 )then
+            return true;
+        else
+            return false;
+        end
     end
 
 end
