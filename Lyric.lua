@@ -133,7 +133,7 @@ if( nil == luavsq.Lyric )then
             self.phrase = phrase;
             self._consonantAdjustment = nil;
             self:setPhoneticSymbol( phoneticSymbol );
-            self.lengthRatio = 0.0;
+            self.lengthRatio = 1.0;
             self.isProtected = false;
         end
 

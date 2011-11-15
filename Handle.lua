@@ -351,7 +351,7 @@ if( nil == luavsq.Handle )then
                 result = result .. "Caption=" .. self.caption .. "\n";
                 result = result .. "StartDyn=" .. self.startDyn .. "\n";
                 result = result .. "EndDyn=" .. self.endDyn .. "\n";
-                result = result .. "Length=" .. self.length .. "\n";
+                result = result .. "Length=" .. self:getLength() .. "\n";
                 if( nil ~= self.dynBP )then
                     if( self.dynBP:size() <= 0 )then
                         result = result .. "DynBPNum=0";

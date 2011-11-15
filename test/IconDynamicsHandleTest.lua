@@ -78,7 +78,7 @@ function testCastToHandle()
     handle.dynBP = nil;
     handle.startDyn = 2;
     handle.endDyn = 3;
-    handle.length = 4;
+    handle:setLength( 4 );
     local casted = handle:castToHandle();
     assert_equal( "$05010000", casted.iconId );
     assert_equal( "foo", casted.ids );
@@ -87,7 +87,7 @@ function testCastToHandle()
     assert_equal( nil, casted.dynBP );
     assert_equal( 2, casted.startDyn );
     assert_equal( 3, casted.endDyn );
-    assert_equal( 4, casted.length );
+    assert_equal( 4, casted:getLength() );
 end
 
 function testGetterAndSetterCaption()

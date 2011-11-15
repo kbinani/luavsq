@@ -1,4 +1,4 @@
-thisDirectory=`echo $(cd $(dirname $0);pwd)`
+thisDirectory=$(cd $(dirname $0);pwd)
 luavsqPath=$thisDirectory/../tool/luavsq.lua
 (
     cd $thisDirectory/../tool/
