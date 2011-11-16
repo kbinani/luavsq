@@ -1,11 +1,11 @@
 require( "lunit" );
-dofile( "../IconHandle.lua" );
+dofile( "../SingerHandle.lua" );
 dofile( "../Handle.lua" );
 dofile( "../HandleTypeEnum.lua" );
-module( "IconHandleTest", package.seeall, lunit.testcase );
+module( "SingerHandleTest", package.seeall, lunit.testcase );
 
-function getIconHandle()
-    local handle = luavsq.IconHandle.new();
+function getSingerHandle()
+    local handle = luavsq.SingerHandle.new();
     handle.caption = "bar";
     handle.iconId = "$07010001";
     handle.ids = "foo";
@@ -18,7 +18,7 @@ function getIconHandle()
 end
 
 function testGetterAndSetterLength()
-    local handle = getIconHandle();
+    local handle = getSingerHandle();
     local expected = 12084;
     assert_not_equal( expected, handle:getLength() );
     handle:setLength( expected );
@@ -26,8 +26,8 @@ function testGetterAndSetterLength()
 end
 
 function testEqual()
-    local a = getIconHandle();
-    local b = getIconHandle();
+    local a = getSingerHandle();
+    local b = getSingerHandle();
     assert_true( a:equals( b ) );
     a.iconId = "$07010001";
     b.iconId = "$07010002";
@@ -35,7 +35,7 @@ function testEqual()
 end
 
 function testClone()
-    local handle = getIconHandle();
+    local handle = getSingerHandle();
     local copy = handle:clone();
     assert_equal( handle.caption, copy.caption );
     assert_equal( handle.iconId, copy.iconId );
@@ -48,7 +48,7 @@ function testClone()
 end
 
 function testCastToHandle()
-    local handle = getIconHandle();
+    local handle = getSingerHandle();
     local casted = handle:castToHandle();
     assert_equal( luavsq.HandleTypeEnum.Singer, casted._type );
     assert_equal( "bar", casted.caption );

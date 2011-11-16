@@ -7,7 +7,7 @@ dofile( "../BPList.lua" );
 dofile( "../EventList.lua" );
 dofile( "../Id.lua" );
 dofile( "../IdTypeEnum.lua" );
-dofile( "../IconHandle.lua" );
+dofile( "../SingerHandle.lua" );
 dofile( "../Event.lua" );
 dofile( "../Track.IndexIteratorKindEnum.lua" );
 dofile( "../Track.IndexIterator.lua" );
@@ -73,7 +73,7 @@ function testConstructNormalTrack()
     assert_equal( "DummyTrackName", track:getName() );
     assert_equal( 1, track:getEventCount() );
     assert_equal( luavsq.IdTypeEnum.Singer, track:getEvent( 0 ).id.type );
-    assert_equal( "DummySingerName", track:getEvent( 0 ).id.iconHandle.ids );
+    assert_equal( "DummySingerName", track:getEvent( 0 ).id.singerHandle.ids );
 
     assert_not_nil( track.common );
     assert_nil( track.master );
@@ -248,7 +248,7 @@ function testGetSingerEventIterator()
     local iterator = track:getSingerEventIterator();
     assert_true( iterator:hasNext() );
     local event = iterator:next();
-    assert_equal( "DummySingerName", event.id.iconHandle.ids );
+    assert_equal( "DummySingerName", event.id.singerHandle.ids );
     assert_false( iterator:hasNext() );
 end
 
@@ -292,13 +292,13 @@ function testPrintMetaText()
 
     local singerEvent = luavsq.Event.new( 0, luavsq.Id.new( 0 ) );
     singerEvent.id.type = luavsq.IdTypeEnum.Singer;
-    singerEvent.id.iconHandle = luavsq.IconHandle.new(); --h#0000
-    singerEvent.id.iconHandle.iconId = "$07010002";
-    singerEvent.id.iconHandle.ids = "Miku";
-    singerEvent.id.iconHandle.original = 1;
-    singerEvent.id.iconHandle.caption = "caption for miku";
-    singerEvent.id.iconHandle.language = 1;
-    singerEvent.id.iconHandle.program = 2;
+    singerEvent.id.singerHandle = luavsq.SingerHandle.new(); --h#0000
+    singerEvent.id.singerHandle.iconId = "$07010002";
+    singerEvent.id.singerHandle.ids = "Miku";
+    singerEvent.id.singerHandle.original = 1;
+    singerEvent.id.singerHandle.caption = "caption for miku";
+    singerEvent.id.singerHandle.language = 1;
+    singerEvent.id.singerHandle.program = 2;
     track:setEvent( 0, singerEvent );
 
     local crescendoEvent = luavsq.Event.new( 240, luavsq.Id.new( 0 ) );
@@ -342,13 +342,13 @@ function testPrintMetaText()
 
     local singerEvent2 = luavsq.Event.new( 1920, luavsq.Id.new( 0 ) );
     singerEvent2.id.type = luavsq.IdTypeEnum.Singer;
-    singerEvent2.id.iconHandle = luavsq.IconHandle.new();--h#0004
-    singerEvent2.id.iconHandle.iconId = "$07020003";
-    singerEvent2.id.iconHandle.ids = "Luka_EN";
-    singerEvent2.id.iconHandle.original = 0x82;
-    singerEvent2.id.iconHandle.caption = "caption for luka";
-    singerEvent2.id.iconHandle.language = 2;
-    singerEvent2.id.iconHandle.program = 3;
+    singerEvent2.id.singerHandle = luavsq.SingerHandle.new();--h#0004
+    singerEvent2.id.singerHandle.iconId = "$07020003";
+    singerEvent2.id.singerHandle.ids = "Luka_EN";
+    singerEvent2.id.singerHandle.original = 0x82;
+    singerEvent2.id.singerHandle.caption = "caption for luka";
+    singerEvent2.id.singerHandle.language = 2;
+    singerEvent2.id.singerHandle.program = 3;
     track:addEvent( singerEvent2, 5 );
 
     local noteEvent = luavsq.Event.new( 1920, luavsq.Id.new( 0 ) );
@@ -757,7 +757,7 @@ function testClone()
     assert_equal( 2, copy:getEventCount() );
     assert_equal( 0, copy:getEvent( 0 ).clock );
     assert_equal( luavsq.IdTypeEnum.Singer, copy:getEvent( 0 ).id.type );
-    assert_equal( "DummySingerName", copy:getEvent( 0 ).id.iconHandle.ids );
+    assert_equal( "DummySingerName", copy:getEvent( 0 ).id.singerHandle.ids );
     assert_equal( 480, copy:getEvent( 1 ).clock );
     assert_equal( luavsq.IdTypeEnum.Anote, copy:getEvent( 1 ).id.type );
     assert_equal( 1, copy:getCurve( "pit" ):size() );

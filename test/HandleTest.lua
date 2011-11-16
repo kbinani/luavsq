@@ -6,7 +6,7 @@ dofile( "../Lyric.lua" );
 dofile( "../Util.lua" );
 dofile( "../VibratoBPList.lua" );
 dofile( "../VibratoBP.lua" );
-dofile( "../IconHandle.lua" );
+dofile( "../SingerHandle.lua" );
 dofile( "../VibratoHandle.lua" );
 dofile( "../IconDynamicsHandle.lua" );
 dofile( "../IconParameter.lua" );
@@ -280,13 +280,13 @@ function testCastToVibratoHandle()
     assert_equal( 64, casted:getStartRate() );
 end
 
-function testCastToIconHandle()
+function testCastToSingerHandle()
     local stream = getSingerStream();
     local lastLine = { ["value"] = "" };
     local index = 9476;
     local handle = luavsq.Handle.new( stream, index, lastLine );
 
-    local casted = handle:castToIconHandle();
+    local casted = handle:castToSingerHandle();
     assert_equal( index, casted.index );
     assert_equal( "", casted.caption );
     assert_equal( "$07010002", casted.iconId );

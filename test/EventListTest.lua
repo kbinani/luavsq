@@ -6,7 +6,7 @@ dofile( "../IdTypeEnum.lua" );
 dofile( "../IconDynamicsHandle.lua" );
 dofile( "../IconParameter.lua" );
 dofile( "../ArticulationTypeEnum.lua" );
-dofile( "../IconHandle.lua" );
+dofile( "../SingerHandle.lua" );
 dofile( "../LyricHandle.lua" );
 dofile( "../Lyric.lua" );
 dofile( "../Util.lua" );
@@ -202,7 +202,7 @@ function testIterator()
 
     local singerEvent = luavsq.Event.new( 0, luavsq.Id.new( 0 ) );
     singerEvent.id.type = luavsq.IdTypeEnum.Singer;
-    singerEvent.id.iconHandle = luavsq.IconHandle.new();
+    singerEvent.id.singerHandle = luavsq.SingerHandle.new();
     list:add( singerEvent, 1 );
 
     local crescendoEvent = luavsq.Event.new( 240, luavsq.Id.new( 0 ) );
@@ -224,7 +224,7 @@ function testWrite()
 
     local singerEvent = luavsq.Event.new( 0, luavsq.Id.new( 0 ) );
     singerEvent.id.type = luavsq.IdTypeEnum.Singer;
-    singerEvent.id.iconHandle = luavsq.IconHandle.new();
+    singerEvent.id.singerHandle = luavsq.SingerHandle.new();
     list:add( singerEvent, 1 );
 
     local crescendoEvent = luavsq.Event.new( 240, luavsq.Id.new( 0 ) );
@@ -247,7 +247,7 @@ function testWrite()
 
     local singerEvent2 = luavsq.Event.new( 1920, luavsq.Id.new( 0 ) );
     singerEvent2.id.type = luavsq.IdTypeEnum.Singer;
-    singerEvent2.id.iconHandle = luavsq.IconHandle.new();
+    singerEvent2.id.singerHandle = luavsq.SingerHandle.new();
     list:add( singerEvent2, 5 );
 
     local noteEvent = luavsq.Event.new( 1920, luavsq.Id.new( 0 ) );

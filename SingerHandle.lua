@@ -1,5 +1,5 @@
 --[[
-  IconHandle.lua
+  SingerHandle.lua
   Copyright © 2011 kbinani
 
   This file is part of luavsq.
@@ -16,15 +16,15 @@ if( nil == luavsq )then
     luavsq = {};
 end
 
-if( nil == luavsq.IconHandle )then
+if( nil == luavsq.SingerHandle )then
 
     ---
     -- 歌手設定を表します。
-    luavsq.IconHandle = {};
+    luavsq.SingerHandle = {};
 
     ---
     -- 新しい歌手設定のインスタンスを初期化します。
-    function luavsq.IconHandle.new()
+    function luavsq.SingerHandle.new()
         local this = {};
 
         ---
@@ -67,7 +67,7 @@ if( nil == luavsq.IconHandle )then
 
         ---
         -- このインスタンスと、指定された歌手変更のインスタンスが等しいかどうかを判定します。
-        -- @param item [IconHandle] 比較対象の歌手変更。
+        -- @param item (luavsq.SingerHandle) 比較対象の歌手変更。
         -- @returns [bool] このインスタンスと、比較対象の歌手変更が等しければtrue、そうでなければfalseを返します。
         function this:equals( item )
             if( nil == item )then
@@ -81,7 +81,7 @@ if( nil == luavsq.IconHandle )then
         -- このインスタンスのコピーを作成します。
         -- @return [object]
         function this:clone()
-            local ret = luavsq.IconHandle.new();
+            local ret = luavsq.SingerHandle.new();
             ret.caption = self.caption;
             ret.iconId = self.iconId;
             ret.ids = self.ids;

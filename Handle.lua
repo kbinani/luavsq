@@ -19,7 +19,7 @@ end
 if( nil == luavsq.Handle )then
 
     ---
-    -- ハンドルを取り扱います。ハンドルにはLyricHandle、VibratoHandle、IconHandleおよびNoteHeadHandleがある
+    -- ハンドルを取り扱います。ハンドルにはLyricHandle、VibratoHandle、SingerHandleおよびNoteHeadHandleがある
     luavsq.Handle = {};
 
     function luavsq.Handle.new( ... )
@@ -97,8 +97,8 @@ if( nil == luavsq.Handle )then
 
         ---
         -- @return [IconHandle]
-        function this:castToIconHandle()
-            local ret = luavsq.IconHandle.new();
+        function this:castToSingerHandle()
+            local ret = luavsq.SingerHandle.new();
             ret.index = self.index;
             ret.caption = self.caption;
             ret.iconId = self.iconId;

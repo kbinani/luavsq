@@ -3,7 +3,7 @@ dofile( "../Event.lua" );
 dofile( "../Id.lua" );
 dofile( "../Util.lua" );
 dofile( "../IdTypeEnum.lua" );
-dofile( "../IconHandle.lua" );
+dofile( "../SingerHandle.lua" );
 dofile( "../TextStream.lua" );
 dofile( "../LyricHandle.lua" );
 dofile( "../ArticulationTypeEnum.lua" );
@@ -40,16 +40,16 @@ end
 function getSingerId()
     local singerId = luavsq.Id.new( 15 );
     singerId.type = luavsq.IdTypeEnum.Singer;
-    singerId.iconHandle = nil;
-    singerId.iconHandleIndex = 16;
+    singerId.singerHandle = nil;
+    singerId.singerHandleIndex = 16;
     return singerId;
 end
 
 function getIconId()
     local iconId = luavsq.Id.new( 17 );
     iconId.type = luavsq.IdTypeEnum.Aicon;
-    iconId.iconHandle = nil;
-    iconId.iconHandleIndex = 18;
+    iconId.singerHandle = nil;
+    iconId.singerHandleIndex = 18;
     iconId.note = 19;
     return iconId;
 end
@@ -209,14 +209,14 @@ end
 
 function testClone()
     local singerId = getSingerId();
-    singerId.iconHandle = luavsq.IconHandle.new();
-    singerId.iconHandle.index = 12;
+    singerId.singerHandle = luavsq.SingerHandle.new();
+    singerId.singerHandle.index = 12;
     local event = luavsq.Event.new( 40, singerId );
     event.internalId = 4;
     local copy = event:clone();
     assert_equal( 40, copy.clock );
     assert_equal( 4, copy.internalId );
-    assert_equal( 12, copy.id.iconHandle.index );
+    assert_equal( 12, copy.id.singerHandle.index );
 --TODO: ustEventのclone
 end
 

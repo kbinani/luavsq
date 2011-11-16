@@ -248,14 +248,14 @@ if( nil == luavsq.EventList )then
                 local item = itr:next();
                 current_id = current_id + 1;
                 item.id.value = current_id;
-                -- IconHandle
-                if( item.id.iconHandle ~= nil )then
-                    local ish = item.id.iconHandle;
+                -- SingerHandle
+                if( item.id.singerHandle ~= nil )then
+                    local ish = item.id.singerHandle;
                     current_handle = current_handle + 1;
                     local handle_item = ish:castToHandle();
                     handle_item.index = current_handle;
                     table.insert( handle, handle_item );
-                    item.id.iconHandleIndex = current_handle;
+                    item.id.singerHandleIndex = current_handle;
                     local lang = luavsq.VoiceLanguageEnum.valueFromSingerName( ish.ids );
                     add_quotation_mark = lang == luavsq.VoiceLanguageEnum.Japanese;
                 end
@@ -291,7 +291,7 @@ if( nil == luavsq.EventList )then
                     handle_item.index = current_handle;
                     handle_item:setLength( item.id:getLength() );
                     table.insert( handle, handle_item );
-                    item.id.iconHandleIndex = current_handle;
+                    item.id.singerHandleIndex = current_handle;
                 end
             end
             return handle;

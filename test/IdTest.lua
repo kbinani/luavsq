@@ -1,7 +1,7 @@
 require( "lunit" );
 dofile( "../Id.lua" );
 dofile( "../IdTypeEnum.lua" );
-dofile( "../IconHandle.lua" );
+dofile( "../SingerHandle.lua" );
 dofile( "../LyricHandle.lua" );
 dofile( "../ArticulationTypeEnum.lua" );
 dofile( "../Lyric.lua" );
@@ -16,12 +16,12 @@ module( "IdTest", package.seeall, lunit.testcase );
 function testConstructWithValue()
     local id = luavsq.Id.new( 1 );
     assert_equal( 1, id.value );
-    assert_equal( 0, id.iconHandleIndex );
+    assert_equal( 0, id.singerHandleIndex );
     assert_equal( 0, id.lyricHandleIndex );
     assert_equal( 0, id.vibratoHandleIndex );
     assert_equal( 0, id.noteHeadHandleIndex );
     assert_equal( luavsq.IdTypeEnum.Note, id.type );
-    assert_nil( id.iconHandle );
+    assert_nil( id.singerHandle );
     assert_equal( 0, id.note );
     assert_equal( 0, id.dynamics );
     assert_equal( 0, id.pmBendDepth );
@@ -68,7 +68,7 @@ function testClone()
     id.vMeanNoteTransition = 15;
     id.d4mean = 16;
     id.pMeanEndingNote = 17;
-    assert_nil( id.iconHandle );
+    assert_nil( id.singerHandle );
     assert_nil( id.lyricHandle );
     assert_nil( id.vibratoHandle );
     assert_nil( id.noteHeadHandle );
@@ -90,9 +90,9 @@ function testClone()
     assert_equal( 16, copy.d4mean );
     assert_equal( 17, copy.pMeanEndingNote );
 
-    local iconHandle = luavsq.IconHandle.new();
+    local iconHandle = luavsq.SingerHandle.new();
     iconHandle.caption = "foo";
-    id.iconHandle = iconHandle;
+    id.singerHandle = iconHandle;
     local lyricHandle = luavsq.LyricHandle.new();
     lyricHandle.index = 102;
     id.lyricHandle = lyricHandle;
@@ -107,7 +107,7 @@ function testClone()
     id.iconDynamicsHandle = iconDynamicsHandle;
 
     copy = id:clone();
-    assert_equal( "foo", copy.iconHandle.caption );
+    assert_equal( "foo", copy.singerHandle.caption );
     assert_equal( 102, copy.lyricHandle.index );
     assert_equal( "aho", copy.vibratoHandle.iconId );
     assert_equal( "baka", copy.noteHeadHandle.ids );

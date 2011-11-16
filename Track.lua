@@ -239,7 +239,7 @@ if( nil == luavsq.Track )then
             self.events = luavsq.EventList.new();
             local id = luavsq.Id.new( 0 );
             id.type = luavsq.IdTypeEnum.Singer;
-            local ish = luavsq.IconHandle.new();
+            local ish = luavsq.SingerHandle.new();
             ish.iconID = "$07010000";
             ish.ids = singer;
             ish.original = 0;
@@ -247,7 +247,7 @@ if( nil == luavsq.Track )then
             ish:setLength( 1 );
             ish.language = 0;
             ish.program = 0;
-            id.iconHandle = ish;
+            id.singerHandle = ish;
             self.events:add( luavsq.Event.new( 0, id ) );
         end
 
@@ -664,7 +664,7 @@ if( nil == luavsq.Track )then
             if( singers_size <= 0 )then
                 default_id = luavsq.Id.new();
                 default_id.type = luavsq.IdTypeEnum.Singer;
-                local singer_handle = luavsq.IconHandle.new();
+                local singer_handle = luavsq.SingerHandle.new();
                 singer_handle.IconID = "$0701" + org.kbinani.PortUtil.sprintf( "%04X", 0 );
                 singer_handle.ids = "Unknown";
                 singer_handle.Index = 0;
@@ -673,7 +673,7 @@ if( nil == luavsq.Track )then
                 singer_handle.Original = 0;
                 singer_handle.Program = 0;
                 singer_handle.Caption = "";
-                default_id.iconHandle = singer_handle;
+                default_id.singerHandle = singer_handle;
             else
                 default_id = singers[0];
             end

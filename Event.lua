@@ -201,7 +201,7 @@ if( nil == luavsq.Event )then
                 end
             elseif( self.id.type == luavsq.IdTypeEnum.Singer )then
                 -- シンガーイベントの比較
-                if( self.id.iconHandle.program ~= item.id.iconHandle.program )then
+                if( self.id.singerHandle.program ~= item.id.singerHandle.program )then
                     return false;
                 end
             elseif( self.id.type == luavsq.IdTypeEnum.Aicon )then
@@ -293,9 +293,9 @@ if( nil == luavsq.Event )then
                     writer:writeLine( "NoteHeadHandle=h#" .. string.format( "%04d", self.id.noteHeadHandleIndex ) );
                 end
             elseif( self.id.type == luavsq.IdTypeEnum.Singer )then
-                writer:writeLine( "IconHandle=h#" .. string.format( "%04d", self.id.iconHandleIndex ) );
+                writer:writeLine( "IconHandle=h#" .. string.format( "%04d", self.id.singerHandleIndex ) );
             elseif( self.id.type == luavsq.IdTypeEnum.Aicon )then
-                writer:writeLine( "IconHandle=h#" .. string.format( "%04d", self.id.iconHandleIndex ) );
+                writer:writeLine( "IconHandle=h#" .. string.format( "%04d", self.id.singerHandleIndex ) );
                 writer:writeLine( "Note#=" .. self.id.note );
             end
         end

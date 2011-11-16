@@ -26,15 +26,15 @@ if( nil == luavsq.Id )then
         local this = {};
         local arguments = { ... };
         this.value = -1;
-        this.iconHandleIndex = 0;
+        this.singerHandleIndex = 0;
         this.lyricHandleIndex = 0;
         this.vibratoHandleIndex = 0;
         this.noteHeadHandleIndex = 0;
         this.type = luavsq.IdTypeEnum.Note;
 
         ---
-        -- [IconHandle]
-        this.iconHandle = nil;
+        -- [SingerHandle]
+        this.singerHandle = nil;
         this._length = 0;
         this.note = 0;
         this.dynamics = 0;
@@ -84,7 +84,7 @@ if( nil == luavsq.Id )then
             local spl;
             self.value = value;
             self.type = luavsq.IdTypeEnum.Unknown;
-            self.iconHandleIndex = -2;
+            self.singerHandleIndex = -2;
             self.lyricHandleIndex = -1;
             self.vibratoHandleIndex = -1;
             self.noteHeadHandleIndex = -1;
@@ -128,7 +128,7 @@ if( nil == luavsq.Id )then
                 elseif( search == "LyricHandle" )then
                     self.lyricHandleIndex = luavsq.Handle.getHandleIndexFromString( spl[2] );
                 elseif( search == "IconHandle" )then
-                    self.iconHandleIndex = luavsq.Handle.getHandleIndexFromString( spl[2] );
+                    self.singerHandleIndex = luavsq.Handle.getHandleIndexFromString( spl[2] );
                 elseif( search == "VibratoHandle" )then
                     self.vibratoHandleIndex = luavsq.Handle.getHandleIndexFromString( spl[2] );
                 elseif( search == "VibratoDelay" )then
@@ -164,8 +164,8 @@ if( nil == luavsq.Id )then
         function this:clone()
             local result = luavsq.Id.new( self.value );
             result.type = self.type;
-            if( self.iconHandle ~= nil )then
-                result.iconHandle = self.iconHandle:clone();
+            if( self.singerHandle ~= nil )then
+                result.singerHandle = self.singerHandle:clone();
             end
             result:setLength( self:getLength() );
             result.note = self.note;
@@ -224,7 +224,7 @@ if( nil == luavsq.Id )then
                     ret = ret .. ", VibratoDelay=" .. self.vibratoDelay;
                 end
             elseif( self.type == luavsq.IdTypeEnum.Singer )then
-                ret = ret .. ", IconHandle=h#" .. string.format( "%04d", self.iconHandleIndex );
+                ret = ret .. ", IconHandle=h#" .. string.format( "%04d", self.singerHandleIndex );
             end
             ret = ret .. "}";
             return ret;
