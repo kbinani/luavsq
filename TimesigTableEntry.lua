@@ -84,7 +84,7 @@ if( nil == luavsq.TimesigTableEntry )then
     -- @param b [TimeSigTableEntry]
     -- @return [int]
     function luavsq.TimesigTableEntry.compare( a, b )
-        return a:compareTo( b );
+        return (a:compareTo( b ) < 0);
     end
 
 end
