@@ -27,7 +27,7 @@ dofile( "../VibratoHandle.lua" );
 dofile( "../VibratoBPList.lua" );
 dofile( "../Master.lua" );
 dofile( "../Mixer.lua" );
-dofile( "../MixerEntry.lua" );
+dofile( "../MixerItem.lua" );
 dofile( "../TextStream.lua" );
 dofile( "../Handle.lua" );
 dofile( "../HandleTypeEnum.lua" );
@@ -385,7 +385,7 @@ function testPrintMetaText()
 
     track.mixer = luavsq.Mixer.new( 1, 2, 3, 4 );
     track.mixer.slave = {};
-    track.mixer.slave[1] = luavsq.MixerEntry.new( 5, 6, 7, 8 );
+    track.mixer.slave[1] = luavsq.MixerItem.new( 5, 6, 7, 8 );
 
     track.common.version = "DSB301";
     track.common.name = "foo";

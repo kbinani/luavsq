@@ -1,5 +1,5 @@
 --[[
-  TimesigTableEntry.lua
+  TimesigTableItem.lua
   Copyright © 2011 kbinani
 
   This file is part of luavsq.
@@ -16,11 +16,11 @@ if( nil == luavsq )then
     luavsq = {};
 end
 
-if( nil == luavsq.TimesigTableEntry )then
+if( nil == luavsq.TimesigTableItem )then
 
-    luavsq.TimesigTableEntry = {};
+    luavsq.TimesigTableItem = {};
 
-    function luavsq.TimesigTableEntry.new( ... )
+    function luavsq.TimesigTableItem.new( ... )
         local this = {};
         local arguments = { ... };
 
@@ -62,7 +62,7 @@ if( nil == luavsq.TimesigTableEntry )then
         ---
         -- @return [object]
         function this:clone()
-            return luavsq.TimesigTableEntry.new( self.clock, self.numerator, self.denominator, self.barCount );
+            return luavsq.TimesigTableItem.new( self.clock, self.numerator, self.denominator, self.barCount );
         end
 
         ---
@@ -83,7 +83,7 @@ if( nil == luavsq.TimesigTableEntry )then
     -- @param a [TimeSigTableEntry]
     -- @param b [TimeSigTableEntry]
     -- @return [int]
-    function luavsq.TimesigTableEntry.compare( a, b )
+    function luavsq.TimesigTableItem.compare( a, b )
         return (a:compareTo( b ) < 0);
     end
 

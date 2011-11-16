@@ -27,7 +27,7 @@ if( nil == luavsq.TempoTable )then
         this._array = luavsq.List.new();
 
         ---
-        -- @return [Iterator<TempoTableEntry>]
+        -- @return [Iterator<TempoTableItem>]
         function this:iterator()
             return this._array:iterator();
         end
@@ -36,12 +36,12 @@ if( nil == luavsq.TempoTable )then
         -- データ点を時刻順に並べ替えます
         -- @return [void]
         function this:sort()
-            self._array:sort( luavsq.TempoTableEntry.compare );
+            self._array:sort( luavsq.TempoTableItem.compare );
         end
 
         ---
         -- データ点を追加します
-        -- @param value [TempoTableEntry]
+        -- @param value [TempoTableItem]
         -- @return [void]
         function this:push( value )
             self._array:push( value );
@@ -57,7 +57,7 @@ if( nil == luavsq.TempoTable )then
         ---
         -- 第index番目のデータ点を取得します
         -- @param index [int] 0 から始まるインデックス
-        -- @return [TempoTableEntry]
+        -- @return [TempoTableItem]
         function this:get( index )
             return self._array[index];
         end
@@ -65,7 +65,7 @@ if( nil == luavsq.TempoTable )then
         ---
         -- データ点を設定します
         -- @param index [int]
-        -- @param value [TempoTableEntry]
+        -- @param value [TempoTableItem]
         -- @return [void]
         function this:set( index, value )
             self._array[index] = value;
@@ -106,9 +106,9 @@ if( nil == luavsq.TempoTable )then
         function this:updateTempoInfo()
             local c = self._array:size();
             if( c == 0 )then
-                self._array:push( luavsq.TempoTableEntry.new( 0, luavsq.TempoTable.baseTempo, 0.0 ) );
+                self._array:push( luavsq.TempoTableItem.new( 0, luavsq.TempoTable.baseTempo, 0.0 ) );
             end
-            self._array:sort( luavsq.TempoTableEntry.compare );
+            self._array:sort( luavsq.TempoTableItem.compare );
             local item0 = self._array[0];
             if( item0.clock ~= 0 )then
                 item0.time = luavsq.TempoTable.baseTempo * item0.clock / (luavsq.TempoTable.gatetimePerQuater * 1000000.0);

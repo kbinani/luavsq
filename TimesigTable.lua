@@ -25,7 +25,7 @@ if( nil == luavsq.TimesigTable )then
 
         ---
         -- データ点を追加する
-        -- @param (luavsq.TimesigTableEntry)
+        -- @param (luavsq.TimesigTableItem)
         function this:push( item )
             self._list:push( item );
         end
@@ -33,7 +33,7 @@ if( nil == luavsq.TimesigTable )then
         ---
         -- データ点を取得する
         -- @param (number) index 取得するデータ点のインデックス(0から始まる)
-        -- @return (luavsq.TimesigTableEntry)
+        -- @return (luavsq.TimesigTableItem)
         function this:get( index )
             return self._list[index];
         end
@@ -41,7 +41,7 @@ if( nil == luavsq.TimesigTable )then
         ---
         -- データ点を設定する
         -- @param (number) index 設定するデータ点のインデックス(0から始まる)
-        -- @param (luavsq.TimesigTableEntry)
+        -- @param (luavsq.TimesigTableItem)
         function this:set( index, value )
             self._list[index] = value;
         end
@@ -53,7 +53,7 @@ if( nil == luavsq.TimesigTable )then
                 return;
             end
             self._list[0].Clock = 0;
-            self._list:sort( luavsq.TimesigTableEntry.compare );-- Collections.sort( this );
+            self._list:sort( luavsq.TimesigTableItem.compare );-- Collections.sort( this );
             local count = self._list:size();
             local j;
             for j = 1, count - 1, 1 do
@@ -73,7 +73,7 @@ if( nil == luavsq.TimesigTable )then
         -- @param (number) clock ゲートタイム
         -- @return (luavsq.Timesig) 指定されたゲートタイムでの拍子情報
         function this:getTimesigAt( clock )
-            local ret = luavsq.TimesigTableEntry.new();
+            local ret = luavsq.TimesigTableItem.new();
             ret.numerator = 4;
             ret.denominator = 4;
             local index = 0;
@@ -93,7 +93,7 @@ if( nil == luavsq.TimesigTable )then
         ---
         -- 指定されたゲートタイムにおける拍子情報を取得する
         -- @param (number) clock ゲートタイム
-        -- @return (luavsq.TimesigTableEntry) 指定されたゲートタイムでの拍子情報
+        -- @return (luavsq.TimesigTableItem) 指定されたゲートタイムでの拍子情報
         function this:findTimesigAt( clock )
             local index = 0;
             local c = self._list:size();

@@ -1,6 +1,6 @@
 require( "lunit" );
 dofile( "../Mixer.lua" );
-dofile( "../MixerEntry.lua" );
+dofile( "../MixerItem.lua" );
 dofile( "../TextStream.lua" );
 dofile( "../Util.lua" );
 module( "MixerTest", package.seeall, lunit.testcase );
@@ -44,8 +44,8 @@ end
 function testClone()
     local mixer = luavsq.Mixer.new( 1, 2, 3, 4 );
     mixer.slave = {};
-    mixer.slave[1] = luavsq.MixerEntry.new( 5, 6, 7, 8 );
-    mixer.slave[2] = luavsq.MixerEntry.new( 9, 10, 11, 12 );
+    mixer.slave[1] = luavsq.MixerItem.new( 5, 6, 7, 8 );
+    mixer.slave[2] = luavsq.MixerItem.new( 9, 10, 11, 12 );
 
     local copy = mixer:clone();
     assert_equal( 2, #copy.slave );
@@ -66,8 +66,8 @@ end
 function testWrite()
     local mixer = luavsq.Mixer.new( 1, 2, 3, 4 );
     mixer.slave = {};
-    mixer.slave[1] = luavsq.MixerEntry.new( 5, 6, 7, 8 );
-    mixer.slave[2] = luavsq.MixerEntry.new( 9, 10, 11, 12 );
+    mixer.slave[1] = luavsq.MixerItem.new( 5, 6, 7, 8 );
+    mixer.slave[2] = luavsq.MixerItem.new( 9, 10, 11, 12 );
     local stream = luavsq.TextStream.new();
     mixer:write( stream );
     local expected =

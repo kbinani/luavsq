@@ -1,9 +1,9 @@
 require( "lunit" );
-dofile( "../MixerEntry.lua" );
-module( "MixerEntryTest", package.seeall, lunit.testcase );
+dofile( "../MixerItem.lua" );
+module( "MixerItemTest", package.seeall, lunit.testcase );
 
 function testConstruct()
-    local mixerEntry = luavsq.MixerEntry.new( 1, 2, 3, 4 );
+    local mixerEntry = luavsq.MixerItem.new( 1, 2, 3, 4 );
     assert_equal( 1, mixerEntry.feder );
     assert_equal( 2, mixerEntry.panpot );
     assert_equal( 3, mixerEntry.mute );
@@ -11,7 +11,7 @@ function testConstruct()
 end
 
 function testClone()
-    local mixerEntry = luavsq.MixerEntry.new( 1, 2, 3, 4 );
+    local mixerEntry = luavsq.MixerItem.new( 1, 2, 3, 4 );
     local copy = mixerEntry:clone();
     assert_equal( 1, copy.feder );
     assert_equal( 2, copy.panpot );

@@ -1,5 +1,5 @@
 --[[
-  MixerEntry.lua
+  MixerItem.lua
   Copyright © 2011 kbinani
 
   This file is part of luavvsq.
@@ -16,11 +16,11 @@ if( nil == luavsq )then
     luavsq = {};
 end
 
-if( nil == luavsq.MixerEntry )then
+if( nil == luavsq.MixerItem )then
 
     ---
     -- VsqMixerのSlave要素に格納される各エントリ
-    luavsq.MixerEntry = {};
+    luavsq.MixerItem = {};
 
     ---
     -- 各パラメータを指定したコンストラクタ
@@ -28,7 +28,7 @@ if( nil == luavsq.MixerEntry )then
     -- @param panpot (integer) Panpot値
     -- @param mute (integer) Mute値
     -- @param solo (integer) Solo値
-    function luavsq.MixerEntry.new( feder, panpot, mute, solo )
+    function luavsq.MixerItem.new( feder, panpot, mute, solo )
         local this = {};
         this.feder = feder;
         this.panpot = panpot;
@@ -43,7 +43,7 @@ if( nil == luavsq.MixerEntry )then
         end
 
         function this:clone()
-            return luavsq.MixerEntry.new( self.feder, self.panpot, self.mute, self.solo );
+            return luavsq.MixerItem.new( self.feder, self.panpot, self.mute, self.solo );
         end
 
         return this;

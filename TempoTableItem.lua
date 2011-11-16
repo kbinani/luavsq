@@ -1,5 +1,5 @@
 --[[
-  TempoTableEntry.lua
+  TempoTableItem.lua
   Copyright © 2011 kbinani
 
   This file is part of luavsq.
@@ -16,11 +16,11 @@ if( nil == luavsq )then
     luavsq = {};
 end
 
-if( nil == luavsq.TempoTableEntry )then
+if( nil == luavsq.TempoTableItem )then
 
-    luavsq.TempoTableEntry = {};
+    luavsq.TempoTableItem = {};
 
-    function luavsq.TempoTableEntry.new( ... )
+    function luavsq.TempoTableItem.new( ... )
         local this = {};
         local arguments = { ... };
         this.clock = 0;
@@ -36,18 +36,18 @@ if( nil == luavsq.TempoTableEntry )then
         ---
         -- @return [object]
         function this:clone()
-            return luavsq.TempoTableEntry.new( self.clock, self.tempo, self.time );
+            return luavsq.TempoTableItem.new( self.clock, self.tempo, self.time );
         end
 
         ---
         -- overload1
-        -- @return [TempoTableEntry]
+        -- @return [TempoTableItem]
         --
         -- overload2
         -- @param clock [int]
         -- @param _tempo [int]
         -- @param _time [int]
-        -- @return [TempoTableEntry]
+        -- @return [TempoTableItem]
         function this:_init_3( clock, tempo, time )
             self.clock = clock;
             self.tempo = tempo;
@@ -55,14 +55,14 @@ if( nil == luavsq.TempoTableEntry )then
         end
 
         ---
-        -- @param entry [TempoTableEntry]
+        -- @param entry [TempoTableItem]
         -- @return [int]
         function this:compareTo( entry )
             return self.clock - entry.clock;
         end
 
         ---
-        -- @param entry [TempoTableEntry]
+        -- @param entry [TempoTableItem]
         -- @return [bool]
         function this:equals( entry )
             if( self.clock == entry.clock )then
@@ -80,10 +80,10 @@ if( nil == luavsq.TempoTableEntry )then
     end
 
     ---
-    -- @param a [TempoTableEntry]
-    -- @param b [TempoTableEntry]
+    -- @param a [TempoTableItem]
+    -- @param b [TempoTableItem]
     -- @return [int]
-    function luavsq.TempoTableEntry.compare( a, b )
+    function luavsq.TempoTableItem.compare( a, b )
         if( a:compareTo( b ) < 0 )then
             return true;
         else

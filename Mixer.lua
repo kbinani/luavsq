@@ -94,7 +94,7 @@ if( nil == luavsq.Mixer )then
             self.slave = {};
             local i;
             for i = 1, tracks, 1 do
-                self.slave[i] = luavsq.MixerEntry.new( 0, 0, 0, 0 );
+                self.slave[i] = luavsq.MixerItem.new( 0, 0, 0, 0 );
             end
             spl = luavsq.Util.split( buffer, "\n" );
             local spl2;
