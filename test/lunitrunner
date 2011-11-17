@@ -1,0 +1,52 @@
+#!/bin/sh
+pwd=`pwd`
+
+directory=$pwd
+testPattern=*Test.lua
+
+count=0
+editTimes=()
+fileNames=()
+
+lunit --runner lunit-runner $directory/$testPattern
+
+first=1
+while true;
+do
+    run=0
+    files=`ls $directory/*Test.lua`
+    for file in $files
+    do
+        atime=`stat -s $file | sed -e "s/.* st_mtime=\\([0-9]*\\) .*/\\1/g"`
+        found=0
+        i=0
+        while (( $i <= $count ));
+        do
+            fileName=${fileNames[$i]}
+            if [ "$fileName" == "$file" ] ; then
+                editTime=${editTimes[$i]}
+                if [ "$editTime" != "$atime" ] ; then
+                    editTimes[$i]=$atime
+                    run=1
+                fi
+                found=1
+            fi
+            i=`expr $i + 1`
+        done
+        if [ "$found" == "0" ] ; then
+            count=`expr $count + 1`
+            editTimes[$count]=$atime
+            fileNames[$count]=$file
+            if [ "$first" == "0" ] ; then
+                run=1
+            fi
+        fi
+    done
+
+    if [ "$run" == "1" ] ; then
+        lunit --runner lunit-runner $directory/$testPattern
+    fi
+    first=0
+
+    sleep 1
+done
