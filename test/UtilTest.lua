@@ -68,3 +68,31 @@ function testOr()
     assert_equal( 0xC0000000, luavsq.Util.bor( 0x0, 0x40000000, 0x80000000 ) );
     assert_nil( luavsq.Util.bor() );
 end
+
+function testLShift()
+    local n = 0x1;
+    assert_equal( 1, luavsq.Util.lshift( n, 0 ) )
+    assert_equal( 2, luavsq.Util.lshift( n, 1 ) );
+    assert_equal( 16, luavsq.Util.lshift( n, 4 ) );
+end
+
+function testRShift()
+    local n = 0x8002;
+    assert_equal( 0x4001, luavsq.Util.rshift( n, 1 ) );
+    assert_equal( 0x2000, luavsq.Util.rshift( n, 2 ) );
+    assert_equal( 0x1000, luavsq.Util.rshift( n, 3 ) );
+    assert_equal( 0x800, luavsq.Util.rshift( n, 4 ) );
+    assert_equal( 0x400, luavsq.Util.rshift( n, 5 ) );
+    assert_equal( 0x200, luavsq.Util.rshift( n, 6 ) );
+    assert_equal( 0x100, luavsq.Util.rshift( n, 7 ) );
+    assert_equal( 0x80, luavsq.Util.rshift( n, 8 ) );
+    assert_equal( 0x40, luavsq.Util.rshift( n, 9 ) );
+    assert_equal( 0x20, luavsq.Util.rshift( n, 10 ) );
+    assert_equal( 0x10, luavsq.Util.rshift( n, 11 ) );
+    assert_equal( 0x8, luavsq.Util.rshift( n, 12 ) );
+    assert_equal( 0x4, luavsq.Util.rshift( n, 13 ) );
+    assert_equal( 0x2, luavsq.Util.rshift( n, 14 ) );
+    assert_equal( 0x1, luavsq.Util.rshift( n, 15 ) );
+    assert_equal( 0x0, luavsq.Util.rshift( n, 16 ) );
+    assert_equal( 0x0, luavsq.Util.rshift( n, 17 ) );
+end

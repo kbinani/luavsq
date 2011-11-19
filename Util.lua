@@ -199,4 +199,32 @@ if( nil == luavsq.Util )then
         end
         return result;
     end
+
+    ---
+    -- 左シフト演算
+    -- @param (integer) n
+    -- @param (integer) shift
+    -- @return (integer)
+    function luavsq.Util.lshift( n, shift )
+        n = math.floor( n );
+        local i;
+        for i = 0, shift - 1, 1 do
+            n = n * 2;
+        end
+        return n;
+    end
+
+    ---
+    -- 右シフト演算
+    -- @param (integer) n
+    -- @param (integer) shift
+    -- @return (integer)
+    function luavsq.Util.rshift( n, shift )
+        n = math.floor( n );
+        local i;
+        for i = 0, shift - 1, 1 do
+            n = math.floor( n / 2 );
+        end
+        return n;
+    end
 end
