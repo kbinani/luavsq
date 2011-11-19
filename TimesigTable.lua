@@ -24,6 +24,13 @@ if( nil == luavsq.TimesigTable )then
         this._list = luavsq.List.new();
 
         ---
+        -- データ点を順に返す反復子を取得する
+        -- @return (luavsq.List.Iterator<luavsq.TimesigTableItem>)
+        function this:iterator()
+            return self._list:iterator();
+        end
+
+        ---
         -- データ点を追加する
         -- @param (luavsq.TimesigTableItem)
         function this:push( item )

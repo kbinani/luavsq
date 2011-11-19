@@ -94,3 +94,19 @@ function testGetBarCountFromClock()
     assert_equal( 2, table:getBarCountFromClock( 3360 ) );
     assert_equal( 7, table:getBarCountFromClock( 9760 ) );
 end
+
+function testIterator()
+    local table = luavsq.TimesigTable.new();
+    table:push( luavsq.TimesigTableItem.new( 0, 4, 4, 2 ) );
+    table:push( luavsq.TimesigTableItem.new( 0, 4, 4, 0 ) );
+    table:push( luavsq.TimesigTableItem.new( 0, 3, 4, 1 ) );
+    table:updateTimesigInfo();
+
+    local i = table:iterator();
+    assert_true( i:hasNext() );
+    assert_equal( 0, i:next().clock );
+    assert_true( i:hasNext() );
+    assert_equal( 1920, i:next().clock );
+    assert_true( i:hasNext() );
+    assert_equal( 3360, i:next().clock );
+end
