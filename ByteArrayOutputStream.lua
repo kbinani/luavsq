@@ -22,6 +22,7 @@ if( nil == luavsq.ByteArrayOutputStream )then
 
     function luavsq.ByteArrayOutputStream.new()
         local this = {};
+        this._pointer = -1;
         this._array = {};
 
         function this:write( ... )
@@ -40,8 +41,8 @@ if( nil == luavsq.ByteArrayOutputStream )then
         -- @param (integer) length 書き込むバイト値の個数
         function this:_write_3( array, startIndex, length )
             local i;
-            for i = startIndex, startIndex + length - 1, 1 do
-                table.insert( self._array, array[i] );
+            for i = 1, length, 1 do
+                self:_write_1( array[startIndex + i - 1] );
             end
         end
 
@@ -49,7 +50,19 @@ if( nil == luavsq.ByteArrayOutputStream )then
         -- 指定されたバイト値をストリームに書きこむ
         -- @param (number) 書きこむバイト値
         function this:_write_1( byte )
-            table.insert( self._array, byte );
+            if( byte == nil )then
+                byte = 0;
+            end
+            local index = self._pointer + 2;
+            local remain = index - #self._array;
+            if( remain > 0 )then
+                local i;
+                for i = 1, remain, 1 do
+                    table.insert( self._array, 0 );
+                end
+            end
+            self._array[index] = byte;
+            self._pointer = self._pointer + 1;
         end
 
         ---
@@ -62,6 +75,17 @@ if( nil == luavsq.ByteArrayOutputStream )then
                 result = result .. string.char( self._array[i] );
             end
             return result;
+        end
+
+        ---
+        -- 現在のファイルポインタを取得する
+        -- @return (integer) 現在のファイルポインタ
+        function this:getPointer()
+            return self._pointer;
+        end
+
+        function this:seek( position )
+            self._pointer = position;
         end
 
         return this;
