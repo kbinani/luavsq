@@ -14,10 +14,13 @@ first=1
 while true;
 do
     run=0
-    files=`ls $directory/*Test.lua`
+    files=`ls $directory/$testPattern`
     for file in $files
     do
         atime=`stat -s $file | sed -e "s/.* st_mtime=\\([0-9]*\\) .*/\\1/g"`
+        if [ "$atime" == "" ] ; then
+            atime=`stat --format=%Y $file`
+        fi
         found=0
         i=0
         while (( $i <= $count ));
