@@ -33,6 +33,8 @@ if( nil == luavsq.List )then
         local arguments = { ... };
         this._array = {};
 
+
+
         ---
         -- リスト内のデータを順番に返すイテレータを取得する
         -- @access public
@@ -109,6 +111,19 @@ if( nil == luavsq.List )then
         end
 
         return this;
+    end
+
+    ---
+    -- lua の table から、luavsq.List のインスタンスを作成する
+    -- @param (table) _table
+    -- @return (luavsq.List)
+    function luavsq.List.fromTable( _table )
+        local list = luavsq.List.new();
+        local i;
+        for i = 1, #_table, 1 do
+            table.insert( list._array, { ["value"] = _table[i] } );
+        end
+        return list;
     end
 
     luavsq.List.Iterator = {};

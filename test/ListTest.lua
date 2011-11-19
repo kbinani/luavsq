@@ -66,3 +66,13 @@ function testConstruct()
     assert_nil( list[0] );
     assert_nil( list[1] );
 end
+
+function testFromTable()
+    local list = luavsq.List.fromTable( { 1, 2 } );
+    local i = list:iterator();
+    assert_true( i:hasNext() );
+    assert_equal( 1, i:next() );
+    assert_true( i:hasNext() );
+    assert_equal( 2, i:next() );
+    assert_false( i:hasNext() );
+end
