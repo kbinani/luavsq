@@ -87,6 +87,35 @@ if( nil == luavsq.Util )then
     end
 
     ---
+    -- 16bit の unsigned int 値を Big Endian のバイト列に変換する
+    -- @param (integer) value
+    -- @return (table<integer>)
+    function luavsq.Util.getBytesUInt16BE( value )
+        local result = {};
+        result[2] = luavsq.Util.band( value, 0xff );
+        value = luavsq.Util.rshift( value, 8 );
+        result[1] = luavsq.Util.band( value, 0xff );
+        return result;
+    end
+
+    ---
+    -- 32bit の unsigned int 値を Big Endian のバイト列に変換する
+    -- @param (integer) value
+    -- @return (table<integer>)
+    function luavsq.Util.getBytesUInt32BE( data )
+        local dat = {};
+        data = luavsq.Util.band( 0xffffffff, data );
+        dat[4] = luavsq.Util.band( data, 0xff );
+        data = luavsq.Util.rshift( data, 8 );
+        dat[3] = luavsq.Util.band( data, 0xff );
+        data = luavsq.Util.rshift( data, 8 );
+        dat[2] = luavsq.Util.band( data, 0xff );
+        data = luavsq.Util.rshift( data, 8 );
+        dat[1] = luavsq.Util.band( data, 0xff );
+        return dat;
+    end
+
+    ---
     -- @param array (table) 並び替えるテーブル
     -- @param startIndex (number) 並び替える範囲の開始位置(先頭が0)
     -- @param length (number) 並び替える範囲の長さ

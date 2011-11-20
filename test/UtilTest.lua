@@ -45,6 +45,22 @@ function testMakeUInt32BE()
     assert_equal( 0x12345678, luavsq.Util.makeUInt32BE( bytes ) );
 end
 
+function testGetBytesUInt16BE()
+    local bytes = luavsq.Util.getBytesUInt16BE( 0x1234 );
+    assert_equal( 2, #bytes );
+    assert_equal( 0x12, bytes[1] );
+    assert_equal( 0x34, bytes[2] );
+end
+
+function testGetBytesUInt32BE()
+    local bytes = luavsq.Util.getBytesUInt32BE( 0x12345678 );
+    assert_equal( 4, #bytes );
+    assert_equal( 0x12, bytes[1] );
+    assert_equal( 0x34, bytes[2] );
+    assert_equal( 0x56, bytes[3] );
+    assert_equal( 0x78, bytes[4] );
+end
+
 function testSort()
     local array = { 1, 2, 3, 8, 7, 6, 5, 4, 9 };
     luavsq.Util.sort( array, 3, 5 );
