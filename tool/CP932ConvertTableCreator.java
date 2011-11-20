@@ -3,8 +3,8 @@ import java.net.*;
 import java.util.*;
 
 /**
- * unicode.orgからcp932 => utf8の文字コードマップをダウンロードし、
- * utf-8からcp932への変換テーブルを表現するluaスクリプトを作成する
+ * unicode.orgからcp932 => unicodeの文字コードマップをダウンロードし、
+ * unicodeからcp932への変換テーブルを表現するluaスクリプトを作成する
  */
 class CP932ConvertTableCreator
 {
@@ -15,6 +15,7 @@ class CP932ConvertTableCreator
         File cp932map = File.createTempFile( "cp932", ".txt" );
         download( url, cp932map.getAbsolutePath() );
         TreeMap<String, String> rawMap = getTable( cp932map.getAbsolutePath() );
+        cp932map.delete();
 
         TreeMap<Integer, TreeMap<Integer, int[]>> map = getTableDetail( rawMap );
 
@@ -38,11 +39,11 @@ class CP932ConvertTableCreator
                 }
                 int secondByte = j.next().intValue();
                 stream.print( "[" + secondByte + "] = { " );
-                int[] cp932bytes = map.get( firstByte ).get( secondByte );
-                for( int k = 0; k < cp932bytes.length - 1; k++ ){
-                    stream.print( cp932bytes[k] + ", " );
+                int[] cp932Bytes = map.get( firstByte ).get( secondByte );
+                for( int k = 0; k < cp932Bytes.length - 1; k++ ){
+                    stream.print( cp932Bytes[k] + ", " );
                 }
-                stream.print( cp932bytes[cp932bytes.length - 1] + " }, " );
+                stream.print( cp932Bytes[cp932Bytes.length - 1] + " }, " );
             }
             stream.println( "" );
             stream.println( "    }," );
@@ -51,7 +52,7 @@ class CP932ConvertTableCreator
     }
 
     /**
-     * utf8の文字コードとcp932の文字コードの紐付けを格納したマップから、
+     * unicodeの文字コードとcp932の文字コードの紐付けを格納したマップから、
      * firstByte, secondByteに階層化されたマップを取得する
      * 例えば、
      *     { "814A" => "309B" }
@@ -63,22 +64,22 @@ class CP932ConvertTableCreator
     {
         TreeMap<Integer, TreeMap<Integer, int[]>> result = new TreeMap<Integer, TreeMap<Integer, int[]>>();
         for( Iterator<String> itr = map.keySet().iterator(); itr.hasNext(); ){
-            String utf8 = itr.next();
-            String cp932 = map.get( utf8 );
-            int[] utf8bytes = null;
-            int[] cp932bytes = null;
+            String unicode = itr.next();
+            String cp932 = map.get( unicode );
+            int[] unicodeBytes = null;
+            int[] cp932Bytes = null;
             try{
-                utf8bytes = getBytesFromString( utf8 );
-                cp932bytes = getBytesFromString( cp932 );
+                unicodeBytes = getBytesFromString( unicode );
+                cp932Bytes = getBytesFromString( cp932 );
             }catch( Exception e ){
                 e.printStackTrace();
                 continue;
             }
 
-            if( false == result.containsKey( utf8bytes[0] ) ){
-                result.put( utf8bytes[0], new TreeMap<Integer, int[]>() );
+            if( false == result.containsKey( unicodeBytes[0] ) ){
+                result.put( unicodeBytes[0], new TreeMap<Integer, int[]>() );
             }
-            result.get( utf8bytes[0] ).put( utf8bytes[1], cp932bytes );
+            result.get( unicodeBytes[0] ).put( unicodeBytes[1], cp932Bytes );
         }
         return result;
     }
@@ -109,8 +110,8 @@ class CP932ConvertTableCreator
     }
 
     /**
-     * unicode.orgからダウンロードしたcp932 => UTF8のマッピング文書を読み込み、
-     * utf8 => cp832のマップを連想配列として取得する
+     * unicode.orgからダウンロードしたcp932 => Unicodeのマッピング文書を読み込み、
+     * Unicode => cp832のマップを連想配列として取得する
      * @param String file
      * @retrun TreeMap<String, String>
      */
@@ -129,14 +130,14 @@ class CP932ConvertTableCreator
                 if( tokens.length < 2 ){
                     continue;
                 }
-                String utf8 = tokens[1];
-                utf8 = utf8.replace( " ", "" );
-                if( utf8.length() == 0 ){
+                String unicode = tokens[1];
+                unicode = unicode.replace( " ", "" );
+                if( unicode.length() == 0 ){
                     continue;
                 }
-                utf8 = utf8.substring( 2 );
+                unicode = unicode.substring( 2 );
                 String cp932 = tokens[0].substring( 2 );
-                map.put( utf8, cp932 );
+                map.put( unicode, cp932 );
             }
         }catch( Exception e ){
         }finally{
