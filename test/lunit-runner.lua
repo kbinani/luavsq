@@ -76,3 +76,38 @@ function done()
         os.execute( "echo \"\\033[41m\\033[1;37m" .. message .. "\\033[0m\"" );
     end
 end
+
+function var_dump( obj )
+    if( obj == nil )then
+        return
+    end
+--[[
+"nil" (という文字列。nil 値ではなく。)
+    "number"
+    "string"
+    "boolean"
+    "table"
+    "function"
+    "thread"
+    "userdata"
+]]
+    local t = type( obj );
+    if( t == "string" or t == "number" )then
+        return "" .. obj;
+    elseif( t == "nil" )then
+        return "nil";
+    elseif( t == "boolean" )then
+        if( obj == true )then
+            return "true";
+        else
+            return "false";
+        end
+    elseif( t == "table" )then
+        local result = "";
+        local k, v;
+        for k, v in pairs( obj )do
+            result = result .. "    " .. var_dump( k ) .. "=" .. var_dump( v ) .. "\n";
+        end
+        return result;
+    end
+end
