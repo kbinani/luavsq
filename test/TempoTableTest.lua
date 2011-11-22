@@ -98,3 +98,14 @@ function testGetSecFromClock()
     assert_equal( 0.4, list:getSecFromClock( 384 ) );
     assert_equal( 0.7, list:getSecFromClock( 680 ) );
 end
+
+function testGetTempoAt()
+    local list = luavsq.TempoTable.new();
+    list:push( luavsq.TempoTableItem.new( 480, 480000, 0.0 ) );
+    list:push( luavsq.TempoTableItem.new( 0, 500000, 0.0 ) );
+    list:updateTempoInfo();
+
+    assert_equal( 500000, list:getTempoAt( 0 ) );
+    assert_equal( 500000, list:getTempoAt( 479 ) );
+    assert_equal( 480000, list:getTempoAt( 480 ) );
+end

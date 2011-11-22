@@ -85,7 +85,7 @@ if( nil == luavsq.TempoTable )then
                 base_clock = 0;
                 base_time = 0.0;
             elseif( c == 1 )then
-                tempo = self._array[0].Tempo;
+                tempo = self._array[0].tempo;
                 base_clock = self._array[0].clock;
                 base_time = self._array[0].time;
             else
@@ -147,6 +147,23 @@ if( nil == luavsq.TempoTable )then
 
             local sec_per_clock = luavsq.TempoTable.baseTempo * 1e-6 / 480.0;
             return clock * sec_per_clock;
+        end
+
+        ---
+        -- 指定したクロックにおけるテンポを取得します。
+        -- @param clock [int]
+        -- @return [int]
+        function this:getTempoAt( clock )
+            local index = 0;
+            local c = self:size();
+            local i;
+            for i = c - 1, 0, -1 do
+                index = i;
+                if( self:get( i ).clock <= clock )then
+                    break;
+                end
+            end
+            return self:get( index ).tempo;
         end
 
         return this;
