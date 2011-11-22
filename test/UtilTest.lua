@@ -87,9 +87,11 @@ end
 
 function testLShift()
     local n = 0x1;
-    assert_equal( 1, luavsq.Util.lshift( n, 0 ) )
-    assert_equal( 2, luavsq.Util.lshift( n, 1 ) );
-    assert_equal( 16, luavsq.Util.lshift( n, 4 ) );
+    assert_equal( 0x1, luavsq.Util.lshift( n, 0 ) )
+    assert_equal( 0x2, luavsq.Util.lshift( n, 1 ) );
+    assert_equal( 0x10, luavsq.Util.lshift( n, 4 ) );
+    assert_equal( 0x8000000000000000, luavsq.Util.lshift( n, 63 ) );
+    assert_equal( 0x0, luavsq.Util.lshift( n, 64 ) );
 end
 
 function testRShift()

@@ -230,7 +230,7 @@ if( nil == luavsq.Util )then
     end
 
     ---
-    -- 左シフト演算
+    -- 左シフト演算(64bitまでを考慮)
     -- @param (integer) n
     -- @param (integer) shift
     -- @return (integer)
@@ -238,6 +238,9 @@ if( nil == luavsq.Util )then
         n = math.floor( n );
         local i;
         for i = 0, shift - 1, 1 do
+            if( n >= 0x8000000000000000 )then
+                n = n % 0x8000000000000000;
+            end
             n = n * 2;
         end
         return n;
