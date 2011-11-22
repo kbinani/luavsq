@@ -24,6 +24,13 @@ if( nil == luavsq.TimesigTable )then
         this._list = luavsq.List.new();
 
         ---
+        -- データ点の個数を取得する
+        -- @return (integer)
+        function this:size()
+            return self._list:size();
+        end
+
+        ---
         -- データ点を順に返す反復子を取得する
         -- @return (luavsq.List.Iterator<luavsq.TimesigTableItem>)
         function this:iterator()

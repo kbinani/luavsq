@@ -110,3 +110,10 @@ function testIterator()
     assert_true( i:hasNext() );
     assert_equal( 3360, i:next().clock );
 end
+
+function testSize()
+    local table = luavsq.TimesigTable.new();
+    assert_equal( 0, table:size() );
+    table:push( luavsq.TimesigTableItem.new( 0, 4, 4, 2 ) );
+    assert_equal( 1, table:size() );
+end
