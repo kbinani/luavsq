@@ -37,7 +37,14 @@ if( nil == luavsq.MidiEvent )then
                 luavsq.MidiEvent.writeDeltaClock( stream, #self.data - 1 );
                 stream:write( self.data, 2, #self.data - 1 );
             else
-                stream:write( self.data, 1, #self.data );
+local i;
+for i = 1, #self.data, 1 do
+    if( self.data[i] < 0 or 255 < self.data[i] )then
+        assert( false, "invalid byte value; i=" .. i );
+    end
+    stream:write( self.data[i] );
+end
+--                stream:write( self.data, 1, #self.data );
             end
         end
 

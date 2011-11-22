@@ -574,7 +574,7 @@ if( nil == luavsq.CP932Converter )then
     };
 
     ---
-    -- UTF8の文字列を，CP932のバイト列に変換します
+    -- UTF8の文字列を，CP932の文字列に変換します
     -- @param (string) s
     -- @return (string)
     function luavsq.CP932Converter.convertFromUTF8( s )

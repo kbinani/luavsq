@@ -114,3 +114,12 @@ function testRShift()
     assert_equal( 0x0, luavsq.Util.rshift( n, 16 ) );
     assert_equal( 0x0, luavsq.Util.rshift( n, 17 ) );
 end
+
+function testStringToArray()
+    local s = "abc";
+    local actual = luavsq.Util.stringToArray( s );
+    assert_equal( 3, #actual );
+    assert_equal( string.byte( "a" ), actual[1] );
+    assert_equal( string.byte( "b" ), actual[2] );
+    assert_equal( string.byte( "c" ), actual[3] );
+end

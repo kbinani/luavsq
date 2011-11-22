@@ -33,7 +33,13 @@ if( nil == luavsq.List )then
         local arguments = { ... };
         this._array = {};
 
+        function this:get( index )
+            return self[index];
+        end
 
+        function this:set( index, value )
+            self[index] = value;
+        end
 
         ---
         -- リスト内のデータを順番に返すイテレータを取得する

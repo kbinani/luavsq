@@ -259,4 +259,18 @@ if( nil == luavsq.Util )then
         end
         return n;
     end
+
+    ---
+    -- 文字列のバイトを取り出して配列にしたものを返す
+    -- @param (string) string_
+    -- @return (table<integer>)
+    function luavsq.Util.stringToArray( string_ )
+        local count = string_:len();
+        local result = {};
+        local i;
+        for i = 1, count, 1 do
+            table.insert( result, string.byte( string_:sub( i, i ) ) );
+        end
+        return result;
+    end
 end
