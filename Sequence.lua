@@ -19,7 +19,6 @@ end
 if( nil == luavsq.Sequence )then
     luavsq.Sequence = {};
 
-    luavsq.Sequence.m_tpq = 480;
     luavsq.Sequence.baseTempo = 500000;
     luavsq.Sequence._MTRK = { 0x4d, 0x54, 0x72, 0x6b };
     luavsq.Sequence._MTHD = { 0x4d, 0x54, 0x68, 0x64 };
@@ -31,6 +30,8 @@ if( nil == luavsq.Sequence )then
     function luavsq.Sequence.new( ... )
         local this = {};
         local arguments = { ... };
+
+        this.m_tpq = 480;
 
         ---
         -- [Vector<VsqTrack>]
@@ -65,7 +66,7 @@ if( nil == luavsq.Sequence )then
             self.totalClocks = pre_measure * 480 * 4 / denominator * numerator;
 
             self.track = luavsq.List.new();--Array.new();
-            self.track:push( luavsq.Track.new( tempo, numerator, denominator ) );
+            self.track:push( luavsq.Track.new() );
             self.track:push( luavsq.Track.new( "Voice1", singer ) );
             self.master = luavsq.Master.new( pre_measure );
             self.mixer = luavsq.Mixer.new( 0, 0, 0, 0 );
@@ -158,7 +159,7 @@ if( nil == luavsq.Sequence )then
         -- @return [void]
         function this:updateTotalClocks()
             local max = self:getPreMeasureClocks();
-            for i = 1, self.track.length - 1, 1 do
+            for i = 1, self.track:size() - 1, 1 do
                 local track = self.track:get( i );
                 local numEvents = track:getEventCount();
                 if( numEvents > 0 )then
@@ -235,7 +236,7 @@ if( nil == luavsq.Sequence )then
                         end
                         for i = #prefix + 1, remain, 1 do
                             local d = buffer[1];
-                            add.data[i] = d;
+                            add.data[i + 1] = d;
                             table.remove( buffer, 1 );
                         end
                         table.insert( ret, add );
@@ -258,7 +259,7 @@ if( nil == luavsq.Sequence )then
                             add.data[i + 1] = prefix[i];
                         end
                         for i = #prefix + 1, remain, 1 do
-                            add.data[i] = buffer[1];
+                            add.data[i + 1] = buffer[1];
                             table.remove( buffer, 1 );
                         end
                         table.insert( ret, add );
@@ -278,7 +279,7 @@ if( nil == luavsq.Sequence )then
                             add.data[i + 1] = prefix[i];
                         end
                         for i = #prefix + 1, remain, 1 do
-                            add.data[i] = buffer[1];
+                            add.data[i + 1] = buffer[1];
                             table.remove( buffer, 1 );
                         end
                         table.insert( ret, add );
@@ -301,6 +302,7 @@ if( nil == luavsq.Sequence )then
             return clock - draft_clock;
         end
 
+--[[
         ---
         -- 指定したクロックにおける、音符長さ(ゲートタイム単位)の最大値を調べます
         -- @param clock [int]
@@ -317,6 +319,7 @@ if( nil == luavsq.Sequence )then
             clockAtEnd = clockAtEnd - 1;
             return clockAtEnd - clock;
         end
+]]
 
         ---
         -- @return [Vector<MidiEvent>]
@@ -371,7 +374,6 @@ if( nil == luavsq.Sequence )then
             local last_clock = 0;
             local track_size = self.track:size();
             local track;
-print( "Sequence::_writeCore; track_size=" .. track_size );
             for track = 1, track_size - 1, 1 do
                 if( self.track:get( track ):getEventCount() > 0 )then
                     local index = self.track:get( track ):getEventCount() - 1;
@@ -536,9 +538,9 @@ print( "Sequence::_writeCore; track_size=" .. track_size );
         end
 
         local last = 0;
-        --[[ @var data (table<VsqNrpn>) ]]--
+        --[[ @var data (table<NrpnEvent>) ]]--
         local data = luavsq.Sequence.generateNRPN( vsq, track, msPreSend );
-        --[[ @var nrpns (table<NrpnEvent>) ]]--
+        --[[ @var nrpns (table<MidiEvent>) ]]--
         local nrpns = luavsq.NrpnEvent.convert( data );
         for i = 1, #nrpns, 1 do
             luavsq.MidiEvent.writeDeltaClock( fs, nrpns[i].clock - last );
@@ -574,7 +576,7 @@ print( "Sequence::_writeCore; track_size=" .. track_size );
             local clock = dyn:getKeyClock( i );
             local c = clock - vsq:getPresendClockAt( clock, msPreSend );
             if( c >= 0 )then
-                local add = luavsq.VsqNrpn.new(
+                local add = luavsq.NrpnEvent.new(
                     c,
                     luavsq.MidiParameterEnum.CC_E_EXPRESSION,
                     dyn:getElement( i )
@@ -600,7 +602,7 @@ print( "Sequence::_writeCore; track_size=" .. track_size );
             local clock = fx2depth:getKeyClock( i );
             local c = clock - vsq:getPresendClockAt( clock, msPreSend );
             if( c >= 0 )then
-                local add = luavsq.VsqNrpn.new(
+                local add = luavsq.NrpnEvent.new(
                     c,
                     luavsq.MidiParameterEnum.CC_FX2_EFFECT2_DEPTH,
                     fx2depth:getElement( i )
@@ -616,7 +618,7 @@ print( "Sequence::_writeCore; track_size=" .. track_size );
     --  先頭に記録されるNRPNを作成します
     -- @return [VsqNrpn]
     function luavsq.Sequence.generateHeaderNRPN()
-        local ret = luavsq.VsqNrpn.new( 0, luavsq.MidiParameterEnum.CC_BS_VERSION_AND_DEVICE, 0x00, 0x00 );
+        local ret = luavsq.NrpnEvent.new( 0, luavsq.MidiParameterEnum.CC_BS_VERSION_AND_DEVICE, 0x00, 0x00 );
         ret:append( luavsq.MidiParameterEnum.CC_BS_DELAY, 0x00, 0x00 );
         ret:append( luavsq.MidiParameterEnum.CC_BS_LANGUAGE_TYPE, 0x00 );
         return ret;
@@ -670,7 +672,7 @@ print( "Sequence::_writeCore; track_size=" .. track_size );
     -- @return [VsqNrpn]
     function luavsq.Sequence.generateNoteNRPN( vsq, track, ve, msPreSend, note_loc, add_delay_sign )
         local clock = ve.clock;
-        local renderer = vsq.track:get( track ):getCommon().version;
+        local renderer = vsq.track:get( track ).common.version;
 
         local clock_msec = vsq.tempoTable:getSecFromClock( clock ) * 1000.0;
 
@@ -683,7 +685,7 @@ print( "Sequence::_writeCore; track_size=" .. track_size );
         local add;
         if( add_delay_sign )then
             local delay0, delay1 = luavsq.Sequence.getMsbAndLsb( msPreSend );
-            add = luavsq.VsqNrpn.new(
+            add = luavsq.NrpnEvent.new(
                 clock - vsq:getPresendClockAt( clock, msPreSend ),
                 luavsq.MidiParameterEnum.CVM_NM_VERSION_AND_DEVICE,
                 0x00, 0x00
@@ -691,7 +693,7 @@ print( "Sequence::_writeCore; track_size=" .. track_size );
             add:append( luavsq.MidiParameterEnum.CVM_NM_DELAY, delay0, delay1, true );
             add:append( luavsq.MidiParameterEnum.CVM_NM_NOTE_NUMBER, ve.id.note, true ); -- Note number
         else
-            add = luavsq.VsqNrpn.new(
+            add = luavsq.NrpnEvent.new(
                 clock - vsq:getPresendClockAt( clock, msPreSend ),
                 luavsq.MidiParameterEnum.CVM_NM_NOTE_NUMBER, ve.id.note
             ); -- Note number
@@ -702,7 +704,7 @@ print( "Sequence::_writeCore; track_size=" .. track_size );
 
         if( ve.id.vibratoHandle ~= nil )then
             add:append( luavsq.MidiParameterEnum.CVM_NM_INDEX_OF_VIBRATO_DB, 0x00, 0x00, true );
-            local icon_id = ve.id.vibratoHandle.iconID;
+            local icon_id = ve.id.vibratoHandle.iconId;
             local num = icon_id:sub( icon_id:len() - 4 );
             local vibrato_type = math.floor( tonumber( num, 16 ) );
             local note_length = ve.id:getLength();
@@ -727,21 +729,18 @@ print( "Sequence::_writeCore; track_size=" .. track_size );
         if( renderer:sub( 1, 4 ) == "DSB2" )then
             add:append( 0x5011, 0x01, true );--TODO: (byte)0x5011の意味は解析中
         end
-        add:append( luavsq.MidiParameterEnum.CVM_NM_PHONETIC_SYMBOL_BYTES, symbols.length, true );-- (byte)0x12(Number of phonetic symbols in bytes)
+        add:append( luavsq.MidiParameterEnum.CVM_NM_PHONETIC_SYMBOL_BYTES, #symbols, true );-- (byte)0x12(Number of phonetic symbols in bytes)
         local count = -1;
         local consonantAdjustment = ve.id.lyricHandle:getLyricAt( 0 ):getConsonantAdjustmentList();
         for j = 1, #spl, 1 do
-            local chars = {};--Array.new();
+            local chars = luavsq.Util.stringToArray( spl[j] );--Array.new();
             local k;
-            for k = 1, spl[j]:len(), 1 do
-                chars[k] = spl[j]:sub( k, k );
-            end
             for k = 1, #chars, 1 do
                 count = count + 1;
                 if( k == 1 )then
-                    add.append( luavsq.Util.bor( luavsq.Util.lshift( 0x50, 8 ), (0x13 + count) ), chars[k], consonantAdjustment[j], true ); -- Phonetic symbol j
+                    add:append( luavsq.Util.bor( luavsq.Util.lshift( 0x50, 8 ), (0x13 + count) ), chars[k], consonantAdjustment[j], true ); -- Phonetic symbol j
                 else
-                    add.append( luavsq.Util.bor( luavsq.Util.lshift( 0x50, 8 ), (0x13 + count) ), chars[k], true ); -- Phonetic symbol j
+                    add:append( luavsq.Util.bor( luavsq.Util.lshift( 0x50, 8 ), (0x13 + count) ), chars[k], true ); -- Phonetic symbol j
                 end
             end
         end
@@ -769,7 +768,7 @@ print( "Sequence::_writeCore; track_size=" .. track_size );
             add:append( luavsq.MidiParameterEnum.CVM_NM_ADD_PORTAMENTO, ve.id.pmbPortamentoUse, true );-- (byte)0x58(AddScoopToUpInternals&AddPortamentoToDownIntervals)
             local decay = math.floor( ve.id.demDecGainRate / 100.0 * 0x64 );
             add:append( luavsq.MidiParameterEnum.CVM_NM_CHANGE_AFTER_PEAK, decay, true );-- (byte)0x59(changeAfterPeak)
-            local accent = math.floor( 0x64 * ve.ID.DEMaccent / 100.0 );
+            local accent = math.floor( 0x64 * ve.id.demAccent / 100.0 );
             add:append( luavsq.MidiParameterEnum.CVM_NM_ACCENT, accent, true );-- (byte)0x5a(Accent)
         end
 --[[
@@ -920,15 +919,12 @@ print( "Sequence::_writeCore; track_size=" .. track_size );
                 break;
             end
         end
-print( "Sequence::_generateNRPN_3; count=" .. count .. "; singer_event=" .. singer_event );
         if( singer_event >= 0 )then --見つかった場合
-print( "Sequence::_generateNRPN_3; before; #list=" .. #list );
             luavsq.Sequence._array_add_all( list, luavsq.Sequence.generateSingerNRPN( vsq, target:getEvent( singer_event ), 0 ) );
-print( "Sequence::_generateNRPN_3; after; #list=" .. #list );
         else                   --多分ありえないと思うが、歌手が不明の場合。
             --throw new Exception( "first singer was not specified" );
-            table.insert( list, luavsq.VsqNrpn.new( 0, luavsq.MidiParameterEnum.CC_BS_LANGUAGE_TYPE, 0x0 ) );
-            table.insert( list, luavsq.VsqNrpn.new( 0, luavsq.MidiParameterEnum.PC_VOICE_TYPE, 0x0 ) );
+            table.insert( list, luavsq.NrpnEvent.new( 0, luavsq.MidiParameterEnum.CC_BS_LANGUAGE_TYPE, 0x0 ) );
+            table.insert( list, luavsq.NrpnEvent.new( 0, luavsq.MidiParameterEnum.PC_VOICE_TYPE, 0x0 ) );
         end
 
         luavsq.Sequence._array_add_all( list, luavsq.Sequence.generateVoiceChangeParameterNRPN( vsq, track, msPreSend ) );
@@ -986,7 +982,7 @@ print( "Sequence::_generateNRPN_3; after; #list=" .. #list );
                 local j;
                 for j = i + 1, event_count - 1, 1 do
                     local itemj = target:getEvent( j );
-                    if( itemj.id.type == luavsq.IdType.Anote )then
+                    if( itemj.id.type == luavsq.IdTypeEnum.Anote )then
                         nextclock = itemj.clock;
                         break;
                     end
@@ -1026,7 +1022,7 @@ print( "Sequence::_generateNRPN_3; after; #list=" .. #list );
             end
         end
 
-        list = luavsq.NrpnEvent.sort( list );
+        table.sort( list, luavsq.NrpnEvent.compare );
         local merged = {};--Vector<VsqNrpn>();
         for i = 1, #list, 1 do
             luavsq.Sequence._array_add_all( merged, list[i]:expand() );
@@ -1052,7 +1048,7 @@ print( "Sequence::_generateNRPN_3; after; #list=" .. #list );
             local msb, lsb = luavsq.Sequence.getMsbAndLsb( value );
             local c = clock - vsq:getPresendClockAt( clock, msPreSend );
             if( c >= 0 )then
-                local add = luavsq.VsqNrpn.new(
+                local add = luavsq.NrpnEvent.new(
                     c,
                     luavsq.MidiParameterEnum.PB_PITCH_BEND,
                     msb,
@@ -1087,7 +1083,7 @@ print( "Sequence::_generateNRPN_3; after; #list=" .. #list );
             local clock = pbs:getKeyClock( i );
             local c = clock - vsq:getPresendClockAt( clock, msPreSend );
             if( c >= 0 )then
-                local add = luavsq.VsqNrpn.new(
+                local add = luavsq.NrpnEvent.new(
                     c,
                     luavsq.MidiParameterEnum.CC_PBS_PITCH_BEND_SENSITIVITY,
                     pbs:getElement( i ),
@@ -1110,7 +1106,7 @@ print( "Sequence::_generateNRPN_3; after; #list=" .. #list );
         if( ve.id.vibratoHandle ~= nil )then
             local vclock = ve.clock + ve.id.vibratoDelay;
             local delayMSB, delayLSB = luavsq.Sequence.getMsbAndLsb( msPreSend );
-            local add2 = luavsq.VsqNrpn.new(
+            local add2 = luavsq.NrpnEvent.new(
                 vclock - vsq:getPresendClockAt( vclock, msPreSend ),
                 luavsq.MidiParameterEnum.CC_VD_VERSION_AND_DEVICE,
                 0x00,
@@ -1122,7 +1118,7 @@ print( "Sequence::_generateNRPN_3; after; #list=" .. #list );
             table.insert( ret, add2 );
             local vlength = ve.id:getLength() - ve.id.vibratoDelay;
             local rateBP = ve.id.vibratoHandle:getRateBP();
-            local count = rateBP:getCount();
+            local count = rateBP:size();
             if( count > 0 )then
                 local i;
                 for i = 0, count - 1, 1 do
@@ -1131,7 +1127,7 @@ print( "Sequence::_generateNRPN_3; after; #list=" .. #list );
                     local cl = vclock + math.floor( percent * vlength );
                     table.insert(
                         ret,
-                        luavsq.VsqNrpn.new(
+                        luavsq.NrpnEvent.new(
                             cl - vsq:getPresendClockAt( cl, msPreSend ),
                             luavsq.MidiParameterEnum.CC_VR_VIBRATO_RATE,
                             itemi.y
@@ -1140,7 +1136,7 @@ print( "Sequence::_generateNRPN_3; after; #list=" .. #list );
                 end
             end
             local depthBP = ve.id.vibratoHandle:getDepthBP();
-            count = depthBP:getCount();
+            count = depthBP:size();
             if( count > 0 )then
                 local i;
                 for i = 0, count - 1, 1 do
@@ -1149,7 +1145,7 @@ print( "Sequence::_generateNRPN_3; after; #list=" .. #list );
                     local cl = vclock + math.floor( percent * vlength );
                     table.insert(
                         ret,
-                        luavsq.VsqNrpn.new(
+                        luavsq.NrpnEvent.new(
                             cl - vsq:getPresendClockAt( cl, msPreSend ),
                             luavsq.MidiParameterEnum.CC_VD_VIBRATO_DEPTH,
                             itemi.y
@@ -1158,7 +1154,7 @@ print( "Sequence::_generateNRPN_3; after; #list=" .. #list );
                 end
             end
         end
-        table.sort( ret, luavsq.VsqNrpn.compare );--Collections.sort( ret );
+        table.sort( ret, luavsq.NrpnEvent.compare );--Collections.sort( ret );
         return ret;
     end
 
@@ -1191,14 +1187,14 @@ print( "Sequence::_generateNRPN_3; after; #list=" .. #list );
         for i = 1, #curves, 1 do
             local vbpl = vsq.track:get( track ):getCurve( curves[i] );
             if( vbpl:size() > 0 )then
-                local lsb = luavsq.MidiParameterEnum.getVoiceChangeParameterID( curves[i] );
+                local lsb = luavsq.MidiParameterEnum.getVoiceChangeParameterId( curves[i] );
                 local count = vbpl:size();
                 local j;
                 for j = 0, count - 1, 1 do
                     local clock = vbpl:getKeyClock( j );
                     local c = clock - vsq:getPresendClockAt( clock, msPreSend );
                     if( c >= 0 )then
-                        local add = luavsq.VsqNrpn.new(
+                        local add = luavsq.NrpnEvent.new(
                             c,
                             luavsq.MidiParameterEnum.VCP_VOICE_CHANGE_PARAMETER_ID,
                             lsb
@@ -1236,7 +1232,7 @@ print( "Sequence::_generateNRPN_3; after; #list=" .. #list );
     end
 
     ---
-    -- "DM:0001"といった、VSQメタテキストの行の先頭につくヘッダー文字列のバイト列表現を取得する
+    -- "DM:0001:"といった、VSQメタテキストの行の先頭につくヘッダー文字列のバイト列表現を取得する
     -- @param (integer) count
     -- @return (table<integer>)
     function luavsq.Sequence.getLinePrefixBytes( count )
@@ -1275,17 +1271,6 @@ print( "Sequence::_generateNRPN_3; after; #list=" .. #list );
             if( val < digits )then
                 return i - 1;
             end
-        end
-    end
-
-    ---
-    -- char[]を書き込む。
-    -- @param fs [ByteArrayOutputStream]
-    -- @param item char[]
-    function luavsq.Sequence.writeCharArray( fs, item )
-        local i;
-        for i = 1, #item, 1 do
-            fs:write( item[i] );
         end
     end
 

@@ -63,22 +63,22 @@ if( nil == luavsq.TimesigTable )then
         ---
         -- TimeSigTableの[*].Clockの部分を更新します
         function this:updateTimesigInfo()
-            if( self._list[0].clock ~= 0 )then
+            if( self:get( 0 ).clock ~= 0 )then
                 return;
             end
-            self._list[0].Clock = 0;
+            self:get( 0 ).clock = 0;
             self._list:sort( luavsq.TimesigTableItem.compare );-- Collections.sort( this );
-            local count = self._list:size();
+            local count = self:size();
             local j;
             for j = 1, count - 1, 1 do
-                local item = self._list[j - 1];
+                local item = self:get( j - 1 );
                 local numerator = item.numerator;
                 local denominator = item.denominator;
                 local clock = item.clock;
                 local bar_count = item.barCount;
                 local dif = math.floor( 480 * 4 / denominator * numerator );--1小節が何クロックか？
-                clock = clock + (self._list[j].barCount - bar_count) * dif;
-                self._list[j].clock = clock;
+                clock = clock + (self:get( j ).barCount - bar_count) * dif;
+                self:get( j ).clock = clock;
             end
         end
 

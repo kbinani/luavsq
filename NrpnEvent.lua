@@ -77,12 +77,14 @@ if( nil == luavsq.NrpnEvent )then
                 table.insert( ret, v );
             end
             local i;
-            for i = 1, #self._list, 1 do
-                local add = self._list[i]:expand();
-                local j;
-                for j = 1, #add, 1 do
-                    table.insert( ret, add[j] );
-                end --ret.addAll( Arrays.asList( m_list.get( i ).expand() ) );
+            if( self._list ~= nil )then
+                for i = 1, #self._list, 1 do
+                    local add = self._list[i]:expand();
+                    local j;
+                    for j = 1, #add, 1 do
+                        table.insert( ret, add[j] );
+                    end --ret.addAll( Arrays.asList( m_list.get( i ).expand() ) );
+                end
             end
             return ret;
         end

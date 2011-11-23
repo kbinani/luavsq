@@ -29,7 +29,7 @@ if( nil == luavsq.Log )then
 
     function luavsq.Log.print( message )
         if( luavsq.Log._level > 0 )then
-            local fp = luavsq.Log._getFilehandle();
+            local fp = luavsq.Log._getFileHandle();
             fp:write( message );
             fp:flush();
         end

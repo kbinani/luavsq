@@ -122,12 +122,13 @@ if( nil == luavsq.Util )then
     function luavsq.Util.sort( array, startIndex, length )
         local spliced = {};
         local i;
-        for i = startIndex + 1, startIndex + 1 + length, 1 do
+        for i = startIndex + 1, startIndex + length, 1 do
             table.insert( spliced, array[i] );
         end
         table.sort( spliced );
-        for i = startIndex + 1, startIndex + 1 + length, 1 do
-            array[i] = spliced[i - startIndex];
+        local j;
+        for j = startIndex + 1, startIndex + length, 1 do
+            array[j] = spliced[j - startIndex];
         end
     end
 

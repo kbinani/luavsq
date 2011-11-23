@@ -240,7 +240,7 @@ if( nil == luavsq.Track )then
             local id = luavsq.Id.new( 0 );
             id.type = luavsq.IdTypeEnum.Singer;
             local ish = luavsq.SingerHandle.new();
-            ish.iconID = "$07010000";
+            ish.iconId = "$07010000";
             ish.ids = singer;
             ish.original = 0;
             ish.caption = "";
@@ -401,7 +401,7 @@ if( nil == luavsq.Track )then
                     end
 
                     local bplist = handle.getDynBP();
-                    if( bplist == nil or (bplist ~= nil and bplist.getCount() <= 0) )then
+                    if( bplist == nil or (bplist ~= nil and bplist.size() <= 0) )then
                         -- カーブデータが無い場合
                         local a = 0.0;
                         if( length > 0 )then
@@ -425,7 +425,7 @@ if( nil == luavsq.Track )then
                         -- カーブデータがある場合
                         local last_val = handle.getStartDyn();
                         local last_clock = clock;
-                        local bpnum = bplist.getCount();
+                        local bpnum = bplist:size();
                         local last = start_dyn;
 
                         -- bplistに指定されている分のデータ点を追加

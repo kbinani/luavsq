@@ -218,17 +218,21 @@ end
 
 function testAdd()
     local list = luavsq.BPList.new( "foo", 63, -10, 1000 );
+    assert_equal( 0, list:size() );
     local idA = list:add( 480, 11 );
+    assert_equal( 1, list:size() );
     assert_equal( 1, idA );
     assert_equal( 11, list:getElement( 0 ) );
 
     --同じclockに値をaddすると、データ点は増えずに値が上書きされる
     idA = list:add( 480, 12 );
+    assert_equal( 1, list:size() );
     assert_equal( 1, idA );
     assert_equal( 12, list:getElement( 0 ) );
 
     --既存の点より小さいclockに値をaddすると、並び替えが起こる
     local idB = list:add( 240, 99 );
+    assert_equal( 2, list:size() );
     assert_not_equal( idA, idB );
     assert_equal( 240, list:getKeyClock( 0 ) );
     assert_equal( idB, list:getElementB( 0 ).id );

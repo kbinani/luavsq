@@ -1,5 +1,6 @@
 require( "lunit" );
 dofile( "../Util.lua" );
+dofile( "../Log.lua" );
 module( "UtilTest", package.seeall, lunit.testcase );
 
 function testSplit()
@@ -66,6 +67,13 @@ function testSort()
     luavsq.Util.sort( array, 3, 5 );
     local expected = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
     local i;
+    for i = 1, #expected, 1 do
+        assert_equal( expected[i], array[i] );
+    end
+
+    array = { 210, 236, 240, 0 };
+    luavsq.Util.sort( array, 0, 3 );
+    expected = { 210, 236, 240, 0 };
     for i = 1, #expected, 1 do
         assert_equal( expected[i], array[i] );
     end
