@@ -358,19 +358,18 @@ if( nil == luavsq.Sequence )then
         -- @return (string)
         function this:write( ... )
             local arguments = { ... };
-            if( #arguments == 2 )then
-                return self:_writeCore( arguments[1], arguments[2], false );
-            elseif( #arguments == 3 )then
-                return self:_writeCore( arguments[1], arguments[2], arguments[3] );
+            if( #arguments == 3 )then
+                return self:_writeCore( arguments[1], arguments[2], arguments[3], false );
+            elseif( #arguments == 4 )then
+                return self:_writeCore( arguments[1], arguments[2], arguments[3], arguments[4] );
             end
         end
 
         ---
-        -- このインスタンスを文字列に出力する
+        -- このインスタンスをストリームに出力する
         -- @param (integer) msPreSend プリセンドタイム(msec)
         -- @param (string) encoding
-        -- @return (string)
-        function this:_writeCore( msPreSend, encoding, print_pitch )
+        function this:_writeCore( fs, msPreSend, encoding, print_pitch )
             local last_clock = 0;
             local track_size = self.track:size();
             local track;
@@ -382,7 +381,6 @@ if( nil == luavsq.Sequence )then
                 end
             end
 
-            local fs = luavsq.ByteArrayOutputStream.new();
             local first_position;--チャンクの先頭のファイル位置
 
             -- ヘッダ
@@ -457,8 +455,6 @@ if( nil == luavsq.Sequence )then
             for track = 2, count - 1, 1 do
                 luavsq.Sequence.printTrack( self, track, fs, msPreSend, encoding, print_pitch );
             end
-
-            return fs:toString();--.toByteArray();
         end
 
         if( #arguments == 1 )then
@@ -538,14 +534,15 @@ if( nil == luavsq.Sequence )then
         end
 
         local last = 0;
-        --[[ @var data (table<NrpnEvent>) ]]--
+        -- @var data (table<NrpnEvent>)
         local data = luavsq.Sequence.generateNRPN( vsq, track, msPreSend );
-        --[[ @var nrpns (table<MidiEvent>) ]]--
+        -- @var nrpns (table<MidiEvent>)
         local nrpns = luavsq.NrpnEvent.convert( data );
         for i = 1, #nrpns, 1 do
-            luavsq.MidiEvent.writeDeltaClock( fs, nrpns[i].clock - last );
-            nrpns[i]:writeData( fs );
-            last = nrpns[i].clock;
+            local item = nrpns[i];
+            luavsq.MidiEvent.writeDeltaClock( fs, item.clock - last );
+            item:writeData( fs );
+            last = item.clock;
         end
 
         --トラックエンド
