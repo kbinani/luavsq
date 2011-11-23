@@ -45,7 +45,9 @@ if( nil == luavsq.Log )then
 
     function luavsq.Log._getFileHandle()
         if( luavsq.Log._fileHandle == nil )then
-            luavsq.Log._fileHandle = io.open( "..\\luavsq.log", "w" );
+            luavsq.Log._fileHandle = io.open( "..\\luavsq.log", "a" );
+            luavsq.Log._fileHandle:write( "========================================================================\n" );
+            luavsq.Log._fileHandle:write( "Log start: " .. os.date() .. "\n" );
         end
         return luavsq.Log._fileHandle;
     end
