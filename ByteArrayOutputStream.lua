@@ -53,12 +53,6 @@ if( nil == luavsq.ByteArrayOutputStream )then
             if( byte == nil )then
                 byte = 0;
             end
-if( type( byte ) ~= "number" )then
-    print( "ByteArrayOutputStream::_write_1; argument is not a number" );
-end
-if( byte < 0 or 255 < byte )then
-    assert( false, "ByteArrayOutputStream::_write_1; invalid byte value:" .. byte );
-end
             local index = self._pointer + 2;
             local remain = index - #self._array;
             if( remain > 0 )then
@@ -78,10 +72,6 @@ end
             local result = "";
             local i;
             for i = 1, #self._array, 1 do
-io.write( string.format( "%02X", self._array[i] ) .. " " );
-if( i % 8 == 0 )then
-    io.write( "\n" );
-end
                 result = result .. string.char( self._array[i] );
             end
             return result;
