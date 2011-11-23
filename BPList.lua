@@ -46,7 +46,7 @@ if( nil == luavsq.BPList )then
         end
 
         ---
-        -- @param length [int]
+        -- @param length (integer)
         -- @return [void]
         function this:_ensureBufferLength( length )
             if( self.clocks == nil )then
@@ -103,13 +103,13 @@ if( nil == luavsq.BPList )then
 
         ---
         -- このBPListのデフォルト値を取得します
-        -- @return [int]
+        -- @return (integer)
         function this:getDefault()
             return self.defaultValue;
         end
 
         ---
-        -- @param _value [int]
+        -- @param _value (integer)
         -- @return [void]
         function this:setDefault( _value )
             self.defaultValue = _value;
@@ -183,7 +183,7 @@ if( nil == luavsq.BPList )then
 
         ---
         -- このリストに設定された最大値を取得します。
-        -- @return [int]
+        -- @return (integer)
         function this:getMaximum()
             return self.maxValue;
         end
@@ -197,20 +197,20 @@ if( nil == luavsq.BPList )then
 
         ---
         -- このリストに設定された最小値を取得します
-        -- @return [int]
+        -- @return (integer)
         function this:getMinimum()
             return self.minValue;
         end
 
         ---
-        -- @param vlaue [int]
+        -- @param vlaue (integer)
         -- @return [void]
         function this:setMinimum( value )
             self.minValue = value;
         end
 
         --[[
-        -- @param clock [int]
+        -- @param clock (integer)
         -- @return [void]
         function this:remove( clock )
             self:_ensureBufferLength( self._length );
@@ -219,7 +219,7 @@ if( nil == luavsq.BPList )then
         end]]
 
         --[[
-        -- @param index [int]
+        -- @param index (integer)
         -- @return [void]
         function this:removeElementAt( index )
             index = index + 1;
@@ -235,7 +235,7 @@ if( nil == luavsq.BPList )then
         end]]
 
         ---
-        -- @param clock [int]
+        -- @param clock (integer)
         -- @return [bool]
         function this:isContainsKey( clock )
             self:_ensureBufferLength( self._length );
@@ -247,9 +247,9 @@ if( nil == luavsq.BPList )then
         -- 時刻clockにデータがなければ何もしない。
         -- 時刻new_clockに既にデータがある場合、既存のデータは削除される。
         --
-        -- @param clock [int]
-        -- @param new_clock [int]
-        -- @param new_value [int]
+        -- @param clock (integer)
+        -- @param new_clock (integer)
+        -- @param new_value (integer)
         -- @return [void]
         function this:move( clock, new_clock, new_value )
             self:_ensureBufferLength( self._length );
@@ -294,36 +294,36 @@ if( nil == luavsq.BPList )then
         end
 
         ---
-        -- @param index [int]
-        -- @return [int]
+        -- @param index (integer)
+        -- @return (integer)
         function this:getElement( index )
             return self:getElementA( index );
         end
 
         ---
-        -- @param index [int]
-        -- @return [int]
+        -- @param index (integer)
+        -- @return (integer)
         function this:getElementA( index )
             return self.items[index + 1].value;
         end
 
         ---
-        -- @param index [int]
+        -- @param index (integer)
         -- @return [VsqBPPair]
         function this:getElementB( index )
             return self.items[index + 1]:clone();
         end
 
         ---
-        -- @param index [int]
-        -- @return [int]
+        -- @param index (integer)
+        -- @return (integer)
         function this:getKeyClock( index )
             return self.clocks[index + 1];
         end
 
         ---
         -- @param id [long]
-        -- @return [int]
+        -- @return (integer)
         function this:findValueFromId( id )
             local i;
             for i = 1, self._length, 1 do
@@ -359,7 +359,7 @@ if( nil == luavsq.BPList )then
 
         ---
         -- @param id [long]
-        -- @param value [int]
+        -- @param value (integer)
         -- @return [void]
         function this:setValueForId( id, value )
             local i;
@@ -374,7 +374,7 @@ if( nil == luavsq.BPList )then
         ---
         -- このBPListの内容をテキストファイルに書き出します
         -- @param writer [ITextWriter]
-        -- @param start_clock [int]
+        -- @param start_clock (integer)
         -- @param header [string]
         -- @return [void]
         function this:print( writer, start_clock, header )
@@ -416,7 +416,7 @@ if( nil == luavsq.BPList )then
                 local ch = reader:get();
                 if( ch == '\n' )then
                     if( mode == 1 )then
-                        self:_addWithoutSort( clock, value * minus );
+                        self:addWithoutSort( clock, value * minus );
                         mode = 0;
                         clock = 0;
                         value = 0;
@@ -425,7 +425,7 @@ if( nil == luavsq.BPList )then
                 else
                     if( ch == '[' )then
                         if( mode == 1 )then
-                            self:_addWithoutSort( clock, value * minus );
+                            self:addWithoutSort( clock, value * minus );
                             mode = 0;
                             clock = 0;
                             value = 0;
@@ -475,7 +475,7 @@ if( nil == luavsq.BPList )then
         end]]
 
         ---
-        -- @return [int]
+        -- @return (integer)
         function this:size()
             return self._length;
         end
@@ -502,10 +502,10 @@ if( nil == luavsq.BPList )then
         ---
         -- 並べ替え，既存の値との重複チェックを行わず，リストの末尾にデータ点を追加する
         --
-        -- @param _clock [int]
-        -- @param value [int]
+        -- @param _clock (integer)
+        -- @param value (integer)
         -- @return [void]
-        function this:_addWithoutSort( _clock, value )
+        function this:addWithoutSort( _clock, value )
             self:_ensureBufferLength( self._length + 1 );
             self.clocks[self._length + 1] = _clock;
             self.maxId = self.maxId + 1;
@@ -515,8 +515,8 @@ if( nil == luavsq.BPList )then
         end
 
         ---
-        -- @param clock [int]
-        -- @param value [int]
+        -- @param clock (integer)
+        -- @param value (integer)
         -- @return [long]
         function this:add( clock, value )
             self:_ensureBufferLength( self._length );
@@ -543,8 +543,8 @@ if( nil == luavsq.BPList )then
         end
 
         ---
-        -- @param clock [int]
-        -- @param value [int]
+        -- @param clock (integer)
+        -- @param value (integer)
         -- @param id [long]
         -- @return [void]
         function this:addWithId( clock, value, id )
@@ -590,6 +590,9 @@ if( nil == luavsq.BPList )then
             end
         end]]
 
+        ---
+        -- 指定された Tick 単位の時刻における，コントロールパラメータの値を取得する．
+        -- @see this:_getValue_1, this:_getValue_2
         function this:getValue( ... )
             local arguments = { ... };
             if( #arguments == 2 )then
@@ -600,9 +603,10 @@ if( nil == luavsq.BPList )then
         end
 
         ---
-        -- @param clock [int]
+        -- 指定された Tick 単位の時刻における，コントロールパラメータの値を取得する．
+        -- @param clock (integer)
         -- @param index [ByRef<int>]
-        -- @return [int]
+        -- @return (integer)
         function this:_getValue_2( clock, index )
             if( self._length == 0 )then
                 return self.defaultValue;
@@ -632,8 +636,9 @@ if( nil == luavsq.BPList )then
         end
 
         ---
-        -- @param clock [int]
-        -- @return [int]
+        -- 指定された Tick 単位の時刻における，コントロールパラメータの値を取得する．
+        -- @param clock (integer)
+        -- @return (integer)
         function this:_getValue_1( clock )
             self:_ensureBufferLength( self._length );
             local index = self:_find( clock );

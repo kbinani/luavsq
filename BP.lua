@@ -18,6 +18,8 @@ end
 
 if( nil == luavsq.BP )then
 
+    ---
+    -- コントロールカーブのデータ点を表現するクラス
     luavsq.BP = {};
 
     function luavsq.BP.new( _value, _id )
@@ -26,6 +28,7 @@ if( nil == luavsq.BP )then
         this.id = _id;
 
         ---
+        -- 簡易コピーを返す
         -- @return [object]
         function this:clone()
             return luavsq.BP.new( self.value, self.id );
