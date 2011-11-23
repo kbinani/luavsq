@@ -88,6 +88,10 @@ if( nil == luavsq.ByteArrayOutputStream )then
             self._pointer = position;
         end
 
+        function this:close()
+            --do nothing
+        end
+
         return this;
     end
 
