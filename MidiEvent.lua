@@ -118,33 +118,40 @@ if( nil == luavsq.MidiEvent )then
         return ret;
     end
 
+    luavsq.MidiEvent._x = {};
+    local i;
+    for i = 0, 64, 1 do
+        luavsq.MidiEvent._x[i + 1] = math.pow( 2, i );
+    end
+
     ---
     -- @param (ByteArrayOutputStream) stream
     -- @param (long) number
     function luavsq.MidiEvent.writeDeltaClock( stream, number )
-        local bits = {};--new boolean[64];
-        local val = 0x1;
-        bits[1] = luavsq.Util.band( number, val ) == val;
-        local i;
-        for i = 1, 63, 1 do
-            val = luavsq.Util.lshift( val, 1 );
-            bits[i + 1] = luavsq.Util.band( number, val ) == val;
-        end
+        local bits = {};
+        local p = luavsq.MidiEvent._x[1];
+        local p2;
         local first = 0;
+        local p2 = luavsq.MidiEvent._x[65];
         for i = 63, 0, -1 do
-            if( bits[i + 1] )then
+            p = luavsq.MidiEvent._x[i + 1];
+            local b = (number % p2 >= p);
+            p2 = p;
+            bits[i + 1] = b;
+            if( first == 0 and b )then
                 first = i;
-                break;
             end
         end
+
         -- 何バイト必要か？
         local bytes = math.floor( first / 7 ) + 1;
         for i = 1, bytes, 1 do
             local num = 0;
             local count = 0x80;
             local j;
-            for j = (bytes - i + 1) * 7 - 1, (bytes - i + 1) * 7 - 6 - 1, -1 do
-                count = luavsq.Util.rshift( count, 1 );
+            local startJ = (bytes - i + 1) * 7 - 1;
+            for j = startJ, startJ - 6, -1 do
+                count = count / 2;
                 if( bits[j + 1] )then
                     num = num + count;
                 end
