@@ -18,8 +18,15 @@ end
 
 if( nil == luavsq.CP932Converter )then
 
+    ---
+    -- UTF8 から CP932 への文字コード変換ユーティリティ
     luavsq.CP932Converter = {};
 
+    ---
+    -- Unicode から CP932 への変換テーブル
+    -- @access private
+    -- @class table
+    -- @name _unicode_to_cp932
     luavsq.CP932Converter._unicode_to_cp932 = {
         [0] = {
             [0] = { 0 }, [1] = { 1 }, [2] = { 2 }, [3] = { 3 }, [4] = { 4 }, [5] = { 5 }, [6] = { 6 }, [7] = { 7 }, [8] = { 8 }, [9] = { 9 }, [10] = { 10 }, [11] = { 11 }, [12] = { 12 }, [13] = { 13 }, [14] = { 14 }, [15] = { 15 }, [16] = { 16 }, [17] = { 17 }, [18] = { 18 }, [19] = { 19 }, [20] = { 20 }, [21] = { 21 }, [22] = { 22 }, [23] = { 23 },
@@ -571,9 +578,9 @@ if( nil == luavsq.CP932Converter )then
     };
 
     ---
-    -- UTF8の文字列を，CP932の文字列に変換します
-    -- @param (string) s
-    -- @return (string)
+    -- UTF8 の文字列を CP932 の文字列に変換する
+    -- @param (string) s 変換前の文字列
+    -- @return (string) 変換後の文字列
     function luavsq.CP932Converter.convertFromUTF8( s )
         local utf8codes = luavsq.CP932Converter._getUnicodeBytesFromUTF8String( s );
         local result = "";
@@ -600,9 +607,10 @@ if( nil == luavsq.CP932Converter )then
     end
 
     ---
-    -- utf8の文字列をunicodeのバイト列に変換する
-    -- @param (string) s
-    -- @return (table)
+    -- UTF8 の文字列を unicode のバイト列に変換する
+    -- @access private
+    -- @param (string) s 変換前の文字列
+    -- @return (table) 変換後の unicode のバイト列
     function luavsq.CP932Converter._getUnicodeBytesFromUTF8String( s )
         local result = {};
         local i = 1;
@@ -644,8 +652,9 @@ if( nil == luavsq.CP932Converter )then
     end
 
     ---
-    -- @param (table<integer>) utf8 UTF8のバイト列
-    -- @return (table<integer>) unicodeのバイト列
+    -- UTF8 のバイト列を Unicode のバイト列に変換する
+    -- @param (table) utf8 UTF8のバイト列
+    -- @return (table) Unicode のバイト列
     function luavsq.CP932Converter._getUnicodeBytesFromUTF8Bytes( utf8 )
         if( #utf8 == 1 )then
             --0xxx xxxx

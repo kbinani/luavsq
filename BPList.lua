@@ -19,9 +19,12 @@ end
 if( nil == luavsq.BPList )then
 
     ---
-    --- コントロールカーブのデータ点リスト
+    -- コントロールカーブのデータ点リストを表すクラス
     luavsq.BPList = {};
 
+    ---
+    -- コンストラクタ
+    -- @see this:_init_4
     function luavsq.BPList.new( ... )
         local this = {};
         local arguments = { ... };
@@ -35,8 +38,11 @@ if( nil == luavsq.BPList )then
         this.name = "";
 
         ---
-        -- initializer
-        -- @return [void]
+        -- 初期化を行う
+        -- @param name (string) コントロールカーブの名前
+        -- @param defaultValue (integer) コントロールカーブのデフォルト値
+        -- @param minimum (integer) コントロールカーブの最小値
+        -- @param maximum (integer) コントロールカーブの最大値
         function this:_init_4( name, defaultValue, minimum, maximum )
             self.name = name;
             self.defaultValue = defaultValue;
@@ -46,8 +52,9 @@ if( nil == luavsq.BPList )then
         end
 
         ---
-        -- @param length (integer)
-        -- @return [void]
+        -- データ点を格納するバッファを確保する
+        -- @access private
+        -- @param length (integer) 確保するバッファの最小長さ
         function this:_ensureBufferLength( length )
             if( self.clocks == nil )then
                 self.clocks = {};
@@ -76,7 +83,8 @@ if( nil == luavsq.BPList )then
         end
 
         ---
-        -- @return [string]
+        -- コントロールカーブの名前を取得する
+        -- @return (string) コントロールカーブの名前
         function this:getName()
             if( self.name == nil )then
                 self.name = "";
@@ -85,8 +93,8 @@ if( nil == luavsq.BPList )then
         end
 
         ---
-        -- @param _value [string]
-        -- @return [void]
+        -- コントロールカーブの名前を設定する
+        -- @param value (string) コントロールカーブの名前
         function this:setName( value )
             if( value == nil )then
                 self.name = "";
@@ -96,21 +104,22 @@ if( nil == luavsq.BPList )then
         end
 
         ---
-        -- @return [long]
+        -- このリスト内で使用されている ID の最大値を取得する
+        -- @return (integer) 使用されている ID の最大値
         function this:getMaxId()
             return self.maxId;
         end
 
         ---
-        -- このBPListのデフォルト値を取得します
-        -- @return (integer)
+        -- コントロールカーブのデフォルト値を取得する
+        -- @return (integer) コントロールカーブのデフォルト値
         function this:getDefault()
             return self.defaultValue;
         end
 
         ---
-        -- @param _value (integer)
-        -- @return [void]
+        -- コントロールカーブのデフォルト値を設定する
+        -- @param value (integer) コントロールカーブのデフォルト値
         function this:setDefault( _value )
             self.defaultValue = _value;
         end
@@ -166,8 +175,8 @@ if( nil == luavsq.BPList )then
         end]]
 
         ---
-        -- このVsqBPListの同一コピーを作成します
-        -- @return [object]
+        -- コピーを作成する
+        -- @return (luavsq.BPList) このインスタンスのコピー
         function this:clone()
             local res = luavsq.BPList.new( self.name, self.defaultValue, self.minValue, self.maxValue );
             res:_ensureBufferLength( self._length );
@@ -182,29 +191,29 @@ if( nil == luavsq.BPList )then
         end
 
         ---
-        -- このリストに設定された最大値を取得します。
-        -- @return (integer)
+        -- コントロールカーブの最大値を取得する
+        -- @return (integer) コントロールカーブの最大値
         function this:getMaximum()
             return self.maxValue;
         end
 
         ---
-        -- @param value[ int]
-        -- @return [void]
+        -- コントロールカーブの最大値を設定する
+        -- @param value (integer) コントロールカーブの最大値
         function this:setMaximum( value )
             self.maxValue = value;
         end
 
         ---
-        -- このリストに設定された最小値を取得します
-        -- @return (integer)
+        -- コントロールカーブの最小値を取得する
+        -- @return (integer) コントロールカーブの最小値
         function this:getMinimum()
             return self.minValue;
         end
 
         ---
-        -- @param vlaue (integer)
-        -- @return [void]
+        -- コントロールカーブの最小値を設定する
+        -- @param value (integer) コントロールカーブの最小値
         function this:setMinimum( value )
             self.minValue = value;
         end
@@ -235,8 +244,9 @@ if( nil == luavsq.BPList )then
         end]]
 
         ---
-        -- @param clock (integer)
-        -- @return [bool]
+        -- 指定された時刻にデータ点が存在するかどうかを調べる
+        -- @param clock (integer) Tick 単位の時刻
+        -- @return (boolean) データ点が存在すれば ture を、そうでなければ false を返す
         function this:isContainsKey( clock )
             self:_ensureBufferLength( self._length );
             return (self:_find( clock ) >= 0);
@@ -288,42 +298,47 @@ if( nil == luavsq.BPList )then
         end]]
 
         ---
-        -- @return [void]
+        -- 全てのデータ点を削除する
         function this:clear()
             self._length = 0;
         end
 
         ---
-        -- @param index (integer)
-        -- @return (integer)
+        -- データ点の値を取得する
+        -- @param index (integer) 取得するデータ点のインデックス(最初のインデックスは0)
+        -- @return (integer) データ点の値
         function this:getElement( index )
             return self:getElementA( index );
         end
 
         ---
-        -- @param index (integer)
-        -- @return (integer)
+        -- データ点の値を取得する
+        -- @param index (integer) 取得するデータ点のインデックス(最初のインデックスは0)
+        -- @return (integer) データ点の値
         function this:getElementA( index )
             return self.items[index + 1].value;
         end
 
         ---
-        -- @param index (integer)
-        -- @return [VsqBPPair]
+        -- データ点を取得する
+        -- @param index (integer) 取得するデータ点のインデックス(最初のインデックスは0)
+        -- @return (luavsq.BP) データ点のインスタンス
         function this:getElementB( index )
             return self.items[index + 1]:clone();
         end
 
         ---
-        -- @param index (integer)
-        -- @return (integer)
+        -- データ点の時刻を取得する
+        -- @param index (integer) 取得するデータ点のインデックス(最初のインデックスは0)
+        -- @return (integer) データ点の Tick 単位の時刻
         function this:getKeyClock( index )
             return self.clocks[index + 1];
         end
 
         ---
-        -- @param id [long]
-        -- @return (integer)
+        -- ID を基にデータ点の値を取得する
+        -- @param id (integer) データ点の ID
+        -- @return (integer) データ点の値
         function this:findValueFromId( id )
             local i;
             for i = 1, self._length, 1 do
@@ -336,9 +351,9 @@ if( nil == luavsq.BPList )then
         end
 
         ---
-        -- 指定したid値を持つVsqBPPairを検索し、その結果を返します。
-        -- @param id (number)
-        -- @return (luavsq.BPListSearchResult)
+        -- ID を基にデータ点を検索し、検索結果を取得する
+        -- @param id (integer) データ点の ID
+        -- @return (luavsq.BPListSearchResult) 検索結果を格納したオブジェクト
         function this:findElement( id )
             local context = luavsq.BPListSearchResult.new();
             local i;
@@ -358,9 +373,9 @@ if( nil == luavsq.BPList )then
         end
 
         ---
-        -- @param id [long]
-        -- @param value (integer)
-        -- @return [void]
+        -- 指定した ID のデータ点の値を設定する
+        -- @param id (integer)
+        -- @param value (integer) 設定するデータ点の値
         function this:setValueForId( id, value )
             local i;
             for i = 1, self._length, 1 do
@@ -372,11 +387,10 @@ if( nil == luavsq.BPList )then
         end
 
         ---
-        -- このBPListの内容をテキストファイルに書き出します
-        -- @param writer [ITextWriter]
-        -- @param start_clock (integer)
-        -- @param header [string]
-        -- @return [void]
+        -- コントロールカーブをテキストストリームに出力する
+        -- @param writer (luavsq.TextStream) 出力先のストリーム
+        -- @param start_clock (integer) Tick 単位の出力開始時刻
+        -- @param header (string) 最初に出力するヘッダー文字列
         function this:print( writer, start_clock, header )
             writer:writeLine( header );
             local lastvalue = self.defaultValue;
@@ -475,20 +489,24 @@ if( nil == luavsq.BPList )then
         end]]
 
         ---
-        -- @return (integer)
+        -- データ点の個数を返す
+        -- @return (integer) データ点の個数
         function this:size()
             return self._length;
         end
 
         ---
-        -- @return [Iterator<int>]
+        -- データ点の Tick 単位の時刻を昇順に返す反復子を取得する
+        -- @return (luavsq.BPList.KeyClockIterator) 反復子のインスタンス
         function this:keyClockIterator()
             return luavsq.BPList.KeyClockIterator.new( self );
         end
 
         ---
-        -- @param value (integer)
-        -- @return (integer) 0から始まるインデックス
+        -- 指定された時刻値を持つデータ点のインデックスを検索する
+        -- @access private
+        -- @param value (integer) Tick 単位の時刻
+        -- @return (integer) データ点のインデックス(最初のインデックスは0)。データ点が見つからなかった場合は負の値を返す
         function this:_find( value )
             local i;
             for i = 1, self._length, 1 do
@@ -500,14 +518,12 @@ if( nil == luavsq.BPList )then
         end
 
         ---
-        -- 並べ替え，既存の値との重複チェックを行わず，リストの末尾にデータ点を追加する
-        --
-        -- @param _clock (integer)
-        -- @param value (integer)
-        -- @return [void]
-        function this:addWithoutSort( _clock, value )
+        -- 並べ替え、既存の値との重複チェックを行わず、リストの末尾にデータ点を追加する
+        -- @param clock (integer) Tick 単位の時刻
+        -- @param value (integer) データ点の値
+        function this:addWithoutSort( clock, value )
             self:_ensureBufferLength( self._length + 1 );
-            self.clocks[self._length + 1] = _clock;
+            self.clocks[self._length + 1] = clock;
             self.maxId = self.maxId + 1;
             self.items[self._length + 1].value = value;
             self.items[self._length + 1].id = self.maxId;
@@ -515,9 +531,10 @@ if( nil == luavsq.BPList )then
         end
 
         ---
-        -- @param clock (integer)
-        -- @param value (integer)
-        -- @return [long]
+        -- データ点を追加する。指定された時刻に既にデータ点がある場合、データ点の値を上書きする
+        -- @param clock (integer) データ点を追加する Tick 単位の時刻
+        -- @param value (integer) データ点の値
+        -- @return (integer) データ点の ID
         function this:add( clock, value )
             self:_ensureBufferLength( self._length );
             local index = self:_find( clock );
@@ -543,10 +560,11 @@ if( nil == luavsq.BPList )then
         end
 
         ---
-        -- @param clock (integer)
-        -- @param value (integer)
-        -- @param id [long]
-        -- @return [void]
+        -- データ点を、ID 指定したうえで追加する。指定された時刻に既にデータ点がある場合、データ点の値を上書きする
+        -- @param clock (integer) データ点を追加する Tick 単位の時刻
+        -- @param value (integer) データ点の値
+        -- @param id (integer) データ点の ID
+        -- @return (integer) データ点の ID
         function this:addWithId( clock, value, id )
             self:_ensureBufferLength( self._length );
             local index = self:_find( clock );
@@ -591,7 +609,7 @@ if( nil == luavsq.BPList )then
         end]]
 
         ---
-        -- 指定された Tick 単位の時刻における，コントロールパラメータの値を取得する．
+        -- 指定された Tick 単位の時刻における、コントロールパラメータの値を取得する
         -- @see this:_getValue_1, this:_getValue_2
         function this:getValue( ... )
             local arguments = { ... };
@@ -603,10 +621,10 @@ if( nil == luavsq.BPList )then
         end
 
         ---
-        -- 指定された Tick 単位の時刻における，コントロールパラメータの値を取得する．
-        -- @param clock (integer)
-        -- @param index [ByRef<int>]
-        -- @return (integer)
+        -- 指定された Tick 単位の時刻における、コントロールパラメータの値を取得する
+        -- @param clock (integer) 値を取得する Tick 単位の時刻
+        -- @param index (table,{ value = ? }) 値の取得に使用したインデックス(最初のインデックスは0)
+        -- @return (integer) コントロールパラメータの値
         function this:_getValue_2( clock, index )
             if( self._length == 0 )then
                 return self.defaultValue;
@@ -637,8 +655,8 @@ if( nil == luavsq.BPList )then
 
         ---
         -- 指定された Tick 単位の時刻における，コントロールパラメータの値を取得する．
-        -- @param clock (integer)
-        -- @return (integer)
+        -- @param clock (integer) 値を取得する Tick 単位の時刻
+        -- @return (integer) コントロールパラメータの値
         function this:_getValue_1( clock )
             self:_ensureBufferLength( self._length );
             local index = self:_find( clock );

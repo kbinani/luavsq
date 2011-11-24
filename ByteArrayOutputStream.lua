@@ -18,13 +18,21 @@ end
 
 if( nil == luavsq.ByteArrayOutputStream )then
 
+    ---
+    -- データがバイト配列に書き込まれるストリームの実装
     luavsq.ByteArrayOutputStream = {};
 
+    ---
+    -- 初期化を行う
     function luavsq.ByteArrayOutputStream.new()
         local this = {};
         this._pointer = -1;
         this._array = {};
 
+        ---
+        -- ストリームにデータを書き込む
+        -- @see this:_write_3
+        -- @see this:_write_1
         function this:write( ... )
             local arguments = { ... };
             if( #arguments == 1 )then
@@ -48,7 +56,7 @@ if( nil == luavsq.ByteArrayOutputStream )then
 
         ---
         -- 指定されたバイト値をストリームに書きこむ
-        -- @param (number) 書きこむバイト値
+        -- @param (integer) 書きこむバイト値
         function this:_write_1( byte )
             if( byte == nil )then
                 byte = 0;
@@ -67,7 +75,7 @@ if( nil == luavsq.ByteArrayOutputStream )then
 
         ---
         -- バイト列を文字列に変換する
-        -- @return (string)
+        -- @return (string) 変換された文字列
         function this:toString()
             local result = "";
             local i;
@@ -84,10 +92,15 @@ if( nil == luavsq.ByteArrayOutputStream )then
             return self._pointer;
         end
 
+        ---
+        -- ファイルポインタを指定した位置に変更する
+        -- @param (integer) position 新しいポインタ値
         function this:seek( position )
             self._pointer = position;
         end
 
+        ---
+        -- ストリームを閉じる
         function this:close()
             --do nothing
         end

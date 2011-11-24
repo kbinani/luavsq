@@ -22,14 +22,19 @@ if( nil == luavsq.BP )then
     -- コントロールカーブのデータ点を表現するクラス
     luavsq.BP = {};
 
+    ---
+    -- コンストラクタ
+    -- @param _value (integer) データ点の値
+    -- @param _id (integer) データ点のユニークID
+    -- @return (luavsq.BP) データ点のオブジェクト
     function luavsq.BP.new( _value, _id )
         local this = {};
         this.value = _value;
         this.id = _id;
 
         ---
-        -- 簡易コピーを返す
-        -- @return [object]
+        -- コピーを作成する
+        -- @return (luavsq.BP) このインスタンスのコピー
         function this:clone()
             return luavsq.BP.new( self.value, self.id );
         end

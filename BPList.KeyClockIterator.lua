@@ -22,8 +22,13 @@ end
 
 if( nil == luavsq.BPList.KeyClockIterator )then
 
+    ---
+    -- コントロールカーブのデータ点の Tick 単位の時刻を順に返す反復子
     luavsq.BPList.KeyClockIterator = {};
 
+    ---
+    -- コンストラクタ
+    -- @see this:_init_1
     function luavsq.BPList.KeyClockIterator.new( ... )
         local this = {};
         local arguments = { ... };
@@ -31,15 +36,16 @@ if( nil == luavsq.BPList.KeyClockIterator )then
         this._pos = 0;
 
         ---
-        -- @param list [VsqBPList]
-        -- @return [void]
+        -- 初期化を行う
+        -- @param list (luavsq.BPList) 反復子の元になるリスト
         function this:_init_1( list )
             self._list = list;
             self._pos = 0;
         end
 
         ---
-        -- @return [bool]
+        -- 反復子が次の要素を持つ場合に true を返す
+        -- @return (boolean) 反復子がさらに要素を持つ場合は true を、そうでなければ false を返す
         function this:hasNext()
             if( self._pos + 1 <= self._list._length )then
                 return true;
@@ -49,14 +55,15 @@ if( nil == luavsq.BPList.KeyClockIterator )then
         end
 
         ---
-        -- @return [int]
+        -- 反復子の次の要素を返す
+        -- @return (integer) 次の要素
         function this:next()
             self._pos = self._pos + 1;
             return self._list.clocks[self._pos];
         end
 
         ---
-        -- @return [void]
+        -- 反復子によって最後に返された要素を削除する
         function this:remove()
             if( 0 < self._pos and self._pos <= self._list._length )then
                 local key = self._list.clocks[self._pos];

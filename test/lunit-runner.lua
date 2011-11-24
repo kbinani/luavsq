@@ -13,7 +13,7 @@
 --]]
 
 
-require "lunit"
+--require "lunit"
 
 module( "lunit-runner", package.seeall )
 

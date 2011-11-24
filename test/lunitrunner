@@ -17,7 +17,10 @@ do
     files=`ls $directory/$testPattern`
     for file in $files
     do
-        atime=`stat -s $file | sed -e "s/.* st_mtime=\\([0-9]*\\) .*/\\1/g"`
+        atime=`stat -s $file 2>/dev/null | sed -e "s/.* st_mtime=\\([0-9]*\\) .*/\\1/g"`
+        if [ "$atime" == "" ] ; then
+            atime=`stat --format=%Y $file 2>/dev/null`
+        fi
         if [ "$atime" == "" ] ; then
             atime=`stat --format=%Y $file`
         fi

@@ -19,21 +19,13 @@ end
 if( nil == luavsq.Common )then
 
     ---
-    -- vsqファイルのメタテキストの[Common]セクションに記録される内容を取り扱う
+    -- VSQ ファイルのメタテキストの [Common] セクションに記録される内容を格納するクラス
     luavsq.Common = {};
 
     ---
-    -- overload1
-    -- @param text_stream [TextStream]
-    -- @param last_line [ByRef<String>]
-    --
-    -- overload2
-    -- @param name [String]
-    -- @param red [int]
-    -- @param green [int]
-    -- @param blue [int]
-    -- @param dynamics_mode [int]
-    -- @param play_mode [int]
+    -- 初期化を行う
+    -- @see this:_init_2
+    -- @see this:_init_6
     function luavsq.Common.new( ... )
         local this = {};
         local arguments = { ... };
@@ -51,9 +43,9 @@ if( nil == luavsq.Common )then
         this.lastPlayMode = luavsq.PlayModeEnum.PlayWithSynth;
 
         ---
-        -- @param sr [TextStream]
-        -- @param last_line [ByRef<string>]
-        -- @return [void]
+        -- 初期化を行う
+        -- @param sr (luavsq.TextStream) 読み込み元のテキストストリーム
+        -- @param last_line (table, { value = ? }) 読み込んだ最後の行。テーブルの ["value"] に文字列が格納される
         function this:_init_2( sr, last_line )
             self.version = "";
             self.name = "";
@@ -82,6 +74,14 @@ if( nil == luavsq.Common )then
             end
         end
 
+        ---
+        -- 初期化を行う
+        -- @param name (string) トラック名
+        -- @param red (integer) 赤(意味は不明)
+        -- @param green (integer) 緑(意味は不明)
+        -- @param blue (integer) 青(意味は不明)
+        -- @param dynamicsMode (luavsq.DynamicsModeEnum) シーケンスの Dynamics モード
+        -- @param playMode (luavsq.PlayModeEnum) シーケンスの Play モード
         function this:_init_6( name, r, g, b, dynamicsMode, playMode )
             self.version = "DSB301";
             self.name = name;
@@ -90,6 +90,9 @@ if( nil == luavsq.Common )then
             self.playMode = playMode;
         end
 
+        ---
+        -- コピーを作成する
+        -- @return (luavsq.Common)
         function this:clone()
             local spl = luavsq.Util.split( self.color, "," );
             local r = tonumber( spl[1], 10 );
@@ -102,9 +105,8 @@ if( nil == luavsq.Common )then
         end
 
         ---
-        -- インスタンスの内容をテキストファイルに出力します
-        -- @param sw [ITextWriter] 出力先
-        -- @return [void]
+        -- テキストストリームに出力する
+        -- @param sw (luavsq.TextStream) 出力先のストリーム
         function this:write( sw )
             sw:writeLine( "[Common]" );
             sw:writeLine( "Version=" .. self.version );

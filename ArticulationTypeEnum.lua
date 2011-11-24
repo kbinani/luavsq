@@ -23,9 +23,8 @@ if( nil == luavsq.ArticulationTypeEnum )then
     -- @name ArticulationTypeEnum
     luavsq.ArticulationTypeEnum = {
         ---
+        -- ビブラート
         -- @field
-        -- @name Vibrato
-        -- @description ビブラート
         Vibrato = 0,
 
         ---
