@@ -18,12 +18,21 @@ end
 
 if( nil == luavsq.FileOutputStream )then
 
+    ---
+    -- ファイルへの出力ストリーム
     luavsq.FileOutputStream = {};
 
+    ---
+    -- 初期化を行う
+    -- @param path (string) ファイルのパス
     function luavsq.FileOutputStream.new( path )
         local this = {};
         this._fileHandle = io.open( path, "wb" );
 
+        ---
+        -- ストリームにデータを書き込む
+        -- @see this:_write_3
+        -- @see this:_write_1
         function this:write( ... )
             local arguments = { ... };
             if( #arguments == 1 )then
@@ -35,7 +44,7 @@ if( nil == luavsq.FileOutputStream )then
 
         ---
         -- 指定された配列の、指定した範囲のバイト値をストリームに書きこむ
-        -- @param (table) array 書きこむバイト列が格納された配列
+        -- @param (table<integer>) array 書きこむバイト列が格納された配列
         -- @param (integer) startIndex 書き込み開始位置
         -- @param (integer) length 書き込むバイト値の個数
         function this:_write_3( array, startIndex, length )
@@ -47,7 +56,7 @@ if( nil == luavsq.FileOutputStream )then
 
         ---
         -- 指定されたバイト値をストリームに書きこむ
-        -- @param (number) 書きこむバイト値
+        -- @param (integer) 書きこむバイト値
         function this:_write_1( byte )
             if( nil == byte )then
                 byte = 0;
@@ -62,10 +71,15 @@ if( nil == luavsq.FileOutputStream )then
             return self._fileHandle:seek();
         end
 
+        ---
+        -- ファイルポインタを指定した位置に移動する
+        -- @param position (integer) ファイルポインタ
         function this:seek( position )
             self._fileHandle:seek( "set", position );
         end
 
+        ---
+        -- ストリームを閉じる
         function this:close()
             self._fileHandle:flush();
             self._fileHandle:close();

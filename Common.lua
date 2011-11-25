@@ -92,7 +92,7 @@ if( nil == luavsq.Common )then
 
         ---
         -- コピーを作成する
-        -- @return (luavsq.Common)
+        -- @return (luavsq.Common) このインスタンスのコピー
         function this:clone()
             local spl = luavsq.Util.split( self.color, "," );
             local r = tonumber( spl[1], 10 );

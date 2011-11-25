@@ -21,21 +21,22 @@ if( nil == luavsq.EventList )then
     luavsq.EventList = {};
 
     ---
-    -- 固有 ID 付きの luavsq.Event のリストを取り扱う
+    -- 固有 ID 付きの luavsq.Event のリストを取り扱うクラス
     function luavsq.EventList.new()
         local this = {};
 
         ---
-        -- [Vector<VsqEvent>]
+        -- @var (table<luavsq.Event>)
         this._events = {};
 
         ---
-        -- [Vector<int>]
+        -- @var (table<integer>)
         this._ids = {};
 
         ---
-        -- @param internalId (integer)
-        -- @return (integer) 0から始まるインデックス
+        -- イベント ID を基にイベントを検索し、そのインデックスを返す
+        -- @param internalId (integer) 検索するイベント ID
+        -- @return (integer) 検索結果のインデックス(最初のインデックスは0)。イベントが見つからなければ負の値を返す
         function this:findIndexFromId( internalId )
             local c = #self._events;
             local i;
@@ -49,8 +50,9 @@ if( nil == luavsq.EventList )then
         end
 
         ---
-        -- @param internal_id [int]
-        -- @return [VsqEvent]
+        -- イベント ID を基にイベントを検索し、そのオブジェクトを返す
+        -- @param internal_id (integer) 検索するイベント ID
+        -- @return (luavsq.Event) 検索結果のイベント。イベントが見つからなければ nil を返す
         function this:findFromId( internal_id )
             local index = self:findIndexFromId( internal_id );
             if( 0 <= index and index < #self._events )then
@@ -61,9 +63,9 @@ if( nil == luavsq.EventList )then
         end
 
         ---
-        -- @param internal_id [int]
-        -- @param value [VsqEvent]
-        -- @return [void]
+        -- 指定されたイベント ID をもつイベントのオブジェクトを置き換える。イベントが見つからなければ何もしない
+        -- @param internal_id (integer) 検索するイベント ID
+        -- @param value (luavsq.Event) 置換するオブジェクト
         function this:setForId( internalId, value )
             local c = #self._events;
             local i;
@@ -77,35 +79,31 @@ if( nil == luavsq.EventList )then
         end
 
         ---
-        -- @return [void]
+        -- イベントを並べ替える
         function this:sort()
             table.sort( self._events, luavsq.EventList.comparator );
             self:updateIdList();
         end
 
         ---
-        -- @return [void]
+        -- 全てのイベントを削除する
         function this:clear()
             self._events = {};
             self._ids = {};
         end
 
-        --
-        -- @return [ArrayIterator(VsqEven)]
+        ---
+        -- リスト内のイベントを順に返す反復子を取得する
+        -- @return (luavsq.EventList.Iterator)
         function this:iterator()
             self:updateIdList();
             return luavsq.EventList.Iterator.new( self );
         end
 
         ---
-        -- overload1
-        -- @param item [VsqEvent]
-        -- @param internal_id [int]
-        -- @return [int]
-        --
-        -- overload2
-        -- @param item [VsqEvent]
-        -- @return [int]
+        -- イベントを追加する
+        -- @see this:_add_1
+        -- @see this:_add_2
         function this:add( ... )
             local arguments = { ... };
             if( #arguments == 1 )then
@@ -116,6 +114,10 @@ if( nil == luavsq.EventList )then
             return -1;
         end
 
+        ---
+        -- イベントを追加する
+        -- @param item (luavsq.Event) 追加するオブジェクト
+        -- @return (integer) 追加したオブジェクトに割り振られたイベント ID
         function this:_add_1( item )
             local id = self:_getNextId( 0 );
             self:_addCor( item, id );
@@ -128,6 +130,11 @@ if( nil == luavsq.EventList )then
             return id;
         end
 
+        ---
+        -- イベントを追加する
+        -- @param item (luavsq.Event) 追加するオブジェクト
+        -- @param internal_id (integer) 追加するオブジェクトに割り振るイベント ID
+        -- @return (integer) オブジェクトに割り振られたイベント ID
         function this:_add_2( item, internalId )
             self:_addCor( item, internalId );
             table.sort( self._events, luavsq.EventList.comparator );
@@ -135,9 +142,10 @@ if( nil == luavsq.EventList )then
         end
 
         ---
-        -- @param item [VsqEvent]
-        -- @param internal_id [int]
-        -- @return [void]
+        -- イベントを追加する
+        -- @access private
+        -- @param item (luavsq.Event) 追加するオブジェクト
+        -- @param internal_id (integer) 追加するオブジェクトに割り振るイベント ID
         function this:_addCor( item, internalId )
             self:updateIdList();
             item.internalId = internalId;
@@ -146,8 +154,8 @@ if( nil == luavsq.EventList )then
         end
 
         ---
-        -- @param index [int]
-        -- @return [void]
+        -- イベントを削除する
+        -- @param index (integer) 削除するイベントのインデックス(最初のインデックスは0)
         function this:removeAt( index )
             self:updateIdList();
             table.remove( self._events, index + 1 );
@@ -155,7 +163,9 @@ if( nil == luavsq.EventList )then
         end
 
         ---
-        -- @param next [int]
+        -- イベントに割り振る ID を取得する
+        -- @access private
+        -- @param next (integer)
         -- @return [int]
         function this:_getNextId( next )
             self:updateIdList();
@@ -168,29 +178,31 @@ if( nil == luavsq.EventList )then
         end
 
         ---
-        -- @return [int]
+        -- イベントの個数を返す
+        -- @return (integer) データ点の個数
         function this:size()
             return #self._events;
         end
 
         ---
-        -- @param index [int]
-        -- @return [VsqEvent]
+        -- 指定したインデックスのイベントを取得する
+        -- @param index (integer) インデックス(最初のインデックスは0)
+        -- @return (luavsq.Event) イベント
         function this:getElement( index )
             return self._events[index + 1];
         end
 
         ---
-        -- @param index [int]
-        -- @param value [VsqEvent]
-        -- @return [void]
+        -- 指定したインデックスのイベントを設定する
+        -- @param index (integer) インデックス(最初のインデックスは0)
+        -- @param value (luavsq.Event) 設定するイベント
         function this:setElement( index, value )
             value.internalId = self._events[index + 1].internalId;
             self._events[index + 1] = value;
         end
 
         ---
-        -- @return [void]
+        -- リスト内部のイベント ID のデータを更新する
         function this:updateIdList()
             if( #self._ids ~= #self._events )then
                 self._ids = {};
@@ -203,9 +215,10 @@ if( nil == luavsq.EventList )then
         end
 
         ---
-        -- @param writer [ITextWriter]
-        -- @param eos [int]
-        -- @return [Vector<VsqHandle>]
+        -- イベントリストをテキストストリームに出力する
+        -- @param writer (luavsq.TexStream) 出力先のストリーム
+        -- @param eos (integer) EOS として出力する Tick 単位の時刻
+        -- @return (table<luavsq.Handle>) リスト中のイベントに含まれるハンドルの一覧
         function this:write( writer, eos )
             local handles = self:_buildHandleList();
             writer:writeLine( "[EventList]" );
@@ -234,10 +247,9 @@ if( nil == luavsq.EventList )then
         end
 
         ---
-        -- このインスタンスから、Handleのリストを作成すると同時に、
-        -- Eventsに登録されているVsqEventのvalue値および各ハンドルのvalue値を更新します
-        --
-        -- @return [Vector<VsqHandle>]
+        -- リスト内のイベントから、ハンドルの一覧を作成する。同時に、各イベント、ハンドルの番号を設定する
+        -- @access private
+        -- @return (table<luavsq.Handle>) ハンドルの一覧
         function this:_buildHandleList()
             local handle = {};
             local current_id = -1;
@@ -301,6 +313,7 @@ if( nil == luavsq.EventList )then
     end
 
     ---
+    -- 2 つのイベントを比較する
     -- @param a (luavsq.Event)
     -- @param b (luavsq.Event)
     function luavsq.EventList.comparator( a, b )

@@ -19,9 +19,14 @@ end
 if( nil == luavsq.Event )then
 
     ---
-    -- vsqファイルのメタテキスト内に記述されるイベント。
+    -- VSQ ファイルのメタテキスト内に記述されるイベントを表すクラス
     luavsq.Event = {};
 
+    ---
+    -- 初期化を行う
+    -- @see this:_init_1
+    -- @see this:_init_0
+    -- @see this:_init_2
     function luavsq.Event.new( ... )
         local arguments = { ... };
         local this = {};
@@ -41,6 +46,35 @@ if( nil == luavsq.Event )then
         ---
         -- @var (luavsq.UstEvent)
         this.ustEvent = nil;
+
+        ---
+        -- 初期化を行う
+        -- @param line (string) VSQ メタテキスト中の [EventList] セクション内のイベント宣言文字列(ex."480=ID#0001")
+        function this:_init_1( line )
+            local spl = luavsq.Util.split( line, '=' );
+            self.clock = tonumber( spl[1], 10 );
+            if( spl[2] == "EOS" )then
+                self.id = luavsq.Id.getEOS();
+            end
+        end
+
+        ---
+        -- 初期化を行う。この初期化メソッドは末尾のイベントリストを表すインスタンスを初期化する
+        function this:_init_0()
+            self.clock = 0;
+            self.id = luavsq.Id.new();
+            self.internalId = 0;
+        end
+
+        ---
+        -- 初期化を行う
+        -- @param clcok (integer) Tick 単位の時刻
+        -- @param id (luavsq.Id) イベントに付属する ID
+        function this:_init_2( clock, id )
+            self.clock = clock;
+            self.id = id;
+            self.internalId = 0;
+        end
 
         --[[
         -- @param item [VsqEvent]
@@ -221,6 +255,10 @@ if( nil == luavsq.Event )then
             return true;
         end]]
 
+        ---
+        -- テキストストリームに書き出す
+        -- @see this:_write_1
+        -- @see this:_write_2
         function this:write( ... )
             local arguments = { ... };
             if( #arguments == 1 )then
@@ -231,9 +269,9 @@ if( nil == luavsq.Event )then
         end
 
         ---
-        -- インスタンスをテキストファイルに出力します
-        -- @param sw [ITextWriter] 出力先
-        function this:_write_1( sw )
+        -- テキストストリームに書き出す
+        -- @param writer (luavsq.TextStream) 出力先
+        function this:_write_1( writer )
             local def = { "Length",
                         "Note#",
                         "Dynamics",
@@ -242,12 +280,13 @@ if( nil == luavsq.Event )then
                         "PMbPortamentoUse",
                         "DEMdecGainRate",
                         "DEMaccent" };
-            self:_write_2( sw, def );
+            self:_write_2( writer, def );
         end
 
         ---
-        -- @param writer [ITextWriter]
-        -- @param print_targets [vector<string>]
+        -- テキストストリームに書き出す
+        -- @param writer (luavsq.TextStream) 出力先
+        -- @param print_targets (table) 出力するアイテムのリスト
         function this:_write_2( writer, print_targets )
             writer:writeLine( "[ID#" .. string.format( "%04d", self.id.value ) .. "]" );
             writer:writeLine( "Type=" .. luavsq.IdTypeEnum.toString( self.id.type ) );
@@ -301,8 +340,8 @@ if( nil == luavsq.Event )then
         end
 
         ---
-        -- このオブジェクトのコピーを作成します
-        -- @return [object]
+        -- コピーを作成する
+        -- @return (luavsq.Event) このインスタンスのコピー
         function this:clone()
             local ret = luavsq.Event.new( self.clock, self.id:clone() );
             ret.internalId = self.internalId;
@@ -314,8 +353,9 @@ if( nil == luavsq.Event )then
         end
 
         ---
-        -- @param item [VsqEvent]
-        -- @return [int]
+        -- 順序を比較する
+        -- @param item (luavsq.Event) 比較対象のアイテム
+        -- @return (integer) このインスタンスが比較対象よりも小さい場合は負の整数、等しい場合は 0、大きい場合は正の整数を返す
         function this:compareTo( item )
             local ret = self.clock - item.clock;
             if( ret == 0 )then
@@ -327,33 +367,6 @@ if( nil == luavsq.Event )then
             else
                 return ret;
             end
-        end
-
-        ---
-        -- @param line [string]
-        -- @return [VsqEvent]
-        function this:_init_1( line )
-            local spl = luavsq.Util.split( line, '=' );
-            self.clock = tonumber( spl[1], 10 );
-            if( spl[2] == "EOS" )then
-                self.id = luavsq.Id.getEOS();
-            end
-        end
-
-        function this:_init_0()
-            self.clock = 0;
-            self.id = luavsq.Id.new();
-            self.internalId = 0;
-        end
-
-        ---
-        -- @param clcok (number)
-        -- @param id (luavsq.Id)
-        -- @return (luavsq.Event)
-        function this:_init_2( clock, id )
-            self.clock = clock;
-            self.id = id;
-            self.internalId = 0;
         end
 
         if( #arguments == 0 )then
@@ -368,10 +381,10 @@ if( nil == luavsq.Event )then
     end
 
     ---
-    -- 2 つの Event を比較します
-    -- @param a (luavsq.Event)
-    -- @param b (luavsq.Event)
-    -- @return (integer)
+    -- 2 つの Event を比較する
+    -- @param a (luavsq.Event) 比較対象のオブジェクト
+    -- @param b (luavsq.Event) 比較対象のオブジェクト
+    -- @return (integer) a が b よりも小さい場合は負の整数、等しい場合は 0、大きい場合は正の整数を返す
     function luavsq.Event.compare( a, b )
         return a:compareTo( b );
     end
