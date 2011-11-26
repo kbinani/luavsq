@@ -11,6 +11,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
+#pragma comment( lib, "lua5.1.lib" )
 #include <lua.h>
 #include <lualib.h>
 #include <lauxlib.h>
