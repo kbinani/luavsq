@@ -306,26 +306,26 @@ if( nil == luavsq.Handle )then
                 result = result .. "StartDepth=" .. self.startDepth .. "\n";
                 result = result .. "DepthBPNum=" .. self.depthBP:size() .. "\n";
                 if( self.depthBP:size() > 0 )then
-                    result = result .. "DepthBPX=" .. string.format( "%.6f", self.depthBP:getElement( 0 ).x );
+                    result = result .. "DepthBPX=" .. string.format( "%.6f", self.depthBP:get( 0 ).x );
                     for i = 1, self.depthBP:size() - 1, 1 do
-                        result = result .. "," .. string.format( "%.6f", self.depthBP:getElement( i ).x );
+                        result = result .. "," .. string.format( "%.6f", self.depthBP:get( i ).x );
                     end
-                    result = result .. "\n" .. "DepthBPY=" .. self.depthBP:getElement( 0 ).y;
+                    result = result .. "\n" .. "DepthBPY=" .. self.depthBP:get( 0 ).y;
                     for i = 1, self.depthBP:size() - 1, 1 do
-                        result = result .. "," .. self.depthBP:getElement( i ).y;
+                        result = result .. "," .. self.depthBP:get( i ).y;
                     end
                     result = result .. "\n";
                 end
                 result = result .. "StartRate=" .. self.startRate .. "\n";
                 result = result .. "RateBPNum=" .. self.rateBP:size();
                 if( self.rateBP:size() > 0 )then
-                    result = result .. "\n" .. "RateBPX=" .. string.format( "%.6f", self.rateBP:getElement( 0 ).x );
+                    result = result .. "\n" .. "RateBPX=" .. string.format( "%.6f", self.rateBP:get( 0 ).x );
                     for i = 1, self.rateBP:size() - 1, 1 do
-                        result = result .. "," .. string.format( "%.6f", self.rateBP:getElement( i ).x );
+                        result = result .. "," .. string.format( "%.6f", self.rateBP:get( i ).x );
                     end
-                    result = result .. "\n" .. "RateBPY=" .. self.rateBP:getElement( 0 ).y;
+                    result = result .. "\n" .. "RateBPY=" .. self.rateBP:get( 0 ).y;
                     for i = 1, self.rateBP:size() - 1, 1 do
-                        result = result .. "," .. self.rateBP:getElement( i ).y;
+                        result = result .. "," .. self.rateBP:get( i ).y;
                     end
                 end
             elseif( self._type == luavsq.HandleTypeEnum.Singer )then
@@ -358,13 +358,13 @@ if( nil == luavsq.Handle )then
                     else
                         local c = self.dynBP:size();
                         result = result .. "DynBPNum=" .. c .. "\n";
-                        result = result .. "DynBPX=" .. string.format( "%.6f", self.dynBP:getElement( 0 ).x );
+                        result = result .. "DynBPX=" .. string.format( "%.6f", self.dynBP:get( 0 ).x );
                         for i = 1, c - 1, 1 do
-                            result = result .. "," .. string.format( "%.6f", self.dynBP:getElement( i ).x );
+                            result = result .. "," .. string.format( "%.6f", self.dynBP:get( i ).x );
                         end
-                        result = result .. "\n" .. "DynBPY=" .. self.dynBP:getElement( 0 ).y;
+                        result = result .. "\n" .. "DynBPY=" .. self.dynBP:get( 0 ).y;
                         for i = 1, c - 1, 1 do
-                            result = result .. "," .. self.dynBP:getElement( i ).y;
+                            result = result .. "," .. self.dynBP:get( i ).y;
                         end
                     end
                 else

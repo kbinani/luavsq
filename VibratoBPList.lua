@@ -115,14 +115,14 @@ if( nil == luavsq.VibratoBPList )then
         ---
         -- @param index (integer) 0から始まるインデックス
         -- @return (luavsq.VibratoBP)
-        function this:getElement( index )
+        function this:get( index )
             return self._list[index + 1];
         end
 
         ---
         -- @param index (integer) 0から始まるインデックス
         -- @param value (luavsq.VibratoBP)
-        function this:setElement( index, value )
+        function this:set( index, value )
             self._list[index + 1] = value;
         end
 
