@@ -81,7 +81,7 @@ if( nil == luavsq.EventList )then
         ---
         -- イベントを並べ替える
         function this:sort()
-            table.sort( self._events, luavsq.EventList.comparator );
+            table.sort( self._events, luavsq.Event.compare );
             self:updateIdList();
         end
 
@@ -121,7 +121,7 @@ if( nil == luavsq.EventList )then
         function this:_add_1( item )
             local id = self:_getNextId( 0 );
             self:_addCor( item, id );
-            table.sort( self._events, luavsq.EventList.comparator );
+            table.sort( self._events, luavsq.Event.compare );
             local count = #self._events;
             local i;
             for i = 1, count, 1 do
@@ -137,7 +137,7 @@ if( nil == luavsq.EventList )then
         -- @return (integer) オブジェクトに割り振られたイベント ID
         function this:_add_2( item, internalId )
             self:_addCor( item, internalId );
-            table.sort( self._events, luavsq.EventList.comparator );
+            table.sort( self._events, luavsq.Event.compare );
             return internalId;
         end
 
@@ -222,12 +222,12 @@ if( nil == luavsq.EventList )then
         function this:write( writer, eos )
             local handles = self:_buildHandleList();
             writer:writeLine( "[EventList]" );
-            local temp = {};--new Vector<VsqEvent>();
+            local temp = {};
             local itr = self:iterator();
             while( itr:hasNext() )do
                 table.insert( temp, itr:next() );
             end
-            table.sort( temp, luavsq.EventList.comparator );--Collections.sort( temp );
+            table.sort( temp, luavsq.Event.compare );
             local i = 1;
             while( i <= #temp )do
                 local item = temp[i];
@@ -316,7 +316,7 @@ if( nil == luavsq.EventList )then
     -- 2 つのイベントを比較する
     -- @param a (luavsq.Event)
     -- @param b (luavsq.Event)
-    function luavsq.EventList.comparator( a, b )
+    function luavsq.EventList.__OBSOLETE__comparator( a, b )
         if( a:compareTo( b ) < 0 )then
             return true;
         else

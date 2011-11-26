@@ -241,17 +241,17 @@ end
 function testCompare()
     local singerEvent = luavsq.Event.new( 1920, getSingerId() );
     local noteEvent = luavsq.Event.new( 1920, getNoteId() );
-    assert_equal( 0, luavsq.Event.compare( singerEvent, singerEvent ) );
-    assert_true( 0 > luavsq.Event.compare( singerEvent, noteEvent ) );
-    assert_true( 0 < luavsq.Event.compare( noteEvent, singerEvent ) );
+    assert_false( luavsq.Event.compare( singerEvent, singerEvent ) );
+    assert_true( luavsq.Event.compare( singerEvent, noteEvent ) );
+    assert_false( luavsq.Event.compare( noteEvent, singerEvent ) );
 
     singerEvent.clock = 2000;
     noteEvent.clock = 1920;
-    assert_true( 0 < luavsq.Event.compare( singerEvent, noteEvent ) );
+    assert_false( luavsq.Event.compare( singerEvent, noteEvent ) );
 
     singerEvent.clock = 2000;
     singerEvent.id = nil;
     noteEvent.clock = 2001;
     noteEvent.id = nil;
-    assert_equal( 1, luavsq.Event.compare( noteEvent, singerEvent ) );
+    assert_false( luavsq.Event.compare( noteEvent, singerEvent ) );
 end
