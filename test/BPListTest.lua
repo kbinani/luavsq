@@ -271,26 +271,26 @@ function testRemoveWithId()
 --    fail();
 end
 
-function testGetValueWithoutLastIndex()
+function testGetValueAtWithoutLastIndex()
     local list = luavsq.BPList.new( "foo", 63, -10, 1000 );
     list:add( 480, 11 );
     list:add( 1920, 12 );
-    assert_equal( 63, list:getValue( 479 ) );
-    assert_equal( 11, list:getValue( 480 ) );
-    assert_equal( 12, list:getValue( 2000 ) );
+    assert_equal( 63, list:getValueAt( 479 ) );
+    assert_equal( 11, list:getValueAt( 480 ) );
+    assert_equal( 12, list:getValueAt( 2000 ) );
 end
 
-function testGetValueWithLastIndex()
+function testGetValueAtWithLastIndex()
     local list = luavsq.BPList.new( "foo", 63, -10, 1000 );
     list:add( 480, 11 );
     list:add( 1920, 12 );
     local index = { value = 0 };
-    assert_equal( 63, list:getValue( 479, index ) );
+    assert_equal( 63, list:getValueAt( 479, index ) );
     assert_equal( 0, index.value );
-    assert_equal( 11, list:getValue( 480, index ) );
+    assert_equal( 11, list:getValueAt( 480, index ) );
     assert_equal( 0, index.value );
-    assert_equal( 12, list:getValue( 2000, index ) );
+    assert_equal( 12, list:getValueAt( 2000, index ) );
     assert_equal( 1, index.value );
-    assert_equal( 63, list:getValue( 479, index ) );
+    assert_equal( 63, list:getValueAt( 479, index ) );
     assert_equal( 0, index.value );
 end

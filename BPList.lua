@@ -610,13 +610,13 @@ if( nil == luavsq.BPList )then
 
         ---
         -- 指定された Tick 単位の時刻における、コントロールパラメータの値を取得する
-        -- @see this:_getValue_1, this:_getValue_2
-        function this:getValue( ... )
+        -- @see this:_getValueAt_1, this:_getValueAt_2
+        function this:getValueAt( ... )
             local arguments = { ... };
             if( #arguments == 2 )then
-                return self:_getValue_2( arguments[1], arguments[2] );
+                return self:_getValueAt_2( arguments[1], arguments[2] );
             elseif( #arguments == 1 )then
-                return self:_getValue_1( arguments[1] );
+                return self:_getValueAt_1( arguments[1] );
             end
         end
 
@@ -625,7 +625,7 @@ if( nil == luavsq.BPList )then
         -- @param clock (integer) 値を取得する Tick 単位の時刻
         -- @param index (table,{ value = ? }) 値の取得に使用したインデックス(最初のインデックスは0)
         -- @return (integer) コントロールパラメータの値
-        function this:_getValue_2( clock, index )
+        function this:_getValueAt_2( clock, index )
             if( self._length == 0 )then
                 return self.defaultValue;
             else
@@ -657,7 +657,7 @@ if( nil == luavsq.BPList )then
         -- 指定された Tick 単位の時刻における，コントロールパラメータの値を取得する．
         -- @param clock (integer) 値を取得する Tick 単位の時刻
         -- @return (integer) コントロールパラメータの値
-        function this:_getValue_1( clock )
+        function this:_getValueAt_1( clock )
             self:_ensureBufferLength( self._length );
             local index = self:_find( clock );
             if( index >= 0 )then
