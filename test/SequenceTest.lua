@@ -140,7 +140,7 @@ function test()
     note.id.note = 60;
     note.id:setLength( 480 );
     note.id.lyricHandle = luavsq.LyricHandle.new( "あ", "a" );
-    sequence.track:get( 1 ):addEvent( note );
+    sequence.track:get( 1 ).events:add( note );
     local fileHandle = io.open( "foo.vsq", "wb" );
     fileHandle:write( sequence:write( 500, "Shift_JIS" ) );
     fileHandle:close();
@@ -186,7 +186,7 @@ function testUpdateTotalClocks()
     note.id.type = luavsq.IdTypeEnum.Anote;
     note.id:setLength( 480 );
     note.id.note = 60;
-    sequence.track[1]:addEvent( note );
+    sequence.track[1].events:add( note );
     sequence:updateTotalClocks();
     assert_equal( 2400, sequence.totalClocks );
 end

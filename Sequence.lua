@@ -161,9 +161,9 @@ if( nil == luavsq.Sequence )then
             local max = self:getPreMeasureClocks();
             for i = 1, self.track:size() - 1, 1 do
                 local track = self.track:get( i );
-                local numEvents = track:getEventCount();
+                local numEvents = track.events:size();
                 if( numEvents > 0 )then
-                    local lastItem = track:getEvent( numEvents - 1 );
+                    local lastItem = track.events:get( numEvents - 1 );
                     max = math.max( max, lastItem.clock + lastItem.id:getLength() );
                 end
                 local j;
@@ -374,9 +374,9 @@ if( nil == luavsq.Sequence )then
             local track_size = self.track:size();
             local track;
             for track = 1, track_size - 1, 1 do
-                if( self.track:get( track ):getEventCount() > 0 )then
-                    local index = self.track:get( track ):getEventCount() - 1;
-                    local last = self.track:get( track ):getEvent( index );
+                if( self.track:get( track ).events:size() > 0 )then
+                    local index = self.track:get( track ).events:size() - 1;
+                    local last = self.track:get( track ).events:get( index );
                     last_clock = math.max( last_clock, last.clock + last.id:getLength() );
                 end
             end
@@ -546,7 +546,7 @@ if( nil == luavsq.Sequence )then
         end
 
         --トラックエンド
-        local last_event = vsq.track:get( track ):getEvent( vsq.track:get( track ):getEventCount() - 1 );
+        local last_event = vsq.track:get( track ).events:get( vsq.track:get( track ).events:size() - 1 );
         local last_clock = last_event.clock + last_event.id:getLength();
         luavsq.MidiEvent.writeDeltaClock( fs, last_clock );
         fs:write( 0xff );
@@ -890,19 +890,19 @@ if( nil == luavsq.Sequence )then
         local target = vsq.track:get( track );
         local version = target.common.version;
 
-        local count = target:getEventCount();
+        local count = target.events:size();
         local note_start = 0;
-        local note_end = target:getEventCount() - 1;
+        local note_end = target.events:size() - 1;
         local i;
         for i = 0, count - 1, 1 do
-            if( 0 <= target:getEvent( i ).clock )then
+            if( 0 <= target.events:get( i ).clock )then
                 note_start = i;
                 break;
             end
             note_start = i;
         end
-        for i = target:getEventCount() - 1, 0, -1 do
-            if( target:getEvent( i ).clock <= vsq.totalClocks )then
+        for i = target.events:size() - 1, 0, -1 do
+            if( target.events:get( i ).clock <= vsq.totalClocks )then
                 note_end = i;
                 break;
             end
@@ -911,13 +911,13 @@ if( nil == luavsq.Sequence )then
         -- 最初の歌手を決める
         local singer_event = -1;
         for i = note_start, 0, -1 do
-            if( target:getEvent( i ).id.type == luavsq.IdTypeEnum.Singer )then
+            if( target.events:get( i ).id.type == luavsq.IdTypeEnum.Singer )then
                 singer_event = i;
                 break;
             end
         end
         if( singer_event >= 0 )then --見つかった場合
-            luavsq.Sequence._array_add_all( list, luavsq.Sequence.generateSingerNRPN( vsq, target:getEvent( singer_event ), 0 ) );
+            luavsq.Sequence._array_add_all( list, luavsq.Sequence.generateSingerNRPN( vsq, target.events:get( singer_event ), 0 ) );
         else                   --多分ありえないと思うが、歌手が不明の場合。
             --throw new Exception( "first singer was not specified" );
             table.insert( list, luavsq.NrpnEvent.new( 0, luavsq.MidiParameterEnum.CC_BS_LANGUAGE_TYPE, 0x0 ) );
@@ -966,7 +966,7 @@ if( nil == luavsq.Sequence )then
         local first = true;
         local last_note_end = 0;
         for i = note_start, note_end, 1 do
-            local item = target:getEvent( i );
+            local item = target.events:get( i );
             if( item.id.type == luavsq.IdTypeEnum.Anote )then
                 local note_loc = 0x03;
                 if( item.clock == last_note_end )then
@@ -975,10 +975,10 @@ if( nil == luavsq.Sequence )then
 
                 -- 次に現れる音符イベントを探す
                 local nextclock = item.clock + item.id:getLength() + 1;
-                local event_count = target:getEventCount();
+                local event_count = target.events:size();
                 local j;
                 for j = i + 1, event_count - 1, 1 do
-                    local itemj = target:getEvent( j );
+                    local itemj = target.events:get( j );
                     if( itemj.id.type == luavsq.IdTypeEnum.Anote )then
                         nextclock = itemj.clock;
                         break;
