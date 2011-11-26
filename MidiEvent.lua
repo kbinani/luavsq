@@ -18,10 +18,14 @@ end
 
 if( nil == luavsq.MidiEvent )then
 
+    ---
+    -- MIDI イベントを表現するクラス。
+    -- メタイベントは、メタイベントのデータ長をData[1]に格納せず、生のデータをDataに格納するので、注意が必要
     luavsq.MidiEvent = {};
 
     ---
-    -- midiイベント。メタイベントは、メタイベントのデータ長をData[1]に格納せず、生のデータをDataに格納するので、注意が必要
+    -- 初期化を行う
+    -- @return (luavsq.MidiEvent)
     function luavsq.MidiEvent.new()
         local this = {};
         this.clock = 0;
@@ -29,7 +33,8 @@ if( nil == luavsq.MidiEvent )then
         this.data = {};
 
         ---
-        -- @param (ByteArrayOutputStream) stream
+        -- MIDI データをストリームに出力する
+        -- @param (? extends OutputStream) stream 出力先のストリーム
         function this:writeData( stream )
             stream:write( self.firstByte );
             if( self.firstByte == 0xff )then
@@ -42,8 +47,9 @@ if( nil == luavsq.MidiEvent )then
         end
 
         ---
-        -- @param item [MidiEvent]
-        -- @return [int]
+        -- 順序を比較する
+        -- @param item (luavsq.MidiEvent) 比較対象のアイテム
+        -- @return (integer) このインスタンスが比較対象よりも小さい場合は負の整数、等しい場合は 0、大きい場合は正の整数を返す
         function this:compareTo( item )
             if( self.clock ~= item.clock )then
                 return self.clock - item.clock;
@@ -88,10 +94,11 @@ if( nil == luavsq.MidiEvent )then
     end
 
     ---
-    -- @param clock [int]
-    -- @param numerator [int]
-    -- @param denominator [int]
-    -- @return [MidiEvent]
+    -- 拍子イベントを作成する
+    -- @param clock (integer) Tick 単位の時刻
+    -- @param numerator (integer) 拍子の分子の値
+    -- @param denominator (integer) 表紙の分母の値
+    -- @return (luavsq.MidiEvent) 拍子イベント
     function luavsq.MidiEvent.generateTimeSigEvent( clock, numerator, denominator )
         local ret = luavsq.MidiEvent.new();
         ret.clock = clock;
@@ -102,9 +109,10 @@ if( nil == luavsq.MidiEvent )then
     end
 
     ---
-    -- @param clock [int]
-    -- @param tempo [int]
-    -- @return [MidiEvent]
+    -- テンポイベントを作成する
+    -- @param clock (integer) Tick 単位の時刻
+    -- @param tempo (integer) 四分音符のマイクロ秒単位の長さ
+    -- @return (luavsq.MidiEvent) テンポイベント
     function luavsq.MidiEvent.generateTempoChangeEvent( clock, tempo )
         local ret = luavsq.MidiEvent.new();
         ret.clock = clock;
@@ -125,8 +133,9 @@ if( nil == luavsq.MidiEvent )then
     end
 
     ---
-    -- @param (ByteArrayOutputStream) stream
-    -- @param (long) number
+    -- 可変長のデルタタイムをストリームに出力する
+    -- @param stream (? extends OutputStream) 出力先のストリーム
+    -- @param number (integer) デルタタイム
     function luavsq.MidiEvent.writeDeltaClock( stream, number )
         local bits = {};
         local p = luavsq.MidiEvent._x[1];
@@ -301,9 +310,10 @@ if( nil == luavsq.MidiEvent )then
 ]]
 
     ---
-    -- @param (luavsq.MidiEvent) a
-    -- @param (luavsq.MidiEvent) b
-    -- @return (boolean)
+    -- 2 つの MidiEvent を比較する
+    -- @param a (luavsq.MidiEvent) 比較対象のオブジェクト
+    -- @param b (luavsq.MidiEvent) 比較対象のオブジェクト
+    -- @return (boolean) a が b よりも小さい場合は true、そうでない場合は false を返す
     function luavsq.MidiEvent.compare( a, b )
         return (a:compareTo( b ) < 0);
     end

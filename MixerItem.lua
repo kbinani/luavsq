@@ -19,15 +19,16 @@ end
 if( nil == luavsq.MixerItem )then
 
     ---
-    -- VsqMixerのSlave要素に格納される各エントリ
+    -- Mixer の slave 要素に格納されるアイテムを表すクラス
     luavsq.MixerItem = {};
 
     ---
-    -- 各パラメータを指定したコンストラクタ
+    -- 各パラメータを指定し、初期化を行う
     -- @param feder (integer) Feder値
     -- @param panpot (integer) Panpot値
     -- @param mute (integer) Mute値
     -- @param solo (integer) Solo値
+    -- @return (luavsq.MixerItem)
     function luavsq.MixerItem.new( feder, panpot, mute, solo )
         local this = {};
         this.feder = feder;
@@ -42,6 +43,9 @@ if( nil == luavsq.MixerItem )then
             self.solo = solo;
         end
 
+        ---
+        -- コピーを作成する
+        -- @return (luavsq.MixerItem) このオブジェクトのコピー
         function this:clone()
             return luavsq.MixerItem.new( self.feder, self.panpot, self.mute, self.solo );
         end

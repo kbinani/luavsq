@@ -19,9 +19,14 @@ end
 if( nil == luavsq.Mixer )then
 
     ---
-    -- vsqファイルのメタテキストの[Mixer]セクションに記録される内容を取り扱う
+    -- VSQ ファイルのメタテキストの [Mixer] セクションに記録される内容を取り扱うクラス
     luavsq.Mixer = {};
 
+    ---
+    -- 初期化を行う
+    -- @see luavsq.Mixer._init_2
+    -- @see luavsq.Mixer._init_4
+    -- @return (luavsq.Mixer)
     function luavsq.Mixer.new( ... )
         local this = {};
         local arguments = { ... };
@@ -35,12 +40,11 @@ if( nil == luavsq.Mixer )then
         this.slave = {};
 
         ---
-        -- 各パラメータを指定したコンストラクタ
-        -- @param master_fader [int] MasterFader値
-        -- @param master_panpot [int] MasterPanpot値
-        -- @param master_mute [int] MasterMute値
-        -- @param output_mode [int]
-        -- @return [VsqMixer]
+        -- 各パラメータを指定し、初期化を行う
+        -- @param master_fader (integer) MasterFader 値
+        -- @param master_panpot (integer) MasterPanpot 値
+        -- @param master_mute (integer) MasterMute 値
+        -- @param output_mode (integer) OutputMode 値
         function this:_init_4( master_feder, master_panpot, master_mute, output_mode )
             self.masterFeder = master_feder;
             self.masterMute = master_mute;
@@ -53,9 +57,9 @@ if( nil == luavsq.Mixer )then
         end
 
         ---
-        -- @param sr [TextStream]
-        -- @param last_line [ByRef<string>]
-        -- @return [VsqMixer]
+        -- テキストストリームから読み込みを行い、初期化を行う
+        -- @param sr (luavsq.TextStream) 読み込むテキストストリーム
+        -- @param lastLine (table, { value = ? }) 読み込んだ最後の行。テーブルの ["value"] に文字列が格納される
         function this:_init_2( stream, last_line )
             self.masterFeder = 0;
             self.masterPanpot = 0;
@@ -122,6 +126,9 @@ if( nil == luavsq.Mixer )then
             end
         end
 
+        ---
+        -- コピーを作成する
+        -- @return (luavsq.Mixer) このオブジェクトのコピー
         function this:clone()
             local res = luavsq.Mixer.new( self.masterFeder, self.masterPanpot, self.masterMute, self.outputMode );
             res.slave = {};
@@ -134,8 +141,8 @@ if( nil == luavsq.Mixer )then
         end
 
         ---
-        -- このインスタンスをテキストファイルに出力します
-        -- @param sw (TextStream) 出力対象
+        -- テキストストリームに出力する
+        -- @param sw (luavsq.TextStream) 出力先のストリーム
         function this:write( sw )
             sw:writeLine( "[Mixer]" );
             sw:writeLine( "MasterFeder=" .. self.masterFeder );

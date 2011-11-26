@@ -35,6 +35,7 @@ if( nil == luavsq.BP )then
         ---
         -- コピーを作成する
         -- @return (luavsq.BP) このインスタンスのコピー
+        -- @name luavsq.BP:clone
         function this:clone()
             return luavsq.BP.new( self.value, self.id );
         end

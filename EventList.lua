@@ -312,15 +312,4 @@ if( nil == luavsq.EventList )then
         return this;
     end
 
-    ---
-    -- 2 つのイベントを比較する
-    -- @param a (luavsq.Event)
-    -- @param b (luavsq.Event)
-    function luavsq.EventList.__OBSOLETE__comparator( a, b )
-        if( a:compareTo( b ) < 0 )then
-            return true;
-        else
-            return false;
-        end
-    end
 end

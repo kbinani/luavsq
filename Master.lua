@@ -19,9 +19,13 @@ end
 if( nil == luavsq.Master )then
 
     ---
-    -- vsqファイルのメタテキストの[Master]に記録される内容を取り扱う
+    -- VSQ ファイルのメタテキストの [Master] に記録される内容を取り扱うクラス
     luavsq.Master = {};
 
+    ---
+    -- 初期化を行う
+    -- @see luavsq.Master:_init_1
+    -- @see luavsq.Master:_init_2
     function luavsq.Master.new( ... )
         local this = {};
         local arguments = { ... };
@@ -29,14 +33,16 @@ if( nil == luavsq.Master )then
         this.preMeasure = 1;
 
         ---
-        -- @param preMeasure (integer)
+        -- プリメジャーを指定し、初期化を行う
+        -- @param preMeasure (integer) プリメジャーの長さ(小節数)
         function this:_init_1( preMeasure )
             self.preMeasure = preMeasure;
         end
 
         ---
-        -- @param sr [TextStream]
-        -- @param lastLine [ByRef<string>]
+        -- テキストストリームから読み込むことで初期化を行う
+        -- @param sr (luavsq.TextStream) 読み込むテキストストリーム
+        -- @param lastLine (table, { value = ? }) 読み込んだ最後の行。テーブルの ["value"] に文字列が格納される
         function this:_init_2( sr, lastLine )
             self.preMeasure = 0;
             local spl;
@@ -53,13 +59,16 @@ if( nil == luavsq.Master )then
             end
         end
 
+        ---
+        -- コピーを作成する
+        -- @return (luavsq.Master) このオブジェクトのコピー
         function this:clone()
             return luavsq.Master.new( self.preMeasure );
         end
 
         ---
-        -- インスタンスの内容をテキストファイルに出力します
-        -- @param stream (TextStream) 出力先
+        -- テキストストリームに出力する
+        -- @param stream (luavsq.TextStream) 出力先
         function this:write( stream )
             stream:writeLine( "[Master]" );
             stream:writeLine( "PreMeasure=" .. self.preMeasure );

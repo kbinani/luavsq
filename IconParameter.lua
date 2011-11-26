@@ -21,10 +21,12 @@ end
 if( nil == luavsq.IconParameter )then
 
     ---
-    -- アイコン設定ファイルである*.AICファイルを読み取ることで作成されるアイコン設定を表します。
-    -- アイコン設定ファイルを使用するIconDynamicsHandle、NoteHeadHandle、およびVibratoHandleの基底クラスとなっています。
+    -- アイコン設定ファイルである*.AICファイルを読み取ることで作成されるアイコン設定を表すクラス
+    -- アイコン設定ファイルを使用するIconDynamicsHandle、NoteHeadHandle、およびVibratoHandleの基底クラスとなっている
     luavsq.IconParameter = {};
 
+    ---
+    -- 初期化を行う
     function luavsq.IconParameter.new()
         local this = {};
 
@@ -73,20 +75,22 @@ if( nil == luavsq.IconParameter )then
         --TODO: AIC ファイルからのコンストラクタを追加する
 
         ---
-        -- @return [String]
+        -- ボタンテキストを取得する
+        -- @return (string) ボタンテキスト
         function this:getButton()
             return self.button;
         end
 
         ---
-        -- @return [String]
+        -- ボタン画像のパスを取得する
+        -- @return (string) ボタン画像のパス
         function this:getButtonImageFullPath()
             return self.buttonImageFullPath;
         end
 
         ---
-        -- @param value [String]
-        -- @return [void]
+        -- ボタン画像のパスを設定する
+        -- @param value (string) ボタン画像のパス
         function this:setButtonImageFullPath( value )
             self.buttonImageFullPath = value;
         end

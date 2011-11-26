@@ -22,6 +22,9 @@ if( nil == luavsq.Handle )then
     -- ハンドルを取り扱います。ハンドルにはLyricHandle、VibratoHandle、SingerHandleおよびNoteHeadHandleがある
     luavsq.Handle = {};
 
+    ---
+    -- 初期化を行う
+    -- @see this:_init_3
     function luavsq.Handle.new( ... )
         local arguments = { ... };
         local this = {};
@@ -46,31 +49,34 @@ if( nil == luavsq.Handle )then
         this.dynBP = nil;
 
         ---
+        -- @field
         -- 歌詞・発音記号列の前後にクォーテーションマークを付けるかどうか
         this.addQuotationMark = true;
 
         ---
-        -- @return [int]
+        -- Tick 単位の長さを取得する
+        -- @return (integer)
         function this:getLength()
             return self.length;
         end
 
         ---
-        -- @param value [int]
-        -- @return [void]
+        -- 長さを設定する
+        -- @param value (integer) Tick単位の長さ
         function this:setLength( value )
             self.length = value;
         end
 
         ---
-        -- このハンドルのタイプを取得する
-        -- @return (luavsq.HandleTypeEnum)
+        -- ハンドルのタイプを取得する
+        -- @return (luavsq.HandleTypeEnum) ハンドルのタイプ
         function this:getHandleType()
             return self._type;
         end
 
         ---
-        -- @return (luavsq.LyricHandle)
+        -- このオブジェクトを歌詞ハンドルに型変換する
+        -- @return (luavsq.LyricHandle) 歌詞ハンドル
         function this:castToLyricHandle()
             local ret = luavsq.LyricHandle.new();
             ret.index = self.index;
@@ -79,7 +85,8 @@ if( nil == luavsq.Handle )then
         end
 
         ---
-        -- @return (luavsq.VibratoHandle)
+        -- このオブジェクトをビブラートハンドルに型変換する
+        -- @return (luavsq.VibratoHandle) ビブラートハンドル
         function this:castToVibratoHandle()
             local ret = luavsq.VibratoHandle.new();
             ret.index = self.index;
@@ -96,7 +103,8 @@ if( nil == luavsq.Handle )then
         end
 
         ---
-        -- @return [IconHandle]
+        -- このオブジェクトを歌手ハンドルに型変換する
+        -- @return (luavsq.SingerHandle) 歌手ハンドル
         function this:castToSingerHandle()
             local ret = luavsq.SingerHandle.new();
             ret.index = self.index;
@@ -111,7 +119,8 @@ if( nil == luavsq.Handle )then
         end
 
         ---
-        -- @return [NoteHeadHandle]
+        -- このオブジェクトをアタックハンドルに型変換する
+        -- @return (luavsq.NoteHeadHandle) アタックハンドル
         function this:castToNoteHeadHandle()
             local ret = luavsq.NoteHeadHandle.new();
             ret:setCaption( self.caption );
@@ -125,7 +134,8 @@ if( nil == luavsq.Handle )then
         end
 
         ---
-        -- @return [IconDynamicsHandle]
+        -- このオブジェクトをダイナミクスハンドルに型変換する
+        -- @return (luavsq.IconDynamicsHandle) ダイナミクスハンドル
         function this:castToIconDynamicsHandle()
             local ret = luavsq.IconDynamicsHandle.new();
             ret.ids = self.ids;
@@ -140,18 +150,17 @@ if( nil == luavsq.Handle )then
         end
 
         ---
-        -- インスタンスをストリームに書き込みます。
-        -- encode=trueの場合、2バイト文字をエンコードして出力します。
-        -- @param sw [ITextWriter] 書き込み対象
-        function this:write( sw )
+        -- ストリームに書き込む
+        -- @param stream (luavsq.TextStream) 書き込み先のストリーム
+        function this:write( stream )
             sw:writeLine( self:toString() );
         end
 
         ---
-        -- FileStreamから読み込みながらコンストラクト
-        -- @param sr [TextStream]読み込み対象
-        -- @param index [int]
-        -- @param last_line [ByRef<string>]
+        -- テキストストリームからハンドルの内容を読み込み初期化する
+        -- @param sr (luavsq.TextStream) 読み込み元のテキストストリーム
+        -- @param index (integer) index フィールドの値
+        -- @param last_line (table, { value = ? }) 読み込んだ最後の行。テーブルの ["value"] に文字列が格納される
         function this:_init_3( sr, index, last_line )
             self.index = index;
             local spl;
@@ -288,8 +297,8 @@ if( nil == luavsq.Handle )then
         end
 
         ---
-        -- インスタンスを文字列に変換します
-        -- @return [string] インスタンスを変換した文字列
+        -- オブジェクトを文字列に変換する
+        -- @return (string) 文字列
         function this:toString()
             local result = "";
             result = result .. "[h#" .. string.format( "%04d", self.index ) .. "]";
@@ -382,9 +391,9 @@ if( nil == luavsq.Handle )then
     end
 
     ---
-    -- ハンドル指定子（例えば"h#0123"という文字列）からハンドル番号を取得します
-    -- @param _string [string] ハンドル指定子
-    -- @return [int] ハンドル番号
+    -- ハンドル指定子（例えば"h#0123"という文字列）からハンドル番号を取得する
+    -- @param string (string) ハンドル指定子
+    -- @return (integer) ハンドル番号
     function luavsq.Handle.getHandleIndexFromString( _string )
         local spl = luavsq.Util.split( _string, "#" );
         return tonumber( spl[2], 10 );

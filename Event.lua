@@ -384,7 +384,7 @@ if( nil == luavsq.Event )then
     -- 2 つの Event を比較する
     -- @param a (luavsq.Event) 比較対象のオブジェクト
     -- @param b (luavsq.Event) 比較対象のオブジェクト
-    -- @return (integer) a が b よりも小さい場合は true、そうでない場合は false を返す
+    -- @return (boolean) a が b よりも小さい場合は true、そうでない場合は false を返す
     function luavsq.Event.compare( a, b )
         return (a:compareTo( b ) < 0);
     end

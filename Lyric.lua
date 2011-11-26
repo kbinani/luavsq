@@ -21,15 +21,15 @@ end
 
 if( nil == luavsq.Lyric )then
 
+    ---
+    -- 歌詞ハンドルに格納する歌詞情報を保持するクラス
     luavsq.Lyric = {};
 
     ---
+    -- 初期化を行う
+    -- @return (luavsq.Lyric) 歌詞オブジェクト
     -- overload1
-    -- 歌詞、発音記号を指定したコンストラクタ
-    -- @param phrase String 歌詞
-    -- @param phonetic_symbol String 発音記号
     -- overload2
-    -- 文字列(ex."a","a",0.0000,0.0)からのコンストラクタ
     function luavsq.Lyric.new( ... )
         local arguments = { ... }
         local this = {};
@@ -40,7 +40,8 @@ if( nil == luavsq.Lyric )then
         this._consonantAdjustment = { 0 };
 
         ---
-        -- @param line String
+        -- 文字列を元に初期化を行う
+        -- @param line (string) 「"あ","a",0.0000,0.0」などのような文字列
         function this:_init_1( line )
             if( line == nil or (line ~= nil and line:len() == 0) )then
                 self.phrase = "a";
@@ -127,8 +128,9 @@ if( nil == luavsq.Lyric )then
         end
 
         ---
-        -- @param phrase String
-        -- @param phoneticSymbol String
+        -- 歌詞、発音記号を指定して初期化を行う
+        -- @param phrase (string) 歌詞
+        -- @param phoneticSymbol (string) 発音記号
         function this:_init_2( phrase, phoneticSymbol )
             self.phrase = phrase;
             self._consonantAdjustment = nil;
@@ -138,11 +140,11 @@ if( nil == luavsq.Lyric )then
         end
 
         ---
-        -- このオブジェクトのインスタンスと、指定されたアイテムが同じかどうかを調べます。
-        -- 音声合成したときに影響のある範囲のフィールドしか比較されません。
+        -- このオブジェクトと、指定されたオブジェクトが同じかどうかを調べる。
+        -- 音声合成したときに影響のある範囲のフィールドしか比較されない。
         -- たとえば、isProtectedがthisとitemで違っていても、他が同一であればtrueが返る。
-        -- @param item [Lyric]
-        -- @return [bool]
+        -- @param item (luavsq.Lyric) 比較対象のオブジェクト
+        -- @return (boolean) 比較対象と同じであれば true を、そうでなければ false を返す
         function this:equalsForSynth( item )
             if( self:getPhoneticSymbol() ~= item:getPhoneticSymbol() )then
                 return false;
@@ -154,9 +156,9 @@ if( nil == luavsq.Lyric )then
         end
 
         ---
-        -- このオブジェクトのインスタンスと、指定されたオブジェクトが同じかどうかを調べます。
-        -- @param item [Lyric]
-        -- @return [bool]
+        -- このオブジェクトのインスタンスと、指定されたオブジェクトが同じかどうかを調べる
+        -- @param item (luavsq.Lyric) 比較対象のオブジェクト
+        -- @return (boolean) 比較対象と同じであれば true を、そうでなければ false を返す
         function this:equals( item )
             if( not self:equalsForSynth( item ) )then
                 return false;
@@ -174,8 +176,8 @@ if( nil == luavsq.Lyric )then
         end
 
         ---
-        -- Consonant Adjustmentの文字列形式を取得します。
-        -- @return [String]
+        -- Consonant Adjustmentの文字列形式を取得する
+        -- @return (string) Consonant Adjustment を空白区切りで連結した文字列
         function this:getConsonantAdjustment()
             local arr = self:getConsonantAdjustmentList();
             if( #arr == 0 )then
@@ -189,9 +191,8 @@ if( nil == luavsq.Lyric )then
         end
 
         ---
-        -- Consonant Adjustmentを文字列形式で設定します。
-        -- @param value [String]
-        -- @return [void]
+        -- Consonant Adjustmentを文字列形式で設定する
+        -- @param value (string) Consonant Adjustment を空白区切りで連結した文字列
         function this:setConsonantAdjustment( value )
             local spl = luavsq.Util.split( value, "," );
             local arr = luavsq.Util.array( #spl );
@@ -202,8 +203,8 @@ if( nil == luavsq.Lyric )then
         end
 
         ---
-        -- Consonant Adjustmentを、整数配列で取得します。
-        -- @return int[]
+        -- Consonant Adjustment を、整数配列で取得する
+        -- @return (table<integer>) Consonant Adjustment を格納した整数の配列
         function this:getConsonantAdjustmentList()
             if( self._consonantAdjustment == nil )then
                 if( self._phoneticSymbol == nil )then
@@ -225,8 +226,8 @@ if( nil == luavsq.Lyric )then
         end
 
         ---
-        -- Consonant Adjustmentを、整数配列形式で設定します。
-        -- @param value int[]
+        -- Consonant Adjustment を、整数配列形式で設定する
+        -- @param value (table<integer>) Consonant Adjustment を格納した整数の配列
         function this:setConsonantAdjustmentList( value )
             if( value == nil )then
                 return;
@@ -238,8 +239,8 @@ if( nil == luavsq.Lyric )then
         end
 
         ---
-        -- このオブジェクトの簡易コピーを取得します。
-        -- @return [object] このインスタンスの簡易コピー
+        -- コピーを作成する
+        -- @return (luavsq.Lyric) このインスタンスのコピー
         function this:clone()
             local result = luavsq.Lyric.new();
             result.phrase = self.phrase;
@@ -261,8 +262,8 @@ if( nil == luavsq.Lyric )then
         end
 
         ---
-        -- この歌詞の発音記号を取得します。
-        -- @return [String]
+        -- この歌詞の発音記号を取得する
+        -- @return (string) 発音記号
         function this:getPhoneticSymbol()
             local symbol = self:getPhoneticSymbolList();
             if( #symbol == 0 )then
@@ -276,8 +277,8 @@ if( nil == luavsq.Lyric )then
         end
 
         ---
-        -- この歌詞の発音記号を設定します。
-        -- @param value (string)
+        -- この歌詞の発音記号を設定する
+        -- @param value (string) 発音記号
         function this:setPhoneticSymbol( value )
             local s = value:gsub( "  ", " " );
             self._phoneticSymbol = luavsq.Util.split( s, " " );
@@ -288,7 +289,7 @@ if( nil == luavsq.Lyric )then
 
         ---
         -- この歌詞の発音記号の配列を取得する
-        -- @return array<String>
+        -- @return (table<string>) 発音記号の配列
         function this:getPhoneticSymbolList()
             local ret = luavsq.Util.array( #self._phoneticSymbol );
             for i = 1, #self._phoneticSymbol, 1 do
@@ -298,9 +299,9 @@ if( nil == luavsq.Lyric )then
         end
 
         ---
-        -- このインスタンスを文字列に変換します
-        -- @param addQuateMark [bool]
-        -- @return 変換後の文字列 [String]
+        -- このインスタンスを文字列に変換する
+        -- @param addQuateMark (boolean) 歌詞、発音記号の前後に引用符(")を追加するかどうか
+        -- @return (string) 変換後の文字列
         function this:toString( addQuateMark )
             local quot;
             if( addQuateMark )then
@@ -313,7 +314,7 @@ if( nil == luavsq.Lyric )then
             local symbol = self:getPhoneticSymbolList();
             local strSymbol = self:getPhoneticSymbol();
             if( not addQuateMark )then
-                if( (strSymbol == null) or (strSymbol ~= null and strSymbol == "" ) )then
+                if( (strSymbol == nil) or (strSymbol ~= nil and strSymbol == "" ) )then
                     strSymbol = "u:";
                 end
             end

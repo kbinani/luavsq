@@ -18,10 +18,14 @@ end
 
 if( nil == luavsq.NoteHeadHandle )then
 
+    ---
+    -- アタックハンドル
     luavsq.NoteHeadHandle = {};
 
-    function luavsq.NoteHeadHandle.new( ... )
-        local arguments = { ... };
+    ---
+    -- 初期化を行う
+    -- @return (luavsq.NoteHeadHandle)
+    function luavsq.NoteHeadHandle.new( ids, iconId, index )
         local this = luavsq.IconParameter.new();
 
         this.articulation = luavsq.ArticulationTypeEnum.NoteAttack;
@@ -31,71 +35,78 @@ if( nil == luavsq.NoteHeadHandle )then
         this.original = 0;
 
         ---
-        -- @return [String]
+        -- 文字列に変換する
+        -- @return (string) 変換後の文字列
         function this:toString()
             return self:getDisplayString();
         end
 
         ---
-        -- @return [int]
+        -- Depth 値を取得する
+        -- @return (integer) Depth 値
         function this:getDepth()
             return self.depth;
         end
 
         ---
-        -- @param value [int]
-        -- @return [void]
+        -- Depth 値を設定する
+        -- @param value (integer) Depth 値
         function this:setDepth( value )
             self.depth = value;
         end
 
         ---
-        -- @return [int]
+        -- Duration 値を取得する
+        -- @return (integer) Duration 値
         function this:getDuration()
             return self.duration;
         end
 
         ---
-        -- @param value [int]
-        -- @return [void]
+        -- Duration 値を設定する
+        -- @param value (integer) Duration 値
         function this:setDuration( value )
             self.duration = value;
         end
 
         ---
-        -- @return [String]
+        -- キャプションを取得する
+        -- @return (string) キャプション
         function this:getCaption()
             return self.caption;
         end
 
         ---
-        -- @param value [String]
-        -- @return [void]
+        -- キャプションを設定する
+        -- @param value (string) キャプション
         function this:setCaption( value )
             self.caption = value;
         end
 
         ---
-        -- @return [int]
+        -- 長さを取得する
+        -- @return (integer) 長さ
         function this:getLength()
             return self.length;
         end
 
         ---
-        -- @param value [int]
-        -- @return [void]
+        -- 長さを設定する
+        -- @param value (integer) 長さ
         function this:setLength( value )
             self.length = value;
         end
 
         ---
-        -- @return [String]
+        -- Display String 値を取得する
+        -- @return (string) Display String 値
         function this:getDisplayString()
             return self.ids .. self.caption;
         end
 
         ---
-        -- @return [object]
+        -- コピーを作成する
+        -- @return (luavsq.NoteHeadHandle) このオブジェクトのコピー
         function this:clone()
             local result = luavsq.NoteHeadHandle.new();
             result.index = self.index;
@@ -110,7 +121,8 @@ if( nil == luavsq.NoteHeadHandle )then
         end
 
         ---
-        -- @return [VsqHandle]
+        -- Handle に型変換する
+        -- @return (luavsq.Handle) Handle
         function this:castToHandle()
             local ret = luavsq.Handle.new();
             ret._type = luavsq.HandleTypeEnum.NoteHead;
@@ -125,11 +137,9 @@ if( nil == luavsq.NoteHeadHandle )then
             return ret;
         end
 
-        if( #arguments == 3 )then
-            this.ids = arguments[1];
-            this.iconId = arguments[2];
-            this.index = arguments[3];
-        end
+        this.ids = ids;
+        this.iconId = iconId;
+        this.index = index;
 
         return this;
     end

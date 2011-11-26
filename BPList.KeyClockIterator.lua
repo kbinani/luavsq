@@ -28,7 +28,7 @@ if( nil == luavsq.BPList.KeyClockIterator )then
 
     ---
     -- コンストラクタ
-    -- @see this:_init_1
+    -- @see luavsq.BPList.KeyClockIterator:_init_1
     function luavsq.BPList.KeyClockIterator.new( ... )
         local this = {};
         local arguments = { ... };
@@ -38,6 +38,7 @@ if( nil == luavsq.BPList.KeyClockIterator )then
         ---
         -- 初期化を行う
         -- @param list (luavsq.BPList) 反復子の元になるリスト
+        -- @name luavsq.BPList.KeyClockIterator:_init_1
         function this:_init_1( list )
             self._list = list;
             self._pos = 0;
@@ -46,6 +47,7 @@ if( nil == luavsq.BPList.KeyClockIterator )then
         ---
         -- 反復子が次の要素を持つ場合に true を返す
         -- @return (boolean) 反復子がさらに要素を持つ場合は true を、そうでなければ false を返す
+        -- @name luavsq.BPList.KeyClockIterator:hasNext
         function this:hasNext()
             if( self._pos + 1 <= self._list._length )then
                 return true;
@@ -57,6 +59,7 @@ if( nil == luavsq.BPList.KeyClockIterator )then
         ---
         -- 反復子の次の要素を返す
         -- @return (integer) 次の要素
+        -- @name luavsq.BPList.KeyClockIterator:next
         function this:next()
             self._pos = self._pos + 1;
             return self._list.clocks[self._pos];
@@ -64,6 +67,7 @@ if( nil == luavsq.BPList.KeyClockIterator )then
 
         ---
         -- 反復子によって最後に返された要素を削除する
+        -- @name luavsq.BPList.KeyClockIterator:remove
         function this:remove()
             if( 0 < self._pos and self._pos <= self._list._length )then
                 local key = self._list.clocks[self._pos];

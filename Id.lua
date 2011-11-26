@@ -19,9 +19,11 @@ end
 if( nil == luavsq.Id )then
 
     ---
-    -- メタテキストに埋め込まれるIDを表すクラス。
+    -- メタテキストに埋め込まれるIDを表すクラス
     luavsq.Id = {};
 
+    ---
+    -- 初期化を行う
     function luavsq.Id.new( ... )
         local this = {};
         local arguments = { ... };
@@ -146,21 +148,22 @@ if( nil == luavsq.Id )then
         end]]
 
         ---
-        -- @return [int]
+        -- 長さを取得する
+        -- @return (integer) 長さ
         function this:getLength()
             return self._length;
         end
 
         ---
-        -- @param value [int]
-        -- @return [void]
+        -- 長さを設定する
+        -- @param value (integer) 長さ
         function this:setLength( value )
             self._length = value;
         end
 
         ---
-        -- このインスタンスの簡易コピーを取得します。
-        -- @return [object] このインスタンスの簡易コピー
+        -- コピーを作成する
+        -- @return (luavsq.Id) このインスタンスのコピー
         function this:clone()
             local result = luavsq.Id.new( self.value );
             result.type = self.type;
@@ -195,6 +198,9 @@ if( nil == luavsq.Id )then
             return result;
         end
 
+        ---
+        -- このオブジェクトがイベントリストの末尾の要素( EOS )かどうかを取得する
+        -- @return (boolean) このオブジェクトが EOS 要素であれば true を、そうでなければ false を返す
         function this:isEOS()
             if( self.value == -1 )then
                 return true;
@@ -239,6 +245,9 @@ if( nil == luavsq.Id )then
         return this;
     end
 
+    ---
+    -- イベントリストの末尾の要素を表すオブジェクトを取得する
+    -- @return (luavsq.Id) 末尾の要素を表す Id
     function luavsq.Id.getEOS()
         return luavsq.Id.new();
     end

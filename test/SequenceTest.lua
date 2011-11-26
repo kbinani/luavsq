@@ -390,7 +390,3 @@ end
 function testWriteUnsignedInt()
     fail();
 end
-
-function testToDo1()
-    fail( "getElementとsetElementではなくget,setにする" );
-end

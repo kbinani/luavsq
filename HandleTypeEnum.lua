@@ -18,12 +18,18 @@ end
 
 if( nil == luavsq.HandleTypeEnum )then
 
-    luavsq.HandleTypeEnum = {};
+    ---
+    -- ハンドルのタイプを表現する列挙子
+    -- @class table
+    -- @name HandleTypeEnum
+    luavsq.HandleTypeEnum = {
 
-    luavsq.HandleTypeEnum.Lyric = 0;
-    luavsq.HandleTypeEnum.Vibrato = 1;
-    luavsq.HandleTypeEnum.Singer = 2;
-    luavsq.HandleTypeEnum.NoteHead = 3;
-    luavsq.HandleTypeEnum.Dynamics = 4;
+        Lyric = 0,
+        Vibrato = 1,
+        Singer = 2,
+        NoteHead = 3,
+        Dynamics = 4
+
+    };
 
 end

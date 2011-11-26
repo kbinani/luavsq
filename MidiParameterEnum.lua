@@ -18,7 +18,10 @@ end
 
 if( nil == luavsq.MidiParameterEnum )then
 
+    ---
+    -- VOCALOID で使用される NRPN を表す列挙子
     luavsq.MidiParameterEnum = {};
+
     ---
     -- (0x5000) Version number(MSB) &amp;, Device number(LSB)
     luavsq.MidiParameterEnum.CVM_NM_VERSION_AND_DEVICE = 0x5000;
@@ -441,9 +444,9 @@ if( nil == luavsq.MidiParameterEnum )then
     }]]
 
     ---
-    -- 指定したコントロールに対応するVoice Change Parameter IDの値を調べます
-    -- @param curve_name [string]
-    -- @return [byte]
+    -- 指定したコントロールに対応する Voice Change Parameter ID の値を取得する
+    -- @param curveName (string) コントロールカーブの名前
+    -- @return (integer) Voice Change Parameter ID の値
     function luavsq.MidiParameterEnum.getVoiceChangeParameterId( curveName )
         local lsb = 0x31;
         if( nil == curveName )then
@@ -493,8 +496,9 @@ if( nil == luavsq.MidiParameterEnum )then
     end
 
     ---
-    -- @param nrpn [int]
-    -- @return [bool]
+    -- 指定された NRPN が、DATA LSB が必要なものかどうかを調べる
+    -- @param nrpn (integer) 対象の NRPN
+    -- @return (boolean) DATA LSB が必要であれば true を、そうでなければ false を返す
     function luavsq.MidiParameterEnum.isDataLsbRequire( nrpn )
         if( nrpn == luavsq.MidiParameterEnum.CVM_NM_VERSION_AND_DEVICE or
             nrpn == luavsq.MidiParameterEnum.CVM_NM_DELAY or

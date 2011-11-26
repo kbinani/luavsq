@@ -18,6 +18,8 @@ end
 
 if( nil == luavsq.IconDynamicsHandle )then
 
+    ---
+    -- ダイナミクスハンドル
     luavsq.IconDynamicsHandle = {};
 
     ---
@@ -32,6 +34,8 @@ if( nil == luavsq.IconDynamicsHandle )then
     -- デクレッシェンドの場合の、IconId の最初の5文字。
     luavsq.IconDynamicsHandle.ICONID_HEAD_DECRESCEND = "$0503";
 
+    ---
+    -- 初期化を行う
     function luavsq.IconDynamicsHandle.new()
         local this = luavsq.IconParameter.new();
 
@@ -51,8 +55,8 @@ if( nil == luavsq.IconDynamicsHandle )then
         this.original = 0;
 
         ---
-        -- このハンドルが強弱記号を表すものかどうかを表すブール値を取得します。
-        -- @return [bool]
+        -- このハンドルが強弱記号を表すものかどうかを表すブール値を取得する
+        -- @return (boolean) このオブジェクトが強弱記号を表すものであれば true を、そうでなければ false を返す
         function this:isDynaffType()
             if( nil ~= self.iconId )then
                 return self.iconId:find( luavsq.IconDynamicsHandle.ICONID_HEAD_DYNAFF ) == 1;
@@ -62,8 +66,8 @@ if( nil == luavsq.IconDynamicsHandle )then
         end
 
         ---
-        -- このハンドルがクレッシェンドを表すものかどうかを表すブール値を取得します。
-        -- @return [bool]
+        -- このハンドルがクレッシェンドを表すものかどうかを表すブール値を取得する
+        -- @return (boolean) このオブジェクトがクレッシェンドを表すものであれば true を、そうでなければ false を返す
         function this:isCrescendType()
             if( nil ~= self.iconId )then
                 return self.iconId:find( luavsq.IconDynamicsHandle.ICONID_HEAD_CRESCEND ) == 1;
@@ -73,8 +77,8 @@ if( nil == luavsq.IconDynamicsHandle )then
         end
 
         ---
-        -- このハンドルがデクレッシェンドを表すものかどうかを表すブール値を取得します。
-        -- @return [bool]
+        -- このハンドルがデクレッシェンドを表すものかどうかを表すブール値を取得する
+        -- @return (boolean) このオブジェクトがデクレッシェンドを表すものであれば true を、そうでなければ false を返す
         function this:isDecrescendType()
             if( nil ~= self.iconId )then
                 return self.iconId:find( luavsq.IconDynamicsHandle.ICONID_HEAD_DECRESCEND ) == 1;
@@ -84,8 +88,8 @@ if( nil == luavsq.IconDynamicsHandle )then
         end
 
         ---
-        -- このインスタンスのコピーを作成します。
-        -- @return [object]
+        -- コピーを作成する
+        -- @return (luavsq.IconDynamicsHandle) このインスタンスのコピー
         function this:clone()
             local ret = luavsq.IconDynamicsHandle.new();
             ret.iconId = self.iconId;
@@ -102,8 +106,8 @@ if( nil == luavsq.IconDynamicsHandle )then
         end
 
         ---
-        -- この強弱記号設定のインスタンスを、Handleに型キャストします。
-        -- @return [VsqHandle]
+        -- このオブジェクトを、Handle に型変換する
+        -- @return (luavsq.Handle) ハンドル
         function this:castToHandle()
             local ret = luavsq.Handle.new();
             ret._type = luavsq.HandleTypeEnum.Dynamics;
@@ -119,75 +123,71 @@ if( nil == luavsq.IconDynamicsHandle )then
         end
 
         ---
-        -- キャプションを取得します。
-        -- @return [string]
+        -- キャプションを取得する
+        -- @return (string) キャプション
         function this:getCaption()
             return self.caption;
         end
 
         ---
-        -- キャプションを設定します。
-        -- @param value [string]
-        -- @return [void]
+        -- キャプションを設定する
+        -- @param value (string)
         function this:setCaption( value )
             self.caption = value;
         end
 
         ---
-        -- ゲートタイム長さを取得します。
-        -- @return [int]
+        -- 長さを取得する
+        -- @return (integer) Tick 単位の長さ
         function this:getLength()
             return self.length;
         end
 
         ---
-        -- ゲートタイム長さを設定します。
-        -- @param value [int]
-        -- @return [void]
+        -- 長さを設定する
+        -- @param value (integer) Tick 単位の長さ
         function this:setLength( value )
             self.length = value;
         end
 
         ---
-        -- DYNの開始値を取得します。
-        -- @return [int]
+        -- DYN の開始値を取得する
+        -- @return (integer) DYN の開始値
         function this:getStartDyn()
             return self.startDyn;
         end
 
         ---
-        -- DYNの開始値を設定します。
-        -- @param value [int]
+        -- DYN の開始値を設定する
+        -- @param value (integer) DYN の開始値
         function this:setStartDyn( value )
             self.startDyn = value;
         end
 
         ---
-        -- DYNの終了値を取得します。
-        -- @return [int]
+        -- DYN の終了値を取得する
+        -- @return (integer) DYN の終了値
         function this:getEndDyn()
             return self.endDyn;
         end
 
         ---
-        -- DYNの終了値を設定します。
-        -- @param value [int]
-        -- @return [void]
+        -- DYN の終了値を設定する
+        -- @param value (integer) DYN の終了値
         function this:setEndDyn( value )
             self.endDyn = value;
         end
 
         ---
-        -- DYNカーブを表すリストを取得します。
-        -- @return [VibratoBPList]
+        -- DYN カーブを取得する
+        -- @return (luavsq.VibratoBPList) DYN カーブ
         function this:getDynBP()
             return self.dynBP;
         end
 
         ---
-        -- DYNカーブを表すリストを設定します。
-        -- @param value [VibratoBPList]
-        -- @return [void]
+        -- DYN カーブを設定する
+        -- @param value (luavsq.VibratoBPList) DYN カーブ
         function this:setDynBP( value )
             self.dynBP = value;
         end

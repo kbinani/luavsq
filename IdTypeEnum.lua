@@ -18,6 +18,8 @@ end
 
 if( nil == luavsq.IdTypeEnum )then
 
+    ---
+    -- Id の種類を表現する列挙子
     luavsq.IdTypeEnum = {};
 
     luavsq.IdTypeEnum.Singer = 0;
@@ -25,6 +27,9 @@ if( nil == luavsq.IdTypeEnum )then
     luavsq.IdTypeEnum.Aicon = 2;
     luavsq.IdTypeEnum.Unknown = -1;
 
+    ---
+    -- 文字列に変換する
+    -- @param value (luavsq.IdTypeEnum) 指定された列挙子の文字列表現
     function luavsq.IdTypeEnum.toString( value )
         if( value == luavsq.IdTypeEnum.Singer )then
             return "Singer";

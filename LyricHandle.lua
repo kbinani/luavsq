@@ -22,12 +22,15 @@ end
 
 if( nil == luavsq.LyricHandle )then
 
+    ---
+    -- 歌詞ハンドル
     luavsq.LyricHandle = {};
 
     ---
-    -- type = Lyric用のhandleのコンストラクタ
+    -- 初期化を行う
     -- @param phrase (string) 歌詞
     -- @param phoneticSymbol (string) 発音記号
+    -- @return (luavsq.LyricHandle)
     function luavsq.LyricHandle.new( ... )
         local arguments = { ... };
         local this = {};
@@ -50,27 +53,31 @@ if( nil == luavsq.LyricHandle )then
         end
 
         ---
-        -- @param index (integer) 0 から始まるインデックス
-        -- @return (luavsq.Lyric)
+        -- 指定した位置にある歌詞を取得する
+        -- @param index (integer) 取得する要素のインデックス(最初のインデックスは0)
+        -- @return (luavsq.Lyric) 歌詞
         function this:getLyricAt( index )
             return self.lyrics[index + 1];
         end
 
         ---
-        -- @param index (integer) 0 から始まるインデックス
-        -- @param value (luavsq.Lyric)
+        -- 指定した位置にある歌詞を指定した要素で置き換える
+        -- @param index (integer) 置き換える要素のインデックス(最初のインデックスは0)
+        -- @param value (luavsq.Lyric) 置き換える要素
         function this:setLyricAt( index, value )
             self.lyrics[index + 1] = value;
         end
 
         ---
-        -- @return (integer)
+        -- 歌詞の個数を返す
+        -- @return (integer) 歌詞の個数
         function this:size()
             return #self.lyrics;
         end
 
         ---
-        -- @return (luavsq.LyricHandle)
+        -- コピーを作成する
+        -- @return (luavsq.LyricHandle) このオブジェクトのコピー
         function this:clone()
             local result = luavsq.LyricHandle.new();
             result.index = self.index;
@@ -83,7 +90,8 @@ if( nil == luavsq.LyricHandle )then
         end
 
         ---
-        -- @return (luavsq.Handle)
+        -- このオブジェクトを Handle に型変換する
+        -- @return (luavsq.Handle) 変換後の Handle
         function this:castToHandle()
             local result = luavsq.Handle.new();
             result._type = luavsq.HandleTypeEnum.Lyric;
