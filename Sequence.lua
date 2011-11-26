@@ -576,7 +576,7 @@ if( nil == luavsq.Sequence )then
                 local add = luavsq.NrpnEvent.new(
                     c,
                     luavsq.MidiParameterEnum.CC_E_EXPRESSION,
-                    dyn:getElement( i )
+                    dyn:getValue( i )
                 );
                 table.insert( ret, add );
             end
@@ -602,7 +602,7 @@ if( nil == luavsq.Sequence )then
                 local add = luavsq.NrpnEvent.new(
                     c,
                     luavsq.MidiParameterEnum.CC_FX2_EFFECT2_DEPTH,
-                    fx2depth:getElement( i )
+                    fx2depth:getValue( i )
                 );
                 table.insert( ret, add );
             end
@@ -1040,7 +1040,7 @@ if( nil == luavsq.Sequence )then
         local i;
         for i = 0, count - 1, 1 do
             local clock = pit:getKeyClock( i );
-            local value = pit:getElement( i ) + 0x2000;
+            local value = pit:getValue( i ) + 0x2000;
 
             local msb, lsb = luavsq.Sequence.getMsbAndLsb( value );
             local c = clock - vsq:getPresendClockAt( clock, msPreSend );
@@ -1083,7 +1083,7 @@ if( nil == luavsq.Sequence )then
                 local add = luavsq.NrpnEvent.new(
                     c,
                     luavsq.MidiParameterEnum.CC_PBS_PITCH_BEND_SENSITIVITY,
-                    pbs:getElement( i ),
+                    pbs:getValue( i ),
                     0x00
                 );
                 table.insert( ret, add );
@@ -1196,7 +1196,7 @@ if( nil == luavsq.Sequence )then
                             luavsq.MidiParameterEnum.VCP_VOICE_CHANGE_PARAMETER_ID,
                             lsb
                         );
-                        add:append( luavsq.MidiParameterEnum.VCP_VOICE_CHANGE_PARAMETER, vbpl:getElement( j ), true );
+                        add:append( luavsq.MidiParameterEnum.VCP_VOICE_CHANGE_PARAMETER, vbpl:getValue( j ), true );
                         table.insert( res, add );
                     end
                 end

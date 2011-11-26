@@ -762,7 +762,7 @@ function testClone()
     assert_equal( luavsq.IdTypeEnum.Anote, copy:getEvent( 1 ).id.type );
     assert_equal( 1, copy:getCurve( "pit" ):size() );
     assert_equal( 480, copy:getCurve( "pit" ):getKeyClock( 0 ) );
-    assert_equal( 100, copy:getCurve( "pit" ):getElementB( 0 ).value );
+    assert_equal( 100, copy:getCurve( "pit" ):get( 0 ).value );
     assert_equal( "DummyTrackName", copy:getName() );
     assert_equal( "valueOfTag", copy.tag );
 end

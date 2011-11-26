@@ -307,15 +307,7 @@ if( nil == luavsq.BPList )then
         -- データ点の値を取得する
         -- @param index (integer) 取得するデータ点のインデックス(最初のインデックスは0)
         -- @return (integer) データ点の値
-        function this:getElement( index )
-            return self:getElementA( index );
-        end
-
-        ---
-        -- データ点の値を取得する
-        -- @param index (integer) 取得するデータ点のインデックス(最初のインデックスは0)
-        -- @return (integer) データ点の値
-        function this:getElementA( index )
+        function this:getValue( index )
             return self.items[index + 1].value;
         end
 
@@ -323,7 +315,7 @@ if( nil == luavsq.BPList )then
         -- データ点を取得する
         -- @param index (integer) 取得するデータ点のインデックス(最初のインデックスは0)
         -- @return (luavsq.BP) データ点のインスタンス
-        function this:getElementB( index )
+        function this:get( index )
             return self.items[index + 1]:clone();
         end
 

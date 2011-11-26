@@ -58,11 +58,11 @@ function testClone()
     assert_equal( -10, copy:getMinimum() );
     assert_equal( 1000, copy:getMaximum() );
     assert_equal( 2, copy:size() );
-    assert_equal( 1, copy:getElementB( 0 ).id );
-    assert_equal( 1, copy:getElementB( 0 ).value );
+    assert_equal( 1, copy:get( 0 ).id );
+    assert_equal( 1, copy:get( 0 ).value );
     assert_equal( 480, copy:getKeyClock( 0 ) );
-    assert_equal( 2, copy:getElementB( 1 ).id );
-    assert_equal( 2, copy:getElementB( 1 ).value );
+    assert_equal( 2, copy:get( 1 ).id );
+    assert_equal( 2, copy:get( 1 ).value );
     assert_equal( 1920, copy:getKeyClock( 1 ) );
 end
 
@@ -99,30 +99,22 @@ function testMove()
 --    fail();
 end
 
-function testGetElement()
+function testGetValue()
     local list = luavsq.BPList.new( "foo", 63, -10, 1000 );
     list:add( 480, 1 );
     list:add( 1920, 2 );
-    assert_equal( 1, list:getElement( 0 ) );
-    assert_equal( 2, list:getElement( 1 ) );
+    assert_equal( 1, list:getValue( 0 ) );
+    assert_equal( 2, list:getValue( 1 ) );
 end
 
-function testGetElementA()
-    local list = luavsq.BPList.new( "foo", 63, -10, 1000 );
-    list:add( 480, 1 );
-    list:add( 1920, 2 );
-    assert_equal( 1, list:getElementA( 0 ) );
-    assert_equal( 2, list:getElementA( 1 ) );
-end
-
-function testGetElementB()
+function testGet()
     local list = luavsq.BPList.new( "foo", 63, -10, 1000 );
     list:add( 480, 11 );
     list:add( 1920, 12 );
-    assert_equal( 1, list:getElementB( 0 ).id );
-    assert_equal( 11, list:getElementB( 0 ).value );
-    assert_equal( 2, list:getElementB( 1 ).id );
-    assert_equal( 12, list:getElementB( 1 ).value );
+    assert_equal( 1, list:get( 0 ).id );
+    assert_equal( 11, list:get( 0 ).value );
+    assert_equal( 2, list:get( 1 ).id );
+    assert_equal( 12, list:get( 1 ).value );
 end
 
 function testGetKeyClock()
@@ -222,37 +214,37 @@ function testAdd()
     local idA = list:add( 480, 11 );
     assert_equal( 1, list:size() );
     assert_equal( 1, idA );
-    assert_equal( 11, list:getElement( 0 ) );
+    assert_equal( 11, list:getValue( 0 ) );
 
     --同じclockに値をaddすると、データ点は増えずに値が上書きされる
     idA = list:add( 480, 12 );
     assert_equal( 1, list:size() );
     assert_equal( 1, idA );
-    assert_equal( 12, list:getElement( 0 ) );
+    assert_equal( 12, list:getValue( 0 ) );
 
     --既存の点より小さいclockに値をaddすると、並び替えが起こる
     local idB = list:add( 240, 99 );
     assert_equal( 2, list:size() );
     assert_not_equal( idA, idB );
     assert_equal( 240, list:getKeyClock( 0 ) );
-    assert_equal( idB, list:getElementB( 0 ).id );
-    assert_equal( 99, list:getElementB( 0 ).value );
+    assert_equal( idB, list:get( 0 ).id );
+    assert_equal( 99, list:get( 0 ).value );
     assert_equal( 480, list:getKeyClock( 1 ) );
-    assert_equal( idA, list:getElementB( 1 ).id );
-    assert_equal( 12, list:getElementB( 1 ).value );
+    assert_equal( idA, list:get( 1 ).id );
+    assert_equal( 12, list:get( 1 ).value );
 end
 
 function testAddWithId()
     local list = luavsq.BPList.new( "foo", 63, -10, 1000 );
     local idA = list:addWithId( 480, 11, 3 );
     assert_equal( 3, idA );
-    assert_equal( 11, list:getElement( 0 ) );
+    assert_equal( 11, list:getValue( 0 ) );
     assert_equal( 3, list:getMaxId() );
 
     --同じclockに値をaddすると、データ点は増えずに値が上書きされる
     idA = list:addWithId( 480, 12, 4 );
     assert_equal( 4, idA );
-    assert_equal( 12, list:getElement( 0 ) );
+    assert_equal( 12, list:getValue( 0 ) );
     assert_equal( 4, list:getMaxId() );
 
     --既存の点より小さいclockに値をaddすると、並び替えが起こる
@@ -260,11 +252,11 @@ function testAddWithId()
     assert_equal( 5, idB );
     assert_equal( 5, list:getMaxId() );
     assert_equal( 240, list:getKeyClock( 0 ) );
-    assert_equal( 5, list:getElementB( 0 ).id );
-    assert_equal( 99, list:getElementB( 0 ).value );
+    assert_equal( 5, list:get( 0 ).id );
+    assert_equal( 99, list:get( 0 ).value );
     assert_equal( 480, list:getKeyClock( 1 ) );
-    assert_equal( 4, list:getElementB( 1 ).id );
-    assert_equal( 12, list:getElementB( 1 ).value );
+    assert_equal( 4, list:get( 1 ).id );
+    assert_equal( 12, list:get( 1 ).value );
 end
 
 function testRemoveWithId()
