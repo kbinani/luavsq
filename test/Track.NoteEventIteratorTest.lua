@@ -41,6 +41,6 @@ function test()
     iterator:remove();
     assert_false( iterator:hasNext() );
     assert_equal( 1, list:size() );
-    assert_equal( 1920, list:getElement( 0 ).clock );
-    assert_equal( luavsq.IdTypeEnum.Aicon, list:getElement( 0 ).id.type );
+    assert_equal( 1920, list:get( 0 ).clock );
+    assert_equal( luavsq.IdTypeEnum.Aicon, list:get( 0 ).id.type );
 end

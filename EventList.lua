@@ -188,7 +188,7 @@ if( nil == luavsq.EventList )then
         -- 指定したインデックスのイベントを取得する
         -- @param index (integer) インデックス(最初のインデックスは0)
         -- @return (luavsq.Event) イベント
-        function this:getElement( index )
+        function this:get( index )
             return self._events[index + 1];
         end
 
@@ -196,7 +196,7 @@ if( nil == luavsq.EventList )then
         -- 指定したインデックスのイベントを設定する
         -- @param index (integer) インデックス(最初のインデックスは0)
         -- @param value (luavsq.Event) 設定するイベント
-        function this:setElement( index, value )
+        function this:set( index, value )
             value.internalId = self._events[index + 1].internalId;
             self._events[index + 1] = value;
         end

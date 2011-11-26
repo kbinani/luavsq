@@ -101,8 +101,8 @@ function isEqualToDefaultSequence( sequence )
     assert_not_nil( track1.events );
     assert_equal( "", track1.tag );
     assert_equal( 1, track1.events:size() );
-    assert_equal( 0, track1.events:getElement( 0 ).clock );
-    assert_equal( luavsq.IdTypeEnum.Singer, track1.events:getElement( 0 ).id.type );
+    assert_equal( 0, track1.events:get( 0 ).clock );
+    assert_equal( luavsq.IdTypeEnum.Singer, track1.events:get( 0 ).id.type );
 
     -- master
     assert_equal( 1, sequence.master.preMeasure );

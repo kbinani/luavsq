@@ -49,7 +49,7 @@ if( nil == luavsq.EventList.Iterator )then
         -- @return (luavsq.Event) 次の要素
         function this:next()
             self._pos = self._pos + 1;
-            return self._list:getElement( self._pos );
+            return self._list:get( self._pos );
         end
 
         ---

@@ -828,7 +828,7 @@ if( nil == luavsq.Track )then
         -- @param index [int]
         -- @return [VsqEvent]
         function this:getEvent( index )
-            return self.events:getElement( index );
+            return self.events:get( index );
         end
 
         ---
@@ -836,7 +836,7 @@ if( nil == luavsq.Track )then
         -- @param item [VsqEvent]
         -- @return [void]
         function this:setEvent( index, item )
-            self.events:setElement( index, item );
+            self.events:set( index, item );
         end
 
         ---
@@ -911,7 +911,7 @@ if( nil == luavsq.Track )then
                 res.events = luavsq.EventList.new();
                 local i;
                 for i = 0, self.events:size() - 1, 1 do
-                    local item = self.events:getElement( i );
+                    local item = self.events:get( i );
                     res.events:add( item:clone(), item.internalID );
                 end
             end

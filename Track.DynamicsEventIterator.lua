@@ -35,7 +35,7 @@ if( nil == luavsq.Track.DynamicsEventIterator )then
             local c = self._list:size();
             local i;
             for i = self._pos + 1, c, 1 do
-                if( self._list:getElement( i - 1 ).id.type == luavsq.IdTypeEnum.Aicon )then
+                if( self._list:get( i - 1 ).id.type == luavsq.IdTypeEnum.Aicon )then
                     return true;
                 end
             end
@@ -48,7 +48,7 @@ if( nil == luavsq.Track.DynamicsEventIterator )then
             local c = self._list:size();
             local i;
             for i = self._pos + 1, c, 1 do
-                local item = self._list:getElement( i - 1 );
+                local item = self._list:get( i - 1 );
                 if( item.id.type == luavsq.IdTypeEnum.Aicon )then
                     self._pos = i;
                     return item;

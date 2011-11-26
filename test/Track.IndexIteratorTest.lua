@@ -45,7 +45,7 @@ function test()
     assert_true( noteIterator:hasNext() );
     assert_equal( 4, noteIterator:next() );
     assert_false( noteIterator:hasNext() );
-    local event = list:getElement( 4 );
+    local event = list:get( 4 );
     assert_equal( 1920, event.clock );
     assert_equal( 5, event.internalId );
 
@@ -54,7 +54,7 @@ function test()
     assert_true( singerIterator:hasNext() );
     assert_equal( 0, singerIterator:next() );
     assert_false( singerIterator:hasNext() );
-    event = list:getElement( 0 );
+    event = list:get( 0 );
     assert_equal( 0, event.clock );
     assert_equal( 1, event.internalId );
 
@@ -63,7 +63,7 @@ function test()
     assert_true( dynaffIterator:hasNext() );
     assert_equal( 2, dynaffIterator:next() );
     assert_false( dynaffIterator:hasNext() );
-    event = list:getElement( 2 );
+    event = list:get( 2 );
     assert_equal( 480, event.clock );
     assert_equal( 3, event.internalId );
 
@@ -72,7 +72,7 @@ function test()
     assert_true( crescendoIterator:hasNext() );
     assert_equal( 1, crescendoIterator:next() );
     assert_false( crescendoIterator:hasNext() );
-    event = list:getElement( 1 );
+    event = list:get( 1 );
     assert_equal( 240, event.clock );
     assert_equal( 2, event.internalId );
 
@@ -80,7 +80,7 @@ function test()
     assert_true( decrescendoIterator:hasNext() );
     assert_equal( 3, decrescendoIterator:next() );
     assert_false( decrescendoIterator:hasNext() );
-    event = list:getElement( 3 );
+    event = list:get( 3 );
     assert_equal( 720, event.clock );
     assert_equal( 4, event.internalId );
 
@@ -94,28 +94,28 @@ function test()
     local iteratorAll = luavsq.Track.IndexIterator.new( list, kindAll );
     assert_true( iteratorAll:hasNext() );
     assert_equal( 0, iteratorAll:next() );
-    assert_equal( 0, list:getElement( 0 ).clock );
-    assert_equal( 1, list:getElement( 0 ).internalId );
+    assert_equal( 0, list:get( 0 ).clock );
+    assert_equal( 1, list:get( 0 ).internalId );
 
     assert_true( iteratorAll:hasNext() );
     assert_equal( 1, iteratorAll:next() );
-    assert_equal( 240, list:getElement( 1 ).clock );
-    assert_equal( 2, list:getElement( 1 ).internalId );
+    assert_equal( 240, list:get( 1 ).clock );
+    assert_equal( 2, list:get( 1 ).internalId );
 
     assert_true( iteratorAll:hasNext() );
     assert_equal( 2, iteratorAll:next() );
-    assert_equal( 480, list:getElement( 2 ).clock );
-    assert_equal( 3, list:getElement( 2 ).internalId );
+    assert_equal( 480, list:get( 2 ).clock );
+    assert_equal( 3, list:get( 2 ).internalId );
 
     assert_true( iteratorAll:hasNext() );
     assert_equal( 3, iteratorAll:next() );
-    assert_equal( 720, list:getElement( 3 ).clock );
-    assert_equal( 4, list:getElement( 3 ).internalId );
+    assert_equal( 720, list:get( 3 ).clock );
+    assert_equal( 4, list:get( 3 ).internalId );
 
     assert_true( iteratorAll:hasNext() );
     assert_equal( 4, iteratorAll:next() );
-    assert_equal( 1920, list:getElement( 4 ).clock );
-    assert_equal( 5, list:getElement( 4 ).internalId );
+    assert_equal( 1920, list:get( 4 ).clock );
+    assert_equal( 5, list:get( 4 ).internalId );
 
     assert_false( iteratorAll:hasNext() );
 end

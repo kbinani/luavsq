@@ -84,7 +84,7 @@ if( nil == luavsq.Track.IndexIterator )then
             local count = self._list:size();
             local i;
             for i = self._pos + 1, count, 1 do
-                local item = self._list:getElement( i - 1 );
+                local item = self._list:get( i - 1 );
                 if( self._kindSinger )then
                     if( item.id.type == luavsq.IdTypeEnum.Singer )then
                         return i;
