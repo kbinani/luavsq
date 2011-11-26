@@ -1119,7 +1119,7 @@ if( nil == luavsq.Sequence )then
             if( count > 0 )then
                 local i;
                 for i = 0, count - 1, 1 do
-                    local itemi = rateBP:getElement( i );
+                    local itemi = rateBP:get( i );
                     local percent = itemi.x;
                     local cl = vclock + math.floor( percent * vlength );
                     table.insert(
@@ -1137,7 +1137,7 @@ if( nil == luavsq.Sequence )then
             if( count > 0 )then
                 local i;
                 for i = 0, count - 1, 1 do
-                    local itemi = depthBP:getElement( i );
+                    local itemi = depthBP:get( i );
                     local percent = itemi.x;
                     local cl = vclock + math.floor( percent * vlength );
                     table.insert(
