@@ -372,6 +372,7 @@ function testGetLinePrefixBytes()
 end
 
 function testGetHowManyDigits()
+    assert_equal( 1, luavsq.Sequence.getHowManyDigits( 0 ) );
     assert_equal( 1, luavsq.Sequence.getHowManyDigits( 9 ) );
     assert_equal( 2, luavsq.Sequence.getHowManyDigits( 99 ) );
     assert_equal( 10, luavsq.Sequence.getHowManyDigits( 1000000000 ) );

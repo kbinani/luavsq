@@ -1245,7 +1245,11 @@ if( nil == luavsq.Sequence )then
     -- @return (integer) 数値の 10 進数での桁数
     function luavsq.Sequence.getHowManyDigits( number )
         number = math.abs( number );
-        return math.floor( math.log10( number ) ) + 1;
+        if( number == 0 )then
+            return 1;
+        else
+            return math.floor( math.log10( number ) ) + 1;
+        end
     end
 
     ---
