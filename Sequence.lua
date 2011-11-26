@@ -31,7 +31,7 @@ if( nil == luavsq.Sequence )then
         local this = {};
         local arguments = { ... };
 
-        this.m_tpq = 480;
+        this._tickPerQuarter = 480;
 
         ---
         -- [Vector<VsqTrack>]
@@ -151,7 +151,7 @@ if( nil == luavsq.Sequence )then
         ---
         -- 4分の1拍子1音あたりのクロック数を取得します
         function this:getTickPerQuarter()
-            return self.m_tpq;
+            return self._tickPerQuarter;
         end
 
         ---
@@ -1219,16 +1219,6 @@ if( nil == luavsq.Sequence )then
     end
 
     ---
-    -- メタテキストの行番号から、各行先頭のプレフィクス文字列("DM:0123:"等)を作成します
-    -- @param count [int]
-    -- @return [string]
-    function luavsq.Sequence.getLinePrefix( count )
-        local digits = luavsq.Sequence.getHowManyDigits( count );
-        local c = math.floor( (digits - 1) / 4 ) + 1;
-        return "DM:" .. string.format( "%0" .. (4 * c) .. "d", count ) .. ":";
-    end
-
-    ---
     -- "DM:0001:"といった、VSQメタテキストの行の先頭につくヘッダー文字列のバイト列表現を取得する
     -- @param (integer) count
     -- @return (table<integer>)
@@ -1250,25 +1240,12 @@ if( nil == luavsq.Sequence )then
     end
 
     ---
-    -- 数numberの桁数を調べます。（10進数のみ）
-    -- @param number [int]
-    -- @return [int]
+    -- 数値の 10 進数での桁数を取得する
+    -- @param number (integer) 検査対象の数値
+    -- @return (integer) 数値の 10 進数での桁数
     function luavsq.Sequence.getHowManyDigits( number )
-        local val;
-        if( number > 0 )then
-            val = number;
-        else
-            val = -number;
-        end
-        local i = 1;
-        local digits = 1;
-        while( true )do
-            i = i + 1;
-            digits = digits * 10;
-            if( val < digits )then
-                return i - 1;
-            end
-        end
+        number = math.abs( number );
+        return math.floor( math.log10( number ) ) + 1;
     end
 
     ---

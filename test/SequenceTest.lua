@@ -292,16 +292,90 @@ function testGetMsbAndLsb()
     fail();
 end
 
-function testGetLinePrefix()
-    fail();
-end
-
 function testGetLinePrefixBytes()
-    fail();
+    -- 4 桁
+    local expected = {
+        string.byte( "D" ),
+        string.byte( "M" ),
+        string.byte( ":" ),
+        string.byte( "0" ),
+        string.byte( "1" ),
+        string.byte( "2" ),
+        string.byte( "3" ),
+        string.byte( ":" )
+    };
+    local actual = luavsq.Sequence.getLinePrefixBytes( 123 );
+    assert_equal( #expected, #actual );
+    local i;
+    for i = 1, #expected, 1 do
+        assert_equal( expected[i], actual[i] );
+    end
+
+    -- 4 桁
+    expected = {
+        string.byte( "D" ),
+        string.byte( "M" ),
+        string.byte( ":" ),
+        string.byte( "9" ),
+        string.byte( "9" ),
+        string.byte( "9" ),
+        string.byte( "9" ),
+        string.byte( ":" )
+    };
+    actual = luavsq.Sequence.getLinePrefixBytes( 9999 );
+    assert_equal( #expected, #actual );
+    for i = 1, #expected, 1 do
+        assert_equal( expected[i], actual[i] );
+    end
+
+    -- 8 桁
+    expected = {
+        string.byte( "D" ),
+        string.byte( "M" ),
+        string.byte( ":" ),
+        string.byte( "0" ),
+        string.byte( "0" ),
+        string.byte( "0" ),
+        string.byte( "1" ),
+        string.byte( "2" ),
+        string.byte( "3" ),
+        string.byte( "4" ),
+        string.byte( "5" ),
+        string.byte( ":" )
+    };
+    actual = luavsq.Sequence.getLinePrefixBytes( 12345 );
+    assert_equal( #expected, #actual );
+    for i = 1, #expected, 1 do
+        assert_equal( expected[i], actual[i] );
+    end
+
+    -- 8 桁
+    expected = {
+        string.byte( "D" ),
+        string.byte( "M" ),
+        string.byte( ":" ),
+        string.byte( "0" ),
+        string.byte( "1" ),
+        string.byte( "2" ),
+        string.byte( "3" ),
+        string.byte( "4" ),
+        string.byte( "5" ),
+        string.byte( "6" ),
+        string.byte( "7" ),
+        string.byte( ":" )
+    };
+    actual = luavsq.Sequence.getLinePrefixBytes( 1234567 );
+    assert_equal( #expected, #actual );
+    for i = 1, #expected, 1 do
+        assert_equal( expected[i], actual[i] );
+    end
 end
 
 function testGetHowManyDigits()
-    fail();
+    assert_equal( 1, luavsq.Sequence.getHowManyDigits( 9 ) );
+    assert_equal( 2, luavsq.Sequence.getHowManyDigits( 99 ) );
+    assert_equal( 10, luavsq.Sequence.getHowManyDigits( 1000000000 ) );
+    assert_equal( 2, luavsq.Sequence.getHowManyDigits( -10 ) );
 end
 
 function testWriteCharArray()
@@ -317,7 +391,5 @@ function testWriteUnsignedInt()
 end
 
 function testToDo1()
-    fail( "m_tpqを_tpqにリネーム" );
-    fail( "MSBとLSBに分解するメソッドがあるので、利用できる所で使う" );
-    fail( "getLinePrefixは使ってる?" );
+    fail( "getElementとsetElementではなくget,setにする" );
 end
