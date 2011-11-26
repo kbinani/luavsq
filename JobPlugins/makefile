@@ -1,7 +1,7 @@
-all: GetOpenFileName.dll
+all: GetSaveFileName.dll
 
-GetOpenFileName.dll: GetOpenFileName.c
-	gcc GetOpenFileName.c -shared -o GetOpenFileName.dll -llua51 -lcomdlg32
+GetSaveFileName.dll: GetSaveFileName.c
+	gcc GetSaveFileName.c -shared -o GetSaveFileName.dll -llua51 -lcomdlg32
 
 clean:
-	rm GetOpenFileName.dll
+	rm GetSaveFileName.dll
