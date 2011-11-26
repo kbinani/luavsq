@@ -16,12 +16,12 @@ function testConstructWithArray()
     assert_equal( "0=1,1=128", list:getData() );
 end
 
-function testGetValue()
+function testGetValueAt()
     local list = luavsq.VibratoBPList.new( { 0.0, 1.0 }, { 1, 128 } );
-    assert_equal( 1, list:getValue( 0.0 ) );
-    assert_equal( 1, list:getValue( 0.99999 ) );
-    assert_equal( 128, list:getValue( 1.0 ) );
-    assert_equal( 64, list:getValue( -0.0000001, 64 ) );
+    assert_equal( 1, list:getValueAt( 0.0 ) );
+    assert_equal( 1, list:getValueAt( 0.99999 ) );
+    assert_equal( 128, list:getValueAt( 1.0 ) );
+    assert_equal( 64, list:getValueAt( -0.0000001, 64 ) );
 end
 
 function testClone()

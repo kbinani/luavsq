@@ -78,7 +78,7 @@ if( nil == luavsq.VibratoBPList )then
         -- @param x [float]
         -- @param defaultValue [int]
         -- @return [int]
-        function this:getValue( x, defaultValue )
+        function this:getValueAt( x, defaultValue )
             if( #self._list <= 0 )then
                 return defaultValue;
             end
