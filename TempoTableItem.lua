@@ -18,8 +18,16 @@ end
 
 if( nil == luavsq.TempoTableItem )then
 
+    ---
+    -- テンポ情報テーブル内の要素を表現するクラス
+    -- @class table
+    -- @name TempoTableItem
     luavsq.TempoTableItem = {};
 
+    ---
+    -- 初期化を行う
+    -- @see TempoTable:_init_3
+    -- @return (TempoTableItem)
     function luavsq.TempoTableItem.new( ... )
         local this = {};
         local arguments = { ... };
@@ -28,26 +36,25 @@ if( nil == luavsq.TempoTableItem )then
         this.time = 0.0;
 
         ---
-        -- @return [string]
+        -- 文字列に変換する
+        -- @return (string) 変換後の文字列
         function this:toString()
             return "{Clock=" .. self.clock .. ", Tempo=" .. self.tempo .. ", Time=" .. self.time .. "}";
         end
 
         ---
-        -- @return [object]
+        -- コピーを作成する
+        -- @return (TempoTableItem) このオブジェクトのコピー
         function this:clone()
             return luavsq.TempoTableItem.new( self.clock, self.tempo, self.time );
         end
 
         ---
-        -- overload1
-        -- @return [TempoTableItem]
-        --
-        -- overload2
-        -- @param clock [int]
-        -- @param _tempo [int]
-        -- @param _time [int]
-        -- @return [TempoTableItem]
+        -- 初期化を行う
+        -- @param clock (integer) Tick 単位の時刻
+        -- @param tempo (integer) テンポ値。四分音符の長さをマイクロ秒単位で表した値
+        -- @param time (double) 秒単位の時刻。この値は最初は 0 を指定して良い。
+        --                      time フィールドの値は、TempoTable:updateTempoInfo によって更新する
         function this:_init_3( clock, tempo, time )
             self.clock = clock;
             self.tempo = tempo;
@@ -55,15 +62,17 @@ if( nil == luavsq.TempoTableItem )then
         end
 
         ---
-        -- @param entry [TempoTableItem]
-        -- @return [int]
+        -- 順序を比較する
+        -- @param item (TempoTableItem) 比較対象のアイテム
+        -- @return (integer) このインスタンスが比較対象よりも小さい場合は負の整数、等しい場合は 0、大きい場合は正の整数を返す
         function this:compareTo( entry )
             return self.clock - entry.clock;
         end
 
         ---
-        -- @param entry [TempoTableItem]
-        -- @return [bool]
+        -- このオブジェクトのインスタンスと、指定されたオブジェクトが同じかどうかを調べる
+        -- @param item (TempoTableItem) 比較対象のオブジェクト
+        -- @return (boolean) 比較対象と同じであれば true を、そうでなければ false を返す
         function this:equals( entry )
             if( self.clock == entry.clock )then
                 return true;
@@ -80,9 +89,10 @@ if( nil == luavsq.TempoTableItem )then
     end
 
     ---
-    -- @param a [TempoTableItem]
-    -- @param b [TempoTableItem]
-    -- @return [int]
+    -- 2 つの TempoTableItem を比較する
+    -- @param a (TempoTableItem) 比較対象のオブジェクト
+    -- @param b (TempoTableItem) 比較対象のオブジェクト
+    -- @return (boolean) a が b よりも小さい場合は true、そうでない場合は false を返す
     function luavsq.TempoTableItem.compare( a, b )
         if( a:compareTo( b ) < 0 )then
             return true;

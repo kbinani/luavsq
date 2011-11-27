@@ -18,8 +18,17 @@ end
 
 if( nil == luavsq.NrpnEvent )then
 
+    ---
+    -- NRPN イベントを表すクラス
+    -- @class table
+    -- @name NrpnEvent
     luavsq.NrpnEvent = {};
 
+    ---
+    -- 初期化を行う
+    -- @return (luavsq.NrpnEvent)
+    -- @see luavsq.NrpnEvent:_init_3
+    -- @see luavsq.NrpnEvent:_init_4
     function luavsq.NrpnEvent.new( ... )
         local this = {};
         local arguments = { ... };
@@ -33,10 +42,10 @@ if( nil == luavsq.NrpnEvent )then
         this._list = nil;
 
         ---
-        -- @param clock [int]
-        -- @param nrpn [int]
-        -- @param data_msb [byte]
-        -- @return [void]
+        -- 時刻、NRPN、DATA MSB を指定し、初期化を行う
+        -- @param clock (integer) Tick 単位の時刻
+        -- @param nrpn (integer) NRPN
+        -- @param data_msb (integer) DATA MSB
         function this:_init_3( clock, nrpn, data_msb )
             self.clock = clock;
             self.nrpn = nrpn;
@@ -48,11 +57,11 @@ if( nil == luavsq.NrpnEvent )then
         end
 
         ---
-        -- @param clock [int]
-        -- @param nrpn [int]
-        -- @param data_msb [byte]
-        -- @param data_lsb [byte]
-        -- @return [void]
+        -- 時刻、NRPN、DATA MSB、DATA LSB を指定し、初期化を行う
+        -- @param clock (integer) Tick 単位の時刻
+        -- @param nrpn (integer) NRPN
+        -- @param data_msb (integer) DATA MSB
+        -- @param data_lsb (integer) DATA LSB
         function this:_init_4( clock, nrpn, data_msb, data_lsb )
             self.clock = clock;
             self.nrpn = nrpn;
@@ -64,7 +73,8 @@ if( nil == luavsq.NrpnEvent )then
         end
 
         ---
-        -- @return (table<luavsq.NrpnEvent>)
+        -- 親子関係によって入れ子になっている NRPN イベントを展開し、配列に変換する
+        -- @return (table<luavsq.NrpnEvent>) 展開後の NRPN イベントの配列
         function this:expand()
             local ret = {};--new Vector<luavsq.NrpnEvent>();
             if( self.hasLSB )then
@@ -90,8 +100,9 @@ if( nil == luavsq.NrpnEvent )then
         end
 
         ---
-        -- @param item [luavsq.NrpnEvent]
-        -- @return [int]
+        -- 順序を比較する
+        -- @param item (luavsq.NrpnEvent) 比較対象のアイテム
+        -- @return (integer) このインスタンスが比較対象よりも小さい場合は負の整数、等しい場合は 0、大きい場合は正の整数を返す
         function this:compareTo( item )
             if( self.clock == item.clock )then
                 local thisNrpnMsb = (this.nrpn - (this.nrpn % 0x100)) / 0x100;
@@ -102,6 +113,12 @@ if( nil == luavsq.NrpnEvent )then
             end
         end
 
+        ---
+        -- このオブジェクトの末尾に NRPN イベントを追加する
+        -- @see luavsq.NrpnEvent:_append_2
+        -- @see luavsq.NrpnEvent:_append_3_int_byte_bool
+        -- @see luavsq.NrpnEvent:_append_3_int_byte_byte
+        -- @see luavsq.NrpnEvent:_append_4
         function this:append( ... )
             local arguments = { ... };
             if( #arguments == 2 )then
@@ -119,27 +136,27 @@ if( nil == luavsq.NrpnEvent )then
         end
 
         ---
-        -- @param nrpn [int]
-        -- @param data_msb [byte]
-        -- @return [void]
+        -- NRPN、DATA MSB を指定し、イベントを追加する
+        -- @param nrpn (integer) NRPN
+        -- @param data_msb (integer) DATA MSB
         function this:_append_2( nrpn, data_msb )
             table.insert( self._list, luavsq.NrpnEvent.new( self.clock, nrpn, data_msb ) );
         end
 
         ---
-        -- @param nrpn [int]
-        -- @param data_msb [byte]
-        -- @param data_lsb [byte]
-        -- @return [void]
+        -- NRPN、DATA MSB、DATA LSB を指定し、イベントを追加する
+        -- @param nrpn (integer) NRPN
+        -- @param data_msb (integer) DATA MSB
+        -- @param data_lsb (integer) DATA LSB
         function this:_append_3_int_byte_byte( nrpn, data_msb, data_lsb )
             table.insert( self._list, luavsq.NrpnEvent.new( self.clock, nrpn, data_msb, data_lsb ) );
         end
 
         ---
-        -- @param nrpn [int]
-        -- @param data_msb [byte]
-        -- @param msb_omit_required [bool]
-        -- @return [void]
+        -- NRPN、DATA MSB、MSB 省略フラグを指定し、イベントを追加する
+        -- @param nrpn (integer) NRPN
+        -- @param data_msb (integer) DATA MSB
+        -- @param msb_omit_required (boolean) NRPN MSB を省略する場合は true を、そうでない場合は false を指定する
         function this:_append_3_int_byte_bool( nrpn, data_msb, msb_omit_required )
             local v = luavsq.NrpnEvent.new( self.clock, nrpn, data_msb );
             v.isMSBOmittingRequired = msb_omit_required;
@@ -147,11 +164,11 @@ if( nil == luavsq.NrpnEvent )then
         end
 
         ---
-        -- @param nrpn [int]
-        -- @param data_msb [int]
-        -- @param data_lsb [int]
-        -- @param msb_omit_required [bool]
-        -- @return [void]
+        -- NRPN、DATA MSB、DATA LSB、MSB 省略フラグを指定し、イベントを追加する
+        -- @param nrpn (integer) NRPN
+        -- @param data_msb (integer) DATA MSB
+        -- @param data_lsb (integer) DATA LSB
+        -- @param msb_omit_required (boolean) NRPN MSB を省略する場合は true を、そうでない場合は false を指定する
         function this:_append_4( nrpn, data_msb, data_lsb, msb_omit_required )
             local v = luavsq.NrpnEvent.new( self.clock, nrpn, data_msb, data_lsb );
             v.isMSBOmittingRequired = msb_omit_required;
@@ -167,6 +184,11 @@ if( nil == luavsq.NrpnEvent )then
         return this;
     end
 
+    ---
+    -- 2 つの NrpnEvent を比較する
+    -- @param a (luavsq.NrpnEvent) 比較対象のオブジェクト
+    -- @param b (luavsq.NrpnEvent) 比較対象のオブジェクト
+    -- @return (boolean) a が b よりも小さい場合は true、そうでない場合は false を返す
     function luavsq.NrpnEvent.compare( a, b )
         if( a:compareTo( b ) < 0 )then
             return true;
@@ -194,8 +216,9 @@ if( nil == luavsq.NrpnEvent )then
 ]]
 
     ---
-    -- @param source [luavsq.NrpnEvent[] ]
-    -- @return (table<MidiEvent>)
+    -- NRPN イベントの配列を、MidiEvent の配列に変換する
+    -- @param source (table<luavsq.NrpnEvent>) NRPN イベントの配列
+    -- @return (table<MidiEvent>) 変換後の MidiEvent の配列
     function luavsq.NrpnEvent.convert( source )
         local nrpn = source[1].nrpn;
         local msb = luavsq.Util.rshift( nrpn, 8 );

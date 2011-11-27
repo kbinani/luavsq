@@ -18,8 +18,16 @@ end
 
 if( nil == luavsq.TimesigTableItem )then
 
+    ---
+    -- 拍子変更情報テーブル内の要素を表現するためのクラス
+    -- @class table
+    -- @name luavsq.TimesigTableItem
     luavsq.TimesigTableItem = {};
 
+    ---
+    -- 初期化を行う
+    -- @see luavsq.TimesigTableItem:_init_4
+    -- @return (luavsq.TimesigTableItem)
     function luavsq.TimesigTableItem.new( ... )
         local this = {};
         local arguments = { ... };
@@ -41,11 +49,11 @@ if( nil == luavsq.TimesigTableItem )then
         this.barCount = 0;
 
         ---
-        -- @param clock [int]
-        -- @param numerator [int]
-        -- @param denominator [int]
-        -- @param bar_count [int]
-        -- @return [TimeSigTableEntry]
+        -- 初期化を行う
+        -- @param clock (integer) Tick 単位の時刻
+        -- @param numerator (integer) 拍子の分子の値
+        -- @param denominator (integer) 拍子の分母値
+        -- @param bar_count (integer) 小節数
         function this:_init_4( clock, numerator, denominator, barCount )
             self.clock = clock;
             self.numerator = numerator;
@@ -54,20 +62,23 @@ if( nil == luavsq.TimesigTableItem )then
         end
 
         ---
-        -- @return [string]
+        -- 文字列に変換する
+        -- @return (string) 変換後の文字列
         function this:toString()
             return "{Clock=" .. self.clock .. ", Numerator=" .. self.numerator .. ", Denominator=" .. self.denominator .. ", BarCount=" .. self.barCount .. "}";
         end
 
         ---
-        -- @return [object]
+        -- コピーを作成する
+        -- @return (luavsq.TimesigTableItem) このオブジェクトのコピー
         function this:clone()
             return luavsq.TimesigTableItem.new( self.clock, self.numerator, self.denominator, self.barCount );
         end
 
         ---
-        -- @param item [TimeSigTableEntry]
-        -- @return [int]
+        -- 順序を比較する
+        -- @param item (luavsq.TimesigTableItem) 比較対象のアイテム
+        -- @return (integer) このインスタンスが比較対象よりも小さい場合は負の整数、等しい場合は 0、大きい場合は正の整数を返す
         function this:compareTo( item )
             return self.barCount - item.barCount;
         end
@@ -80,9 +91,10 @@ if( nil == luavsq.TimesigTableItem )then
     end
 
     ---
-    -- @param a [TimeSigTableEntry]
-    -- @param b [TimeSigTableEntry]
-    -- @return [int]
+    -- 2 つの TimesigTableItem を比較する
+    -- @param a (TimesigTableItem) 比較対象のオブジェクト
+    -- @param b (TimesigTableItem) 比較対象のオブジェクト
+    -- @return (boolean) a が b よりも小さい場合は true、そうでない場合は false を返す
     function luavsq.TimesigTableItem.compare( a, b )
         return (a:compareTo( b ) < 0);
     end

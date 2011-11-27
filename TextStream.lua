@@ -18,8 +18,15 @@ end
 
 if( nil == luavsq.TextStream )then
 
+    ---
+    -- 文字列への読み書きストリーム
+    -- @class table
+    -- @name luavsq.TextStream
     luavsq.TextStream = {};
 
+    ---
+    -- 初期化を行う
+    -- @return (luavsq.TextStream)
     function luavsq.TextStream.new()
         local this = {};
         this.array = {};
@@ -27,27 +34,30 @@ if( nil == luavsq.TextStream )then
         this.position = -1;
 
         ---
-        -- @return [int]
+        -- 現在の読み書き位置を取得する
+        -- @return (integer) 現在の読み書き位置
         function this:getPointer()
             return self.position;
         end
 
         ---
-        -- @param value [int]
-        -- @return [void]
+        -- 現在の読み書き位置を設定する
+        -- @param value (integer) 設定する読み書き位置
         function this:setPointer( value )
             self.position = value;
         end
 
         ---
-        -- @return [char]
+        -- 現在の読み込み位置から 1 文字を読み込み、読み書き位置を一つ進める
+        -- @return (string) 読み込んだ文字
         function this:get()
             self.position = self.position + 1;
             return self.array[self.position + 1];
         end
 
         ---
-        -- @return [string]
+        -- 現在の読み込み位置から、改行またはファイル末端まで読み込む
+        -- @return (string) 読み込んだ文字列
         function this:readLine()
             local sb = "";
             -- '\n'が来るまで読み込み
@@ -63,7 +73,8 @@ if( nil == luavsq.TextStream )then
         end
 
         ---
-        -- @return [bool]
+        -- テキストストリームが読み込み可能な状態かどうかを返す
+        -- @return (boolean) 読み込み可能であれば true を、そうでなければ false を返す
         function this:ready()
             if( 0 <= self.position + 1 and self.position + 1 < self.length )then
                 return true;
@@ -73,8 +84,9 @@ if( nil == luavsq.TextStream )then
         end
 
         ---
-        -- @param length [int]
-        -- @return [void]
+        -- 内部のバッファー容量を確保する
+        -- @access private
+        -- @param length (integer) 確保したいバッファー容量
         function this:_ensureCapacity( _length )
             if( _length > #self.array )then
                 local add = _length - #self.array;
@@ -85,8 +97,8 @@ if( nil == luavsq.TextStream )then
         end
 
         ---
-        -- @param str [string]
-        -- @return [void]
+        -- 文字列をストリームに書きこむ
+        -- @param str (string) 書きこむ文字列
         function this:write( str )
             local len = str:len();
             local newSize = self.position + 1 + len;
@@ -100,8 +112,8 @@ if( nil == luavsq.TextStream )then
         end
 
         ---
-        -- @param str [string]
-        -- @return [void]
+        -- 文字列をストリームに書きこむ。末尾に改行文字を追加する
+        -- @param str (string) 書きこむ文字列
         function this:writeLine( str )
             local len = str:len();
             local offset = self.position + 1;
@@ -116,14 +128,15 @@ if( nil == luavsq.TextStream )then
         end
 
         ---
-        -- @return [void]
+        -- ストリームを閉じる
         function this:close()
             self.array = nil;
             self.length = 0;
         end
 
         ---
-        --
+        -- ストリームに書きこまれた文字列を連結し、返す
+        -- @return (string) 文字列
         function this:toString()
             local ret = "";
             for i = 1, self.length, 1 do

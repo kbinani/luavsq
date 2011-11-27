@@ -19,11 +19,14 @@ end
 if( nil == luavsq.SingerHandle )then
 
     ---
-    -- 歌手設定を表します。
+    -- 歌手ハンドルを表すクラス
+    -- @class table
+    -- @name SingerHandle
     luavsq.SingerHandle = {};
 
     ---
-    -- 新しい歌手設定のインスタンスを初期化します。
+    -- 初期化を行う
+    -- @return (SingerHandle)
     function luavsq.SingerHandle.new()
         local this = {};
 
@@ -51,24 +54,23 @@ if( nil == luavsq.SingerHandle )then
         this.language = 0;
 
         ---
-        -- ゲートタイム長さを取得します。
-        -- @return [int]
+        -- 長さを取得する
+        -- @return (integer) Tick 単位の長さ
         function this:getLength()
             return self.length;
         end
 
         ---
-        -- ゲートタイム長さを設定します。
-        -- @param value [int]
-        -- @return [void]
+        -- 長さを設定する
+        -- @param value (integer) Tick 単位の長さ
         function this:setLength( value )
             self.length = value;
         end
 
         ---
-        -- このインスタンスと、指定された歌手変更のインスタンスが等しいかどうかを判定します。
-        -- @param item (luavsq.SingerHandle) 比較対象の歌手変更。
-        -- @returns [bool] このインスタンスと、比較対象の歌手変更が等しければtrue、そうでなければfalseを返します。
+        -- このオブジェクトのインスタンスと、指定されたオブジェクトが同じかどうかを調べる
+        -- @param item (SingerHandle) 比較対象のオブジェクト
+        -- @return (boolean) 比較対象と同じであれば true を、そうでなければ false を返す
         function this:equals( item )
             if( nil == item )then
                 return false;
@@ -78,8 +80,8 @@ if( nil == luavsq.SingerHandle )then
         end
 
         ---
-        -- このインスタンスのコピーを作成します。
-        -- @return [object]
+        -- コピーを作成する
+        -- @return (SingerHandle) このオブジェクトのコピー
         function this:clone()
             local ret = luavsq.SingerHandle.new();
             ret.caption = self.caption;
@@ -94,8 +96,8 @@ if( nil == luavsq.SingerHandle )then
         end
 
         ---
-        -- この歌手設定のインスタンスを、Handleに型キャストします。
-        -- @return (luavsq.Handle)
+        -- このオブジェクトを、Handle に型変換する
+        -- @return (luavsq.Handle) ハンドル
         function this:castToHandle()
             local ret = luavsq.Handle.new();
             ret._type = luavsq.HandleTypeEnum.Singer;

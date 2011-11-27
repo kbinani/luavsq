@@ -22,8 +22,15 @@ end
 
 if( nil == luavsq.VibratoHandle )then
 
+    ---
+    -- ビブラートハンドルを表すクラス
+    -- @class table
+    -- @name luavsq.VibratoHandle
     luavsq.VibratoHandle = {};
 
+    ---
+    -- 初期化を行う
+    -- @return (luavsq.VibratoHandle)
     function luavsq.VibratoHandle.new()
         local this = luavsq.IconParameter.new();
         this.articulation = luavsq.ArticulationTypeEnum.Vibrato;
@@ -37,97 +44,106 @@ if( nil == luavsq.VibratoHandle )then
         this.depthBP = luavsq.VibratoBPList.new();
 
         ---
-        -- @return [string]
+        -- 文字列に変換する
+        -- @return (string) 文字列
         function this:toString()
             return self:getDisplayString();
         end
 
         ---
-        -- @return [VibratoBPList]
+        -- Rate のビブラートカーブを取得する
+        -- @return (luavsq.VibratoBPList) Rate のビブラートカーブ
         function this:getRateBP()
             return self.rateBP;
         end
 
         ---
-        -- @param value [VibratoBPList]
-        -- @return [void]
+        -- Rate のビブラートカーブを設定する
+        -- @param value (luavsq.VibratoBPList) 設定するビブラートカーブ
         function this:setRateBP( value )
             self.rateBP = value;
         end
 
         ---
-        -- @return [string]
+        -- キャプションを取得する
+        -- @return (string) キャプション
         function this:getCaption()
             return self.caption;
         end
 
         ---
-        -- @param value [string]
-        -- @return [void]
+        -- キャプションを設定する
+        -- @param value (string) キャプション
         function this:setCaption( value )
             self.caption = value;
         end
 
         ---
-        -- @return [int]
+        -- Rate の開始値を取得する
+        -- @return (integer) Rate の開始値
         function this:getStartRate()
             return self.startRate;
         end
 
         ---
-        -- @param value [int]
-        -- @return [void]
+        -- Rate の開始値を設定する
+        -- @param value (integer) Rate の開始値
         function this:setStartRate( value )
             self.startRate = value;
         end
 
         ---
-        -- @return [VibratoBPList]
+        -- Depth のビブラートカーブを取得する
+        -- @return (luavsq.VibratoBPList) Depth のビビラートカーブ
         function this:getDepthBP()
             return self.depthBP;
         end
 
         ---
-        -- @param value [VibratoBPList]
-        -- @return [void]
+        -- Depth のビブラートカーブを設定する
+        -- @param value (luavsq.VibratoBPList) 設定するビブラートカーブ
         function this:setDepthBP( value )
             self.depthBP = value;
         end
 
         ---
-        -- @return [int]
+        -- Depth の開始値を取得する
+        -- @return (integer) Depth の開始値
         function this:getStartDepth()
             return self.startDepth;
         end
 
         ---
-        -- @param value [int]
-        -- @return [void]
+        -- Depth の開始値を設定する
+        -- @param value (integer) Depth の開始値
         function this:setStartDepth( value )
             self.startDepth = value;
         end
 
         ---
-        -- @return [int]
+        -- 長さを取得する
+        -- @return (integer) Tick 単位の長さ
         function this:getLength()
             return self.length;
         end
 
         ---
-        -- @param value [int]
-        -- @return [void]
+        -- 長さを設定する
+        -- @param value (integer) Tick 単位の長さ
         function this:setLength( value )
             self.length = value;
         end
 
         ---
-        -- @return [string]
+        -- Display String の値を取得する
+        -- @return (string) Display String の値
         function this:getDisplayString()
             return self.caption;
         end
 
         ---
-        -- @return [object]
+        -- コピーを作成する
+        -- @return (luavsq.VibratoHandle) このオブジェクトのコピー
         function this:clone()
             local result = luavsq.VibratoHandle.new();
             result.index = self.index;

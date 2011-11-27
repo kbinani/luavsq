@@ -153,7 +153,7 @@ if( nil == luavsq.Handle )then
         -- ストリームに書き込む
         -- @param stream (luavsq.TextStream) 書き込み先のストリーム
         function this:write( stream )
-            sw:writeLine( self:toString() );
+            stream:writeLine( self:toString() );
         end
 
         ---

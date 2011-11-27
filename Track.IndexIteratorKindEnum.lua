@@ -22,6 +22,10 @@ end
 
 if( nil == luavsq.Track.IndexIteratorKindEnum )then
 
+    ---
+    -- IndexIterator の反復子の種類を表す列挙子
+    -- @class table
+    -- @name luavsq.Track.IndexIteratorKindEnum
     luavsq.Track.IndexIteratorKindEnum = {};
 
     luavsq.Track.IndexIteratorKindEnum.SINGER = 1;

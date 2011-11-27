@@ -18,8 +18,18 @@ end
 
 if( nil == luavsq.Track )then
 
+    ---
+    -- トラックを表すクラス
+    -- @class table
+    -- @name luavsq.Track
     luavsq.Track = {};
 
+    ---
+    -- 初期化を行う
+    -- @see luavsq.Track:_init_0
+    -- @see luavsq.Track:_init_2a
+    -- @see luavsq.Track:_init_2b
+    -- @return luavsq.Track
     function luavsq.Track.new( ... )
         local this = {};
         local arguments = { ... };
@@ -104,15 +114,13 @@ if( nil == luavsq.Track )then
 
         ---
         -- Master Trackを構築
-        -- @return [VsqTrack]
         function this:_init_0()
         end
 
         ---
-        -- Master Trackでないトラックを構築。
-        -- @param name [string]
-        -- @param singer [string]
-        -- @return [VsqTrack]
+        -- Master Trackでないトラックを構築
+        -- @param name (string) トラック名
+        -- @param singer (string) トラックのデフォルトの歌手名
         function this:_init_2a( name, singer )
             self:_initCor( name, singer );
         end
@@ -203,6 +211,7 @@ if( nil == luavsq.Track )then
         end]]
 
         ---
+        -- 初期化を行う
         -- @param name [string]
         -- @param singer [string]
         function this:_initCor( name, singer )
@@ -252,10 +261,9 @@ if( nil == luavsq.Track )then
         end
 
         ---
-        -- 指定された種類のイベントのインデクスを順に返すイテレータを取得します．
-        --
-        -- @param iterator_kind [int]
-        -- @return [IndexIterator]
+        -- 指定された種類のイベントのインデクスを順に返す反復子を取得する
+        -- @param iterator_kind (luavsq.IndexIteratorKindEnum) 反復子の種類
+        -- @return (luavsq.IndexIterator) 反復子
         function this:getIndexIterator( iterator_kind )
             return luavsq.Track.IndexIterator.new( self.events, iterator_kind );
         end
@@ -331,9 +339,8 @@ if( nil == luavsq.Track )then
         end]]
 
         ---
-        -- このトラックの名前を取得します．
-        --
-        -- @return [string]
+        -- トラックの名前を取得する
+        -- @return (string) トラック名
         function this:getName()
             if( self.common == nil )then
                 return "Master Track";
@@ -343,9 +350,8 @@ if( nil == luavsq.Track )then
         end
 
         ---
-        -- このトラックの名前を設定します．
-        --
-        -- @param value [string]
+        -- トラックの名前を設定する
+        -- @param value (string) トラック名
         function this:setName( value )
             if( self.common ~= nil )then
                 self.common.name = value;
@@ -505,17 +511,15 @@ if( nil == luavsq.Track )then
         end]]
 
         ---
-        -- 歌手変更イベントを，曲の先頭から順に返すIteratorを取得します．
-        --
-        -- @return [SingerEventIterator]
+        -- 歌手変更イベントを、曲の先頭から順に返す反復子を取得する
+        -- @return (luavsq.Track.SingerEventIterator) 反復子
         function this:getSingerEventIterator()
             return luavsq.Track.SingerEventIterator.new( self.events );
         end
 
         ---
-        -- 音符イベントを，曲の先頭から順に返すIteratorを取得します．
-        --
-        -- @return [NoteEventIterator]
+        -- 音符イベントを、曲の先頭から順に返す反復子を取得する
+        -- @return (luavsq.Track.NoteEventIterator) 反復子
         function this:getNoteEventIterator()
             if( self.events == nil )then
                 return luavsq.Track.NoteEventIterator.new( luavsq.EventList.new() );
@@ -525,9 +529,8 @@ if( nil == luavsq.Track )then
         end
 
         ---
-        -- クレッシェンド，デクレッシェンド，および強弱記号を表すイベントを，曲の先頭から順に返すIteratorを取得します．
-        --
-        -- @return [DynamicsEventIterator]
+        -- クレッシェンド、デクレッシェンド、および強弱記号を表すイベントを、曲の先頭から順に返す反復子を取得する
+        -- @return (luavsq.Track.DynamicsEventIterator) 反復子
         function this:getDynamicsEventIterator()
             if( self.events == nil )then
                 return luavsq.Track.DynamicsEventIterator.new( luavsq.EventList.new() );
@@ -536,6 +539,9 @@ if( nil == luavsq.Track )then
             end
         end
 
+        ---
+        -- トラックのメタテキストを、テキストストリームに出力する
+        -- @see luavsq.Track:_printMetaTextCore
         function this:printMetaText( ... )
             local arguments = { ... };
             if( #arguments == 3 )then
@@ -546,13 +552,11 @@ if( nil == luavsq.Track )then
         end
 
         ---
-        -- このトラックのメタテキストをストリームに出力します．
-        --
-        -- @param sw [ITextWriter]
-        -- @param eos [int]
-        -- @param start [int]
-        -- @param print_pitch [bool]
-        -- @return [void]
+        -- トラックのメタテキストを、テキストストリームに出力する
+        -- @param sw (luavsq.TextStream) 出力先のストリーム
+        -- @param eos (integer) イベントリストの末尾を表す番号
+        -- @param start (integer) Tick 単位の出力開始時刻
+        -- @param print_pitch (boolean) pitch を含めて出力するかどうか(現在は false 固定で、引数は無視される)
         function this:_printMetaTextCore( sw, eos, start, print_pitch )
             if( self.common ~= nil )then
                 self.common:write( sw );
@@ -703,9 +707,9 @@ if( nil == luavsq.Track )then
         end]]
 
         ---
-        -- このトラックが保持している，指定されたカーブのBPListを取得します
-        --
-        -- @param curve [string]
+        -- 指定された名前のカーブを取得します
+        -- @param curve (string) カーブ名
+        -- @return (luavsq.BPList) カーブ
         function this:getCurve( curve )
             local search = curve:lower();
             if( search == "bre" )then
@@ -762,9 +766,9 @@ if( nil == luavsq.Track )then
         end
 
         ---
-        -- @param curve [string]
-        -- @param value [VsqBPList]
-        -- @return [void]
+        -- 指定された名前のカーブを設定する
+        -- @param curve (string) カーブ名
+        -- @param value (luavsq.BPList) 設定するカーブ
         function this:setCurve( curve, value )
             local search = curve:lower();
             if( search == "bre" )then
@@ -819,9 +823,8 @@ if( nil == luavsq.Track )then
         end
 
         ---
-        -- このインスタンスのコピーを作成します
-        --
-        -- @return [object]
+        -- コピーを作成する
+        -- @return (luavsq.Track) このオブジェクトのコピー
         function this:clone()
             local res = luavsq.Track.new();
             res:setName( self:getName() );

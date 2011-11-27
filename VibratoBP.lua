@@ -18,8 +18,17 @@ end
 
 if( nil == luavsq.VibratoBP )then
 
+    ---
+    -- ビブラートのデータポイント
+    -- @class table
+    -- @name luavsq.VibratoBP
     luavsq.VibratoBP = {};
 
+    ---
+    -- 初期化を行う
+    -- @param x (double) x 軸の値
+    -- @param y (integer) y 軸の値
+    -- @return (luavsq.VibratoBP)
     function luavsq.VibratoBP.new( ... )
         local arguments = { ... };
         local this = {};
@@ -31,9 +40,9 @@ if( nil == luavsq.VibratoBP )then
         end
 
         ---
-        -- この VibratoBP のインスタンスと、引数で指定されたインスタンスを比較する
-        -- @param item (luavsq.VibratoBP)
-        -- @return (integer)
+        -- 順序を比較する
+        -- @param item (luavsq.VibratoBP) 比較対象のアイテム
+        -- @return (integer) このインスタンスが比較対象よりも小さい場合は負の整数、等しい場合は 0、大きい場合は正の整数を返す
         function this:compareTo( item )
             local v = self.x - item.x;
             if( v > 0.0 )then

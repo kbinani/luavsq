@@ -18,13 +18,17 @@ end
 
 if( nil == luavsq.Util )then
 
+    ---
+    -- ユーティリティクラス
+    -- @class table
+    -- @name luavsq.Util
     luavsq.Util = {};
 
     ---
     -- value で指定された文字列を、splitter で区切る
-    -- @param value string
-    -- @param splitter string
-    -- @return table 区切られた文字列のテーブル
+    -- @param value (string) 区切られる文字列
+    -- @param splitter (string) 区切り文字
+    -- @return (table) 区切られた文字列のテーブル
     function luavsq.Util.split( value, splitter )
         local init = 1;
         local result = {};
@@ -45,8 +49,8 @@ if( nil == luavsq.Util )then
 
     ---
     -- 指定された個数の false 要素を含む配列を取得する
-    -- @param count integer
-    -- @return table
+    -- @param count (integer) 要素の個数
+    -- @return (table) 作成した配列
     function luavsq.Util.array( count )
         local result = {};
         local i;
@@ -57,8 +61,10 @@ if( nil == luavsq.Util )then
     end
 
     ---
-    -- @param array (table)
-    -- @param value (object)
+    -- 配列の中から、指定された要素を検索し、そのインデックスを取得する
+    -- @param array (table) 検索対象の配列
+    -- @param value (object) 検索するオブジェクト
+    -- @return (integer) 要素が見つかったインデックス。見つからなかった場合負の値を返す
     function luavsq.Util.searchArray( array, value )
         if( nil == array )then
             return -1;
@@ -73,23 +79,25 @@ if( nil == luavsq.Util )then
     end
 
     ---
-    -- @param bytes (table<number>)
-    -- @return number
+    -- バイト配列を、16 ビットの unsigned int 値を Big Endian とみなして数値に変換する
+    -- @param bytes (table<integer>) 変換元のバイト列
+    -- @return (integer) 変換後の数値
     function luavsq.Util.makeUInt16BE( bytes )
         return bytes[1] * 0x100 + bytes[2];
     end
 
     ---
-    -- @param bytes (table<number>)
-    -- @return number
+    -- バイト配列を、32 ビットの unsigned int 値を Big Endian とみなして数値に変換する
+    -- @param bytes (table<integer>) 変換元のバイト列
+    -- @return (integer) 変換後の数値
     function luavsq.Util.makeUInt32BE( bytes )
         return bytes[1] * 0x1000000 + bytes[2] * 0x10000 + bytes[3] * 0x100 + bytes[4];
     end
 
     ---
     -- 16bit の unsigned int 値を Big Endian のバイト列に変換する
-    -- @param (integer) value
-    -- @return (table<integer>)
+    -- @param value (integer) 変換元の数値
+    -- @return (table<integer>) 変換後のバイト列
     function luavsq.Util.getBytesUInt16BE( value )
         local result = {};
         result[2] = luavsq.Util.band( value, 0xff );
@@ -100,8 +108,8 @@ if( nil == luavsq.Util )then
 
     ---
     -- 32bit の unsigned int 値を Big Endian のバイト列に変換する
-    -- @param (integer) value
-    -- @return (table<integer>)
+    -- @param value (integer) 変換元の数値
+    -- @return (table<integer>) 変換後のバイト列
     function luavsq.Util.getBytesUInt32BE( data )
         local dat = {};
         data = luavsq.Util.band( 0xffffffff, data );
@@ -116,6 +124,7 @@ if( nil == luavsq.Util )then
     end
 
     ---
+    -- 配列を、範囲を指定して並び替える
     -- @param array (table) 並び替えるテーブル
     -- @param startIndex (number) 並び替える範囲の開始位置(先頭が0)
     -- @param length (number) 並び替える範囲の長さ
@@ -134,9 +143,8 @@ if( nil == luavsq.Util )then
 
     ---
     -- ビット演算 AND
-    -- @param a (number)
-    -- @param b (number)
-    -- @return (number)
+    -- @param 可変長引数。AND 演算を行う数値を指定する
+    -- @return (number) AND 演算の結果
     function luavsq.Util.band( ... )
         local arguments = { ... };
         if( #arguments == 0 )then
@@ -183,9 +191,8 @@ if( nil == luavsq.Util )then
 
     ---
     -- ビット演算 OR
-    -- @param a (number)
-    -- @param b (number)
-    -- @return (number)
+    -- @param 可変長引数。OR 演算を行う数値を指定する
+    -- @return (number) OR 演算の結果
     function luavsq.Util.bor( ... )
         local arguments = { ... };
         if( #arguments == 0 )then
@@ -232,9 +239,9 @@ if( nil == luavsq.Util )then
 
     ---
     -- 左シフト演算(64bitまでを考慮)
-    -- @param (integer) n
-    -- @param (integer) shift
-    -- @return (integer)
+    -- @param n (integer) 演算対象の数値
+    -- @param shift (integer) シフトするビット数
+    -- @return (integer) 演算結果
     function luavsq.Util.lshift( n, shift )
         n = math.floor( n );
         local i;
@@ -249,9 +256,9 @@ if( nil == luavsq.Util )then
 
     ---
     -- 右シフト演算
-    -- @param (integer) n
-    -- @param (integer) shift
-    -- @return (integer)
+    -- @param n (integer) 演算対象の数値
+    -- @param shift (integer) シフトするビット数
+    -- @return (integer) 演算結果
     function luavsq.Util.rshift( n, shift )
         n = math.floor( n );
         local i;
@@ -263,8 +270,8 @@ if( nil == luavsq.Util )then
 
     ---
     -- 文字列のバイトを取り出して配列にしたものを返す
-    -- @param (string) string_
-    -- @return (table<integer>)
+    -- @param string_ (string) 変換元の文字列
+    -- @return (table<integer>) 変換後のバイト列
     function luavsq.Util.stringToArray( string_ )
         local count = string_:len();
         local result = {};

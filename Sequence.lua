@@ -17,6 +17,11 @@ if( nil == luavsq )then
 end
 
 if( nil == luavsq.Sequence )then
+
+    ---
+    -- VSQ ファイルのシーケンスを保持するクラス
+    -- @class table
+    -- @name luavsq.Sequence
     luavsq.Sequence = {};
 
     luavsq.Sequence.baseTempo = 500000;
@@ -26,7 +31,9 @@ if( nil == luavsq.Sequence )then
     luavsq.Sequence._CURVES = { "VEL", "DYN", "BRE", "BRI", "CLE", "OPE", "GEN", "POR", "PIT", "PBS" };
 
     ---
-    -- VSQファイルの内容を保持するクラス
+    -- 初期化を行う
+    -- @see luavsq.Sequence:_init_5
+    -- @return (luavsq.Sequence)
     function luavsq.Sequence.new( ... )
         local this = {};
         local arguments = { ... };
@@ -56,12 +63,12 @@ if( nil == luavsq.Sequence )then
         this.tag = nil;
 
         ---
-        -- @param singer [string]
-        -- @param pre_measure [int]
-        -- @param numerator [int]
-        -- @param denominator [int]
-        -- @param tempo [int]
-        -- @return [VsqFile]
+        -- 初期化を行う
+        -- @param singer (string) 歌手名
+        -- @param pre_measure (integer) 小節単位のプリメジャー
+        -- @param numerator (integer) 拍子の分子の値
+        -- @param denominator (integer) 拍子の分母の値
+        -- @param tempo (integer) テンポ値。四分音符の長さのマイクロ秒単位の長さ
         function this:_init_5( singer, pre_measure, numerator, denominator, tempo )
             self.totalClocks = pre_measure * 480 * 4 / denominator * numerator;
 
@@ -78,8 +85,8 @@ if( nil == luavsq.Sequence )then
         end
 
         ---
-        -- このインスタンスのコピーを作成します
-        -- @return [VsqFile] このインスタンスのコピー
+        -- コピーを作成する
+        -- @return (luavsq.Sequence) オブジェクトのコピー
         function this:clone()
             local ret = luavsq.Sequence.new();
             ret.track = luavsq.List.new();
@@ -104,29 +111,30 @@ if( nil == luavsq.Sequence )then
         end
 
         ---
-        -- 基本テンポ値を取得します
-        -- @return [int]
+        -- テンポが一つも指定されていない場合の、基本テンポ値を取得する
+        -- @return (integer) テンポ値。四分音符の長さのマイクロ秒単位の長さ
         function this:getBaseTempo()
             return luavsq.Sequence.baseTempo;
         end
 
         ---
-        -- プリメジャー値を取得します
-        -- @return [int]
+        -- プリメジャー値を取得する
+        -- @return (integer) 小節単位のプリメジャー長さ
         function this:getPreMeasure()
             return self.master.preMeasure;
         end
 
         ---
-        -- プリメジャー部分の長さをクロックに変換した値を取得します．
-        -- @return [int]
+        -- Tick 単位のプリメジャー部分の長さを取得する
+        -- @return (integer) Tick 単位のプリメジャー長さ
         function this:getPreMeasureClocks()
             return self:_calculatePreMeasureInClock();
         end
 
         ---
-        -- プリメジャーの長さ(クロック)を計算します。
-        -- @return [int]
+        -- プリメジャーの Tick 単位の長さを計算する
+        -- @access private
+        -- @return (integer) Tick 単位のプリメジャー長さ
         function this:_calculatePreMeasureInClock()
             local pre_measure = self.master.preMeasure;
             local last_bar_count = self.timesigTable:get( 0 ).barCount;
@@ -149,14 +157,14 @@ if( nil == luavsq.Sequence )then
         end
 
         ---
-        -- 4分の1拍子1音あたりのクロック数を取得します
+        -- 四分音符あたりの Tick 数を取得する
+        -- @return (integer) 四分音符一つあたりの Tick 数
         function this:getTickPerQuarter()
             return self._tickPerQuarter;
         end
 
         ---
-        -- VsqFile.Executeの実行直後などに、m_total_clocksの値を更新する
-        -- @return [void]
+        -- totalClock の値を更新する
         function this:updateTotalClocks()
             local max = self:getPreMeasureClocks();
             for i = 1, self.track:size() - 1, 1 do
@@ -182,6 +190,10 @@ if( nil == luavsq.Sequence )then
             self.totalClocks = max;
         end
 
+        ---
+        -- メタテキストイベントを作成する
+        -- @see luavsq.Sequence:_generateMetaTextEventCore
+        -- @return (table<MidiEvent>) メタテキストを格納した MidiEvent の配列
         function this:generateMetaTextEvent( ... )
             local arguments = { ... };
             if( #arguments == 2 )then
@@ -194,11 +206,13 @@ if( nil == luavsq.Sequence )then
         end
 
         ---
-        -- @param track [int]
-        -- @param encoding [string]
-        -- @param start_clock [int]
-        -- @param print_pitch [bool]
-        -- @return [Vector<MidiEvent>]
+        -- メタテキストイベントを作成する
+        -- @accesss private
+        -- @param track (integer) トラック番号
+        -- @param encoding (string) マルチバイト文字のテキストエンコーディング(現在は Shift_JIS 固定で、引数は無視される)
+        -- @param start_clock (integer) イベント作成の開始位置
+        -- @param print_pitch (boolean) pitch を含めて出力するかどうか(現在は false 固定で、引数は無視される)
+        -- @return (table<MidiEvent>) メタテキストを格納した MidiEvent の配列
         function this:_generateMetaTextEventCore( track, encoding, start_clock, print_pitch )
             local _NL = string.char( 0x0a );
             local ret = {};--new Vector<MidiEvent>();
@@ -291,10 +305,10 @@ if( nil == luavsq.Sequence )then
         end
 
         ---
-        -- 指定したクロックにおけるプリセンド・クロックを取得します
-        -- @param clock [int]
-        -- @param msPreSend [int]
-        -- @return [int]
+        -- 指定した時刻におけるプリセンド・クロックを取得する
+        -- @param clock (integer) Tick 単位の時刻
+        -- @param msPreSend (integer) ミリ秒単位のプリセンド時間
+        -- @return (integer) Tick 単位の時間
         function this:getPresendClockAt( clock, msPreSend )
             local clock_msec = self.tempoTable:getSecFromClock( clock ) * 1000.0;
             local draft_clock_sec = (clock_msec - msPreSend) / 1000.0;
@@ -322,7 +336,8 @@ if( nil == luavsq.Sequence )then
 ]]
 
         ---
-        -- @return [Vector<MidiEvent>]
+        -- 拍子情報のテーブルから、拍子変更の MidiEvent を作成する
+        -- @return (table<luavsq.MidiEvent>) 拍子変更イベントを格納した MidiEvent の配列
         function this:generateTimeSig()
             local events = {};--new Vector<MidiEvent>();
             local itr = self.timesigTable:iterator();
@@ -339,7 +354,8 @@ if( nil == luavsq.Sequence )then
         end
 
         ---
-        -- @return [Vector<MidiEvent>]
+        -- テンポ情報のテーブルから、テンポ変更の MidiEvent を作成する
+        -- @return (table<luavsq.MidiEvent>) テンポ変更イベントを格納した MidiEvent の配列
         function this:generateTempoChange()
             local events = {};--new Vector<MidiEvent>();
             local itr = self.tempoTable:iterator();
@@ -352,10 +368,10 @@ if( nil == luavsq.Sequence )then
         end
 
         ---
-        -- このインスタンスを文字列に出力する
-        -- @param (integer) msPreSend プリセンドタイム(msec)
-        -- @param (string) encoding
-        -- @return (string)
+        -- ストリームに出力する
+        -- @param msPreSend (integer) ミリ秒単位のプリセンドタイム
+        -- @param encoding (string) マルチバイト文字のテキストエンコーディング(現在は Shift_JIS 固定で、引数は無視される)
+        -- @see luavsq.Sequence:_writeCore
         function this:write( ... )
             local arguments = { ... };
             if( #arguments == 3 )then
@@ -366,9 +382,9 @@ if( nil == luavsq.Sequence )then
         end
 
         ---
-        -- このインスタンスをストリームに出力する
-        -- @param (integer) msPreSend プリセンドタイム(msec)
-        -- @param (string) encoding
+        -- ストリームに出力する
+        -- @param (integer) msPreSend ミリ秒単位のプリセンドタイム
+        -- @param (string) encoding マルチバイト文字のテキストエンコーディング(現在は Shift_JIS 固定で、引数は無視される)
         function this:_writeCore( fs, msPreSend, encoding, print_pitch )
             local last_clock = 0;
             local track_size = self.track:size();
@@ -469,11 +485,11 @@ if( nil == luavsq.Sequence )then
     end
 
     ---
-    --  文字列sの先頭から文字列を切り取るとき，切り取った文字列をencodingによりエンコードした結果が127Byte以下になるように切り取ります．
-    -- 現状、encdingはShift_JISに固定
-    -- @param s [string]
-    -- @param encoding [string]
-    -- @return [string]
+    -- 文字列 s の先頭から、先頭から 127 バイト以下の文字を切り取る。
+    -- ただし、指定されたテキストエンコーディングでエンコードした場合にも、127 バイト以下となるよう切り取りを行う
+    -- @param s (string) 切り取り元の文字列
+    -- @param encoding (string) マルチバイト文字のテキストエンコーディング(現在は Shift_JIS 固定で、引数は無視される)
+    -- @return (string) 切り取った文字列
     function luavsq.Sequence.substring127Bytes( s, encoding )
         local count = math.min( 127, s:len() );
         local arr = luavsq.CP932Converter.convertFromUTF( s:sub( 1, count ) );
@@ -501,13 +517,13 @@ if( nil == luavsq.Sequence )then
     end
 
     ---
-    -- @param vsq [VsqFile]
-    -- @param track [int]
-    -- @param fs [ByteArrayOutputStream]
-    -- @param msPreSend [int]
-    -- @param encoding [string]
-    -- @param print_pitch [bool]
-    -- @return [void]
+    -- トラックをストリームに出力する
+    -- @param vsq (luavsq.Sequence) 出力するシーケンス
+    -- @param track (integer) 出力するトラックの番号
+    -- @param fs (? extends OutputStream) 出力先のストリーム
+    -- @param msPreSend (integer) ミリ秒単位のプリセンド時間
+    -- @param encoding (string) マルチバイト文字のテキストエンコーディング(現在は Shift_JIS 固定で、引数は無視される)
+    -- @param print_pitch (boolean) pitch を含めて出力するかどうか(現在は false 固定で、引数は無視される)
     function luavsq.Sequence.printTrack( vsq, track, fs, msPreSend, encoding, print_pitch )
         local _NL = string.char( 0x0a );
         --ヘッダ
@@ -559,11 +575,11 @@ if( nil == luavsq.Sequence )then
     end
 
     ---
-    --  指定したトラックから、Expression(DYN)のNRPNリストを作成します
-    -- @param vsq [VsqFile]
-    -- @param track [int]
-    -- @param msPreSend [int]
-    -- @return [VsqNrpn[] ]
+    -- トラックの Expression(DYN) の NRPN リストを作成する
+    -- @param vsq (luavsq.Sequence) 出力するシーケンス
+    -- @param track (integer) 出力するトラックの番号
+    -- @param msPreSend (integer) ミリ秒単位のプリセンド時間
+    -- @return (table<luavsq.NrpnEvent>) NrpnEvent の配列
     function luavsq.Sequence.generateExpressionNRPN( vsq, track, msPreSend )
         local ret = {};--Array.new();--Vector<VsqNrpn>();
         local dyn = vsq.track:get( track ):getCurve( "DYN" );
@@ -585,7 +601,7 @@ if( nil == luavsq.Sequence )then
     end
 
 --[[
-    ---
+    --
     -- @param vsq [VsqFile]
     -- @param track [int]
     -- @param msPreSend [int]
@@ -612,8 +628,8 @@ if( nil == luavsq.Sequence )then
 ]]
 
     ---
-    --  先頭に記録されるNRPNを作成します
-    -- @return [VsqNrpn]
+    -- トラックの先頭に記録される NRPN のリストを作成する
+    -- @return (table<luavsq.NrpnEvent>) NrpnEvent の配列
     function luavsq.Sequence.generateHeaderNRPN()
         local ret = luavsq.NrpnEvent.new( 0, luavsq.MidiParameterEnum.CC_BS_VERSION_AND_DEVICE, 0x00, 0x00 );
         ret:append( luavsq.MidiParameterEnum.CC_BS_DELAY, 0x00, 0x00 );
@@ -622,11 +638,11 @@ if( nil == luavsq.Sequence )then
     end
 
     ---
-    --  歌手変更イベントから，NRPNを作成します
-    -- @param vsq [VsqFile]
-    -- @param ve [VsqEvent]
-    -- @param msPreSend [int]
-    -- @return [VsqNrpn[] ]
+    -- 歌手変更イベントの NRPN リストを作成する
+    -- @param vsq (luavsq.Sequence) 出力元のシーケンス
+    -- @param ve (luavsq.Event) 出力する歌手変更イベント
+    -- @param msPreSend (integer) ミリ秒単位のプリセンド時間
+    -- @return (table<luavsq.NrpnEvent>) NrpnEvent の配列
     function luavsq.Sequence.generateSingerNRPN( vsq, ve, msPreSend )
         local clock = ve.clock;
         local singer_handle = nil; --IconHandle
@@ -659,14 +675,19 @@ if( nil == luavsq.Sequence )then
     end
 
     ---
-    --  音符イベントから，NRPNを作成します
-    -- @param vsq [VsqFile]
-    -- @param track [int]
-    -- @param ve [VsqEvent]
-    -- @param msPreSend [int]
-    -- @note_loc [byte]
-    -- @add_delay_sign [bool]
-    -- @return [VsqNrpn]
+    -- トラックの音符イベントから NRPN のリストを作成する
+    -- @param vsq (luavsq.Sequence) 出力元のシーケンス
+    -- @param track (integer) 出力するトラックの番号
+    -- @param ve (luavsq.Event) 出力する音符イベント
+    -- @param msPreSend (integer) ミリ秒単位のプリセンド時間
+    -- @param note_loc (integer) <ul>
+    --                               <li>00:前後共に連続した音符がある
+    --                               <li>01:後ろにのみ連続した音符がある
+    --                               <li>02:前にのみ連続した音符がある
+    --                               <li>03:前後どちらにも連続した音符が無い
+    --                           </ul>
+    -- @param add_delay_sign (boolean) ディレイイベントを追加するかどうか
+    -- @return (table<luavsq.NrpnEvent>) NrpnEvent の配列
     function luavsq.Sequence.generateNoteNRPN( vsq, track, ve, msPreSend, note_loc, add_delay_sign )
         local clock = ve.clock;
         local renderer = vsq.track:get( track ).common.version;
@@ -846,6 +867,10 @@ if( nil == luavsq.Sequence )then
         return add;
     end
 
+    ---
+    -- 指定したシーケンスの指定したトラックから、NRPN のリストを作成する
+    -- @see luavsq.Sequence._generateNRPN_3
+    -- see luavsq.Sequence._generateNRPN_5
     function luavsq.Sequence.generateNRPN( ... )
         local arguments = { ... };
         if( #arguments == 3 )then
@@ -879,11 +904,11 @@ if( nil == luavsq.Sequence )then
 ]]
 
     ---
-    --  指定したトラックのデータから，NRPNを作成します
-    -- @param vsq [VsqFile]
-    -- @param track [int]
-    -- @param msPreSend [int]
-    -- @return [VsqNrpn[] ]
+    -- 指定したシーケンスの指定したトラックから、NRPN のリストを作成する
+    -- @param vsq (luavsq.Sequence) 出力元のシーケンス
+    -- @param track (integer) 出力するトラックの番号
+    -- @param msPreSend (integer) ミリ秒単位のプリセンド時間
+    -- @return (table<luavsq.NrpnEvent>) NrpnEvent の配列
     function luavsq.Sequence._generateNRPN_3( vsq, track, msPreSend )
         local list = {};--Vector<VsqNrpn>();
 
@@ -1028,11 +1053,11 @@ if( nil == luavsq.Sequence )then
     end
 
     ---
-    --  指定したトラックから、PitchBendのNRPNを作成します
-    -- @param vsq [VsqFile]
-    -- @param track [int]
-    -- @param msPreSend [int]
-    -- @return [VsqNrpn[] ]
+    -- 指定したシーケンスの指定したトラックから、PitchBend の NRPN リストを作成する
+    -- @param vsq (luavsq.Sequence) 出力元のシーケンス
+    -- @param track (integer) 出力するトラックの番号
+    -- @param msPreSend (integer) ミリ秒単位のプリセンド時間
+    -- @return (table<luavsq.NrpnEvent>) NrpnEvent の配列
     function luavsq.Sequence.generatePitchBendNRPN( vsq, track, msPreSend )
         local ret = {};--Vector<VsqNrpn>();
         local pit = vsq.track:get( track ):getCurve( "PIT" );
@@ -1057,6 +1082,11 @@ if( nil == luavsq.Sequence )then
         return ret;
     end
 
+    ---
+    -- 配列を連結する
+    -- @param src_array (table) 連結先のテーブル。参照として更新される
+    -- @param add_array (table) 追加される要素が格納されたテーブル
+    -- @return (table) src_array と同じインスタンス
     function luavsq.Sequence._array_add_all( src_array, add_array )
         local i;
         for i = 1, #add_array, 1 do
@@ -1066,11 +1096,11 @@ if( nil == luavsq.Sequence )then
     end
 
     ---
-    --  指定したトラックからPitchBendSensitivityのNRPNを作成します
-    -- @param vsq [VsqFile]
-    -- @param track [int]
-    -- @param msPreSend [int]
-    -- @return [VsqNrpn[] ]
+    -- 指定したシーケンスの指定したトラックから、PitchBendSensitivity の NRPN リストを作成する
+    -- @param vsq (luavsq.Sequence) 出力元のシーケンス
+    -- @param track (integer) 出力するトラックの番号
+    -- @param msPreSend (integer) ミリ秒単位のプリセンド時間
+    -- @return (table<luavsq.NrpnEvent>) NrpnEvent の配列
     function luavsq.Sequence.generatePitchBendSensitivityNRPN( vsq, track, msPreSend )
         local ret = {};-- Vector<VsqNrpn>();
         local pbs = vsq.track:get( track ):getCurve( "PBS" );
@@ -1093,11 +1123,11 @@ if( nil == luavsq.Sequence )then
     end
 
     ---
-    --  指定した音符イベントから，ビブラート出力用のNRPNを作成します
-    -- @param vsq [VsqFile]
-    -- @param ve [VsqEvent]
-    -- @param msPreSend [int]
-    -- @return [VsqNrpn[] ]
+    -- トラックの音符イベントから、ビブラート出力用の NRPN のリストを作成する
+    -- @param vsq (luavsq.Sequence) 出力元のシーケンス
+    -- @param ve (luavsq.Event) 出力する音符イベント
+    -- @param msPreSend (integer) ミリ秒単位のプリセンド時間
+    -- @return (table<luavsq.NrpnEvent>) NrpnEvent の配列
     function luavsq.Sequence.generateVibratoNRPN( vsq, ve, msPreSend )
         local ret = {};--Vector<VsqNrpn>();
         if( ve.id.vibratoHandle ~= nil )then
@@ -1156,11 +1186,11 @@ if( nil == luavsq.Sequence )then
     end
 
     ---
-    --  指定したトラックから、VoiceChangeParameterのNRPNのリストを作成します
-    -- @param vsq [VsqFile]
-    -- @param track [int]
-    -- @param msPreSend [int]
-    -- @return [VsqNrpn[] ]
+    -- 指定したシーケンスの指定したトラックから、VoiceChangeParameter の NRPN リストを作成する
+    -- @param vsq (luavsq.Sequence) 出力元のシーケンス
+    -- @param track (integer) 出力するトラックの番号
+    -- @param msPreSend (integer) ミリ秒単位のプリセンド時間
+    -- @return (table<luavsq.NrpnEvent>) NrpnEvent の配列
     function luavsq.Sequence.generateVoiceChangeParameterNRPN( vsq, track, msPreSend )
         local premeasure_clock = vsq:getPreMeasureClocks();
         local renderer = vsq.track:get( track ).common.version;
@@ -1207,8 +1237,10 @@ if( nil == luavsq.Sequence )then
     end
 
     ---
-    -- @param value [int]
-    -- @return [ValuePair<Byte, Byte>]
+    -- DATA の値を MSB と LSB に分解する
+    -- @param value (integer) 分解する値
+    -- @return (integer) MSB の値
+    -- @return (integer) LSB の値
     function luavsq.Sequence.getMsbAndLsb( value )
         if( 0x3fff < value )then
             return 0x7f, 0x7f;
@@ -1220,8 +1252,8 @@ if( nil == luavsq.Sequence )then
 
     ---
     -- "DM:0001:"といった、VSQメタテキストの行の先頭につくヘッダー文字列のバイト列表現を取得する
-    -- @param (integer) count
-    -- @return (table<integer>)
+    -- @param count (integer) ヘッダーの番号
+    -- @return (table<integer>) バイト列
     function luavsq.Sequence.getLinePrefixBytes( count )
         local digits = luavsq.Sequence.getHowManyDigits( count );
         local c = math.floor( (digits - 1) / 4 ) + 1;
@@ -1253,20 +1285,18 @@ if( nil == luavsq.Sequence )then
     end
 
     ---
-    -- ushort値をビッグエンディアンでfsに書き込みます
-    -- @param fs [ByteArrayOutputStream]
-    -- @data [int]
-    -- @return [void]
-    function luavsq.Sequence.writeUnsignedShort( fs, data )
+    -- 16 ビットの unsigned int 値をビッグエンディアンでストリームに書きこむ
+    -- @param stream (? extends OutputStream) 出力先のストリーム
+    -- @param data (integer) 出力する値
+    function luavsq.Sequence.writeUnsignedShort( stream, data )
         local dat = luavsq.Util.getBytesUInt16BE( data );
-        fs:write( dat, 1, #dat );
+        stream:write( dat, 1, #dat );
     end
 
     ---
-    -- uint値をビッグエンディアンでfsに書き込みます
-    -- @param fs [ByteArrayOutputStram]
-    -- @param data [long]
-    -- @return [void]
+    -- 32 ビットの unsigned int 値をビッグエンディアンでストリームに書きこむ
+    -- @param fs (? extends OutputStram) 出力先のストリーム
+    -- @param data (integer) 出力する値
     function luavsq.Sequence.writeUnsignedInt( fs, data )
         local dat = luavsq.Util.getBytesUInt32BE( data );
         fs:write( dat, 1, #dat );

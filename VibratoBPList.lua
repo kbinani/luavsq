@@ -21,17 +21,26 @@ end
 
 if( nil == luavsq.VibratoBPList )then
 
+    ---
+    -- ビブラートデータポイントのリストを表すクラス
+    -- @class table
+    -- @name luvasq.VibratoBPList
     luavsq.VibratoBPList = {};
 
+    ---
+    -- 初期化を行う
+    -- @see luavsq.VibratoBPList:_init_3
+    -- @see luavsq.VibratoBPList:_init_2
     function luavsq.VibratoBPList.new( ... )
         local arguments = { ... };
         local this = {};
         this._list = {};
 
         ---
-        -- @param strNum (string)
-        -- @param strBPX (string)
-        -- @param strBPY (string)
+        -- 初期化を行う
+        -- @param strNum (string) データ点の個数の文字列表現
+        -- @param strBPX (string) x 軸のデータ点の値をカンマ区切りで繋げた文字列
+        -- @param strBPY (string) y 軸のデータ点の値をカンマ区切りで繋げた文字列
         function this:_init_3( strNum, strBPX, strBPY )
             local num = tonumber( strNum );
             if( nil == num )then
@@ -57,8 +66,9 @@ if( nil == luavsq.VibratoBPList )then
         end
 
         ---
-        -- @param x (table<float>)
-        -- @param y (table<integer>)
+        -- 初期化を行う
+        -- @param x (table<double>) x 軸の値のリスト
+        -- @param y (table<integer>) y 軸の値のリスト
         function this:_init_2( x, y )
             local len = math.min( #x, #y );
             for i = 1, len, 1 do
@@ -75,9 +85,10 @@ if( nil == luavsq.VibratoBPList )then
         end
 
         ---
-        -- @param x [float]
-        -- @param defaultValue [int]
-        -- @return [int]
+        -- 指定した位置のビブラートカーブの値を取得する
+        -- @param x (double) 取得したい x 軸の値
+        -- @param defaultValue (integer) ビブラートカーブのデフォルト値
+        -- @return (integer) ビブラートカーブの値
         function this:getValueAt( x, defaultValue )
             if( #self._list <= 0 )then
                 return defaultValue;
@@ -97,7 +108,8 @@ if( nil == luavsq.VibratoBPList )then
         end
 
         ---
-        -- @return [object]
+        -- コピーを作成する
+        -- @return (luavsq.VibratoBPList) このオブジェクトのコピー
         function this:clone()
             local ret = luavsq.VibratoBPList.new();
             for i = 1, #self._list, 1 do
@@ -107,27 +119,31 @@ if( nil == luavsq.VibratoBPList )then
         end
 
         ---
-        -- @return (integer)
+        -- データ点の個数を返す
+        -- @return (integer) データ点の個数
         function this:size()
             return #self._list;
         end
 
         ---
+        -- 指定したインデックスのデータ点を取得する
         -- @param index (integer) 0から始まるインデックス
-        -- @return (luavsq.VibratoBP)
+        -- @return (luavsq.VibratoBP) データ点
         function this:get( index )
             return self._list[index + 1];
         end
 
         ---
-        -- @param index (integer) 0から始まるインデックス
-        -- @param value (luavsq.VibratoBP)
+        -- 指定したインデックスのデータ点を設定する
+        -- @param index (integer) インデックス(最初のインデックスは0)
+        -- @param value (luavsq.VibratoBP) 設定するデータ点
         function this:set( index, value )
             self._list[index + 1] = value;
         end
 
         ---
-        -- @return (string)
+        -- データ点のリストを、文字列に変換する。例えば "key1=value1,key2=value2" のように変換される
+        -- @return (string) 変換後の文字列
         function this:getData()
             local ret = "";
             for i = 1, #self._list, 1 do
@@ -140,8 +156,8 @@ if( nil == luavsq.VibratoBPList )then
         end
 
         ---
-        -- @param value [String]
-        -- @return [void]
+        -- "key1=value=1,key2=value2" のような文字列から、データ点のリストを設定する
+        -- @param value (string) データ点の文字列形式
         function this:setData( value )
             self._list = {};
             local spl = luavsq.Util.split( value, ',' );
@@ -166,8 +182,10 @@ if( nil == luavsq.VibratoBPList )then
     end
 
     ---
-    -- @param a (luavsq.VibratoBP)
-    -- @param b (luavsq.VibratoBP)
+    -- 2 つの VibratoBP を比較する
+    -- @param a (luavsq.VibratoBP) 比較対象のオブジェクト
+    -- @param b (luavsq.VibratoBP) 比較対象のオブジェクト
+    -- @return (boolean) a が b よりも小さい場合は true、そうでない場合は false を返す
     function luavsq.VibratoBPList._comparator( a, b )
         if( a:compareTo( b ) < 0 )then
             return true;

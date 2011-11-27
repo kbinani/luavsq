@@ -19,7 +19,9 @@ end
 if( nil == luavsq.PhoneticSymbol )then
 
     ---
-    -- VSQで使用される発音記号の種類や有効性を判定するユーティリティ群です。
+    -- VSQ で使用される発音記号のためのユーティリティ
+    -- @class table
+    -- @name luavsq.PhoneticSymbol
     luavsq.PhoneticSymbol = {};
 
     ---
@@ -39,9 +41,9 @@ if( nil == luavsq.PhoneticSymbol )then
     luavsq.PhoneticSymbol._SYMBOL_CONSONANT_EN = "\tw\tj\tb\td\tg\tbh\tdh\tgh\tdZ\tv\tD\tz\tZ\tm\tn\tN\tr\tl\tl0\tp\tt\tk\tph\tth\tkh\ttS\tf\tT\ts\tS\th\tSil\tAsp\t";
 
     ---
-    -- 指定した文字列が子音を表す発音記号かどうかを判定します。
-    -- @param symbol String
-    -- @return boolean
+    -- 指定した文字列が子音を表す発音記号かどうかを判定する
+    -- @param symbol (string) 判定対象の発音記号
+    -- @return (boolean) 子音であれば true を、そうでなければ false を返す
     function luavsq.PhoneticSymbol.isConsonant( symbol )
         local search = "\t" .. symbol .. "\t";
         local startIndex, endIndex = luavsq.PhoneticSymbol._SYMBOL_CONSONANT_JP:find( search );
@@ -57,9 +59,9 @@ if( nil == luavsq.PhoneticSymbol )then
     end
 
     ---
-    -- 指定した文字列が母音を表す発音記号かどうかを判定します。
-    -- @param symbol String
-    -- @return boolean
+    -- 指定した文字列が母音を表す発音記号かどうかを判定する
+    -- @param symbol (string) 判定対象の発音記号
+    -- @return (boolean) 母音であれば true を、そうでなければ false を返す
     function luavsq.PhoneticSymbol.isVowel( symbol )
         local search = "\t" .. symbol .. "\t";
         local startIndex, endIndex = luavsq.PhoneticSymbol._SYMBOL_VOWEL_JP:find( search );
@@ -75,9 +77,9 @@ if( nil == luavsq.PhoneticSymbol )then
     end
 
     ---
-    -- 指定した文字列が発音記号として有効かどうかを判定します。
-    -- @param symbol String
-    -- @return boolean
+    -- 指定した文字列が発音記号として有効かどうかを判定する
+    -- @param symbol (string) 判定対象の発音記号
+    -- @return (boolean) 有効であれば true を、そうでなければ false を返す
     function luavsq.PhoneticSymbol.isValidSymbol( symbol )
         local isVowel = luavsq.PhoneticSymbol.isVowel( symbol );
         local isConsonant = luavsq.PhoneticSymbol.isConsonant( symbol );

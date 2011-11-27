@@ -22,12 +22,17 @@ end
 
 if( nil == luavsq.Track.IndexIterator )then
 
+    ---
+    -- イベントリスト中の、インデックスを順に返す反復子
+    -- @class table
+    -- @name luavsq.Track.IndexIterator
     luavsq.Track.IndexIterator = {};
 
     ---
-    -- @param list [VsqEventList]
-    -- @param iterator_kind[int]
-    -- @return [IndexIterator]
+    -- 初期化を行う
+    -- @param list (luavsq.EventList) 反復子の元になるリスト
+    -- @param iterator_kind (luavsq.IndexIteratorKindEnum) 反復子の種類
+    -- @return (luavsq.IndexIterator) 反復子
     function luavsq.Track.IndexIterator.new( list, iteratorKind )
         local this = {};
         ---
@@ -61,7 +66,8 @@ if( nil == luavsq.Track.IndexIterator )then
             ) == luavsq.Track.IndexIteratorKindEnum.DYNAFF;
 
         ---
-        -- @return [int]
+        -- 反復子の次の要素を返す
+        -- @return (integer) 次の要素
         function this:next()
             local nextPosition = self:_nextPosition();
             if( nextPosition > 0 )then
@@ -73,13 +79,16 @@ if( nil == luavsq.Track.IndexIterator )then
         end
 
         ---
-        -- @return [bool]
+        -- 反復子が次の要素を持つ場合に true を返す
+        -- @return (boolean) 反復子がさらに要素を持つ場合は true を、そうでなければ false を返す
         function this:hasNext()
             return (self:_nextPosition() > 0);
         end
 
         ---
-        -- @return [int]
+        -- 反復子の次の要素を探索する
+        -- @access private
+        -- @return (integer) 次のインデックス
         function this:_nextPosition()
             local count = self._list:size();
             local i;
@@ -120,7 +129,7 @@ if( nil == luavsq.Track.IndexIterator )then
         end
 
         ---
-        -- @return [void]
+        -- 反復子によって最後に返された要素を削除する
         function this:remove()
             if( 0 < self._pos and self._pos <= self._list:size() )then
                 self._list:removeAt( self._pos - 1 );

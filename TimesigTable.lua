@@ -17,51 +17,62 @@ if( nil == luavsq )then
 end
 
 if( nil == luavsq.TimesigTable )then
+
+    ---
+    -- 拍子情報を格納したテーブルを表すクラス
+    -- @class table
+    -- @name TimesigTable
     luavsq.TimesigTable = {};
 
+    ---
+    -- 初期化を行う
+    -- @return (luavsq.TimesigTable)
     function luavsq.TimesigTable.new()
         local this = {};
         this._list = luavsq.List.new();
 
         ---
         -- データ点の個数を取得する
-        -- @return (integer)
+        -- @return (integer) データ点の個数
         function this:size()
             return self._list:size();
         end
 
         ---
         -- データ点を順に返す反復子を取得する
-        -- @return (luavsq.List.Iterator<luavsq.TimesigTableItem>)
+        -- @return (luavsq.List.Iterator<luavsq.TimesigTableItem>) 反復子
         function this:iterator()
             return self._list:iterator();
         end
 
         ---
         -- データ点を追加する
-        -- @param (luavsq.TimesigTableItem)
+        -- @param (luavsq.TimesigTableItem) 追加する拍子変更情報
         function this:push( item )
             self._list:push( item );
         end
 
         ---
-        -- データ点を取得する
-        -- @param (number) index 取得するデータ点のインデックス(0から始まる)
-        -- @return (luavsq.TimesigTableItem)
+        -- 指定したインデックスの拍子変更情報を取得する
+        -- @param (integer) index 取得するデータ点のインデックス(0から始まる)
+        -- @return (luavsq.TimesigTableItem) 拍子変更情報
         function this:get( index )
             return self._list[index];
         end
 
         ---
-        -- データ点を設定する
-        -- @param (number) index 設定するデータ点のインデックス(0から始まる)
-        -- @param (luavsq.TimesigTableItem)
+        -- 指定したインデックスの拍子変更情報を設定する
+        -- @param index (integer) インデックス(最初のインデックスは0)
+        -- @param value (TempoTableItem) 設定するイベント
         function this:set( index, value )
             self._list[index] = value;
         end
 
         ---
-        -- TimeSigTableの[*].Clockの部分を更新します
+        -- リスト内のテンポ変更情報の秒単位の時刻部分を更新する
+
+        ---
+        -- リスト内の拍子変更情報の clock の部分を更新する
         function this:updateTimesigInfo()
             if( self:get( 0 ).clock ~= 0 )then
                 return;
@@ -84,7 +95,7 @@ if( nil == luavsq.TimesigTable )then
 
         ---
         -- 指定されたゲートタイムにおける拍子情報を取得する
-        -- @param (number) clock ゲートタイム
+        -- @param clock (number) ゲートタイム
         -- @return (luavsq.Timesig) 指定されたゲートタイムでの拍子情報
         function this:getTimesigAt( clock )
             local ret = luavsq.TimesigTableItem.new();
@@ -106,7 +117,7 @@ if( nil == luavsq.TimesigTable )then
 
         ---
         -- 指定されたゲートタイムにおける拍子情報を取得する
-        -- @param (number) clock ゲートタイム
+        -- @param clock (number) ゲートタイム
         -- @return (luavsq.TimesigTableItem) 指定されたゲートタイムでの拍子情報
         function this:findTimesigAt( clock )
             local index = 0;
@@ -127,9 +138,10 @@ if( nil == luavsq.TimesigTable )then
         end
 
         ---
-        -- 指定した小節の開始クロックを調べます。ここで使用する小節数は、プリメジャーを考慮しない。即ち、曲頭の小節が0である。
-        -- @param (integer) bar_count
-        -- @return (integer)
+        -- 指定した小節の開始クロックを取得する。
+        -- ここで使用する小節数は、プリメジャーを考慮しない。即ち、曲頭の小節が 0 となる
+        -- @param bar_count (integer) 小節数
+        -- @return (integer) Tick 単位の時刻
         function this:getClockFromBarCount( bar_count )
             local index = 0;
             local c = self._list:size();
@@ -150,9 +162,10 @@ if( nil == luavsq.TimesigTable )then
         end
 
         ---
-        -- 指定したクロックが、曲頭から何小節目に属しているかを調べます。ここで使用する小節数は、プリメジャーを考慮しない。即ち、曲頭の小節が0である。
-        -- @param (integer) clock
-        -- @return (integer)
+        -- 指定したクロックが、曲頭から何小節目に属しているかを調べる
+        -- ここで使用する小節数は、プリメジャーを考慮しない。即ち、曲頭の小節が 0 となる
+        -- @param clock  (integer) Tick 単位の時刻
+        -- @return (integer) 小節数
         function this:getBarCountFromClock( clock )
             local index = 0;
             local c = self._list:size();

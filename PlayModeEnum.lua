@@ -18,10 +18,14 @@ end
 
 if( nil == luavsq.PlayModeEnum )then
 
+    ---
+    -- 歌声合成の再生モードを表す列挙子
+    -- @class table
+    -- @name luavsq.PlayModeEnum
     luavsq.PlayModeEnum = {};
 
     ---
-    -- トラックはミュートされる．(-1)
+    -- トラックはミュートされる(-1)
     luavsq.PlayModeEnum.Off = -1;
 
     ---

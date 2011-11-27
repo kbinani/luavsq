@@ -19,7 +19,9 @@ end
 if( nil == luavsq.VoiceLanguageEnum )then
 
     ---
-    -- Represents the voice language of singer.
+    -- 歌手の歌唱言語を表す列挙子
+    -- @class table
+    -- @name luavsq.VoiceLanguageEnum
     luavsq.VoiceLanguageEnum = {};
 
     ---
@@ -31,10 +33,9 @@ if( nil == luavsq.VoiceLanguageEnum )then
     luavsq.VoiceLanguageEnum.English = 1;
 
     ---
-    -- 指定した名前の歌手の歌唱言語を取得します。
-    --
-    -- @param name [string] name of singer
-    -- @return [VsqVoiceLanguage]
+    -- 歌手の名前から、その歌手の歌唱言語を取得する
+    -- @param name (string) 歌手の名前
+    -- @return (luavsq.VoiceLanguageEnum) 歌唱言語
     function luavsq.VoiceLanguageEnum.valueFromSingerName( name )
         local search = name:lower();
         if( search == "meiko" or

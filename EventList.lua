@@ -94,7 +94,7 @@ if( nil == luavsq.EventList )then
 
         ---
         -- リスト内のイベントを順に返す反復子を取得する
-        -- @return (luavsq.EventList.Iterator)
+        -- @return (luavsq.EventList.Iterator) 反復子
         function this:iterator()
             self:updateIdList();
             return luavsq.EventList.Iterator.new( self );

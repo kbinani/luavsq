@@ -22,15 +22,23 @@ end
 
 if( nil == luavsq.Track.DynamicsEventIterator )then
 
+    ---
+    -- イベントリスト中の、ダイナミクスイベントを順に返す反復子
+    -- @class table
+    -- @name luavsq.Track.DynamicsEventIterator
     luavsq.Track.DynamicsEventIterator = {};
 
+    ---
+    -- 初期化を行う
+    -- @param list (luavsq.EventList) 反復子の元になるリスト
     function luavsq.Track.DynamicsEventIterator.new( list )
         local this = {};
         this._list = list;
         this._pos = 0;
 
         ---
-        -- @return [bool]
+        -- 反復子が次の要素を持つ場合に true を返す
+        -- @return (boolean) 反復子がさらに要素を持つ場合は true を、そうでなければ false を返す
         function this:hasNext()
             local c = self._list:size();
             local i;
@@ -43,7 +51,8 @@ if( nil == luavsq.Track.DynamicsEventIterator )then
         end
 
         ---
-        -- @return [VsqEvent]
+        -- 反復子の次の要素を返す
+        -- @return (luavsq.Event) 次の要素
         function this:next()
             local c = self._list:size();
             local i;
@@ -58,7 +67,7 @@ if( nil == luavsq.Track.DynamicsEventIterator )then
         end
 
         ---
-        -- @return [void]
+        -- 反復子によって最後に返された要素を削除する
         function this:remove()
             if( 1 <= self._pos and self._pos <= self._list:size() )then
                 self._list:removeAt( self._pos - 1 );
