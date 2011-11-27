@@ -20,12 +20,15 @@ if( nil == luavsq.Common )then
 
     ---
     -- VSQ ファイルのメタテキストの [Common] セクションに記録される内容を格納するクラス
+    -- @class table
+    -- @name luavsq.Common
     luavsq.Common = {};
 
     ---
     -- 初期化を行う
     -- @see this:_init_2
     -- @see this:_init_6
+    -- @return (luavsq.Common)
     function luavsq.Common.new( ... )
         local this = {};
         local arguments = { ... };

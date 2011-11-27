@@ -24,6 +24,8 @@ if( nil == luavsq.LyricHandle )then
 
     ---
     -- 歌詞ハンドル
+    -- @class table
+    -- @name luavsq.LyricHandle
     luavsq.LyricHandle = {};
 
     ---

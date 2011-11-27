@@ -164,7 +164,8 @@ if( nil == luavsq.VibratoHandle )then
         end
 
         ---
-        -- @return [VsqHandle]
+        -- このオブジェクトを、Handle に型変換する
+        -- @return (luavsq.Handle) ハンドル
         function this:castToHandle()
             local ret = luavsq.Handle.new();
             ret._type = luavsq.HandleTypeEnum.Vibrato;

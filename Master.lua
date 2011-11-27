@@ -20,12 +20,15 @@ if( nil == luavsq.Master )then
 
     ---
     -- VSQ ファイルのメタテキストの [Master] に記録される内容を取り扱うクラス
+    -- @class table
+    -- @name luavsq.Master
     luavsq.Master = {};
 
     ---
     -- 初期化を行う
     -- @see luavsq.Master:_init_1
     -- @see luavsq.Master:_init_2
+    -- @return (luavsq.Master)
     function luavsq.Master.new( ... )
         local this = {};
         local arguments = { ... };

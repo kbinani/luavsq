@@ -20,11 +20,14 @@ if( nil == luavsq.BPList )then
 
     ---
     -- コントロールカーブのデータ点リストを表すクラス
+    -- @class table
+    -- @name luavsq.BPList
     luavsq.BPList = {};
 
     ---
     -- コンストラクタ
     -- @see this:_init_4
+    -- @return (luavsq.BPList)
     function luavsq.BPList.new( ... )
         local this = {};
         local arguments = { ... };
@@ -151,7 +154,7 @@ if( nil == luavsq.BPList )then
             return ret;
         end
 
-        ---
+        --
         -- @param value [string]
         -- @return [void]
         function this:setData( value )

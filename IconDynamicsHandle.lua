@@ -20,6 +20,8 @@ if( nil == luavsq.IconDynamicsHandle )then
 
     ---
     -- ダイナミクスハンドル
+    -- @class table
+    -- @name luavsq.IconDynamicsHandle
     luavsq.IconDynamicsHandle = {};
 
     ---
@@ -36,6 +38,7 @@ if( nil == luavsq.IconDynamicsHandle )then
 
     ---
     -- 初期化を行う
+    -- @return (luavsq.IconDynamicsHandle)
     function luavsq.IconDynamicsHandle.new()
         local this = luavsq.IconParameter.new();
 

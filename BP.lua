@@ -20,6 +20,8 @@ if( nil == luavsq.BP )then
 
     ---
     -- コントロールカーブのデータ点を表現するクラス
+    -- @class table
+    -- @name luavsq.BP
     luavsq.BP = {};
 
     ---

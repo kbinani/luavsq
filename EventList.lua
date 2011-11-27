@@ -18,10 +18,15 @@ end
 
 if( nil == luavsq.EventList )then
 
+    ---
+    -- 固有 ID 付きの luavsq.Event のリストを取り扱うクラス
+    -- @class table
+    -- @name luavsq.EventList
     luavsq.EventList = {};
 
     ---
-    -- 固有 ID 付きの luavsq.Event のリストを取り扱うクラス
+    -- 初期化を行う
+    -- @return (luavsq.EventList)
     function luavsq.EventList.new()
         local this = {};
 

@@ -20,10 +20,13 @@ if( nil == luavsq.BPListSearchResult )then
 
     ---
     -- コントロールパラメータのデータ点検索結果を格納するクラス
+    -- @class table
+    -- @name luavsq.BPListSearchResult
     luavsq.BPListSearchResult = {};
 
     ---
     -- 初期化を行う
+    -- @return (luavsq.BPListSearchResult)
     function luavsq.BPListSearchResult.new()
         local this = {};
         this.clock = 0;

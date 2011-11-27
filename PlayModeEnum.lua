@@ -22,18 +22,20 @@ if( nil == luavsq.PlayModeEnum )then
     -- 歌声合成の再生モードを表す列挙子
     -- @class table
     -- @name luavsq.PlayModeEnum
-    luavsq.PlayModeEnum = {};
+    -- @field Off トラックはミュートされる(-1)
+    -- @field PlayAfterSynth トラックは合成された後再生される(0)
+    -- @field PlayWithSynth トラックは合成しながら再生される(1)
+    luavsq.PlayModeEnum = {
+        ---
+        -- トラックはミュートされる(-1)
+        Off = -1,
 
-    ---
-    -- トラックはミュートされる(-1)
-    luavsq.PlayModeEnum.Off = -1;
+        ---
+        -- トラックは合成された後再生される(0)
+        PlayAfterSynth = 0,
 
-    ---
-    -- トラックは合成された後再生される(0)
-    luavsq.PlayModeEnum.PlayAfterSynth = 0;
-
-    ---
-    -- トラックは合成しながら再生される(1)
-    luavsq.PlayModeEnum.PlayWithSynth = 1;
-
+        ---
+        -- トラックは合成しながら再生される(1)
+        PlayWithSynth = 1,
+    };
 end

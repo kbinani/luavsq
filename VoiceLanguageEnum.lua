@@ -22,15 +22,17 @@ if( nil == luavsq.VoiceLanguageEnum )then
     -- 歌手の歌唱言語を表す列挙子
     -- @class table
     -- @name luavsq.VoiceLanguageEnum
-    luavsq.VoiceLanguageEnum = {};
+    -- @field Japanese Japanese
+    -- @field English English
+    luavsq.VoiceLanguageEnum = {
+        ---
+        -- Japanese
+        Japanese = 0,
 
-    ---
-    -- Japanese
-    luavsq.VoiceLanguageEnum.Japanese = 0;
-
-    ---
-    -- English
-    luavsq.VoiceLanguageEnum.English = 1;
+        ---
+        -- English
+        English = 1,
+    };
 
     ---
     -- 歌手の名前から、その歌手の歌唱言語を取得する

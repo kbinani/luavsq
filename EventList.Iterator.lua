@@ -24,11 +24,14 @@ if( nil == luavsq.EventList.Iterator )then
 
     ---
     -- イベントリストのアイテムを順に返す反復子
+    -- @class table
+    -- @name luavsq.EventList.Iterator
     luavsq.EventList.Iterator = {};
 
     ---
     -- 初期化を行う
     -- @param list (luavsq.EventList) 反復子の元になるリスト
+    -- @return (luavsq.EventList.Iterator)
     function luavsq.EventList.Iterator.new( list )
         local this = {};
         this._list = list;

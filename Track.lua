@@ -29,7 +29,7 @@ if( nil == luavsq.Track )then
     -- @see luavsq.Track:_init_0
     -- @see luavsq.Track:_init_2a
     -- @see luavsq.Track:_init_2b
-    -- @return luavsq.Track
+    -- @return (luavsq.Track)
     function luavsq.Track.new( ... )
         local this = {};
         local arguments = { ... };

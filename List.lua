@@ -18,8 +18,6 @@ end
 
 if( nil == luavsq.List )then
 
-    luavsq.List = {};
-
     ---
     -- リスト機能を提供する
     -- インデックスは0から始まる
@@ -28,6 +26,13 @@ if( nil == luavsq.List )then
     -- for i = 0, list:size() - 1, 1 do
     --     print( list[i] );
     -- end
+    -- @class table
+    -- @name luavsq.List
+    luavsq.List = {};
+
+    ---
+    -- 初期化を行う
+    -- @return (luavsq.List)
     function luavsq.List.new( ... )
         local this = {};
         local arguments = { ... };

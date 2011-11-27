@@ -21,6 +21,8 @@ if( nil == luavsq.MidiEvent )then
     ---
     -- MIDI イベントを表現するクラス。
     -- メタイベントは、メタイベントのデータ長をData[1]に格納せず、生のデータをDataに格納するので、注意が必要
+    -- @class table
+    -- @name luavsq.MidiEvent
     luavsq.MidiEvent = {};
 
     ---

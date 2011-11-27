@@ -19,11 +19,14 @@ end
 if( nil == luavsq.Id )then
 
     ---
-    -- メタテキストに埋め込まれるIDを表すクラス
+    -- メタテキストに埋め込まれる ID を表すクラス
+    -- @class table
+    -- @name luavsq.Id
     luavsq.Id = {};
 
     ---
     -- 初期化を行う
+    -- @return (luavsq.Id)
     function luavsq.Id.new( ... )
         local this = {};
         local arguments = { ... };

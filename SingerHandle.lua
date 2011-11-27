@@ -21,12 +21,12 @@ if( nil == luavsq.SingerHandle )then
     ---
     -- 歌手ハンドルを表すクラス
     -- @class table
-    -- @name SingerHandle
+    -- @name luavsq.SingerHandle
     luavsq.SingerHandle = {};
 
     ---
     -- 初期化を行う
-    -- @return (SingerHandle)
+    -- @return (luavsq.SingerHandle)
     function luavsq.SingerHandle.new()
         local this = {};
 

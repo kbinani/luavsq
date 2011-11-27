@@ -20,31 +20,31 @@ if( nil == luavsq.ArticulationTypeEnum )then
     ---
     -- アイコン設定の種類を表します。
     -- @class table
-    -- @name ArticulationTypeEnum
+    -- @name luavsq.ArticulationTypeEnum
+    -- @field Vibrato ビブラート
+    -- @field Crescendo クレッシェンド、またはデクレッシェンド
+    -- @field Dynaff ピアノ、フォルテ等の強弱記号
+    -- @field NoteAttack アタック
+    -- @field NoteTransition NoteTransition(詳細不明)
     luavsq.ArticulationTypeEnum = {
         ---
         -- ビブラート
-        -- @field
         Vibrato = 0,
 
         ---
         -- クレッシェンド、またはデクレッシェンド
-        -- @field
         Crescendo = 1,
 
         ---
         -- ピアノ、フォルテ等の強弱記号
-        -- @field
         Dynaff = 2,
 
         ---
         -- アタック
-        -- @field
         NoteAttack = 3,
 
         ---
         -- NoteTransition(詳細不明)
-        -- @field
         NoteTransition = 4,
     };
 end

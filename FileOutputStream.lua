@@ -20,11 +20,14 @@ if( nil == luavsq.FileOutputStream )then
 
     ---
     -- ファイルへの出力ストリーム
+    -- @class table
+    -- @name luavsq.FileOutputStream
     luavsq.FileOutputStream = {};
 
     ---
     -- 初期化を行う
     -- @param path (string) ファイルのパス
+    -- @return (luavsq.FileOutputStream)
     function luavsq.FileOutputStream.new( path )
         local this = {};
         this._fileHandle = io.open( path, "wb" );

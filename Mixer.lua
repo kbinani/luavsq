@@ -20,6 +20,8 @@ if( nil == luavsq.Mixer )then
 
     ---
     -- VSQ ファイルのメタテキストの [Mixer] セクションに記録される内容を取り扱うクラス
+    -- @class table
+    -- @name luavsq.Mixer
     luavsq.Mixer = {};
 
     ---

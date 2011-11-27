@@ -24,11 +24,14 @@ if( nil == luavsq.BPList.KeyClockIterator )then
 
     ---
     -- コントロールカーブのデータ点の Tick 単位の時刻を順に返す反復子
+    -- @class table
+    -- @name luavsq.BPList.KeyClockIterator
     luavsq.BPList.KeyClockIterator = {};
 
     ---
     -- コンストラクタ
     -- @see luavsq.BPList.KeyClockIterator:_init_1
+    -- @return (luavsq.BPList.KeyClockIterator)
     function luavsq.BPList.KeyClockIterator.new( ... )
         local this = {};
         local arguments = { ... };

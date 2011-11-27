@@ -20,6 +20,8 @@ if( nil == luavsq.Log )then
 
     ---
     -- ロガー
+    -- @class table
+    -- @name luavsq.Log
     luavsq.Log = {};
 
     luavsq.Log._level = 0;

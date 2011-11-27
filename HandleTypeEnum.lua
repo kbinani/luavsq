@@ -21,7 +21,12 @@ if( nil == luavsq.HandleTypeEnum )then
     ---
     -- ハンドルのタイプを表現する列挙子
     -- @class table
-    -- @name HandleTypeEnum
+    -- @name luavsq.HandleTypeEnum
+    -- @field Lyric 歌詞ハンドル
+    -- @field Vibrato ビブラートハンドル
+    -- @field Singer 歌手ハンドル
+    -- @field NoteHead アタックハンドル
+    -- @field Dynamics Dynamics ハンドル
     luavsq.HandleTypeEnum = {
 
         Lyric = 0,

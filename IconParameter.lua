@@ -23,10 +23,13 @@ if( nil == luavsq.IconParameter )then
     ---
     -- アイコン設定ファイルである*.AICファイルを読み取ることで作成されるアイコン設定を表すクラス
     -- アイコン設定ファイルを使用するIconDynamicsHandle、NoteHeadHandle、およびVibratoHandleの基底クラスとなっている
+    -- @class table
+    -- @name luavsq.IconParameter
     luavsq.IconParameter = {};
 
     ---
     -- 初期化を行う
+    -- @return (luavsq.IconParameter)
     function luavsq.IconParameter.new()
         local this = {};
 

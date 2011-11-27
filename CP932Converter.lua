@@ -20,6 +20,8 @@ if( nil == luavsq.CP932Converter )then
 
     ---
     -- UTF8 から CP932 への文字コード変換ユーティリティ
+    -- @class table
+    -- @name luavsq.CP932Converter
     luavsq.CP932Converter = {};
 
     ---

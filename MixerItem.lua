@@ -20,6 +20,8 @@ if( nil == luavsq.MixerItem )then
 
     ---
     -- Mixer の slave 要素に格納されるアイテムを表すクラス
+    -- @class table
+    -- @name luavsq.MixerItem
     luavsq.MixerItem = {};
 
     ---

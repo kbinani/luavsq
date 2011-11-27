@@ -20,10 +20,13 @@ if( nil == luavsq.ByteArrayOutputStream )then
 
     ---
     -- データがバイト配列に書き込まれるストリームの実装
+    -- @class table
+    -- @name luavsq.ByteArrayOutputStream
     luavsq.ByteArrayOutputStream = {};
 
     ---
     -- 初期化を行う
+    -- @return (luavsq.ByteArrayOutputStream)
     function luavsq.ByteArrayOutputStream.new()
         local this = {};
         this._pointer = -1;

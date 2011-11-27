@@ -21,7 +21,7 @@ if( nil == luavsq.TimesigTable )then
     ---
     -- 拍子情報を格納したテーブルを表すクラス
     -- @class table
-    -- @name TimesigTable
+    -- @name luavsq.TimesigTable
     luavsq.TimesigTable = {};
 
     ---

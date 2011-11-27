@@ -20,12 +20,20 @@ if( nil == luavsq.IdTypeEnum )then
 
     ---
     -- Id の種類を表現する列挙子
-    luavsq.IdTypeEnum = {};
+    -- @class table
+    -- @name luavsq.IdTypeEnum
+    -- @field Singer 歌手
+    -- @field Anote 歌詞
+    -- @field Aicon アイコン
+    -- @field Unknown 不明
+    luavsq.IdTypeEnum = {
 
-    luavsq.IdTypeEnum.Singer = 0;
-    luavsq.IdTypeEnum.Anote = 1;
-    luavsq.IdTypeEnum.Aicon = 2;
-    luavsq.IdTypeEnum.Unknown = -1;
+        Singer = 0,
+        Anote = 1,
+        Aicon = 2,
+        Unknown = -1
+
+    };
 
     ---
     -- 文字列に変換する

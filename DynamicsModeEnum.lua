@@ -21,7 +21,9 @@ if( nil == luavsq.DynamicsModeEnum )then
     ---
     -- VOCALOID1における、ダイナミクスモードを表す定数を格納するための列挙子
     -- @class table
-    -- @name DynamicsModeEnum
+    -- @name luavsq.DynamicsModeEnum
+    -- @field Standard DYNカーブが非表示になるモード(デフォルト)
+    -- @field Expert DYNカーブが表示されるモード(エキスパートモード)
     luavsq.DynamicsModeEnum = {
         ---
         -- DYNカーブが非表示になるモード(デフォルト)

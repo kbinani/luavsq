@@ -20,6 +20,8 @@ if( nil == luavsq.Event )then
 
     ---
     -- VSQ ファイルのメタテキスト内に記述されるイベントを表すクラス
+    -- @class table
+    -- @name luavsq.Event
     luavsq.Event = {};
 
     ---
@@ -27,6 +29,7 @@ if( nil == luavsq.Event )then
     -- @see this:_init_1
     -- @see this:_init_0
     -- @see this:_init_2
+    -- @return (luavsq.Event)
     function luavsq.Event.new( ... )
         local arguments = { ... };
         local this = {};

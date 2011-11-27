@@ -20,6 +20,8 @@ if( nil == luavsq.NoteHeadHandle )then
 
     ---
     -- アタックハンドル
+    -- @class table
+    -- @name luavsq.NoteHeadHandle
     luavsq.NoteHeadHandle = {};
 
     ---

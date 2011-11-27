@@ -20,11 +20,14 @@ if( nil == luavsq.Handle )then
 
     ---
     -- ハンドルを取り扱います。ハンドルにはLyricHandle、VibratoHandle、SingerHandleおよびNoteHeadHandleがある
+    -- @class table
+    -- @name luavsq.Handle
     luavsq.Handle = {};
 
     ---
     -- 初期化を行う
     -- @see this:_init_3
+    -- @return (luavsq.Handle)
     function luavsq.Handle.new( ... )
         local arguments = { ... };
         local this = {};

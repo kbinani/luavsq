@@ -31,6 +31,7 @@ if( nil == luavsq.Track.NoteEventIterator )then
     ---
     -- 初期化を行う
     -- @param list (luavsq.EventList) 反復子の元になるリスト
+    -- @return (luavsq.Track.NoteEventIterator)
     function luavsq.Track.NoteEventIterator.new( list )
         local this = {};
         this._list = list;

@@ -21,14 +21,14 @@ if( nil == luavsq.NrpnEvent )then
     ---
     -- NRPN イベントを表すクラス
     -- @class table
-    -- @name NrpnEvent
+    -- @name luavsq.NrpnEvent
     luavsq.NrpnEvent = {};
 
     ---
     -- 初期化を行う
-    -- @return (luavsq.NrpnEvent)
     -- @see luavsq.NrpnEvent:_init_3
     -- @see luavsq.NrpnEvent:_init_4
+    -- @return (luavsq.NrpnEvent)
     function luavsq.NrpnEvent.new( ... )
         local this = {};
         local arguments = { ... };

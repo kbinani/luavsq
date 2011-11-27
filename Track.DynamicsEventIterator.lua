@@ -31,6 +31,7 @@ if( nil == luavsq.Track.DynamicsEventIterator )then
     ---
     -- 初期化を行う
     -- @param list (luavsq.EventList) 反復子の元になるリスト
+    -- @return (luavsq.Track.DynamicsEventIterator)
     function luavsq.Track.DynamicsEventIterator.new( list )
         local this = {};
         this._list = list;

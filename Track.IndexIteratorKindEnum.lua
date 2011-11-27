@@ -26,12 +26,16 @@ if( nil == luavsq.Track.IndexIteratorKindEnum )then
     -- IndexIterator の反復子の種類を表す列挙子
     -- @class table
     -- @name luavsq.Track.IndexIteratorKindEnum
-    luavsq.Track.IndexIteratorKindEnum = {};
-
-    luavsq.Track.IndexIteratorKindEnum.SINGER = 1;
-    luavsq.Track.IndexIteratorKindEnum.NOTE = 2;
-    luavsq.Track.IndexIteratorKindEnum.CRESCEND = 4;
-    luavsq.Track.IndexIteratorKindEnum.DECRESCEND = 8;
-    luavsq.Track.IndexIteratorKindEnum.DYNAFF = 16;
-
+    -- @field SINGER 歌手イベント
+    -- @field NOTE 音符イベント
+    -- @field CRESCEND クレッシェンドイベント
+    -- @field DECRESCEND デクレッシェンドイベント
+    -- @field DYNAFF 強弱記号イベント
+    luavsq.Track.IndexIteratorKindEnum = {
+        SINGER = 1,
+        NOTE = 2,
+        CRESCEND = 4,
+        DECRESCEND = 8,
+        DYNAFF = 16,
+    }
 end

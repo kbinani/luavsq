@@ -21,12 +21,12 @@ if( nil == luavsq.TempoTable )then
     ---
     -- テンポ情報を格納したテーブルを表すクラス
     -- @class table
-    -- @name TempoTable
+    -- @name luavsq.TempoTable
     luavsq.TempoTable = {};
 
     ---
     -- 初期化を行う
-    -- @return (TempoTable)
+    -- @return (luavsq.TempoTable)
     function luavsq.TempoTable.new()
         local this = {};
         this._array = luavsq.List.new();

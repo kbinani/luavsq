@@ -31,6 +31,7 @@ if( nil == luavsq.VibratoBPList )then
     -- 初期化を行う
     -- @see luavsq.VibratoBPList:_init_3
     -- @see luavsq.VibratoBPList:_init_2
+    -- @return (luavsq.VibratoBPList)
     function luavsq.VibratoBPList.new( ... )
         local arguments = { ... };
         local this = {};

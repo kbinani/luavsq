@@ -21,13 +21,13 @@ if( nil == luavsq.TempoTableItem )then
     ---
     -- テンポ情報テーブル内の要素を表現するクラス
     -- @class table
-    -- @name TempoTableItem
+    -- @name luavsq.TempoTableItem
     luavsq.TempoTableItem = {};
 
     ---
     -- 初期化を行う
-    -- @see TempoTable:_init_3
-    -- @return (TempoTableItem)
+    -- @see luavsq.TempoTable:_init_3
+    -- @return (luavsq.TempoTableItem)
     function luavsq.TempoTableItem.new( ... )
         local this = {};
         local arguments = { ... };

@@ -23,13 +23,13 @@ if( nil == luavsq.Lyric )then
 
     ---
     -- 歌詞ハンドルに格納する歌詞情報を保持するクラス
+    -- @class table
+    -- @name luavsq.Lyric
     luavsq.Lyric = {};
 
     ---
     -- 初期化を行う
-    -- @return (luavsq.Lyric) 歌詞オブジェクト
-    -- overload1
-    -- overload2
+    -- @return (luavsq.Lyric)
     function luavsq.Lyric.new( ... )
         local arguments = { ... }
         local this = {};
