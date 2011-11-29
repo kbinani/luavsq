@@ -12,19 +12,21 @@
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 ]]
 
-module( "luavsq.EventList" );
+local table = table;
+
+module( "luavsq" );
 
 ---
 -- イベントリストのアイテムを順に返す反復子
 -- @class table
 -- @name EventList.Iterator
-Iterator = {};
+EventList.Iterator = {};
 
 ---
 -- 初期化を行う
 -- @param list (EventList) 反復子の元になるリスト
 -- @return (EventList.Iterator)
-function Iterator.new( list )
+function EventList.Iterator.new( list )
     local this = {};
     this._list = list;
     this._pos = -1;

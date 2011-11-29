@@ -4,6 +4,16 @@ import java.util.regex.*;
 
 class SourceFilePacker implements Comparator<File>
 {
+    private static String[] STD_FUNCTIONS = {
+        "math",
+        "pairs",
+        "setmetatable",
+        "string",
+        "table",
+        "tonumber",
+        "type",
+    };
+
     public static void main( String[] args )
     {
         File directory = new File( "../" );
@@ -67,20 +77,19 @@ class SourceFilePacker implements Comparator<File>
             "-- To generate this file, just execute the command below:",
             "--     $cd tool && make",
             "-- See tool/makefile and tool/SourceFilePacker.java.",
-            "",
-            "local math         = math;",
-            "local setmetatable = setmetatable;",
-            "local string       = string;",
-            "local table        = table;",
-            "local tonumber     = tonumber;",
-            "local type         = type;",
-            "",
-            "module( \"luavsq\" );",
         };
         for( String line : license ){
             writer.write( line );
             writer.newLine();
         }
+        writer.newLine();
+        for( String f : STD_FUNCTIONS ){
+            writer.write( "local " + f + " = " + f + ";" );
+            writer.newLine();
+        }
+        writer.newLine();
+        writer.write( "module( \"luavsq\" );" );
+        writer.newLine();
     }
 
     private static void concatFile( String path, BufferedWriter writer )
@@ -176,26 +185,20 @@ class SourceFilePacker implements Comparator<File>
 
     private static String extract( String source, String className )
     {
-        String patternString = "if\\( nil == luavsq\\." + className + " \\)then\n(.*)end";
-        Pattern pattern = Pattern.compile( patternString, Pattern.DOTALL );
-        Matcher matcher = pattern.matcher( source );
-        if( matcher.find() ){
-            source = matcher.group( 1 );
-
-            // インデントを1つ解除
-            pattern = Pattern.compile( "^[ ]{4}", Pattern.MULTILINE );
-            matcher = pattern.matcher( source );
-            source = matcher.replaceAll( "" );
-        }
+        Pattern pattern = null;
+        Matcher matcher = null;
 
         pattern = Pattern.compile( "^module.*$", Pattern.MULTILINE );
         matcher = pattern.matcher( source );
         source = matcher.replaceAll( "" );
 
-        pattern = Pattern.compile( "luavsq[.]", Pattern.MULTILINE );
-        matcher = pattern.matcher( source );
-        source = matcher.replaceAll( "" );
-        
+        for( String f : STD_FUNCTIONS ){
+            String p = "^local[ ]*" + f + "[ ]?=[ ]?" + f + "[ ]?;$";
+            pattern = Pattern.compile( p, Pattern.MULTILINE );
+            matcher = pattern.matcher( source );
+            source = matcher.replaceAll( "" );
+        }
+
         return source;
     }
 

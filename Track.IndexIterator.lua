@@ -12,7 +12,11 @@
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 ]]
 
-module( "luavsq.Track" );
+module( "luavsq" );
+
+if( nil == Track )then
+    Track = {};
+end
 
 ---
 -- イベントリスト中の、インデックスを順に返す反復子

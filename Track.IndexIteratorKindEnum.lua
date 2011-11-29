@@ -12,7 +12,11 @@
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 ]]
 
-module( "luavsq.Track" );
+module( "luavsq" );
+
+if( nil == Track )then
+    Track = {};
+end
 
 ---
 -- IndexIterator の反復子の種類を表す列挙子

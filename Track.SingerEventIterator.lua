@@ -14,6 +14,10 @@
 
 module( "luavsq" );
 
+if( nil == Track )then
+    Track = {};
+end
+
 ---
 -- イベントリスト中の、歌手変更イベントを順に返す反復子
 -- @class table

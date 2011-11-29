@@ -131,3 +131,32 @@ function testStringToArray()
     assert_equal( string.byte( "b" ), actual[2] );
     assert_equal( string.byte( "c" ), actual[3] );
 end
+
+function testDump()
+    local tmpFile = os.tmpname();
+    local fp = io.open( tmpFile, "w" );
+
+    local f = { 3, 4 };
+    local t = { 1, "a", { ["b"] = fp }, { ["c"] = fp }, f, f };
+
+    local actual = luavsq.Util.dump( t );
+
+    local expected =
+        "table(6){\n" ..
+        "    1 => 1,\n" ..
+        "    2 => 'a',\n" ..
+        "    3 => table(1){\n" ..
+        "        'b' => userdata,\n" ..
+        "    },\n" ..
+        "    4 => table(1){\n" ..
+        "        'c' => userdata,\n" ..
+        "    },\n" ..
+        "    5 => table(2){\n" ..
+        "        1 => 3,\n" ..
+        "        2 => 4,\n" ..
+        "    },\n" ..
+        "    6 => (cycromatic reference),\n" ..
+        "},";
+
+    assert_equal( expected, actual );
+end

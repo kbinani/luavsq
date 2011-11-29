@@ -12,6 +12,8 @@
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 ]]
 
+local type = type;
+
 module( "luavsq" );
 
 ---

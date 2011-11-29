@@ -12,6 +12,12 @@
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 ]]
 
+local table = table;
+local math = math;
+local type = type;
+local string = string;
+local pairs = pairs;
+
 module( "luavsq" );
 
 ---
@@ -276,4 +282,72 @@ function Util.stringToArray( string_ )
         table.insert( result, string.byte( string_:sub( i, i ) ) );
     end
     return result;
+end
+
+---
+-- 変数の中身をダンプする
+-- @param value (?) ダンプする変数
+-- @return (string) 変数のダンプ
+function Util.dump( value )
+    return Util._dump( value, 0, {} );
+end
+
+---
+-- @access private
+-- @param value (?) ダンプする変数
+-- @param depth (integer) ダンプのネスト深さ
+-- @param state (table) ダンプ済みオブジェクトのテーブル
+function Util._dump( value, depth, state )
+    local indent = string.rep( " ", 4 * depth );
+    if( value == nil )then
+        return indent .. "nil,";
+    elseif( type( value ) == "boolean" )then
+        if( value )then
+            return indent .. "true,";
+        else
+            return indent .. "false,";
+        end
+    elseif( type( value ) == "string" )then
+        return indent .. "'" .. value .. "',";
+    elseif( type( value ) == "function" )then
+        return indent .. "function,";
+    elseif( type( value ) == "userdata" )then
+        return indent .. "userdata,";
+    elseif( type( value ) ~= "table" )then
+        return indent .. value .. ",";
+    else
+        local i, s;
+        local found = false;
+        for i, s in pairs( state ) do
+            if( s == value )then
+                found = true;
+                break;
+            end
+        end
+        if( found )then
+            return indent .. "(cycromatic reference),";
+        else
+            table.insert( state, value );
+            local nextDepth = depth + 1;
+            local str = "";
+            local count = 0;
+            for k, v in pairs( value ) do
+                local dumped = Util._dump( v, nextDepth, state );
+                while( dumped:len() > 0 and dumped:sub( 1, 1 ) == " " )do
+                    dumped = dumped:sub( 2 );
+                end
+                local key;
+                if( type( k ) == "string" )then
+                    key = "'" .. k .. "'";
+                else
+                    key = "" .. k;
+                end
+                str = str .. indent .. "    " .. key .. " => " .. dumped .. "\n";
+                count = count + 1;
+            end
+            local result = indent .. "table(" .. count .. "){\n";
+            result = result .. str;
+            return result .. indent .. "},";
+        end
+    end
 end

@@ -12,6 +12,9 @@
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 ]]
 
+local string = string;
+local tonumber = tonumber;
+
 module( "luavsq" );
 
 ---

@@ -12,19 +12,19 @@
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 ]]
 
-module( "luavsq.BPList" );
+module( "luavsq" );
 
 ---
 -- コントロールカーブのデータ点の Tick 単位の時刻を順に返す反復子
 -- @class table
 -- @name BPList.KeyClockIterator
-KeyClockIterator = {};
+BPList.KeyClockIterator = {};
 
 ---
 -- コンストラクタ
 -- @see BPList.KeyClockIterator:_init_1
 -- @return (BPList.KeyClockIterator)
-function KeyClockIterator.new( ... )
+function BPList.KeyClockIterator.new( ... )
     local this = {};
     local arguments = { ... };
     this._list = nil;

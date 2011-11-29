@@ -12,19 +12,23 @@
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 ]]
 
-module( "luavsq.Track" );
+module( "luavsq" );
+
+if( nil == Track )then
+    Track = {};
+end
 
 ---
 -- イベントリスト中の、ダイナミクスイベントを順に返す反復子
 -- @class table
 -- @name Track.DynamicsEventIterator
-DynamicsEventIterator = {};
+Track.DynamicsEventIterator = {};
 
 ---
 -- 初期化を行う
 -- @param list (EventList) 反復子の元になるリスト
 -- @return (Track.DynamicsEventIterator)
-function DynamicsEventIterator.new( list )
+function Track.DynamicsEventIterator.new( list )
     local this = {};
     this._list = list;
     this._pos = 0;
