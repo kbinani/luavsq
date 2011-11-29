@@ -12,37 +12,31 @@
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 ]]
 
-if( nil == luavsq )then
-    luavsq = {};
-end
+module( "luavsq" );
 
-if( nil == luavsq.BP )then
+---
+-- コントロールカーブのデータ点を表現するクラス
+-- @class table
+-- @name BP
+BP = {};
+
+---
+-- コンストラクタ
+-- @param _value (integer) データ点の値
+-- @param _id (integer) データ点のユニークID
+-- @return (BP) データ点のオブジェクト
+function BP.new( _value, _id )
+    local this = {};
+    this.value = _value;
+    this.id = _id;
 
     ---
-    -- コントロールカーブのデータ点を表現するクラス
-    -- @class table
-    -- @name luavsq.BP
-    luavsq.BP = {};
-
-    ---
-    -- コンストラクタ
-    -- @param _value (integer) データ点の値
-    -- @param _id (integer) データ点のユニークID
-    -- @return (luavsq.BP) データ点のオブジェクト
-    function luavsq.BP.new( _value, _id )
-        local this = {};
-        this.value = _value;
-        this.id = _id;
-
-        ---
-        -- コピーを作成する
-        -- @return (luavsq.BP) このインスタンスのコピー
-        -- @name luavsq.BP:clone
-        function this:clone()
-            return luavsq.BP.new( self.value, self.id );
-        end
-
-        return this;
+    -- コピーを作成する
+    -- @return (BP) このインスタンスのコピー
+    -- @name BP:clone
+    function this:clone()
+        return BP.new( self.value, self.id );
     end
 
+    return this;
 end

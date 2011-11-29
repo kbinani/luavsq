@@ -12,93 +12,85 @@
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 ]]
 
--- requires( ArticulationTypeEnum.lua )
+module( "luavsq" );
 
-if( nil == luavsq )then
-    luavsq = {};
-end
+---
+-- アイコン設定ファイルである*.AICファイルを読み取ることで作成されるアイコン設定を表すクラス
+-- アイコン設定ファイルを使用するIconDynamicsHandle、NoteHeadHandle、およびVibratoHandleの基底クラスとなっている
+-- @class table
+-- @name IconParameter
+IconParameter = {};
 
-if( nil == luavsq.IconParameter )then
+---
+-- 初期化を行う
+-- @return (IconParameter)
+function IconParameter.new()
+    local this = {};
 
     ---
-    -- アイコン設定ファイルである*.AICファイルを読み取ることで作成されるアイコン設定を表すクラス
-    -- アイコン設定ファイルを使用するIconDynamicsHandle、NoteHeadHandle、およびVibratoHandleの基底クラスとなっている
-    -- @class table
-    -- @name luavsq.IconParameter
-    luavsq.IconParameter = {};
+    -- アイコン設定の種類
+    -- @var (ArticulationTypeEnum)
+    this.articulation = ArticulationTypeEnum.Dynaff;
 
     ---
-    -- 初期化を行う
-    -- @return (luavsq.IconParameter)
-    function luavsq.IconParameter.new()
-        local this = {};
+    -- アイコンのボタンに使用される画像ファイルへの相対パス
+    this.button = "";
 
-        ---
-        -- アイコン設定の種類
-        -- @var (luavsq.ArticulationTypeEnum)
-        this.articulation = luavsq.ArticulationTypeEnum.Dynaff;
+    ---
+    -- キャプション
+    this.caption = "";
 
-        ---
-        -- アイコンのボタンに使用される画像ファイルへの相対パス
-        this.button = "";
+    ---
+    -- ゲートタイム長さ
+    this.length = 0;
 
-        ---
-        -- キャプション
-        this.caption = "";
+    ---
+    -- ビブラート深さの開始値
+    this.startDepth = 64;
 
-        ---
-        -- ゲートタイム長さ
-        this.length = 0;
+    ---
+    -- ビブラート深さの終了値
+    this.endDepth = 64;
 
-        ---
-        -- ビブラート深さの開始値
-        this.startDepth = 64;
+    ---
+    -- ビブラート速さの開始値
+    this.startRate = 64;
 
-        ---
-        -- ビブラート深さの終了値
-        this.endDepth = 64;
+    ---
+    -- ビブラート速さの終了値
+    this.endRate = 64;
 
-        ---
-        -- ビブラート速さの開始値
-        this.startRate = 64;
+    this.startDyn = 64;
+    this.endDyn = 64;
+    this.duration = 1;
+    this.depth = 64;
+    this.dynBP = nil;
+    this.depthBP = nil;
+    this.rateBP = nil;
+    this.buttonImageFullPath = "";
 
-        ---
-        -- ビブラート速さの終了値
-        this.endRate = 64;
+    --TODO: AIC ファイルからのコンストラクタを追加する
 
-        this.startDyn = 64;
-        this.endDyn = 64;
-        this.duration = 1;
-        this.depth = 64;
-        this.dynBP = nil;
-        this.depthBP = nil;
-        this.rateBP = nil;
-        this.buttonImageFullPath = "";
-
-        --TODO: AIC ファイルからのコンストラクタを追加する
-
-        ---
-        -- ボタンテキストを取得する
-        -- @return (string) ボタンテキスト
-        function this:getButton()
-            return self.button;
-        end
-
-        ---
-        -- ボタン画像のパスを取得する
-        -- @return (string) ボタン画像のパス
-        function this:getButtonImageFullPath()
-            return self.buttonImageFullPath;
-        end
-
-        ---
-        -- ボタン画像のパスを設定する
-        -- @param value (string) ボタン画像のパス
-        function this:setButtonImageFullPath( value )
-            self.buttonImageFullPath = value;
-        end
-
-        return this;
+    ---
+    -- ボタンテキストを取得する
+    -- @return (string) ボタンテキスト
+    function this:getButton()
+        return self.button;
     end
 
+    ---
+    -- ボタン画像のパスを取得する
+    -- @return (string) ボタン画像のパス
+    function this:getButtonImageFullPath()
+        return self.buttonImageFullPath;
+    end
+
+    ---
+    -- ボタン画像のパスを設定する
+    -- @param value (string) ボタン画像のパス
+    function this:setButtonImageFullPath( value )
+        self.buttonImageFullPath = value;
+    end
+
+    return this;
 end

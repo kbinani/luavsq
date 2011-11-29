@@ -12,74 +12,70 @@
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 ]]
 
-if( nil == luavsq )then
-    luavsq = {};
-end
+module( "luavsq" );
 
-if( nil == luavsq.Event )then
+---
+-- VSQ ファイルのメタテキスト内に記述されるイベントを表すクラス
+-- @class table
+-- @name Event
+Event = {};
+
+---
+-- 初期化を行う
+-- @see this:_init_1
+-- @see this:_init_0
+-- @see this:_init_2
+-- @return (Event)
+function Event.new( ... )
+    local arguments = { ... };
+    local this = {};
+    this.tag = "";
 
     ---
-    -- VSQ ファイルのメタテキスト内に記述されるイベントを表すクラス
-    -- @class table
-    -- @name luavsq.Event
-    luavsq.Event = {};
+    -- 内部で使用するインスタンス固有のID
+    -- @var (integer)
+    this.internalId = -1;
+
+    this.clock = 0;
+
+    ---
+    -- @var (Id)
+    this.id = nil;
+
+    ---
+    -- @var (UstEvent)
+    this.ustEvent = nil;
 
     ---
     -- 初期化を行う
-    -- @see this:_init_1
-    -- @see this:_init_0
-    -- @see this:_init_2
-    -- @return (luavsq.Event)
-    function luavsq.Event.new( ... )
-        local arguments = { ... };
-        local this = {};
-        this.tag = "";
-
-        ---
-        -- 内部で使用するインスタンス固有のID
-        -- @var (integer)
-        this.internalId = -1;
-
-        this.clock = 0;
-
-        ---
-        -- @var (luavsq.Id)
-        this.id = nil;
-
-        ---
-        -- @var (luavsq.UstEvent)
-        this.ustEvent = nil;
-
-        ---
-        -- 初期化を行う
-        -- @param line (string) VSQ メタテキスト中の [EventList] セクション内のイベント宣言文字列(ex."480=ID#0001")
-        function this:_init_1( line )
-            local spl = luavsq.Util.split( line, '=' );
-            self.clock = tonumber( spl[1], 10 );
-            if( spl[2] == "EOS" )then
-                self.id = luavsq.Id.getEOS();
-            end
+    -- @param line (string) VSQ メタテキスト中の [EventList] セクション内のイベント宣言文字列(ex."480=ID#0001")
+    function this:_init_1( line )
+        local spl = Util.split( line, '=' );
+        self.clock = tonumber( spl[1], 10 );
+        if( spl[2] == "EOS" )then
+            self.id = Id.getEOS();
         end
+    end
 
-        ---
-        -- 初期化を行う。この初期化メソッドは末尾のイベントリストを表すインスタンスを初期化する
-        function this:_init_0()
-            self.clock = 0;
-            self.id = luavsq.Id.new();
-            self.internalId = 0;
-        end
+    ---
+    -- 初期化を行う。この初期化メソッドは末尾のイベントリストを表すインスタンスを初期化する
+    function this:_init_0()
+        self.clock = 0;
+        self.id = Id.new();
+        self.internalId = 0;
+    end
 
-        ---
-        -- 初期化を行う
-        -- @param clcok (integer) Tick 単位の時刻
-        -- @param id (luavsq.Id) イベントに付属する ID
-        function this:_init_2( clock, id )
-            self.clock = clock;
-            self.id = id;
-            self.internalId = 0;
-        end
+    ---
+    -- 初期化を行う
+    -- @param clcok (integer) Tick 単位の時刻
+    -- @param id (Id) イベントに付属する ID
+    function this:_init_2( clock, id )
+        self.clock = clock;
+        self.id = id;
+        self.internalId = 0;
+    end
 
-        --[[
+    --[[
         -- @param item [VsqEvent]
         -- @return [bool]
         function this:equals( item )
@@ -89,7 +85,7 @@ if( nil == luavsq.Event )then
             if( self.id.type ~= item.id.type )then
                 return false;
             end
-            if( self.id.type == luavsq.idType.Anote )then
+            if( self.id.type == idType.Anote )then
                 if( self.id.note ~= item.id.note )then
                     return false;
                 end
@@ -236,12 +232,12 @@ if( nil == luavsq.Event )then
                 if( self.id.vMeanNoteTransition ~= item.id.vMeanNoteTransition )then
                     return false;
                 end
-            elseif( self.id.type == luavsq.IdTypeEnum.Singer )then
+            elseif( self.id.type == IdTypeEnum.Singer )then
                 -- シンガーイベントの比較
                 if( self.id.singerHandle.program ~= item.id.singerHandle.program )then
                     return false;
                 end
-            elseif( self.id.type == luavsq.IdTypeEnum.Aicon )then
+            elseif( self.id.type == IdTypeEnum.Aicon )then
                 if( self.id.iconDynamicsHandle.iconId ~= item.id.iconDynamicsHandle.iconId )then
                     return false;
                 end
@@ -258,138 +254,136 @@ if( nil == luavsq.Event )then
             return true;
         end]]
 
-        ---
-        -- テキストストリームに書き出す
-        -- @see this:_write_1
-        -- @see this:_write_2
-        function this:write( ... )
-            local arguments = { ... };
-            if( #arguments == 1 )then
-                self:_write_1( arguments[1] );
-            elseif( #arguments == 2 )then
-                self:_write_2( arguments[1], arguments[2] );
-            end
-        end
-
-        ---
-        -- テキストストリームに書き出す
-        -- @param writer (luavsq.TextStream) 出力先
-        function this:_write_1( writer )
-            local def = { "Length",
-                        "Note#",
-                        "Dynamics",
-                        "PMBendDepth",
-                        "PMBendLength",
-                        "PMbPortamentoUse",
-                        "DEMdecGainRate",
-                        "DEMaccent" };
-            self:_write_2( writer, def );
-        end
-
-        ---
-        -- テキストストリームに書き出す
-        -- @param writer (luavsq.TextStream) 出力先
-        -- @param print_targets (table) 出力するアイテムのリスト
-        function this:_write_2( writer, print_targets )
-            writer:writeLine( "[ID#" .. string.format( "%04d", self.id.value ) .. "]" );
-            writer:writeLine( "Type=" .. luavsq.IdTypeEnum.toString( self.id.type ) );
-            if( self.id.type == luavsq.IdTypeEnum.Anote )then
-                if( luavsq.Util.searchArray( print_targets, "Length" ) >= 1 )then
-                    writer:writeLine( "Length=" .. self.id:getLength() );
-                end
-                if( luavsq.Util.searchArray( print_targets, "Note#" ) >= 1 )then
-                    writer:writeLine( "Note#=" .. self.id.note );
-                end
-                if( luavsq.Util.searchArray( print_targets, "Dynamics" ) >= 1 )then
-                    writer:writeLine( "Dynamics=" .. self.id.dynamics );
-                end
-                if( luavsq.Util.searchArray( print_targets, "PMBendDepth" ) >= 1 )then
-                    writer:writeLine( "PMBendDepth=" .. self.id.pmBendDepth );
-                end
-                if( luavsq.Util.searchArray( print_targets, "PMBendLength" ) >= 1 )then
-                    writer:writeLine( "PMBendLength=" .. self.id.pmBendLength );
-                end
-                if( luavsq.Util.searchArray( print_targets, "PMbPortamentoUse" ) >= 1 )then
-                    writer:writeLine( "PMbPortamentoUse=" .. self.id.pmbPortamentoUse );
-                end
-                if( luavsq.Util.searchArray( print_targets, "DEMdecGainRate" ) >= 1 )then
-                    writer:writeLine( "DEMdecGainRate=" .. self.id.demDecGainRate );
-                end
-                if( luavsq.Util.searchArray( print_targets, "DEMaccent" ) >= 1 )then
-                    writer:writeLine( "DEMaccent=" .. self.id.demAccent );
-                end
-                if( luavsq.Util.searchArray( print_targets, "PreUtterance" ) >= 1 )then
-                    writer:writeLine( "PreUtterance=" .. self.ustEvent.preUtterance );
-                end
-                if( luavsq.Util.searchArray( print_targets, "VoiceOverlap" ) >= 1 )then
-                    writer:writeLine( "VoiceOverlap=" .. self.ustEvent.voiceOverlap );
-                end
-                if( self.id.lyricHandle ~= nil )then
-                    writer:writeLine( "LyricHandle=h#" .. string.format( "%04d", self.id.lyricHandleIndex ) );
-                end
-                if( self.id.vibratoHandle ~= nil )then
-                    writer:writeLine( "VibratoHandle=h#" .. string.format( "%04d", self.id.vibratoHandleIndex ) );
-                    writer:writeLine( "VibratoDelay=" .. self.id.vibratoDelay );
-                end
-                if( self.id.noteHeadHandle ~= nil )then
-                    writer:writeLine( "NoteHeadHandle=h#" .. string.format( "%04d", self.id.noteHeadHandleIndex ) );
-                end
-            elseif( self.id.type == luavsq.IdTypeEnum.Singer )then
-                writer:writeLine( "IconHandle=h#" .. string.format( "%04d", self.id.singerHandleIndex ) );
-            elseif( self.id.type == luavsq.IdTypeEnum.Aicon )then
-                writer:writeLine( "IconHandle=h#" .. string.format( "%04d", self.id.singerHandleIndex ) );
-                writer:writeLine( "Note#=" .. self.id.note );
-            end
-        end
-
-        ---
-        -- コピーを作成する
-        -- @return (luavsq.Event) このインスタンスのコピー
-        function this:clone()
-            local ret = luavsq.Event.new( self.clock, self.id:clone() );
-            ret.internalId = self.internalId;
-            if( self.ustEvent ~= nil )then
-                ret.ustEvent = self.ustEvent:clone();
-            end
-            ret.tag = self.tag;
-            return ret;
-        end
-
-        ---
-        -- 順序を比較する
-        -- @param item (luavsq.Event) 比較対象のアイテム
-        -- @return (integer) このインスタンスが比較対象よりも小さい場合は負の整数、等しい場合は 0、大きい場合は正の整数を返す
-        function this:compareTo( item )
-            local ret = self.clock - item.clock;
-            if( ret == 0 )then
-                if( self.id ~= nil and item.id ~= nil )then
-                    return self.id.type - item.id.type;
-                else
-                    return ret;
-                end
-            else
-                return ret;
-            end
-        end
-
-        if( #arguments == 0 )then
-            this:_init_0();
-        elseif( #arguments == 1 )then
-            this:_init_1( arguments[1] );
+    ---
+    -- テキストストリームに書き出す
+    -- @see this:_write_1
+    -- @see this:_write_2
+    function this:write( ... )
+        local arguments = { ... };
+        if( #arguments == 1 )then
+            self:_write_1( arguments[1] );
         elseif( #arguments == 2 )then
-            this:_init_2( arguments[1], arguments[2] );
+            self:_write_2( arguments[1], arguments[2] );
         end
-
-        return this;
     end
 
     ---
-    -- 2 つの Event を比較する
-    -- @param a (luavsq.Event) 比較対象のオブジェクト
-    -- @param b (luavsq.Event) 比較対象のオブジェクト
-    -- @return (boolean) a が b よりも小さい場合は true、そうでない場合は false を返す
-    function luavsq.Event.compare( a, b )
-        return (a:compareTo( b ) < 0);
+    -- テキストストリームに書き出す
+    -- @param writer (TextStream) 出力先
+    function this:_write_1( writer )
+        local def = { "Length",
+                    "Note#",
+                    "Dynamics",
+                    "PMBendDepth",
+                    "PMBendLength",
+                    "PMbPortamentoUse",
+                    "DEMdecGainRate",
+                    "DEMaccent" };
+        self:_write_2( writer, def );
     end
 
+    ---
+    -- テキストストリームに書き出す
+    -- @param writer (TextStream) 出力先
+    -- @param print_targets (table) 出力するアイテムのリスト
+    function this:_write_2( writer, print_targets )
+        writer:writeLine( "[ID#" .. string.format( "%04d", self.id.value ) .. "]" );
+        writer:writeLine( "Type=" .. IdTypeEnum.toString( self.id.type ) );
+        if( self.id.type == IdTypeEnum.Anote )then
+            if( Util.searchArray( print_targets, "Length" ) >= 1 )then
+                writer:writeLine( "Length=" .. self.id:getLength() );
+            end
+            if( Util.searchArray( print_targets, "Note#" ) >= 1 )then
+                writer:writeLine( "Note#=" .. self.id.note );
+            end
+            if( Util.searchArray( print_targets, "Dynamics" ) >= 1 )then
+                writer:writeLine( "Dynamics=" .. self.id.dynamics );
+            end
+            if( Util.searchArray( print_targets, "PMBendDepth" ) >= 1 )then
+                writer:writeLine( "PMBendDepth=" .. self.id.pmBendDepth );
+            end
+            if( Util.searchArray( print_targets, "PMBendLength" ) >= 1 )then
+                writer:writeLine( "PMBendLength=" .. self.id.pmBendLength );
+            end
+            if( Util.searchArray( print_targets, "PMbPortamentoUse" ) >= 1 )then
+                writer:writeLine( "PMbPortamentoUse=" .. self.id.pmbPortamentoUse );
+            end
+            if( Util.searchArray( print_targets, "DEMdecGainRate" ) >= 1 )then
+                writer:writeLine( "DEMdecGainRate=" .. self.id.demDecGainRate );
+            end
+            if( Util.searchArray( print_targets, "DEMaccent" ) >= 1 )then
+                writer:writeLine( "DEMaccent=" .. self.id.demAccent );
+            end
+            if( Util.searchArray( print_targets, "PreUtterance" ) >= 1 )then
+                writer:writeLine( "PreUtterance=" .. self.ustEvent.preUtterance );
+            end
+            if( Util.searchArray( print_targets, "VoiceOverlap" ) >= 1 )then
+                writer:writeLine( "VoiceOverlap=" .. self.ustEvent.voiceOverlap );
+            end
+            if( self.id.lyricHandle ~= nil )then
+                writer:writeLine( "LyricHandle=h#" .. string.format( "%04d", self.id.lyricHandleIndex ) );
+            end
+            if( self.id.vibratoHandle ~= nil )then
+                writer:writeLine( "VibratoHandle=h#" .. string.format( "%04d", self.id.vibratoHandleIndex ) );
+                writer:writeLine( "VibratoDelay=" .. self.id.vibratoDelay );
+            end
+            if( self.id.noteHeadHandle ~= nil )then
+                writer:writeLine( "NoteHeadHandle=h#" .. string.format( "%04d", self.id.noteHeadHandleIndex ) );
+            end
+        elseif( self.id.type == IdTypeEnum.Singer )then
+            writer:writeLine( "IconHandle=h#" .. string.format( "%04d", self.id.singerHandleIndex ) );
+        elseif( self.id.type == IdTypeEnum.Aicon )then
+            writer:writeLine( "IconHandle=h#" .. string.format( "%04d", self.id.singerHandleIndex ) );
+            writer:writeLine( "Note#=" .. self.id.note );
+        end
+    end
+
+    ---
+    -- コピーを作成する
+    -- @return (Event) このインスタンスのコピー
+    function this:clone()
+        local ret = Event.new( self.clock, self.id:clone() );
+        ret.internalId = self.internalId;
+        if( self.ustEvent ~= nil )then
+            ret.ustEvent = self.ustEvent:clone();
+        end
+        ret.tag = self.tag;
+        return ret;
+    end
+
+    ---
+    -- 順序を比較する
+    -- @param item (Event) 比較対象のアイテム
+    -- @return (integer) このインスタンスが比較対象よりも小さい場合は負の整数、等しい場合は 0、大きい場合は正の整数を返す
+    function this:compareTo( item )
+        local ret = self.clock - item.clock;
+        if( ret == 0 )then
+            if( self.id ~= nil and item.id ~= nil )then
+                return self.id.type - item.id.type;
+            else
+                return ret;
+            end
+        else
+            return ret;
+        end
+    end
+
+    if( #arguments == 0 )then
+        this:_init_0();
+    elseif( #arguments == 1 )then
+        this:_init_1( arguments[1] );
+    elseif( #arguments == 2 )then
+        this:_init_2( arguments[1], arguments[2] );
+    end
+
+    return this;
+end
+
+---
+-- 2 つの Event を比較する
+-- @param a (Event) 比較対象のオブジェクト
+-- @param b (Event) 比較対象のオブジェクト
+-- @return (boolean) a が b よりも小さい場合は true、そうでない場合は false を返す
+function Event.compare( a, b )
+    return (a:compareTo( b ) < 0);
 end

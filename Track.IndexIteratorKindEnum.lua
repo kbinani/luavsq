@@ -12,30 +12,21 @@
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 ]]
 
-if( nil == luavsq )then
-    luavsq = {};
-end
+module( "luavsq.Track" );
 
-if( nil == luavsq.Track )then
-    luavsq.Track = {};
-end
-
-if( nil == luavsq.Track.IndexIteratorKindEnum )then
-
-    ---
-    -- IndexIterator の反復子の種類を表す列挙子
-    -- @class table
-    -- @name luavsq.Track.IndexIteratorKindEnum
-    -- @field SINGER 歌手イベント
-    -- @field NOTE 音符イベント
-    -- @field CRESCEND クレッシェンドイベント
-    -- @field DECRESCEND デクレッシェンドイベント
-    -- @field DYNAFF 強弱記号イベント
-    luavsq.Track.IndexIteratorKindEnum = {
-        SINGER = 1,
-        NOTE = 2,
-        CRESCEND = 4,
-        DECRESCEND = 8,
-        DYNAFF = 16,
-    }
-end
+---
+-- IndexIterator の反復子の種類を表す列挙子
+-- @class table
+-- @name Track.IndexIteratorKindEnum
+-- @field SINGER 歌手イベント
+-- @field NOTE 音符イベント
+-- @field CRESCEND クレッシェンドイベント
+-- @field DECRESCEND デクレッシェンドイベント
+-- @field DYNAFF 強弱記号イベント
+Track.IndexIteratorKindEnum = {
+    SINGER = 1,
+    NOTE = 2,
+    CRESCEND = 4,
+    DECRESCEND = 8,
+    DYNAFF = 16,
+}

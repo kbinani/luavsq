@@ -12,29 +12,23 @@
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 ]]
 
-if( nil == luavsq )then
-    luavsq = {};
-end
+module( "luavsq" );
 
-if( nil == luavsq.HandleTypeEnum )then
+---
+-- ハンドルのタイプを表現する列挙子
+-- @class table
+-- @name HandleTypeEnum
+-- @field Lyric 歌詞ハンドル
+-- @field Vibrato ビブラートハンドル
+-- @field Singer 歌手ハンドル
+-- @field NoteHead アタックハンドル
+-- @field Dynamics Dynamics ハンドル
+HandleTypeEnum = {
 
-    ---
-    -- ハンドルのタイプを表現する列挙子
-    -- @class table
-    -- @name luavsq.HandleTypeEnum
-    -- @field Lyric 歌詞ハンドル
-    -- @field Vibrato ビブラートハンドル
-    -- @field Singer 歌手ハンドル
-    -- @field NoteHead アタックハンドル
-    -- @field Dynamics Dynamics ハンドル
-    luavsq.HandleTypeEnum = {
+    Lyric = 0,
+    Vibrato = 1,
+    Singer = 2,
+    NoteHead = 3,
+    Dynamics = 4
 
-        Lyric = 0,
-        Vibrato = 1,
-        Singer = 2,
-        NoteHead = 3,
-        Dynamics = 4
-
-    };
-
-end
+};

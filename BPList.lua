@@ -12,122 +12,118 @@
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 ]]
 
-if( nil == luavsq )then
-    luavsq = {};
-end
+module( "luavsq" );
 
-if( nil == luavsq.BPList )then
+---
+-- コントロールカーブのデータ点リストを表すクラス
+-- @class table
+-- @name BPList
+BPList = {};
+
+---
+-- コンストラクタ
+-- @see this:_init_4
+-- @return (BPList)
+function BPList.new( ... )
+    local this = {};
+    local arguments = { ... };
+    this.clocks = nil;
+    this.items = nil;
+    this._length = 0; -- clocks, itemsに入っているアイテムの個数
+    this.defaultValue = 0;
+    this.maxValue = 127;
+    this.minValue = 0;
+    this.maxId = 0;
+    this.name = "";
 
     ---
-    -- コントロールカーブのデータ点リストを表すクラス
-    -- @class table
-    -- @name luavsq.BPList
-    luavsq.BPList = {};
+    -- 初期化を行う
+    -- @param name (string) コントロールカーブの名前
+    -- @param defaultValue (integer) コントロールカーブのデフォルト値
+    -- @param minimum (integer) コントロールカーブの最小値
+    -- @param maximum (integer) コントロールカーブの最大値
+    function this:_init_4( name, defaultValue, minimum, maximum )
+        self.name = name;
+        self.defaultValue = defaultValue;
+        self.maxValue = maximum;
+        self.minValue = minimum;
+        self.maxId = 0;
+    end
 
     ---
-    -- コンストラクタ
-    -- @see this:_init_4
-    -- @return (luavsq.BPList)
-    function luavsq.BPList.new( ... )
-        local this = {};
-        local arguments = { ... };
-        this.clocks = nil;
-        this.items = nil;
-        this._length = 0; -- clocks, itemsに入っているアイテムの個数
-        this.defaultValue = 0;
-        this.maxValue = 127;
-        this.minValue = 0;
-        this.maxId = 0;
-        this.name = "";
-
-        ---
-        -- 初期化を行う
-        -- @param name (string) コントロールカーブの名前
-        -- @param defaultValue (integer) コントロールカーブのデフォルト値
-        -- @param minimum (integer) コントロールカーブの最小値
-        -- @param maximum (integer) コントロールカーブの最大値
-        function this:_init_4( name, defaultValue, minimum, maximum )
-            self.name = name;
-            self.defaultValue = defaultValue;
-            self.maxValue = maximum;
-            self.minValue = minimum;
-            self.maxId = 0;
+    -- データ点を格納するバッファを確保する
+    -- @access private
+    -- @param length (integer) 確保するバッファの最小長さ
+    function this:_ensureBufferLength( length )
+        if( self.clocks == nil )then
+            self.clocks = {};
         end
-
-        ---
-        -- データ点を格納するバッファを確保する
-        -- @access private
-        -- @param length (integer) 確保するバッファの最小長さ
-        function this:_ensureBufferLength( length )
-            if( self.clocks == nil )then
-                self.clocks = {};
-            end
-            if( self.items == nil )then
-                self.items = {};
-            end
-            if( length > #self.clocks )then
-                local newLength = length;
-                if( #self.clocks <= 0 )then
-                    newLength = math.floor( length * 1.2 );
-                else
-                    local order = math.floor( length / #self.clocks );
-                    if( order <= 1 )then
-                        order = 2;
-                    end
-                    newLength = #self.clocks * order;
-                end
-                local delta = newLength - #self.clocks;
-                local i;
-                for i = 1, delta, 1 do
-                    table.insert( self.clocks, 0 );
-                    table.insert( self.items, luavsq.BP.new() );
-                end
-            end
+        if( self.items == nil )then
+            self.items = {};
         end
-
-        ---
-        -- コントロールカーブの名前を取得する
-        -- @return (string) コントロールカーブの名前
-        function this:getName()
-            if( self.name == nil )then
-                self.name = "";
-            end
-            return self.name;
-        end
-
-        ---
-        -- コントロールカーブの名前を設定する
-        -- @param value (string) コントロールカーブの名前
-        function this:setName( value )
-            if( value == nil )then
-                self.name = "";
+        if( length > #self.clocks )then
+            local newLength = length;
+            if( #self.clocks <= 0 )then
+                newLength = math.floor( length * 1.2 );
             else
-                self.name = value;
+                local order = math.floor( length / #self.clocks );
+                if( order <= 1 )then
+                    order = 2;
+                end
+                newLength = #self.clocks * order;
+            end
+            local delta = newLength - #self.clocks;
+            local i;
+            for i = 1, delta, 1 do
+                table.insert( self.clocks, 0 );
+                table.insert( self.items, BP.new() );
             end
         end
+    end
 
-        ---
-        -- このリスト内で使用されている ID の最大値を取得する
-        -- @return (integer) 使用されている ID の最大値
-        function this:getMaxId()
-            return self.maxId;
+    ---
+    -- コントロールカーブの名前を取得する
+    -- @return (string) コントロールカーブの名前
+    function this:getName()
+        if( self.name == nil )then
+            self.name = "";
         end
+        return self.name;
+    end
 
-        ---
-        -- コントロールカーブのデフォルト値を取得する
-        -- @return (integer) コントロールカーブのデフォルト値
-        function this:getDefault()
-            return self.defaultValue;
+    ---
+    -- コントロールカーブの名前を設定する
+    -- @param value (string) コントロールカーブの名前
+    function this:setName( value )
+        if( value == nil )then
+            self.name = "";
+        else
+            self.name = value;
         end
+    end
 
-        ---
-        -- コントロールカーブのデフォルト値を設定する
-        -- @param value (integer) コントロールカーブのデフォルト値
-        function this:setDefault( _value )
-            self.defaultValue = _value;
-        end
+    ---
+    -- このリスト内で使用されている ID の最大値を取得する
+    -- @return (integer) 使用されている ID の最大値
+    function this:getMaxId()
+        return self.maxId;
+    end
 
-        --[[
+    ---
+    -- コントロールカーブのデフォルト値を取得する
+    -- @return (integer) コントロールカーブのデフォルト値
+    function this:getDefault()
+        return self.defaultValue;
+    end
+
+    ---
+    -- コントロールカーブのデフォルト値を設定する
+    -- @param value (integer) コントロールカーブのデフォルト値
+    function this:setDefault( _value )
+        self.defaultValue = _value;
+    end
+
+    --[[
         -- データ点の ID を一度クリアし，新たに番号付けを行います．
         -- ID は，Redo, Undo 用コマンドが使用するため，このメソッドを呼ぶと Redo, Undo 操作が破綻する．XML からのデシリアライズ直後のみ使用するべき．
         -- @return [void]
@@ -140,7 +136,7 @@ if( nil == luavsq.BPList )then
             end
         end]]
 
-        --[[
+    --[[
         -- @return [string]
         function this:getData()
             local ret = "";
@@ -177,51 +173,51 @@ if( nil == luavsq.BPList )then
             }
         end]]
 
-        ---
-        -- コピーを作成する
-        -- @return (luavsq.BPList) このインスタンスのコピー
-        function this:clone()
-            local res = luavsq.BPList.new( self.name, self.defaultValue, self.minValue, self.maxValue );
-            res:_ensureBufferLength( self._length );
-            local i;
-            for i = 1, self._length, 1 do
-                res.clocks[i] = self.clocks[i];
-                res.items[i] = self.items[i]:clone();
-            end
-            res._length = self._length;
-            res.maxId = self.maxId;
-            return res;
+    ---
+    -- コピーを作成する
+    -- @return (BPList) このインスタンスのコピー
+    function this:clone()
+        local res = BPList.new( self.name, self.defaultValue, self.minValue, self.maxValue );
+        res:_ensureBufferLength( self._length );
+        local i;
+        for i = 1, self._length, 1 do
+            res.clocks[i] = self.clocks[i];
+            res.items[i] = self.items[i]:clone();
         end
+        res._length = self._length;
+        res.maxId = self.maxId;
+        return res;
+    end
 
-        ---
-        -- コントロールカーブの最大値を取得する
-        -- @return (integer) コントロールカーブの最大値
-        function this:getMaximum()
-            return self.maxValue;
-        end
+    ---
+    -- コントロールカーブの最大値を取得する
+    -- @return (integer) コントロールカーブの最大値
+    function this:getMaximum()
+        return self.maxValue;
+    end
 
-        ---
-        -- コントロールカーブの最大値を設定する
-        -- @param value (integer) コントロールカーブの最大値
-        function this:setMaximum( value )
-            self.maxValue = value;
-        end
+    ---
+    -- コントロールカーブの最大値を設定する
+    -- @param value (integer) コントロールカーブの最大値
+    function this:setMaximum( value )
+        self.maxValue = value;
+    end
 
-        ---
-        -- コントロールカーブの最小値を取得する
-        -- @return (integer) コントロールカーブの最小値
-        function this:getMinimum()
-            return self.minValue;
-        end
+    ---
+    -- コントロールカーブの最小値を取得する
+    -- @return (integer) コントロールカーブの最小値
+    function this:getMinimum()
+        return self.minValue;
+    end
 
-        ---
-        -- コントロールカーブの最小値を設定する
-        -- @param value (integer) コントロールカーブの最小値
-        function this:setMinimum( value )
-            self.minValue = value;
-        end
+    ---
+    -- コントロールカーブの最小値を設定する
+    -- @param value (integer) コントロールカーブの最小値
+    function this:setMinimum( value )
+        self.minValue = value;
+    end
 
-        --[[
+    --[[
         -- @param clock (integer)
         -- @return [void]
         function this:remove( clock )
@@ -230,7 +226,7 @@ if( nil == luavsq.BPList )then
             self:removeElementAt( index );
         end]]
 
-        --[[
+    --[[
         -- @param index (integer)
         -- @return [void]
         function this:removeElementAt( index )
@@ -246,16 +242,16 @@ if( nil == luavsq.BPList )then
             end
         end]]
 
-        ---
-        -- 指定された時刻にデータ点が存在するかどうかを調べる
-        -- @param clock (integer) Tick 単位の時刻
-        -- @return (boolean) データ点が存在すれば ture を、そうでなければ false を返す
-        function this:isContainsKey( clock )
-            self:_ensureBufferLength( self._length );
-            return (self:_find( clock ) >= 0);
-        end
+    ---
+    -- 指定された時刻にデータ点が存在するかどうかを調べる
+    -- @param clock (integer) Tick 単位の時刻
+    -- @return (boolean) データ点が存在すれば ture を、そうでなければ false を返す
+    function this:isContainsKey( clock )
+        self:_ensureBufferLength( self._length );
+        return (self:_find( clock ) >= 0);
+    end
 
-        --[[
+    --[[
         -- 時刻clockのデータを時刻new_clockに移動します。
         -- 時刻clockにデータがなければ何もしない。
         -- 時刻new_clockに既にデータがある場合、既存のデータは削除される。
@@ -287,7 +283,7 @@ if( nil == luavsq.BPList )then
                 self._length = self._length + 1;
                 self:_ensureBufferLength( self._length );
                 self.clocks[self._length] = new_clock;
-                luavsq.Util.sort( self.clocks, 0, self._length );
+                Util.sort( self.clocks, 0, self._length );
                 index_new = self:_find( new_clock );
                 --item.value = new_value;
                 local i;
@@ -300,119 +296,119 @@ if( nil == luavsq.BPList )then
             end
         end]]
 
-        ---
-        -- 全てのデータ点を削除する
-        function this:clear()
-            self._length = 0;
-        end
+    ---
+    -- 全てのデータ点を削除する
+    function this:clear()
+        self._length = 0;
+    end
 
-        ---
-        -- データ点の値を取得する
-        -- @param index (integer) 取得するデータ点のインデックス(最初のインデックスは0)
-        -- @return (integer) データ点の値
-        function this:getValue( index )
-            return self.items[index + 1].value;
-        end
+    ---
+    -- データ点の値を取得する
+    -- @param index (integer) 取得するデータ点のインデックス(最初のインデックスは0)
+    -- @return (integer) データ点の値
+    function this:getValue( index )
+        return self.items[index + 1].value;
+    end
 
-        ---
-        -- データ点を取得する
-        -- @param index (integer) 取得するデータ点のインデックス(最初のインデックスは0)
-        -- @return (luavsq.BP) データ点のインスタンス
-        function this:get( index )
-            return self.items[index + 1]:clone();
-        end
+    ---
+    -- データ点を取得する
+    -- @param index (integer) 取得するデータ点のインデックス(最初のインデックスは0)
+    -- @return (BP) データ点のインスタンス
+    function this:get( index )
+        return self.items[index + 1]:clone();
+    end
 
-        ---
-        -- データ点の時刻を取得する
-        -- @param index (integer) 取得するデータ点のインデックス(最初のインデックスは0)
-        -- @return (integer) データ点の Tick 単位の時刻
-        function this:getKeyClock( index )
-            return self.clocks[index + 1];
-        end
+    ---
+    -- データ点の時刻を取得する
+    -- @param index (integer) 取得するデータ点のインデックス(最初のインデックスは0)
+    -- @return (integer) データ点の Tick 単位の時刻
+    function this:getKeyClock( index )
+        return self.clocks[index + 1];
+    end
 
-        ---
-        -- ID を基にデータ点の値を取得する
-        -- @param id (integer) データ点の ID
-        -- @return (integer) データ点の値
-        function this:findValueFromId( id )
-            local i;
-            for i = 1, self._length, 1 do
-                local item = self.items[i];
-                if( item.id == id )then
-                    return item.value;
-                end
-            end
-            return self.defaultValue;
-        end
-
-        ---
-        -- ID を基にデータ点を検索し、検索結果を取得する
-        -- @param id (integer) データ点の ID
-        -- @return (luavsq.BPListSearchResult) 検索結果を格納したオブジェクト
-        function this:findElement( id )
-            local context = luavsq.BPListSearchResult.new();
-            local i;
-            for i = 1, self._length, 1 do
-                local item = self.items[i];
-                if( item.id == id )then
-                    context.clock = self.clocks[i];
-                    context.index = i - 1;
-                    context.point = item:clone();
-                    return context;
-                end
-            end
-            context.clock = -1;
-            context.index = -1;
-            context.point = luavsq.BP.new( self.defaultValue, -1 );
-            return context;
-        end
-
-        ---
-        -- 指定した ID のデータ点の値を設定する
-        -- @param id (integer)
-        -- @param value (integer) 設定するデータ点の値
-        function this:setValueForId( id, value )
-            local i;
-            for i = 1, self._length, 1 do
-                if( self.items[i].id == id )then
-                    self.items[i].value = value;
-                    break;
-                end
+    ---
+    -- ID を基にデータ点の値を取得する
+    -- @param id (integer) データ点の ID
+    -- @return (integer) データ点の値
+    function this:findValueFromId( id )
+        local i;
+        for i = 1, self._length, 1 do
+            local item = self.items[i];
+            if( item.id == id )then
+                return item.value;
             end
         end
+        return self.defaultValue;
+    end
 
-        ---
-        -- コントロールカーブをテキストストリームに出力する
-        -- @param writer (luavsq.TextStream) 出力先のストリーム
-        -- @param start_clock (integer) Tick 単位の出力開始時刻
-        -- @param header (string) 最初に出力するヘッダー文字列
-        function this:print( writer, start_clock, header )
-            writer:writeLine( header );
-            local lastvalue = self.defaultValue;
-            local value_at_start_written = false;
-            local i;
-            for i = 1, self._length, 1 do
-                local key = self.clocks[i];
-                if( start_clock == key )then
-                    writer:writeLine( key .. "=" .. self.items[i].value );
+    ---
+    -- ID を基にデータ点を検索し、検索結果を取得する
+    -- @param id (integer) データ点の ID
+    -- @return (BPListSearchResult) 検索結果を格納したオブジェクト
+    function this:findElement( id )
+        local context = BPListSearchResult.new();
+        local i;
+        for i = 1, self._length, 1 do
+            local item = self.items[i];
+            if( item.id == id )then
+                context.clock = self.clocks[i];
+                context.index = i - 1;
+                context.point = item:clone();
+                return context;
+            end
+        end
+        context.clock = -1;
+        context.index = -1;
+        context.point = BP.new( self.defaultValue, -1 );
+        return context;
+    end
+
+    ---
+    -- 指定した ID のデータ点の値を設定する
+    -- @param id (integer)
+    -- @param value (integer) 設定するデータ点の値
+    function this:setValueForId( id, value )
+        local i;
+        for i = 1, self._length, 1 do
+            if( self.items[i].id == id )then
+                self.items[i].value = value;
+                break;
+            end
+        end
+    end
+
+    ---
+    -- コントロールカーブをテキストストリームに出力する
+    -- @param writer (TextStream) 出力先のストリーム
+    -- @param start_clock (integer) Tick 単位の出力開始時刻
+    -- @param header (string) 最初に出力するヘッダー文字列
+    function this:print( writer, start_clock, header )
+        writer:writeLine( header );
+        local lastvalue = self.defaultValue;
+        local value_at_start_written = false;
+        local i;
+        for i = 1, self._length, 1 do
+            local key = self.clocks[i];
+            if( start_clock == key )then
+                writer:writeLine( key .. "=" .. self.items[i].value );
+                value_at_start_written = true;
+            elseif( start_clock < key )then
+                if( (not value_at_start_written) and (lastvalue ~= self.defaultValue) )then
+                    writer:writeLine( start_clock .. "=" .. lastvalue );
                     value_at_start_written = true;
-                elseif( start_clock < key )then
-                    if( (not value_at_start_written) and (lastvalue ~= self.defaultValue) )then
-                        writer:writeLine( start_clock .. "=" .. lastvalue );
-                        value_at_start_written = true;
-                    end
-                    local val = self.items[i].value;
-                    writer:writeLine( key .. "=" .. val );
-                else
-                    lastvalue = self.items[i].value;
                 end
-            end
-            if( (not value_at_start_written) and (lastvalue ~= self.defaultValue) )then
-                writer:writeLine( start_clock .. "=" .. lastvalue );
+                local val = self.items[i].value;
+                writer:writeLine( key .. "=" .. val );
+            else
+                lastvalue = self.items[i].value;
             end
         end
+        if( (not value_at_start_written) and (lastvalue ~= self.defaultValue) )then
+            writer:writeLine( start_clock .. "=" .. lastvalue );
+        end
+    end
 
-        --[[
+    --[[
         -- テキストファイルからデータ点を読込み、現在のリストに追加します
         -- @param reader [TextStream]
         -- @return [string]
@@ -483,108 +479,108 @@ if( nil == luavsq.BPList )then
             return reader:readLine();
         end]]
 
-        ---
-        -- データ点の個数を返す
-        -- @return (integer) データ点の個数
-        function this:size()
-            return self._length;
-        end
+    ---
+    -- データ点の個数を返す
+    -- @return (integer) データ点の個数
+    function this:size()
+        return self._length;
+    end
 
-        ---
-        -- データ点の Tick 単位の時刻を昇順に返す反復子を取得する
-        -- @return (luavsq.BPList.KeyClockIterator) 反復子のインスタンス
-        function this:keyClockIterator()
-            return luavsq.BPList.KeyClockIterator.new( self );
-        end
+    ---
+    -- データ点の Tick 単位の時刻を昇順に返す反復子を取得する
+    -- @return (BPList.KeyClockIterator) 反復子のインスタンス
+    function this:keyClockIterator()
+        return BPList.KeyClockIterator.new( self );
+    end
 
-        ---
-        -- 指定された時刻値を持つデータ点のインデックスを検索する
-        -- @access private
-        -- @param value (integer) Tick 単位の時刻
-        -- @return (integer) データ点のインデックス(最初のインデックスは0)。データ点が見つからなかった場合は負の値を返す
-        function this:_find( value )
-            local i;
-            for i = 1, self._length, 1 do
-                if( self.clocks[i] == value )then
-                    return i - 1;
-                end
+    ---
+    -- 指定された時刻値を持つデータ点のインデックスを検索する
+    -- @access private
+    -- @param value (integer) Tick 単位の時刻
+    -- @return (integer) データ点のインデックス(最初のインデックスは0)。データ点が見つからなかった場合は負の値を返す
+    function this:_find( value )
+        local i;
+        for i = 1, self._length, 1 do
+            if( self.clocks[i] == value )then
+                return i - 1;
             end
-            return -1;
         end
+        return -1;
+    end
 
-        ---
-        -- 並べ替え、既存の値との重複チェックを行わず、リストの末尾にデータ点を追加する
-        -- @param clock (integer) Tick 単位の時刻
-        -- @param value (integer) データ点の値
-        function this:addWithoutSort( clock, value )
-            self:_ensureBufferLength( self._length + 1 );
-            self.clocks[self._length + 1] = clock;
-            self.maxId = self.maxId + 1;
-            self.items[self._length + 1].value = value;
-            self.items[self._length + 1].id = self.maxId;
+    ---
+    -- 並べ替え、既存の値との重複チェックを行わず、リストの末尾にデータ点を追加する
+    -- @param clock (integer) Tick 単位の時刻
+    -- @param value (integer) データ点の値
+    function this:addWithoutSort( clock, value )
+        self:_ensureBufferLength( self._length + 1 );
+        self.clocks[self._length + 1] = clock;
+        self.maxId = self.maxId + 1;
+        self.items[self._length + 1].value = value;
+        self.items[self._length + 1].id = self.maxId;
+        self._length = self._length + 1;
+    end
+
+    ---
+    -- データ点を追加する。指定された時刻に既にデータ点がある場合、データ点の値を上書きする
+    -- @param clock (integer) データ点を追加する Tick 単位の時刻
+    -- @param value (integer) データ点の値
+    -- @return (integer) データ点の ID
+    function this:add( clock, value )
+        self:_ensureBufferLength( self._length );
+        local index = self:_find( clock );
+        if( index >= 0 )then
+            self.items[index + 1].value = value;
+            return self.items[index + 1].id;
+        else
             self._length = self._length + 1;
-        end
-
-        ---
-        -- データ点を追加する。指定された時刻に既にデータ点がある場合、データ点の値を上書きする
-        -- @param clock (integer) データ点を追加する Tick 単位の時刻
-        -- @param value (integer) データ点の値
-        -- @return (integer) データ点の ID
-        function this:add( clock, value )
             self:_ensureBufferLength( self._length );
-            local index = self:_find( clock );
-            if( index >= 0 )then
-                self.items[index + 1].value = value;
-                return self.items[index + 1].id;
-            else
-                self._length = self._length + 1;
-                self:_ensureBufferLength( self._length );
-                self.clocks[self._length] = clock;
-                luavsq.Util.sort( self.clocks, 0, self._length );
-                index = self:_find( clock );
-                self.maxId = self.maxId + 1;
-                local i;
-                for i = self._length, index + 2, -1 do
-                    self.items[i].value = self.items[i - 1].value;
-                    self.items[i].id = self.items[i - 1].id;
-                end
-                self.items[index + 1].value = value;
-                self.items[index + 1].id = self.maxId;
-                return self.maxId;
+            self.clocks[self._length] = clock;
+            Util.sort( self.clocks, 0, self._length );
+            index = self:_find( clock );
+            self.maxId = self.maxId + 1;
+            local i;
+            for i = self._length, index + 2, -1 do
+                self.items[i].value = self.items[i - 1].value;
+                self.items[i].id = self.items[i - 1].id;
             end
+            self.items[index + 1].value = value;
+            self.items[index + 1].id = self.maxId;
+            return self.maxId;
         end
+    end
 
-        ---
-        -- データ点を、ID 指定したうえで追加する。指定された時刻に既にデータ点がある場合、データ点の値を上書きする
-        -- @param clock (integer) データ点を追加する Tick 単位の時刻
-        -- @param value (integer) データ点の値
-        -- @param id (integer) データ点の ID
-        -- @return (integer) データ点の ID
-        function this:addWithId( clock, value, id )
+    ---
+    -- データ点を、ID 指定したうえで追加する。指定された時刻に既にデータ点がある場合、データ点の値を上書きする
+    -- @param clock (integer) データ点を追加する Tick 単位の時刻
+    -- @param value (integer) データ点の値
+    -- @param id (integer) データ点の ID
+    -- @return (integer) データ点の ID
+    function this:addWithId( clock, value, id )
+        self:_ensureBufferLength( self._length );
+        local index = self:_find( clock );
+        if( index >= 0 )then
+            self.items[index + 1].value = value;
+            self.items[index + 1].id = id;
+        else
+            self._length = self._length + 1;
             self:_ensureBufferLength( self._length );
-            local index = self:_find( clock );
-            if( index >= 0 )then
-                self.items[index + 1].value = value;
-                self.items[index + 1].id = id;
-            else
-                self._length = self._length + 1;
-                self:_ensureBufferLength( self._length );
-                self.clocks[self._length] = clock;
-                luavsq.Util.sort( self.clocks, 0, self._length );
-                index = self:_find( clock );
-                local i;
-                for i = self._length, index + 2, -1 do
-                    self.items[i].value = self.items[i - 1].value;
-                    self.items[i].id = self.items[i - 1].id;
-                end
-                self.items[index + 1].value = value;
-                self.items[index + 1].id = id;
+            self.clocks[self._length] = clock;
+            Util.sort( self.clocks, 0, self._length );
+            index = self:_find( clock );
+            local i;
+            for i = self._length, index + 2, -1 do
+                self.items[i].value = self.items[i - 1].value;
+                self.items[i].id = self.items[i - 1].id;
             end
-            self.maxId = math.max( self.maxId, id );
-            return id;
+            self.items[index + 1].value = value;
+            self.items[index + 1].id = id;
         end
+        self.maxId = math.max( self.maxId, id );
+        return id;
+    end
 
-        --[[
+    --[[
         -- @param id [long]
         -- @return [void]
         function this:removeWithId( id )
@@ -603,89 +599,87 @@ if( nil == luavsq.BPList )then
             end
         end]]
 
-        ---
-        -- 指定された Tick 単位の時刻における、コントロールパラメータの値を取得する
-        -- @see this:_getValueAt_1, this:_getValueAt_2
-        function this:getValueAt( ... )
-            local arguments = { ... };
-            if( #arguments == 2 )then
-                return self:_getValueAt_2( arguments[1], arguments[2] );
-            elseif( #arguments == 1 )then
-                return self:_getValueAt_1( arguments[1] );
-            end
+    ---
+    -- 指定された Tick 単位の時刻における、コントロールパラメータの値を取得する
+    -- @see this:_getValueAt_1, this:_getValueAt_2
+    function this:getValueAt( ... )
+        local arguments = { ... };
+        if( #arguments == 2 )then
+            return self:_getValueAt_2( arguments[1], arguments[2] );
+        elseif( #arguments == 1 )then
+            return self:_getValueAt_1( arguments[1] );
         end
-
-        ---
-        -- 指定された Tick 単位の時刻における、コントロールパラメータの値を取得する
-        -- @param clock (integer) 値を取得する Tick 単位の時刻
-        -- @param index (table,{ value = ? }) 値の取得に使用したインデックス(最初のインデックスは0)
-        -- @return (integer) コントロールパラメータの値
-        function this:_getValueAt_2( clock, index )
-            if( self._length == 0 )then
-                return self.defaultValue;
-            else
-                if( index.value < 0 )then
-                    index.value = 0;
-                end
-                if( index.value > 0 and clock < self.clocks[index.value + 1] )then
-                    index.value = 0;
-                end
-                local i;
-                for i = index.value + 1, self._length, 1 do
-                    local keyclock = self.clocks[i];
-                    if( clock < keyclock )then
-                        if( i > 1 )then
-                            index.value = i - 2;
-                            return self.items[i - 1].value;
-                        else
-                            index.value = 0;
-                            return self.defaultValue;
-                        end
-                    end
-                end
-                index.value = self._length - 1;
-                return self.items[self._length].value;
-            end
-        end
-
-        ---
-        -- 指定された Tick 単位の時刻における，コントロールパラメータの値を取得する．
-        -- @param clock (integer) 値を取得する Tick 単位の時刻
-        -- @return (integer) コントロールパラメータの値
-        function this:_getValueAt_1( clock )
-            self:_ensureBufferLength( self._length );
-            local index = self:_find( clock );
-            if( index >= 0 )then
-                return self.items[index + 1].value;
-            else
-                if( self._length <= 0 )then
-                    return self.defaultValue;
-                else
-                    local draft = 0;
-                    local i;
-                    for i = 1, self._length, 1 do
-                        local c = self.clocks[i];
-                        if( clock < c )then
-                            break;
-                        end
-                        draft = i;
-                    end
-                    if( draft == 0 )then
-                        return self.defaultValue;
-                    else
-                        return self.items[draft].value;
-                    end
-                end
-            end
-        end
-
-        if( #arguments == 4 )then
-            this:_init_4( arguments[1], arguments[2], arguments[3], arguments[4] );
-        end
-
-        return this;
     end
 
-    luavsq.BPList.INIT_BUFLEN = 512;
+    ---
+    -- 指定された Tick 単位の時刻における、コントロールパラメータの値を取得する
+    -- @param clock (integer) 値を取得する Tick 単位の時刻
+    -- @param index (table,{ value = ? }) 値の取得に使用したインデックス(最初のインデックスは0)
+    -- @return (integer) コントロールパラメータの値
+    function this:_getValueAt_2( clock, index )
+        if( self._length == 0 )then
+            return self.defaultValue;
+        else
+            if( index.value < 0 )then
+                index.value = 0;
+            end
+            if( index.value > 0 and clock < self.clocks[index.value + 1] )then
+                index.value = 0;
+            end
+            local i;
+            for i = index.value + 1, self._length, 1 do
+                local keyclock = self.clocks[i];
+                if( clock < keyclock )then
+                    if( i > 1 )then
+                        index.value = i - 2;
+                        return self.items[i - 1].value;
+                    else
+                        index.value = 0;
+                        return self.defaultValue;
+                    end
+                end
+            end
+            index.value = self._length - 1;
+            return self.items[self._length].value;
+        end
+    end
 
+    ---
+    -- 指定された Tick 単位の時刻における，コントロールパラメータの値を取得する．
+    -- @param clock (integer) 値を取得する Tick 単位の時刻
+    -- @return (integer) コントロールパラメータの値
+    function this:_getValueAt_1( clock )
+        self:_ensureBufferLength( self._length );
+        local index = self:_find( clock );
+        if( index >= 0 )then
+            return self.items[index + 1].value;
+        else
+            if( self._length <= 0 )then
+                return self.defaultValue;
+            else
+                local draft = 0;
+                local i;
+                for i = 1, self._length, 1 do
+                    local c = self.clocks[i];
+                    if( clock < c )then
+                        break;
+                    end
+                    draft = i;
+                end
+                if( draft == 0 )then
+                    return self.defaultValue;
+                else
+                    return self.items[draft].value;
+                end
+            end
+        end
+    end
+
+    if( #arguments == 4 )then
+        this:_init_4( arguments[1], arguments[2], arguments[3], arguments[4] );
+    end
+
+    return this;
 end
+
+BPList.INIT_BUFLEN = 512;

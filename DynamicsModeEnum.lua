@@ -12,26 +12,20 @@
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 ]]
 
-if( nil == luavsq )then
-    luavsq = {};
-end
+module( "luavsq" );
 
-if( nil == luavsq.DynamicsModeEnum )then
+---
+-- VOCALOID1における、ダイナミクスモードを表す定数を格納するための列挙子
+-- @class table
+-- @name DynamicsModeEnum
+-- @field Standard DYNカーブが非表示になるモード(デフォルト)
+-- @field Expert DYNカーブが表示されるモード(エキスパートモード)
+DynamicsModeEnum = {
+    ---
+    -- DYNカーブが非表示になるモード(デフォルト)
+    Standard = 0,
 
     ---
-    -- VOCALOID1における、ダイナミクスモードを表す定数を格納するための列挙子
-    -- @class table
-    -- @name luavsq.DynamicsModeEnum
-    -- @field Standard DYNカーブが非表示になるモード(デフォルト)
-    -- @field Expert DYNカーブが表示されるモード(エキスパートモード)
-    luavsq.DynamicsModeEnum = {
-        ---
-        -- DYNカーブが非表示になるモード(デフォルト)
-        Standard = 0,
-
-        ---
-        -- DYNカーブが表示されるモード(エキスパートモード)
-        Expert = 1
-    };
-
-end
+    -- DYNカーブが表示されるモード(エキスパートモード)
+    Expert = 1
+};

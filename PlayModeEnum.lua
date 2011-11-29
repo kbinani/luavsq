@@ -12,30 +12,25 @@
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 ]]
 
-if( nil == luavsq )then
-    luavsq = {};
-end
+module( "luavsq" );
 
-if( nil == luavsq.PlayModeEnum )then
+---
+-- 歌声合成の再生モードを表す列挙子
+-- @class table
+-- @name PlayModeEnum
+-- @field Off トラックはミュートされる(-1)
+-- @field PlayAfterSynth トラックは合成された後再生される(0)
+-- @field PlayWithSynth トラックは合成しながら再生される(1)
+PlayModeEnum = {
+    ---
+    -- トラックはミュートされる(-1)
+    Off = -1,
 
     ---
-    -- 歌声合成の再生モードを表す列挙子
-    -- @class table
-    -- @name luavsq.PlayModeEnum
-    -- @field Off トラックはミュートされる(-1)
-    -- @field PlayAfterSynth トラックは合成された後再生される(0)
-    -- @field PlayWithSynth トラックは合成しながら再生される(1)
-    luavsq.PlayModeEnum = {
-        ---
-        -- トラックはミュートされる(-1)
-        Off = -1,
+    -- トラックは合成された後再生される(0)
+    PlayAfterSynth = 0,
 
-        ---
-        -- トラックは合成された後再生される(0)
-        PlayAfterSynth = 0,
-
-        ---
-        -- トラックは合成しながら再生される(1)
-        PlayWithSynth = 1,
-    };
-end
+    ---
+    -- トラックは合成しながら再生される(1)
+    PlayWithSynth = 1,
+};

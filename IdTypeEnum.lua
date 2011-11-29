@@ -12,42 +12,36 @@
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 ]]
 
-if( nil == luavsq )then
-    luavsq = {};
-end
+module( "luavsq" );
 
-if( nil == luavsq.IdTypeEnum )then
+---
+-- Id の種類を表現する列挙子
+-- @class table
+-- @name IdTypeEnum
+-- @field Singer 歌手
+-- @field Anote 歌詞
+-- @field Aicon アイコン
+-- @field Unknown 不明
+IdTypeEnum = {
 
-    ---
-    -- Id の種類を表現する列挙子
-    -- @class table
-    -- @name luavsq.IdTypeEnum
-    -- @field Singer 歌手
-    -- @field Anote 歌詞
-    -- @field Aicon アイコン
-    -- @field Unknown 不明
-    luavsq.IdTypeEnum = {
+    Singer = 0,
+    Anote = 1,
+    Aicon = 2,
+    Unknown = -1
 
-        Singer = 0,
-        Anote = 1,
-        Aicon = 2,
-        Unknown = -1
+};
 
-    };
-
-    ---
-    -- 文字列に変換する
-    -- @param value (luavsq.IdTypeEnum) 指定された列挙子の文字列表現
-    function luavsq.IdTypeEnum.toString( value )
-        if( value == luavsq.IdTypeEnum.Singer )then
-            return "Singer";
-        elseif( value == luavsq.IdTypeEnum.Anote )then
-            return "Anote";
-        elseif( value == luavsq.IdTypeEnum.Aicon )then
-            return "Aicon";
-        else
-            return "Unknown";
-        end
+---
+-- 文字列に変換する
+-- @param value (IdTypeEnum) 指定された列挙子の文字列表現
+function IdTypeEnum.toString( value )
+    if( value == IdTypeEnum.Singer )then
+        return "Singer";
+    elseif( value == IdTypeEnum.Anote )then
+        return "Anote";
+    elseif( value == IdTypeEnum.Aicon )then
+        return "Aicon";
+    else
+        return "Unknown";
     end
-
 end

@@ -12,107 +12,101 @@
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 ]]
 
-if( nil == luavsq )then
-    luavsq = {};
-end
+module( "luavsq" );
 
-if( nil == luavsq.SingerHandle )then
+---
+-- 歌手ハンドルを表すクラス
+-- @class table
+-- @name SingerHandle
+SingerHandle = {};
+
+---
+-- 初期化を行う
+-- @return (SingerHandle)
+function SingerHandle.new()
+    local this = {};
 
     ---
-    -- 歌手ハンドルを表すクラス
-    -- @class table
-    -- @name luavsq.SingerHandle
-    luavsq.SingerHandle = {};
+    -- キャプション。
+    this.caption = "";
 
     ---
-    -- 初期化を行う
-    -- @return (luavsq.SingerHandle)
-    function luavsq.SingerHandle.new()
-        local this = {};
+    -- この歌手設定を一意に識別するための ID です。
+    this.iconId = "";
 
-        ---
-        -- キャプション。
-        this.caption = "";
+    ---
+    -- ユーザ・フレンドリー名。
+    -- このフィールドの値は、他の歌手設定のユーザ・フレンドリー名と重複する場合があります。
+    this.ids = "";
 
-        ---
-        -- この歌手設定を一意に識別するための ID です。
-        this.iconId = "";
+    this.index = 0;
 
-        ---
-        -- ユーザ・フレンドリー名。
-        -- このフィールドの値は、他の歌手設定のユーザ・フレンドリー名と重複する場合があります。
-        this.ids = "";
+    ---
+    -- ゲートタイム長さ。
+    this.length = 0;
 
-        this.index = 0;
+    this.original = 0;
+    this.program = 0;
+    this.language = 0;
 
-        ---
-        -- ゲートタイム長さ。
-        this.length = 0;
-
-        this.original = 0;
-        this.program = 0;
-        this.language = 0;
-
-        ---
-        -- 長さを取得する
-        -- @return (integer) Tick 単位の長さ
-        function this:getLength()
-            return self.length;
-        end
-
-        ---
-        -- 長さを設定する
-        -- @param value (integer) Tick 単位の長さ
-        function this:setLength( value )
-            self.length = value;
-        end
-
-        ---
-        -- このオブジェクトのインスタンスと、指定されたオブジェクトが同じかどうかを調べる
-        -- @param item (SingerHandle) 比較対象のオブジェクト
-        -- @return (boolean) 比較対象と同じであれば true を、そうでなければ false を返す
-        function this:equals( item )
-            if( nil == item )then
-                return false;
-            else
-                return self.iconId == item.iconId;
-            end
-        end
-
-        ---
-        -- コピーを作成する
-        -- @return (SingerHandle) このオブジェクトのコピー
-        function this:clone()
-            local ret = luavsq.SingerHandle.new();
-            ret.caption = self.caption;
-            ret.iconId = self.iconId;
-            ret.ids = self.ids;
-            ret.index = self.index;
-            ret.language = self.language;
-            ret:setLength( self.length );
-            ret.original = self.original;
-            ret.program = self.program;
-            return ret;
-        end
-
-        ---
-        -- このオブジェクトを、Handle に型変換する
-        -- @return (luavsq.Handle) ハンドル
-        function this:castToHandle()
-            local ret = luavsq.Handle.new();
-            ret._type = luavsq.HandleTypeEnum.Singer;
-            ret.caption = self.caption;
-            ret.iconId = self.iconId;
-            ret.ids = self.ids;
-            ret.index = self.index;
-            ret.language = self.language;
-            ret:setLength( self.length );
-            ret.program = self.program;
-            ret.original = self.original;
-            return ret;
-        end
-
-        return this;
+    ---
+    -- 長さを取得する
+    -- @return (integer) Tick 単位の長さ
+    function this:getLength()
+        return self.length;
     end
 
+    ---
+    -- 長さを設定する
+    -- @param value (integer) Tick 単位の長さ
+    function this:setLength( value )
+        self.length = value;
+    end
+
+    ---
+    -- このオブジェクトのインスタンスと、指定されたオブジェクトが同じかどうかを調べる
+    -- @param item (SingerHandle) 比較対象のオブジェクト
+    -- @return (boolean) 比較対象と同じであれば true を、そうでなければ false を返す
+    function this:equals( item )
+        if( nil == item )then
+            return false;
+        else
+            return self.iconId == item.iconId;
+        end
+    end
+
+    ---
+    -- コピーを作成する
+    -- @return (SingerHandle) このオブジェクトのコピー
+    function this:clone()
+        local ret = SingerHandle.new();
+        ret.caption = self.caption;
+        ret.iconId = self.iconId;
+        ret.ids = self.ids;
+        ret.index = self.index;
+        ret.language = self.language;
+        ret:setLength( self.length );
+        ret.original = self.original;
+        ret.program = self.program;
+        return ret;
+    end
+
+    ---
+    -- このオブジェクトを、Handle に型変換する
+    -- @return (Handle) ハンドル
+    function this:castToHandle()
+        local ret = Handle.new();
+        ret._type = HandleTypeEnum.Singer;
+        ret.caption = self.caption;
+        ret.iconId = self.iconId;
+        ret.ids = self.ids;
+        ret.index = self.index;
+        ret.language = self.language;
+        ret:setLength( self.length );
+        ret.program = self.program;
+        ret.original = self.original;
+        return ret;
+    end
+
+    return this;
 end

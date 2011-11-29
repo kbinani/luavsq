@@ -12,83 +12,77 @@
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 ]]
 
-if( nil == luavsq )then
-    luavsq = {};
-end
+module( "luavsq" );
 
-if( nil == luavsq.FileOutputStream )then
+---
+-- ファイルへの出力ストリーム
+-- @class table
+-- @name FileOutputStream
+FileOutputStream = {};
+
+---
+-- 初期化を行う
+-- @param path (string) ファイルのパス
+-- @return (FileOutputStream)
+function FileOutputStream.new( path )
+    local this = {};
+    this._fileHandle = io.open( path, "wb" );
 
     ---
-    -- ファイルへの出力ストリーム
-    -- @class table
-    -- @name luavsq.FileOutputStream
-    luavsq.FileOutputStream = {};
-
-    ---
-    -- 初期化を行う
-    -- @param path (string) ファイルのパス
-    -- @return (luavsq.FileOutputStream)
-    function luavsq.FileOutputStream.new( path )
-        local this = {};
-        this._fileHandle = io.open( path, "wb" );
-
-        ---
-        -- ストリームにデータを書き込む
-        -- @see this:_write_3
-        -- @see this:_write_1
-        function this:write( ... )
-            local arguments = { ... };
-            if( #arguments == 1 )then
-                self:_write_1( arguments[1] );
-            elseif( #arguments == 3 )then
-                self:_write_3( arguments[1], arguments[2], arguments[3] );
-            end
+    -- ストリームにデータを書き込む
+    -- @see this:_write_3
+    -- @see this:_write_1
+    function this:write( ... )
+        local arguments = { ... };
+        if( #arguments == 1 )then
+            self:_write_1( arguments[1] );
+        elseif( #arguments == 3 )then
+            self:_write_3( arguments[1], arguments[2], arguments[3] );
         end
-
-        ---
-        -- 指定された配列の、指定した範囲のバイト値をストリームに書きこむ
-        -- @param (table<integer>) array 書きこむバイト列が格納された配列
-        -- @param (integer) startIndex 書き込み開始位置
-        -- @param (integer) length 書き込むバイト値の個数
-        function this:_write_3( array, startIndex, length )
-            local i;
-            for i = 1, length, 1 do
-                self:_write_1( array[startIndex + i - 1] );
-            end
-        end
-
-        ---
-        -- 指定されたバイト値をストリームに書きこむ
-        -- @param (integer) 書きこむバイト値
-        function this:_write_1( byte )
-            if( nil == byte )then
-                byte = 0;
-            end
-            self._fileHandle:write( string.char( byte ) );
-        end
-
-        ---
-        -- 現在のファイルポインタを取得する
-        -- @return (integer) 現在のファイルポインタ
-        function this:getPointer()
-            return self._fileHandle:seek();
-        end
-
-        ---
-        -- ファイルポインタを指定した位置に移動する
-        -- @param position (integer) ファイルポインタ
-        function this:seek( position )
-            self._fileHandle:seek( "set", position );
-        end
-
-        ---
-        -- ストリームを閉じる
-        function this:close()
-            self._fileHandle:flush();
-            self._fileHandle:close();
-        end
-
-        return this;
     end
 
+    ---
+    -- 指定された配列の、指定した範囲のバイト値をストリームに書きこむ
+    -- @param (table<integer>) array 書きこむバイト列が格納された配列
+    -- @param (integer) startIndex 書き込み開始位置
+    -- @param (integer) length 書き込むバイト値の個数
+    function this:_write_3( array, startIndex, length )
+        local i;
+        for i = 1, length, 1 do
+            self:_write_1( array[startIndex + i - 1] );
+        end
+    end
+
+    ---
+    -- 指定されたバイト値をストリームに書きこむ
+    -- @param (integer) 書きこむバイト値
+    function this:_write_1( byte )
+        if( nil == byte )then
+            byte = 0;
+        end
+        self._fileHandle:write( string.char( byte ) );
+    end
+
+    ---
+    -- 現在のファイルポインタを取得する
+    -- @return (integer) 現在のファイルポインタ
+    function this:getPointer()
+        return self._fileHandle:seek();
+    end
+
+    ---
+    -- ファイルポインタを指定した位置に移動する
+    -- @param position (integer) ファイルポインタ
+    function this:seek( position )
+        self._fileHandle:seek( "set", position );
+    end
+
+    ---
+    -- ストリームを閉じる
+    function this:close()
+        self._fileHandle:flush();
+        self._fileHandle:close();
+    end
+
+    return this;
 end

@@ -12,47 +12,41 @@
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 ]]
 
-if( nil == luavsq )then
-    luavsq = {};
-end
+module( "luavsq" );
 
-if( nil == luavsq.MixerItem )then
+---
+-- Mixer の slave 要素に格納されるアイテムを表すクラス
+-- @class table
+-- @name MixerItem
+MixerItem = {};
 
-    ---
-    -- Mixer の slave 要素に格納されるアイテムを表すクラス
-    -- @class table
-    -- @name luavsq.MixerItem
-    luavsq.MixerItem = {};
+---
+-- 各パラメータを指定し、初期化を行う
+-- @param feder (integer) Feder値
+-- @param panpot (integer) Panpot値
+-- @param mute (integer) Mute値
+-- @param solo (integer) Solo値
+-- @return (MixerItem)
+function MixerItem.new( feder, panpot, mute, solo )
+    local this = {};
+    this.feder = feder;
+    this.panpot = panpot;
+    this.mute = mute;
+    this.solo = solo;
 
-    ---
-    -- 各パラメータを指定し、初期化を行う
-    -- @param feder (integer) Feder値
-    -- @param panpot (integer) Panpot値
-    -- @param mute (integer) Mute値
-    -- @param solo (integer) Solo値
-    -- @return (luavsq.MixerItem)
-    function luavsq.MixerItem.new( feder, panpot, mute, solo )
-        local this = {};
-        this.feder = feder;
-        this.panpot = panpot;
-        this.mute = mute;
-        this.solo = solo;
-
-        function this:_init_4( feder, panpot, mute, solo )
-            self.feder = feder;
-            self.panpot = panpot;
-            self.mute = mute;
-            self.solo = solo;
-        end
-
-        ---
-        -- コピーを作成する
-        -- @return (luavsq.MixerItem) このオブジェクトのコピー
-        function this:clone()
-            return luavsq.MixerItem.new( self.feder, self.panpot, self.mute, self.solo );
-        end
-
-        return this;
+    function this:_init_4( feder, panpot, mute, solo )
+        self.feder = feder;
+        self.panpot = panpot;
+        self.mute = mute;
+        self.solo = solo;
     end
 
+    ---
+    -- コピーを作成する
+    -- @return (MixerItem) このオブジェクトのコピー
+    function this:clone()
+        return MixerItem.new( self.feder, self.panpot, self.mute, self.solo );
+    end
+
+    return this;
 end

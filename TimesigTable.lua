@@ -12,185 +12,178 @@
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 ]]
 
-if( nil == luavsq )then
-    luavsq = {};
-end
+module( "luavsq" );
 
-if( nil == luavsq.TimesigTable )then
+---
+-- 拍子情報を格納したテーブルを表すクラス
+-- @class table
+-- @name TimesigTable
+TimesigTable = {};
+
+---
+-- 初期化を行う
+-- @return (TimesigTable)
+function TimesigTable.new()
+    local this = {};
+    this._list = List.new();
 
     ---
-    -- 拍子情報を格納したテーブルを表すクラス
-    -- @class table
-    -- @name luavsq.TimesigTable
-    luavsq.TimesigTable = {};
-
-    ---
-    -- 初期化を行う
-    -- @return (luavsq.TimesigTable)
-    function luavsq.TimesigTable.new()
-        local this = {};
-        this._list = luavsq.List.new();
-
-        ---
-        -- データ点の個数を取得する
-        -- @return (integer) データ点の個数
-        function this:size()
-            return self._list:size();
-        end
-
-        ---
-        -- データ点を順に返す反復子を取得する
-        -- @return (luavsq.List.Iterator<luavsq.TimesigTableItem>) 反復子
-        function this:iterator()
-            return self._list:iterator();
-        end
-
-        ---
-        -- データ点を追加する
-        -- @param (luavsq.TimesigTableItem) 追加する拍子変更情報
-        function this:push( item )
-            self._list:push( item );
-        end
-
-        ---
-        -- 指定したインデックスの拍子変更情報を取得する
-        -- @param (integer) index 取得するデータ点のインデックス(0から始まる)
-        -- @return (luavsq.TimesigTableItem) 拍子変更情報
-        function this:get( index )
-            return self._list[index];
-        end
-
-        ---
-        -- 指定したインデックスの拍子変更情報を設定する
-        -- @param index (integer) インデックス(最初のインデックスは0)
-        -- @param value (TempoTableItem) 設定するイベント
-        function this:set( index, value )
-            self._list[index] = value;
-        end
-
-        ---
-        -- リスト内のテンポ変更情報の秒単位の時刻部分を更新する
-
-        ---
-        -- リスト内の拍子変更情報の clock の部分を更新する
-        function this:updateTimesigInfo()
-            if( self:get( 0 ).clock ~= 0 )then
-                return;
-            end
-            self:get( 0 ).clock = 0;
-            self._list:sort( luavsq.TimesigTableItem.compare );-- Collections.sort( this );
-            local count = self:size();
-            local j;
-            for j = 1, count - 1, 1 do
-                local item = self:get( j - 1 );
-                local numerator = item.numerator;
-                local denominator = item.denominator;
-                local clock = item.clock;
-                local bar_count = item.barCount;
-                local dif = math.floor( 480 * 4 / denominator * numerator );--1小節が何クロックか？
-                clock = clock + (self:get( j ).barCount - bar_count) * dif;
-                self:get( j ).clock = clock;
-            end
-        end
-
-        ---
-        -- 指定されたゲートタイムにおける拍子情報を取得する
-        -- @param clock (number) ゲートタイム
-        -- @return (luavsq.Timesig) 指定されたゲートタイムでの拍子情報
-        function this:getTimesigAt( clock )
-            local ret = luavsq.TimesigTableItem.new();
-            ret.numerator = 4;
-            ret.denominator = 4;
-            local index = 0;
-            local c = self._list:size();
-            local i;
-            for i = c - 1, 0, -1 do
-                index = i;
-                if( self._list[i].clock <= clock )then
-                    break;
-                end
-            end
-            ret.numerator = self._list[index].numerator;
-            ret.denominator = self._list[index].denominator;
-            return ret;
-        end
-
-        ---
-        -- 指定されたゲートタイムにおける拍子情報を取得する
-        -- @param clock (number) ゲートタイム
-        -- @return (luavsq.TimesigTableItem) 指定されたゲートタイムでの拍子情報
-        function this:findTimesigAt( clock )
-            local index = 0;
-            local c = self._list:size();
-            local i;
-            for i = c - 1, 0, -1 do
-                index = i;
-                if( self._list[i].clock <= clock )then
-                    break;
-                end
-            end
-            local item = self._list[index];
-            local ret = item:clone();
-            local diff = clock - item.clock;
-            local clockPerBar = math.floor( 480 * 4 / ret.denominator * ret.numerator );
-            ret.barCount = item.barCount + math.floor( diff / clockPerBar );
-            return ret;
-        end
-
-        ---
-        -- 指定した小節の開始クロックを取得する。
-        -- ここで使用する小節数は、プリメジャーを考慮しない。即ち、曲頭の小節が 0 となる
-        -- @param bar_count (integer) 小節数
-        -- @return (integer) Tick 単位の時刻
-        function this:getClockFromBarCount( bar_count )
-            local index = 0;
-            local c = self._list:size();
-            local i;
-            for i = c - 1, 0, -1 do
-                index = i;
-                if( self._list[i].barCount <= bar_count )then
-                    break;
-                end
-            end
-            local item = self._list[index];
-            local numerator = item.numerator;
-            local denominator = item.denominator;
-            local init_clock = item.clock;
-            local init_bar_count = item.barCount;
-            local clock_per_bar = numerator * 480 * 4 / denominator;
-            return init_clock + (bar_count - init_bar_count) * clock_per_bar;
-        end
-
-        ---
-        -- 指定したクロックが、曲頭から何小節目に属しているかを調べる
-        -- ここで使用する小節数は、プリメジャーを考慮しない。即ち、曲頭の小節が 0 となる
-        -- @param clock  (integer) Tick 単位の時刻
-        -- @return (integer) 小節数
-        function this:getBarCountFromClock( clock )
-            local index = 0;
-            local c = self._list:size();
-            local i;
-            for i = c - 1, 0, -1 do
-                index = i;
-                if( self._list[i].clock <= clock )then
-                    break;
-                end
-            end
-            local bar_count = 0;
-            if( index >= 0 )then
-                local item = self._list[index];
-                local last_clock = item.clock;
-                local t_bar_count = item.barCount;
-                local numerator = item.numerator;
-                local denominator = item.denominator;
-                local clock_per_bar = numerator * 480 * 4 / denominator;
-                bar_count = t_bar_count + math.floor( (clock - last_clock) / clock_per_bar );
-            end
-            return bar_count;
-        end
-
-        return this;
+    -- データ点の個数を取得する
+    -- @return (integer) データ点の個数
+    function this:size()
+        return self._list:size();
     end
 
+    ---
+    -- データ点を順に返す反復子を取得する
+    -- @return (List.Iterator<TimesigTableItem>) 反復子
+    function this:iterator()
+        return self._list:iterator();
+    end
 
+    ---
+    -- データ点を追加する
+    -- @param (TimesigTableItem) 追加する拍子変更情報
+    function this:push( item )
+        self._list:push( item );
+    end
+
+    ---
+    -- 指定したインデックスの拍子変更情報を取得する
+    -- @param (integer) index 取得するデータ点のインデックス(0から始まる)
+    -- @return (TimesigTableItem) 拍子変更情報
+    function this:get( index )
+        return self._list[index];
+    end
+
+    ---
+    -- 指定したインデックスの拍子変更情報を設定する
+    -- @param index (integer) インデックス(最初のインデックスは0)
+    -- @param value (TempoTableItem) 設定するイベント
+    function this:set( index, value )
+        self._list[index] = value;
+    end
+
+    ---
+    -- リスト内のテンポ変更情報の秒単位の時刻部分を更新する
+
+    ---
+    -- リスト内の拍子変更情報の clock の部分を更新する
+    function this:updateTimesigInfo()
+        if( self:get( 0 ).clock ~= 0 )then
+            return;
+        end
+        self:get( 0 ).clock = 0;
+        self._list:sort( TimesigTableItem.compare );-- Collections.sort( this );
+        local count = self:size();
+        local j;
+        for j = 1, count - 1, 1 do
+            local item = self:get( j - 1 );
+            local numerator = item.numerator;
+            local denominator = item.denominator;
+            local clock = item.clock;
+            local bar_count = item.barCount;
+            local dif = math.floor( 480 * 4 / denominator * numerator );--1小節が何クロックか？
+            clock = clock + (self:get( j ).barCount - bar_count) * dif;
+            self:get( j ).clock = clock;
+        end
+    end
+
+    ---
+    -- 指定されたゲートタイムにおける拍子情報を取得する
+    -- @param clock (number) ゲートタイム
+    -- @return (Timesig) 指定されたゲートタイムでの拍子情報
+    function this:getTimesigAt( clock )
+        local ret = TimesigTableItem.new();
+        ret.numerator = 4;
+        ret.denominator = 4;
+        local index = 0;
+        local c = self._list:size();
+        local i;
+        for i = c - 1, 0, -1 do
+            index = i;
+            if( self._list[i].clock <= clock )then
+                break;
+            end
+        end
+        ret.numerator = self._list[index].numerator;
+        ret.denominator = self._list[index].denominator;
+        return ret;
+    end
+
+    ---
+    -- 指定されたゲートタイムにおける拍子情報を取得する
+    -- @param clock (number) ゲートタイム
+    -- @return (TimesigTableItem) 指定されたゲートタイムでの拍子情報
+    function this:findTimesigAt( clock )
+        local index = 0;
+        local c = self._list:size();
+        local i;
+        for i = c - 1, 0, -1 do
+            index = i;
+            if( self._list[i].clock <= clock )then
+                break;
+            end
+        end
+        local item = self._list[index];
+        local ret = item:clone();
+        local diff = clock - item.clock;
+        local clockPerBar = math.floor( 480 * 4 / ret.denominator * ret.numerator );
+        ret.barCount = item.barCount + math.floor( diff / clockPerBar );
+        return ret;
+    end
+
+    ---
+    -- 指定した小節の開始クロックを取得する。
+    -- ここで使用する小節数は、プリメジャーを考慮しない。即ち、曲頭の小節が 0 となる
+    -- @param bar_count (integer) 小節数
+    -- @return (integer) Tick 単位の時刻
+    function this:getClockFromBarCount( bar_count )
+        local index = 0;
+        local c = self._list:size();
+        local i;
+        for i = c - 1, 0, -1 do
+            index = i;
+            if( self._list[i].barCount <= bar_count )then
+                break;
+            end
+        end
+        local item = self._list[index];
+        local numerator = item.numerator;
+        local denominator = item.denominator;
+        local init_clock = item.clock;
+        local init_bar_count = item.barCount;
+        local clock_per_bar = numerator * 480 * 4 / denominator;
+        return init_clock + (bar_count - init_bar_count) * clock_per_bar;
+    end
+
+    ---
+    -- 指定したクロックが、曲頭から何小節目に属しているかを調べる
+    -- ここで使用する小節数は、プリメジャーを考慮しない。即ち、曲頭の小節が 0 となる
+    -- @param clock  (integer) Tick 単位の時刻
+    -- @return (integer) 小節数
+    function this:getBarCountFromClock( clock )
+        local index = 0;
+        local c = self._list:size();
+        local i;
+        for i = c - 1, 0, -1 do
+            index = i;
+            if( self._list[i].clock <= clock )then
+                break;
+            end
+        end
+        local bar_count = 0;
+        if( index >= 0 )then
+            local item = self._list[index];
+            local last_clock = item.clock;
+            local t_bar_count = item.barCount;
+            local numerator = item.numerator;
+            local denominator = item.denominator;
+            local clock_per_bar = numerator * 480 * 4 / denominator;
+            bar_count = t_bar_count + math.floor( (clock - last_clock) / clock_per_bar );
+        end
+        return bar_count;
+    end
+
+    return this;
 end

@@ -12,27 +12,21 @@
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 ]]
 
-if( nil == luavsq )then
-    luavsq = {};
-end
+module( "luavsq" );
 
-if( nil == luavsq.BPListSearchResult )then
+---
+-- コントロールパラメータのデータ点検索結果を格納するクラス
+-- @class table
+-- @name BPListSearchResult
+BPListSearchResult = {};
 
-    ---
-    -- コントロールパラメータのデータ点検索結果を格納するクラス
-    -- @class table
-    -- @name luavsq.BPListSearchResult
-    luavsq.BPListSearchResult = {};
-
-    ---
-    -- 初期化を行う
-    -- @return (luavsq.BPListSearchResult)
-    function luavsq.BPListSearchResult.new()
-        local this = {};
-        this.clock = 0;
-        this.index = 0;
-        this.point = luavsq.BP.new();
-        return this;
-    end
-
+---
+-- 初期化を行う
+-- @return (BPListSearchResult)
+function BPListSearchResult.new()
+    local this = {};
+    this.clock = 0;
+    this.index = 0;
+    this.point = BP.new();
+    return this;
 end

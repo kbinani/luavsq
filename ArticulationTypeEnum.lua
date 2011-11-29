@@ -12,39 +12,35 @@
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 ]]
 
-if( nil == luavsq )then
-    luavsq = {};
-end
+module( "luavsq" );
 
-if( nil == luavsq.ArticulationTypeEnum )then
+---
+-- アイコン設定の種類を表します。
+-- @class table
+-- @name ArticulationTypeEnum
+-- @field Vibrato ビブラート
+-- @field Crescendo クレッシェンド、またはデクレッシェンド
+-- @field Dynaff ピアノ、フォルテ等の強弱記号
+-- @field NoteAttack アタック
+-- @field NoteTransition NoteTransition(詳細不明)
+ArticulationTypeEnum = {
     ---
-    -- アイコン設定の種類を表します。
-    -- @class table
-    -- @name luavsq.ArticulationTypeEnum
-    -- @field Vibrato ビブラート
-    -- @field Crescendo クレッシェンド、またはデクレッシェンド
-    -- @field Dynaff ピアノ、フォルテ等の強弱記号
-    -- @field NoteAttack アタック
-    -- @field NoteTransition NoteTransition(詳細不明)
-    luavsq.ArticulationTypeEnum = {
-        ---
-        -- ビブラート
-        Vibrato = 0,
+    -- ビブラート
+    Vibrato = 0,
 
-        ---
-        -- クレッシェンド、またはデクレッシェンド
-        Crescendo = 1,
+    ---
+    -- クレッシェンド、またはデクレッシェンド
+    Crescendo = 1,
 
-        ---
-        -- ピアノ、フォルテ等の強弱記号
-        Dynaff = 2,
+    ---
+    -- ピアノ、フォルテ等の強弱記号
+    Dynaff = 2,
 
-        ---
-        -- アタック
-        NoteAttack = 3,
+    ---
+    -- アタック
+    NoteAttack = 3,
 
-        ---
-        -- NoteTransition(詳細不明)
-        NoteTransition = 4,
-    };
-end
+    ---
+    -- NoteTransition(詳細不明)
+    NoteTransition = 4,
+};

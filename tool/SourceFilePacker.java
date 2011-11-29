@@ -68,9 +68,14 @@ class SourceFilePacker implements Comparator<File>
             "--     $cd tool && make",
             "-- See tool/makefile and tool/SourceFilePacker.java.",
             "",
-            "if( nil == luavsq )then",
-            "\tluavsq = {};",
-            "end"
+            "local math         = math;",
+            "local setmetatable = setmetatable;",
+            "local string       = string;",
+            "local table        = table;",
+            "local tonumber     = tonumber;",
+            "local type         = type;",
+            "",
+            "module( \"luavsq\" );",
         };
         for( String line : license ){
             writer.write( line );
@@ -182,6 +187,15 @@ class SourceFilePacker implements Comparator<File>
             matcher = pattern.matcher( source );
             source = matcher.replaceAll( "" );
         }
+
+        pattern = Pattern.compile( "^module.*$", Pattern.MULTILINE );
+        matcher = pattern.matcher( source );
+        source = matcher.replaceAll( "" );
+
+        pattern = Pattern.compile( "luavsq[.]", Pattern.MULTILINE );
+        matcher = pattern.matcher( source );
+        source = matcher.replaceAll( "" );
+        
         return source;
     }
 
