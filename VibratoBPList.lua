@@ -59,7 +59,7 @@ function VibratoBPList.new( ... )
             for i = 1, len, 1 do
                 self._list[i] = VibratoBP.new( x[i], y[i] );
             end
-            table.sort( self._list, VibratoBPList._comparator );
+            table.sort( self._list, VibratoBP.compare );
         end
     end
 
@@ -81,7 +81,7 @@ function VibratoBPList.new( ... )
                 return false;
             end
         end
-        table.sort( self._list, VibratoBPList._comparator );
+        table.sort( self._list, VibratoBP.compare );
     end
 
     ---
@@ -176,7 +176,7 @@ function VibratoBPList.new( ... )
                 j = j + 1
             end
         end
-        table.sort( self._list, VibratoBPList._comparator );
+        table.sort( self._list, VibratoBP.compare );
     end
 
     if( #arguments == 3 )then
@@ -186,18 +186,4 @@ function VibratoBPList.new( ... )
     end
 
     return this;
-end
-
----
--- 2 つの VibratoBP を比較する
--- @param a (VibratoBP) 比較対象のオブジェクト
--- @param b (VibratoBP) 比較対象のオブジェクト
--- @return (boolean) a が b よりも小さい場合は true、そうでない場合は false を返す
--- @name <i>_comparator</i>
-function VibratoBPList._comparator( a, b )
-    if( a:compareTo( b ) < 0 )then
-        return true;
-    else
-        return false;
-    end
 end

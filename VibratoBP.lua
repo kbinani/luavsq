@@ -71,12 +71,11 @@ function VibratoBP.new( ... )
 end
 
 ---
--- 引数で与えられた 2 つのインスタンスの順序比較し、第 1 引数のものが第 2 引数のものより大きければ 1 を返す。
--- 小さければ -1 を返す。同順であれば 0 を返す。
--- @param a (VibratoBP)
--- @param b (VibratoBP)
--- @return (integer)
+-- 2 つの Event を比較する
+-- @param a (VibratoBP) 比較対象のオブジェクト
+-- @param b (VibratoBP) 比較対象のオブジェクト
+-- @return (boolean) a が b よりも小さい場合は true、そうでない場合は false を返す
 -- @name <i>compare</i>
 function VibratoBP.compare( a, b )
-    return a:compareTo( b );
+    return (a:compareTo( b ) < 0);
 end

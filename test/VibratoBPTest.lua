@@ -27,9 +27,9 @@ end
 function testCompare()
     local a = luavsq.VibratoBP.new( 2.0, 3 );
     local b = luavsq.VibratoBP.new( 2.0, 10 );
-    assert_equal( 0, luavsq.VibratoBP.compare( a, b ) );
+    assert_false( luavsq.VibratoBP.compare( a, b ) );
 
     local c = luavsq.VibratoBP.new( 1.0, 3 );
-    assert_equal( 1, luavsq.VibratoBP.compare( b, c ) );
-    assert_equal( -1, luavsq.VibratoBP.compare( c, b ) );
+    assert_false( luavsq.VibratoBP.compare( b, c ) );
+    assert_true( luavsq.VibratoBP.compare( c, b ) );
 end
