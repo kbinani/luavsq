@@ -6,13 +6,9 @@ dofile( "../Lyric.lua" );
 dofile( "../Util.lua" );
 dofile( "../VibratoBPList.lua" );
 dofile( "../VibratoBP.lua" );
-dofile( "../SingerHandle.lua" );
-dofile( "../VibratoHandle.lua" );
-dofile( "../IconDynamicsHandle.lua" );
 dofile( "../IconParameter.lua" );
 dofile( "../ArticulationTypeEnum.lua" );
-dofile( "../NoteHeadHandle.lua" );
-dofile( "../LyricHandle.lua" );
+dofile( "../PhoneticSymbol.lua" );
 module( "HandleTest", package.seeall, lunit.testcase );
 
 function getLyricStream()
@@ -83,6 +79,103 @@ function getCrescendoStream()
     stream:writeLine( "DynBPY=11" );
     stream:setPointer( -1 );
     return stream;
+end
+
+function testConstructIconDynamicsHandle()
+    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.Dynamics );
+    assert_equal( luavsq.ArticulationTypeEnum.Dynaff, handle:getArticulation() );
+end
+
+function testConstructNoteHeadHandle()
+    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.NoteHead );
+    assert_equal( luavsq.ArticulationTypeEnum.NoteAttack, handle:getArticulation() );
+end
+
+function testIsDynaffType()
+    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.Dynamics );
+    handle.iconId = nil;
+    assert_false( handle:isDynaffType() );
+    handle.iconId = "$05000000";
+    assert_false( handle:isDynaffType() );
+    handle.iconId = "$05010000";
+    assert_true( handle:isDynaffType() );
+end
+
+function testIsCrescendType()
+    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.Dynamics );
+    handle.iconId = nil;
+    assert_false( handle:isCrescendType() );
+    handle.iconId = "$05000000";
+    assert_false( handle:isCrescendType() );
+    handle.iconId = "$05020000";
+    assert_true( handle:isCrescendType() );
+end
+
+function testIsDecrescendType()
+    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.Dynamics );
+    handle.iconId = nil;
+    assert_false( handle:isDecrescendType() );
+    handle.iconId = "$05000000";
+    assert_false( handle:isDecrescendType() );
+    handle.iconId = "$05030000";
+    assert_true( handle:isDecrescendType() );
+end
+
+function __testClone()
+    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.Dynamics );
+    handle.iconId = "$05010000";
+    handle.ids = "foo";
+    handle.original = 1;
+    handle.caption = "bar";
+    handle.startDyn = 2;
+    handle.endDyn = 3;
+    handle.length = 4;
+    handle.dynBP = nil;
+    local copy = handle:clone();
+    assert_equal( "$05010000", copy.iconId );
+    assert_equal( "foo", copy.ids );
+    assert_equal( 1, copy.original );
+    assert_equal( "bar", copy.caption );
+    assert_equal( 2, copy:getStartDyn() );
+    assert_equal( 3, copy:getEndDyn() );
+    assert_equal( 4, copy:getLength() );
+    assert_nil( copy:getDynBP() );
+
+    local dynBP = luavsq.VibratoBPList.new( { 0.0, 1.0 }, { 1, 64 } );
+    handle:setDynBP( dynBP );
+    copy = handle:clone();
+    assert_equal( "0=1,1=64", copy:getDynBP():getData() );
+end
+
+function testGetterAndSetterCaption()
+    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.Dynamics );
+    handle:setCaption( "foo" );
+    assert_equal( "foo", handle:getCaption() );
+end
+
+function testGetterAndSetterStartDyn()
+    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.Dynamics );
+    local expected = 100;
+    assert_not_equal( expected, handle:getStartDyn() );
+    handle:setStartDyn( expected );
+    assert_equal( expected, handle:getStartDyn() );
+end
+
+function testGetterAndSetterEndDyn()
+    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.Dynamics );
+    local expected = 100;
+    assert_not_equal( expected, handle:getEndDyn() );
+    handle:setEndDyn( expected );
+    assert_equal( expected, handle:getEndDyn() );
+end
+
+function testGetterAndSetterDynBP()
+    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.Dynamics );
+    local dynBP = luavsq.VibratoBPList.new( { 0.0, 1.0 }, { 1, 2 } );
+    handle:setDynBP( nil );
+    assert_nil( handle:getDynBP() );
+    handle:setDynBP( dynBP );
+    assert_equal( "0=1,1=2", handle:getDynBP():getData() );
 end
 
 ---
@@ -240,92 +333,11 @@ function testConstructCrescendFromTextStream()
 end
 
 function testGetterAndSetterLength()
-    local handle = luavsq.Handle.new();
+    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.Vibrato );
     local expected = 847;
     assert_not_equal( expected, handle:getLength() );
     handle:setLength( expected );
     assert_equal( expected, handle:getLength() );
-end
-
-function testCastToLyricHandle()
-    local stream = getLyricStream();
-    local lastLine = { ["value"] = "" };
-    local index = 3847;
-    local handle = luavsq.Handle.new( stream, index, lastLine );
-    local casted = handle:castToLyricHandle();
-    assert_equal( index, casted.index );
-    assert_equal( #handle.lyrics, #casted.lyrics );
-    local i;
-    for i = 1, #handle.lyrics, 1 do
-        assert_equal( handle.lyrics[i]:toString(), casted.lyrics[i]:toString() );
-    end
-end
-
-function testCastToVibratoHandle()
-    local stream = getVibratoStream();
-    local lastLine = { ["value"] = "" };
-    local index = 347;
-    local handle = luavsq.Handle.new( stream, index, lastLine );
-
-    local casted = handle:castToVibratoHandle();
-    assert_equal( index, casted.index );
-    assert_equal( "キャプションです=あ", casted:getCaption() );
-    assert_equal( "0.5=64,0.75=32,1=0", casted:getDepthBP():getData() );
-    assert_equal( "$04040004", casted.iconId );
-    assert_equal( "normal-da-yo", casted.ids );
-    assert_equal( 120, casted:getLength() );
-    assert_equal( 5, casted.original );
-    assert_equal( "0.5=64,0.75=32,1=0", casted:getRateBP():getData() );
-    assert_equal( 64, casted:getStartDepth() );
-    assert_equal( 64, casted:getStartRate() );
-end
-
-function testCastToSingerHandle()
-    local stream = getSingerStream();
-    local lastLine = { ["value"] = "" };
-    local index = 9476;
-    local handle = luavsq.Handle.new( stream, index, lastLine );
-
-    local casted = handle:castToSingerHandle();
-    assert_equal( index, casted.index );
-    assert_equal( "", casted.caption );
-    assert_equal( "$07010002", casted.iconId );
-    assert_equal( "Miku3=God", casted.ids );
-    assert_equal( 1, casted.language );
-    assert_equal( 1, casted:getLength() );
-    assert_equal( 2, casted.original );
-    assert_equal( 2, casted.program );
-end
-
-function testCastToNoteHeadHandle()
-    local stream = getAttackStream();
-    local lastLine = { ["value"] = "" };
-    local index = 70375;
-    local handle = luavsq.Handle.new( stream, index, lastLine );
-    local casted = handle:castToNoteHeadHandle();
-    assert_equal( "Accent", casted:getCaption() );
-    assert_equal( 63, casted:getDepth() );
-    assert_equal( 64, casted:getDuration() );
-    assert_equal( "$01010002", casted.iconId );
-    assert_equal( "accent", casted.ids );
-    assert_equal( 120, casted:getLength() );
-    assert_equal( 2, casted.original );
-end
-
-function testCastToIconDynamicsHandle()
-    local stream = getCrescendoStream();
-    local lastLine = { ["value"] = "" };
-    local index = 1548;
-    local handle = luavsq.Handle.new( stream, index, lastLine );
-    local casted = handle:castToIconDynamicsHandle();
-    assert_equal( "Crescendo", casted.ids );
-    assert_equal( "$05020001", casted.iconId );
-    assert_equal( 4, casted.original );
-    assert_equal( "Zero Crescendo Curve", casted:getCaption() );
-    assert_equal( "0.5=11", casted.dynBP:getData() );
-    assert_equal( 38, casted.endDyn );
-    assert_equal( 960, casted:getLength() );
-    assert_equal( 2, casted.startDyn );
 end
 
 function testWrite()
@@ -470,3 +482,177 @@ end
 function testGetHandleIndexFromString()
     assert_equal( 2, luavsq.Handle.getHandleIndexFromString( "h#0002" ) );
 end
+
+function testGetterAndSetterDepth()
+    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.NoteHead );
+    local expected = 1234;
+    assert_not_equal( expected, handle:getDepth() );
+    handle:setDepth( expected );
+    assert_equal( expected, handle:getDepth() );
+end
+
+function testGetterAndSetterDuration()
+    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.NoteHead );
+    local expected = 947;
+    assert_not_equal( expected, handle:getDuration() );
+    handle:setDuration( expected );
+    assert_equal( expected, handle:getDuration() );
+end
+
+function testGetDisplayString()
+    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.NoteHead );
+    handle.ids = "goo";
+    handle.caption = "gle";
+    assert_equal( "google", handle:getDisplayString() );
+end
+
+function testGetterAndSetterRateBP()
+    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.Vibrato );
+    local rateBP = luavsq.VibratoBPList.new( { 0.0, 1.0 }, { 1, 128 } );
+    assert_not_equal( "0=1,1=128", handle:getRateBP():getData() );
+    handle:setRateBP( rateBP );
+    assert_equal( "0=1,1=128", handle:getRateBP():getData() );
+end
+
+function testGetterAndSetterDepthBP()
+    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.Vibrato );
+    local depthBP = luavsq.VibratoBPList.new( { 0.0, 1.0 }, { 1, 128 } );
+    assert_not_equal( "0=1,1=128", handle:getDepthBP():getData() );
+    handle:setDepthBP( depthBP );
+    assert_equal( "0=1,1=128", handle:getDepthBP():getData() );
+end
+
+function testGetterAndSetterStartRate()
+    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.Vibrato );
+    local expected = 12345;
+    assert_not_equal( expected, handle:getStartRate() );
+    handle:setStartRate( expected );
+    assert_equal( expected, handle:getStartRate() );
+end
+
+function testGetterAndSetterStartDepth()
+    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.Vibrato );
+    local expected = 12345;
+    assert_not_equal( expected, handle:getStartDepth() );
+    handle:setStartDepth( expected );
+    assert_equal( expected, handle:getStartDepth() );
+end
+
+function testGetterAndSetterLyric()
+    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.Lyric );
+    handle:setLyricAt( 0, luavsq.Lyric.new( "は", "h a" ) );
+    local lyric = luavsq.Lyric.new( "ら", "4 a" );
+    handle:setLyricAt( 1, lyric );
+    assert_equal( 2, handle:size() );
+    assert_true( handle:getLyricAt( 1 ):equals( lyric ) );
+end
+
+function testCloneIconDynamicsHandle()
+    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.Dynamics );
+    handle.iconId = "$05010000";
+    handle.ids = "foo";
+    handle.original = 1;
+    handle.caption = "bar";
+    handle.startDyn = 2;
+    handle.endDyn = 3;
+    handle.length = 4;
+    handle.dynBP = nil;
+    local copy = handle:clone();
+    assert_equal( "$05010000", copy.iconId );
+    assert_equal( "foo", copy.ids );
+    assert_equal( 1, copy.original );
+    assert_equal( "bar", copy.caption );
+    assert_equal( 2, copy:getStartDyn() );
+    assert_equal( 3, copy:getEndDyn() );
+    assert_equal( 4, copy:getLength() );
+    assert_nil( copy:getDynBP() );
+
+    local dynBP = luavsq.VibratoBPList.new( { 0.0, 1.0 }, { 1, 64 } );
+    handle:setDynBP( dynBP );
+    copy = handle:clone();
+    assert_equal( "0=1,1=64", copy:getDynBP():getData() );
+end
+
+function testCloneLyricHandle()
+    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.Lyric );
+    handle:setLyricAt( 0, luavsq.Lyric.new( "ら", "4 a" ) );
+    handle.index = 10;
+    local copy = handle:clone();
+    assert_equal( handle.index, copy.index );
+    assert_true( handle:getLyricAt( 0 ):equals( copy:getLyricAt( 0 ) ) );
+end
+
+function testCloneNoteHeadHandle()
+    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.NoteHead );
+    handle.index = 1;
+    handle.iconId = "$05010000";
+    handle.ids = "dwango";
+    handle.original = 2;
+    handle.caption = "niwango";
+    handle:setLength( 3 );
+    handle:setDuration( 4 );
+    handle:setDepth( 5 );
+
+    local copy = handle:clone();
+    assert_equal( 1, copy.index );
+    assert_equal( "$05010000", copy.iconId );
+    assert_equal( "dwango", copy.ids );
+    assert_equal( 2, copy.original );
+    assert_equal( "niwango", copy.caption );
+    assert_equal( 3, copy:getLength() );
+    assert_equal( 4, copy:getDuration() );
+    assert_equal( 5, copy:getDepth() );
+end
+
+function testCloneVibratoHandle()
+    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.Vibrato );
+    handle.index = 1;
+    handle.iconId = "hahaha";
+    handle.ids = "baka";
+    handle.original = 2;
+    handle:setCaption( "aho" );
+    handle:setLength( 3 );
+    handle:setStartDepth( 4 );
+    handle:setDepthBP( luavsq.VibratoBPList.new( { 0.0, 1.0 }, { 32, 56 } ) );
+    handle:setStartRate( 5 );
+    handle:setRateBP( luavsq.VibratoBPList.new( { 0.0, 1.0 }, { 64, 128 } ) );
+    local copy = handle:clone();
+    assert_equal( 1, copy.index );
+    assert_equal( "hahaha", copy.iconId );
+    assert_equal( "baka", copy.ids );
+    assert_equal( 2, copy.original );
+    assert_equal( "aho", copy:getCaption() );
+    assert_equal( 3, copy:getLength() );
+    assert_equal( 4, copy:getStartDepth() );
+    assert_equal( "0=32,1=56", copy:getDepthBP():getData() );
+    assert_equal( 5, copy:getStartRate() );
+    assert_equal( "0=64,1=128", copy:getRateBP():getData() );
+end
+
+function testCloneSingerHandle()
+    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.Singer );
+    handle.caption = "bar";
+    handle.iconId = "$07010001";
+    handle.ids = "foo";
+    handle.index = 1;
+    handle.length = 2;
+    handle.original = 3;
+    handle.program = 4;
+    handle.language= 5;
+
+    local copy = handle:clone();
+    assert_equal( handle.caption, copy.caption );
+    assert_equal( handle.iconId, copy.iconId );
+    assert_equal( handle.ids, copy.ids );
+    assert_equal( handle.index, copy.index );
+    assert_equal( handle.language, copy.language );
+    assert_equal( handle:getLength(), copy:getLength() );
+    assert_equal( handle.original, copy.original );
+    assert_equal( handle.program, copy.program );
+end
+
+--[[
+function testToDo()
+    fail( "sizeメソッドの名前を変える" );
+end
+]]

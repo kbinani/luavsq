@@ -3,17 +3,12 @@ dofile( "../EventList.lua" );
 dofile( "../Event.lua" );
 dofile( "../Id.lua" );
 dofile( "../IdTypeEnum.lua" );
-dofile( "../IconDynamicsHandle.lua" );
 dofile( "../IconParameter.lua" );
 dofile( "../ArticulationTypeEnum.lua" );
-dofile( "../SingerHandle.lua" );
-dofile( "../LyricHandle.lua" );
 dofile( "../Lyric.lua" );
 dofile( "../Util.lua" );
-dofile( "../NoteHeadHandle.lua" );
 dofile( "../TextStream.lua" );
 dofile( "../EventList.Iterator.lua" );
-dofile( "../VibratoHandle.lua" );
 dofile( "../VibratoBPList.lua" );
 dofile( "../Handle.lua" );
 dofile( "../HandleTypeEnum.lua" );
@@ -202,12 +197,12 @@ function testIterator()
 
     local singerEvent = luavsq.Event.new( 0, luavsq.Id.new( 0 ) );
     singerEvent.id.type = luavsq.IdTypeEnum.Singer;
-    singerEvent.id.singerHandle = luavsq.SingerHandle.new();
+    singerEvent.id.singerHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Singer );
     list:add( singerEvent, 1 );
 
     local crescendoEvent = luavsq.Event.new( 240, luavsq.Id.new( 0 ) );
     crescendoEvent.id.type = luavsq.IdTypeEnum.Aicon;
-    crescendoEvent.id.iconDynamicsHandle = luavsq.IconDynamicsHandle.new();
+    crescendoEvent.id.iconDynamicsHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Dynamics );
     crescendoEvent.id.iconDynamicsHandle.iconId = "$05020001";
     list:add( crescendoEvent, 2 );
 
@@ -224,38 +219,39 @@ function testWrite()
 
     local singerEvent = luavsq.Event.new( 0, luavsq.Id.new( 0 ) );
     singerEvent.id.type = luavsq.IdTypeEnum.Singer;
-    singerEvent.id.singerHandle = luavsq.SingerHandle.new();
+    singerEvent.id.singerHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Singer );
     list:add( singerEvent, 1 );
 
     local crescendoEvent = luavsq.Event.new( 240, luavsq.Id.new( 0 ) );
     crescendoEvent.id.type = luavsq.IdTypeEnum.Aicon;
-    crescendoEvent.id.iconDynamicsHandle = luavsq.IconDynamicsHandle.new();
+    crescendoEvent.id.iconDynamicsHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Dynamics );
     crescendoEvent.id.iconDynamicsHandle.iconId = "$05020001";
     list:add( crescendoEvent, 2 );
 
     local dynaffEvent = luavsq.Event.new( 480, luavsq.Id.new( 0 ) );
     dynaffEvent.id.type = luavsq.IdTypeEnum.Aicon;
-    dynaffEvent.id.iconDynamicsHandle = luavsq.IconDynamicsHandle.new();
+    dynaffEvent.id.iconDynamicsHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Dynamics );
     dynaffEvent.id.iconDynamicsHandle.iconId = "$05010001";
     list:add( dynaffEvent, 3 );
 
     local decrescendoEvent = luavsq.Event.new( 720, luavsq.Id.new( 0 ) );
     decrescendoEvent.id.type = luavsq.IdTypeEnum.Aicon;
-    decrescendoEvent.id.iconDynamicsHandle = luavsq.IconDynamicsHandle.new();
+    decrescendoEvent.id.iconDynamicsHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Dynamics );
     decrescendoEvent.id.iconDynamicsHandle.iconId = "$05030001";
     list:add( decrescendoEvent, 4 );
 
     local singerEvent2 = luavsq.Event.new( 1920, luavsq.Id.new( 0 ) );
     singerEvent2.id.type = luavsq.IdTypeEnum.Singer;
-    singerEvent2.id.singerHandle = luavsq.SingerHandle.new();
+    singerEvent2.id.singerHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Singer );
     list:add( singerEvent2, 5 );
 
     local noteEvent = luavsq.Event.new( 1920, luavsq.Id.new( 0 ) );
     noteEvent.id.type = luavsq.IdTypeEnum.Anote;
     noteEvent.id:setLength( 480 );
-    noteEvent.id.lyricHandle = luavsq.LyricHandle.new( "ら", "4 a" );
-    noteEvent.id.noteHeadHandle = luavsq.NoteHeadHandle.new();
-    noteEvent.id.vibratoHandle = luavsq.VibratoHandle.new();
+    noteEvent.id.lyricHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Lyric );
+    noteEvent.id.lyricHandle:setLyricAt( 0, luavsq.Lyric.new( "ら", "4 a" ) );
+    noteEvent.id.noteHeadHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.NoteHead );
+    noteEvent.id.vibratoHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Vibrato );
     list:add( noteEvent, 6 );
 
     local stream = luavsq.TextStream.new();

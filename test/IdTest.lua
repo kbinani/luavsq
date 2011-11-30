@@ -1,16 +1,13 @@
 require( "lunit" );
 dofile( "../Id.lua" );
 dofile( "../IdTypeEnum.lua" );
-dofile( "../SingerHandle.lua" );
-dofile( "../LyricHandle.lua" );
 dofile( "../ArticulationTypeEnum.lua" );
 dofile( "../Lyric.lua" );
-dofile( "../VibratoHandle.lua" );
 dofile( "../IconParameter.lua" );
 dofile( "../VibratoBPList.lua" );
-dofile( "../NoteHeadHandle.lua" );
-dofile( "../IconDynamicsHandle.lua" );
 dofile( "../Util.lua" );
+dofile( "../Handle.lua" );
+dofile( "../HandleTypeEnum.lua" );
 module( "IdTest", package.seeall, lunit.testcase );
 
 function testConstructWithValue()
@@ -90,19 +87,19 @@ function testClone()
     assert_equal( 16, copy.d4mean );
     assert_equal( 17, copy.pMeanEndingNote );
 
-    local iconHandle = luavsq.SingerHandle.new();
+    local iconHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Singer );
     iconHandle.caption = "foo";
     id.singerHandle = iconHandle;
-    local lyricHandle = luavsq.LyricHandle.new();
+    local lyricHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Lyric );
     lyricHandle.index = 102;
     id.lyricHandle = lyricHandle;
-    local vibratoHandle = luavsq.VibratoHandle.new();
+    local vibratoHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Vibrato );
     vibratoHandle.iconId = "aho";
     id.vibratoHandle = vibratoHandle;
-    local noteHeadHandle = luavsq.NoteHeadHandle.new();
+    local noteHeadHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.NoteHead );
     noteHeadHandle.ids = "baka";
     id.noteHeadHandle = noteHeadHandle;
-    local iconDynamicsHandle = luavsq.IconDynamicsHandle.new();
+    local iconDynamicsHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Dynamics );
     iconDynamicsHandle:setStartDyn( 183635 );
     id.iconDynamicsHandle = iconDynamicsHandle;
 

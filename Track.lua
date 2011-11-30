@@ -246,7 +246,7 @@ function Track.new( ... )
         self.events = EventList.new();
         local id = Id.new( 0 );
         id.type = IdTypeEnum.Singer;
-        local ish = SingerHandle.new();
+        local ish = Handle.new( HandleTypeEnum.Singer );
         ish.iconId = "$07010000";
         ish.ids = singer;
         ish.original = 0;
@@ -638,7 +638,7 @@ function Track.new( ... )
             if( singers_size <= 0 )then
                 default_id = Id.new();
                 default_id.type = IdTypeEnum.Singer;
-                local singer_handle = SingerHandle.new();
+                local singer_handle = Handle.new( HandleTypeEnum.Singer );
                 singer_handle.IconID = "$0701" + org.kbinani.PortUtil.sprintf( "%04X", 0 );
                 singer_handle.ids = "Unknown";
                 singer_handle.Index = 0;

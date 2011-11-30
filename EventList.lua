@@ -267,47 +267,41 @@ function EventList.new()
             item.id.value = current_id;
             -- SingerHandle
             if( item.id.singerHandle ~= nil )then
-                local ish = item.id.singerHandle;
                 current_handle = current_handle + 1;
-                local handle_item = ish:castToHandle();
-                handle_item.index = current_handle;
-                table.insert( handle, handle_item );
+                item.id.singerHandle.index = current_handle;
+                table.insert( handle, item.id.singerHandle );
                 item.id.singerHandleIndex = current_handle;
-                local lang = VoiceLanguageEnum.valueFromSingerName( ish.ids );
+                local lang = VoiceLanguageEnum.valueFromSingerName( item.id.singerHandle.ids );
                 add_quotation_mark = lang == VoiceLanguageEnum.Japanese;
             end
             -- LyricHandle
             if( item.id.lyricHandle ~= nil )then
                 current_handle = current_handle + 1;
-                local handle_item = item.id.lyricHandle:castToHandle();
-                handle_item.index = current_handle;
-                handle_item.addQuotationMark = add_quotation_mark;
-                table.insert( handle, handle_item );
+                item.id.lyricHandle.index = current_handle;
+                item.id.lyricHandle.addQuotationMark = add_quotation_mark;
+                table.insert( handle, item.id.lyricHandle );
                 item.id.lyricHandleIndex = current_handle;
             end
             -- VibratoHandle
             if( item.id.vibratoHandle ~= nil )then
                 current_handle = current_handle + 1;
-                local handle_item = item.id.vibratoHandle:castToHandle();
-                handle_item.index = current_handle;
-                table.insert( handle, handle_item );
+                item.id.vibratoHandle.index = current_handle;
+                table.insert( handle, item.id.vibratoHandle );
                 item.id.vibratoHandleIndex = current_handle;
             end
             -- NoteHeadHandle
             if( item.id.noteHeadHandle ~= nil )then
                 current_handle = current_handle + 1;
-                local handle_item = item.id.noteHeadHandle:castToHandle();
-                handle_item.index = current_handle;
-                table.insert( handle, handle_item );
+                item.id.noteHeadHandle.index = current_handle;
+                table.insert( handle, item.id.noteHeadHandle );
                 item.id.noteHeadHandleIndex = current_handle;
             end
             -- IconDynamicsHandle
             if( item.id.iconDynamicsHandle ~= nil )then
                 current_handle = current_handle + 1;
-                local handle_item = item.id.iconDynamicsHandle:castToHandle();
-                handle_item.index = current_handle;
-                handle_item:setLength( item.id:getLength() );
-                table.insert( handle, handle_item );
+                item.id.iconDynamicsHandle.index = current_handle;
+                item.id.iconDynamicsHandle:setLength( item.id:getLength() );
+                table.insert( handle, item.id.iconDynamicsHandle );
                 item.id.singerHandleIndex = current_handle;
             end
         end

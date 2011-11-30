@@ -4,11 +4,12 @@ dofile( "../EventList.IndexIterator.lua" );
 dofile( "../Event.lua" );
 dofile( "../Id.lua" );
 dofile( "../IdTypeEnum.lua" );
-dofile( "../IconDynamicsHandle.lua" );
 dofile( "../IconParameter.lua" );
 dofile( "../ArticulationTypeEnum.lua" );
 dofile( "../EventList.IndexIteratorKindEnum.lua" );
 dofile( "../Util.lua" );
+dofile( "../Handle.lua" );
+dofile( "../HandleTypeEnum.lua" );
 module( "EventList.IndexIteratorTest", package.seeall, lunit.testcase );
 
 function test()
@@ -24,19 +25,19 @@ function test()
 
     local dynaffEvent = luavsq.Event.new( 480, luavsq.Id.new( 0 ) );
     dynaffEvent.id.type = luavsq.IdTypeEnum.Aicon;
-    dynaffEvent.id.iconDynamicsHandle = luavsq.IconDynamicsHandle.new();
+    dynaffEvent.id.iconDynamicsHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Dynamics );
     dynaffEvent.id.iconDynamicsHandle.iconId = "$05010001";
     list:add( dynaffEvent, 3 );
 
     local crescendoEvent = luavsq.Event.new( 240, luavsq.Id.new( 0 ) );
     crescendoEvent.id.type = luavsq.IdTypeEnum.Aicon;
-    crescendoEvent.id.iconDynamicsHandle = luavsq.IconDynamicsHandle.new();
+    crescendoEvent.id.iconDynamicsHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Dynamics );
     crescendoEvent.id.iconDynamicsHandle.iconId = "$05020001";
     list:add( crescendoEvent, 2 );
 
     local decrescendoEvent = luavsq.Event.new( 720, luavsq.Id.new( 0 ) );
     decrescendoEvent.id.type = luavsq.IdTypeEnum.Aicon;
-    decrescendoEvent.id.iconDynamicsHandle = luavsq.IconDynamicsHandle.new();
+    decrescendoEvent.id.iconDynamicsHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Dynamics );
     decrescendoEvent.id.iconDynamicsHandle.iconId = "$05030001";
     list:add( decrescendoEvent, 4 );
 

@@ -104,17 +104,17 @@ function EventList.IndexIterator.new( list, iteratorKind )
                 if( item.id.type == IdTypeEnum.Aicon and item.id.iconDynamicsHandle ~= nil and item.id.iconDynamicsHandle.iconId ~= nil )then
                     local iconid = item.id.iconDynamicsHandle.iconId;
                     if( self._kindDynaff )then
-                        if( iconid:find( IconDynamicsHandle.ICONID_HEAD_DYNAFF ) == 1 )then
+                        if( iconid:find( Handle.ICONID_HEAD_DYNAFF ) == 1 )then
                             return i;
                         end
                     end
                     if( self._kindCrescend )then
-                        if( iconid:find( IconDynamicsHandle.ICONID_HEAD_CRESCEND ) == 1 )then
+                        if( iconid:find( Handle.ICONID_HEAD_CRESCEND ) == 1 )then
                             return i;
                         end
                     end
                     if( self._kindDecrescend )then
-                        if( iconid:find( IconDynamicsHandle.ICONID_HEAD_DECRESCEND ) == 1 )then
+                        if( iconid:find( Handle.ICONID_HEAD_DECRESCEND ) == 1 )then
                             return i;
                         end
                     end

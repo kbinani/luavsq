@@ -7,20 +7,15 @@ dofile( "../BPList.lua" );
 dofile( "../EventList.lua" );
 dofile( "../Id.lua" );
 dofile( "../IdTypeEnum.lua" );
-dofile( "../SingerHandle.lua" );
 dofile( "../Event.lua" );
 dofile( "../EventList.IndexIteratorKindEnum.lua" );
 dofile( "../EventList.IndexIterator.lua" );
 dofile( "../Util.lua" );
-dofile( "../IconDynamicsHandle.lua" );
 dofile( "../IconParameter.lua" );
 dofile( "../ArticulationTypeEnum.lua" );
 dofile( "../BP.lua" );
 dofile( "../EventList.Iterator.lua" );
-dofile( "../LyricHandle.lua" );
 dofile( "../Lyric.lua" );
-dofile( "../NoteHeadHandle.lua" );
-dofile( "../VibratoHandle.lua" );
 dofile( "../VibratoBPList.lua" );
 dofile( "../Master.lua" );
 dofile( "../Mixer.lua" );
@@ -272,7 +267,7 @@ function testGetIndexIteratorDynamics()
 
     local event = luavsq.Event.new( 480, luavsq.Id.new( 0 ) );
     event.id.type = luavsq.IdTypeEnum.Aicon;
-    event.id.iconDynamicsHandle = luavsq.IconDynamicsHandle.new();
+    event.id.iconDynamicsHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Dynamics );
     event.id.iconDynamicsHandle.iconId = "$05019999";
     track.events:add( event, 10 );
     iterator = track:getIndexIterator( luavsq.EventList.IndexIteratorKindEnum.DYNAFF );
@@ -289,7 +284,7 @@ function testPrintMetaText()
 
     local singerEvent = luavsq.Event.new( 0, luavsq.Id.new( 0 ) );
     singerEvent.id.type = luavsq.IdTypeEnum.Singer;
-    singerEvent.id.singerHandle = luavsq.SingerHandle.new(); --h#0000
+    singerEvent.id.singerHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Singer ); --h#0000
     singerEvent.id.singerHandle.iconId = "$07010002";
     singerEvent.id.singerHandle.ids = "Miku";
     singerEvent.id.singerHandle.original = 1;
@@ -301,7 +296,7 @@ function testPrintMetaText()
     local crescendoEvent = luavsq.Event.new( 240, luavsq.Id.new( 0 ) );
     crescendoEvent.id.type = luavsq.IdTypeEnum.Aicon;
     crescendoEvent.id.note = 64;
-    crescendoEvent.id.iconDynamicsHandle = luavsq.IconDynamicsHandle.new(); --h#0001
+    crescendoEvent.id.iconDynamicsHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Dynamics ); --h#0001
     crescendoEvent.id.iconDynamicsHandle.iconId = "$05020001";
     crescendoEvent.id.iconDynamicsHandle.ids = "crescendo";
     crescendoEvent.id.iconDynamicsHandle.original = 1;
@@ -314,7 +309,7 @@ function testPrintMetaText()
     local dynaffEvent = luavsq.Event.new( 480, luavsq.Id.new( 0 ) );
     dynaffEvent.id.type = luavsq.IdTypeEnum.Aicon;
     dynaffEvent.id.note = 65;
-    dynaffEvent.id.iconDynamicsHandle = luavsq.IconDynamicsHandle.new();--h#0002
+    dynaffEvent.id.iconDynamicsHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Dynamics );--h#0002
     dynaffEvent.id.iconDynamicsHandle.iconId = "$05010001";
     dynaffEvent.id.iconDynamicsHandle.ids = "dynaff";
     dynaffEvent.id.iconDynamicsHandle.original = 2;
@@ -327,7 +322,7 @@ function testPrintMetaText()
     local decrescendoEvent = luavsq.Event.new( 720, luavsq.Id.new( 0 ) );
     decrescendoEvent.id.type = luavsq.IdTypeEnum.Aicon;
     decrescendoEvent.id.note = 66;
-    decrescendoEvent.id.iconDynamicsHandle = luavsq.IconDynamicsHandle.new();--h#0003
+    decrescendoEvent.id.iconDynamicsHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Dynamics );--h#0003
     decrescendoEvent.id.iconDynamicsHandle.iconId = "$05030001";
     decrescendoEvent.id.iconDynamicsHandle.ids = "decrescendo";
     decrescendoEvent.id.iconDynamicsHandle.original = 3;
@@ -339,7 +334,7 @@ function testPrintMetaText()
 
     local singerEvent2 = luavsq.Event.new( 1920, luavsq.Id.new( 0 ) );
     singerEvent2.id.type = luavsq.IdTypeEnum.Singer;
-    singerEvent2.id.singerHandle = luavsq.SingerHandle.new();--h#0004
+    singerEvent2.id.singerHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Singer );--h#0004
     singerEvent2.id.singerHandle.iconId = "$07020003";
     singerEvent2.id.singerHandle.ids = "Luka_EN";
     singerEvent2.id.singerHandle.original = 0x82;
@@ -358,8 +353,9 @@ function testPrintMetaText()
     noteEvent.id.demDecGainRate = 71;
     noteEvent.id.demAccent = 72;
     noteEvent.id:setLength( 480 );
-    noteEvent.id.lyricHandle = luavsq.LyricHandle.new( "ら", "4 a" );--h#0005
-    noteEvent.id.vibratoHandle = luavsq.VibratoHandle.new();--h#0006
+    noteEvent.id.lyricHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Lyric );
+    noteEvent.id.lyricHandle:setLyricAt( 0, luavsq.Lyric.new( "ら", "4 a" ) );--h#0005
+    noteEvent.id.vibratoHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Vibrato );--h#0006
     noteEvent.id.vibratoDelay = 73;
     noteEvent.id.vibratoHandle.iconId ="$04040004";
     noteEvent.id.vibratoHandle.ids = "vibrato";
@@ -368,7 +364,7 @@ function testPrintMetaText()
     noteEvent.id.vibratoHandle:setLength( 407 );
     noteEvent.id.vibratoHandle.startDepth = 13;
     noteEvent.id.vibratoHandle.startRate = 14;
-    noteEvent.id.noteHeadHandle = luavsq.NoteHeadHandle.new();--h#0007
+    noteEvent.id.noteHeadHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.NoteHead );--h#0007
     noteEvent.id.noteHeadHandle.iconId = "$05030000";
     noteEvent.id.noteHeadHandle.ids = "attack";
     noteEvent.id.noteHeadHandle.original = 15;

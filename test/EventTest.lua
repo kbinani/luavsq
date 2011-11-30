@@ -3,15 +3,13 @@ dofile( "../Event.lua" );
 dofile( "../Id.lua" );
 dofile( "../Util.lua" );
 dofile( "../IdTypeEnum.lua" );
-dofile( "../SingerHandle.lua" );
 dofile( "../TextStream.lua" );
-dofile( "../LyricHandle.lua" );
 dofile( "../ArticulationTypeEnum.lua" );
 dofile( "../Lyric.lua" );
-dofile( "../VibratoHandle.lua" );
 dofile( "../IconParameter.lua" );
 dofile( "../VibratoBPList.lua" );
-dofile( "../NoteHeadHandle.lua" );
+dofile( "../Handle.lua" );
+dofile( "../HandleTypeEnum.lua" );
 module( "EventTest", package.seeall, lunit.testcase );
 
 function getNoteId()
@@ -124,9 +122,10 @@ function testWriteNoteWithOption()
     --現在、PreUtteranceとVoiceOverlapは扱わないようにしているので、
     --オプション全指定と、オプションが無い場合の動作が全くおなじになってしまっている。
     --ustEventをちゃんと処理するようになったら、TODOコメントのところを外すこと
-    noteId.lyricHandle = luavsq.LyricHandle.new( "わ", "w a" );
-    noteId.vibratoHandle = luavsq.VibratoHandle.new();
-    noteId.noteHeadHandle = luavsq.NoteHeadHandle.new();
+    noteId.lyricHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Lyric );
+    noteId.lyricHandle:setLyricAt( 0, luavsq.Lyric.new( "わ", "w a" ) );
+    noteId.vibratoHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Vibrato );
+    noteId.noteHeadHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.NoteHead );
     event.id = noteId;
     stream = luavsq.TextStream.new();
     event:write( stream, optionAll );
@@ -209,7 +208,7 @@ end
 
 function testClone()
     local singerId = getSingerId();
-    singerId.singerHandle = luavsq.SingerHandle.new();
+    singerId.singerHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Singer );
     singerId.singerHandle.index = 12;
     local event = luavsq.Event.new( 40, singerId );
     event.internalId = 4;
