@@ -22,12 +22,9 @@ module( "luavsq" );
 -- @name Mixer
 Mixer = {};
 
----
+--
 -- 初期化を行う
--- @see _init_2
--- @see _init_4
 -- @return (Mixer)
--- @name <i>new</i>
 function Mixer.new( ... )
     local this = {};
     local arguments = { ... };
@@ -46,7 +43,8 @@ function Mixer.new( ... )
     -- @param master_panpot (integer) MasterPanpot 値
     -- @param master_mute (integer) MasterMute 値
     -- @param output_mode (integer) OutputMode 値
-    -- @name _init_4
+    -- @return (Mixer)
+    -- @name <i>new</i><sup>2</sup>
     function this:_init_4( master_feder, master_panpot, master_mute, output_mode )
         self.masterFeder = master_feder;
         self.masterMute = master_mute;
@@ -62,7 +60,8 @@ function Mixer.new( ... )
     -- テキストストリームから読み込みを行い、初期化を行う
     -- @param sr (TextStream) 読み込むテキストストリーム
     -- @param lastLine (table, { value = ? }) 読み込んだ最後の行。テーブルの ["value"] に文字列が格納される
-    -- @name _init_2
+    -- @return (Mixer)
+    -- @name <i>new</i><sup>1</sup>
     function this:_init_2( stream, last_line )
         self.masterFeder = 0;
         self.masterPanpot = 0;

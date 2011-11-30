@@ -112,11 +112,8 @@ function EventList.new()
         return EventList.Iterator.new( self );
     end
 
-    ---
+    --
     -- イベントを追加する
-    -- @see _add_1
-    -- @see _add_2
-    -- @name add
     function this:add( ... )
         local arguments = { ... };
         if( #arguments == 1 )then
@@ -131,7 +128,7 @@ function EventList.new()
     -- イベントを追加する
     -- @param item (Event) 追加するオブジェクト
     -- @return (integer) 追加したオブジェクトに割り振られたイベント ID
-    -- @name _add_1
+    -- @name add<sup>1</sup>
     function this:_add_1( item )
         local id = self:_getNextId( 0 );
         self:_addCor( item, id );
@@ -149,7 +146,7 @@ function EventList.new()
     -- @param item (Event) 追加するオブジェクト
     -- @param internal_id (integer) 追加するオブジェクトに割り振るイベント ID
     -- @return (integer) オブジェクトに割り振られたイベント ID
-    -- @name _add_2
+    -- @name add<sup>2</sup>
     function this:_add_2( item, internalId )
         self:_addCor( item, internalId );
         table.sort( self._events, Event.compare );

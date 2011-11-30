@@ -20,11 +20,9 @@ module( "luavsq" );
 -- @name TempoTableItem
 TempoTableItem = {};
 
----
+--
 -- 初期化を行う
--- @see _init_3
 -- @return (TempoTableItem)
--- @name <i>new</i>
 function TempoTableItem.new( ... )
     local this = {};
     local arguments = { ... };
@@ -54,7 +52,8 @@ function TempoTableItem.new( ... )
     -- @param tempo (integer) テンポ値。四分音符の長さをマイクロ秒単位で表した値
     -- @param time (double) 秒単位の時刻。この値は最初は 0 を指定して良い。
     --                      time フィールドの値は、TempoTable:updateTempoInfo によって更新する
-    -- @name _init_3
+    -- @return (TempoTableItem)
+    -- @name <i>new</i>
     function this:_init_3( clock, tempo, time )
         self.clock = clock;
         self.tempo = tempo;

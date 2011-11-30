@@ -20,20 +20,30 @@ module( "luavsq" );
 -- @name VibratoBP
 VibratoBP = {};
 
----
+--
 -- 初期化を行う
--- @param x (double) x 軸の値
--- @param y (integer) y 軸の値
--- @return (VibratoBP)
--- @name <i>new</i>
 function VibratoBP.new( ... )
     local arguments = { ... };
     local this = {};
     this.x = 0.0;
     this.y = 0;
-    if( #arguments == 2 )then
-        this.x = arguments[1];
-        this.y = arguments[2];
+
+    ---
+    -- 初期化を行う
+    -- @return (VibratoBP)
+    -- @name <i>new</i><sup>1</sup>
+    function this:_init_0()
+    end
+
+    ---
+    -- 初期化を行う
+    -- @param x (double) x 軸の値
+    -- @param y (integer) y 軸の値
+    -- @return (VibratoBP)
+    -- @name <i>new</i><sup>2</sup>
+    function this:_init_2( x, y )
+        self.x = x;
+        self.y = y;
     end
 
     ---
@@ -49,6 +59,12 @@ function VibratoBP.new( ... )
             return -1;
         end
         return 0;
+    end
+
+    if( #arguments == 2 )then
+        this:_init_2( arguments[1], arguments[2] );
+    else
+        this:_init_0();
     end
 
     return this;

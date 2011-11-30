@@ -29,14 +29,26 @@ module( "luavsq" );
 -- @name List
 List = {};
 
----
+--
 -- 初期化を行う
 -- @return (List)
--- @name <i>new</i>
 function List.new( ... )
     local this = {};
     local arguments = { ... };
     this._array = {};
+
+    ---
+    -- 初期化を行う
+    -- @name <i>new</i><sup>1</sup>
+    function this:_init_0()
+    end
+
+    ---
+    -- 初期化を行う
+    -- @param count (integer) 初期のリスト要素数
+    -- @name <i>new</i><sup>2</sup>
+    function this:_init_1( count )
+    end
 
     ---
     -- リスト内の指定した位置にある要素を返す
@@ -66,26 +78,37 @@ function List.new( ... )
 
     ---
     -- リスト内のデータを並べ替える
-    -- @param comparator (function) <optional> データの比較に使う比較関数
-    -- @name sort
+    -- @param comparator (function) データの比較に使う比較関数
+    -- @name sort<sup>2</sup>
+    function this:_sort_1( comparator )
+        local wrappedComparator = function( a, b )
+            local actualA = a["value"];
+            local actualB = b["value"];
+            return comparator( actualA, actualB );
+        end
+        table.sort( self._array, wrappedComparator );
+    end
+
+    ---
+    -- リスト内のデータを並べ替える
+    -- @name sort<sup>1</sup>
+    function this:_sort_0()
+        local wrappedComparator = function( a, b )
+            local actualA = a["value"];
+            local actualB = b["value"];
+            return actualA < actualB;
+        end
+        table.sort( self._array, wrappedComparator );
+    end
+
     function this:sort( ... )
         local arguments = { ... };
         local wrappedComparator = nil;
         if( #arguments > 0 )then
-            comparator = arguments[1];
-            wrappedComparator = function( a, b )
-                local actualA = a["value"];
-                local actualB = b["value"];
-                return comparator( actualA, actualB );
-            end
+            self:_sort_1( arguments[1] );
         else
-            wrappedComparator = function( a, b )
-                local actualA = a["value"];
-                local actualB = b["value"];
-                return actualA < actualB;
-            end
+            self:_sort_0();
         end
-        table.sort( self._array, wrappedComparator );
     end
 
     ---

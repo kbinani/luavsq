@@ -22,12 +22,9 @@ module( "luavsq" );
 -- @name Common
 Common = {};
 
----
+--
 -- 初期化を行う
--- @see _init_2
--- @see _init_6
 -- @return (Common)
--- @name <i>new</i>
 function Common.new( ... )
     local this = {};
     local arguments = { ... };
@@ -48,7 +45,8 @@ function Common.new( ... )
     -- 初期化を行う
     -- @param sr (TextStream) 読み込み元のテキストストリーム
     -- @param last_line (table, { value = ? }) 読み込んだ最後の行。テーブルの ["value"] に文字列が格納される
-    -- @name _init_2
+    -- @return (Common)
+    -- @name <i>new</i><sup>1</sup>
     function this:_init_2( sr, last_line )
         self.version = "";
         self.name = "";
@@ -85,7 +83,8 @@ function Common.new( ... )
     -- @param blue (integer) 青(意味は不明)
     -- @param dynamicsMode (DynamicsModeEnum) シーケンスの Dynamics モード
     -- @param playMode (PlayModeEnum) シーケンスの Play モード
-    -- @name _init_6
+    -- @return (Common)
+    -- @name <i>new</i><sup>2</sup>
     function this:_init_6( name, r, g, b, dynamicsMode, playMode )
         self.version = "DSB301";
         self.name = name;

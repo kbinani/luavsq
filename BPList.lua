@@ -23,11 +23,9 @@ module( "luavsq" );
 -- @name BPList
 BPList = {};
 
----
+--
 -- コンストラクタ
--- @see BPList:_init_4
 -- @return (BPList)
--- @name <i>new</i>
 function BPList.new( ... )
     local this = {};
     local arguments = { ... };
@@ -46,7 +44,8 @@ function BPList.new( ... )
     -- @param defaultValue (integer) コントロールカーブのデフォルト値
     -- @param minimum (integer) コントロールカーブの最小値
     -- @param maximum (integer) コントロールカーブの最大値
-    -- @name _init_4
+    -- @name <i>new</i>
+    -- @return (BPList)
     function this:_init_4( name, defaultValue, minimum, maximum )
         self.name = name;
         self.defaultValue = defaultValue;
@@ -628,11 +627,8 @@ function BPList.new( ... )
             end
         end]]
 
-    ---
+    --
     -- 指定された Tick 単位の時刻における、コントロールパラメータの値を取得する
-    -- @see _getValueAt_1
-    -- @see _getValueAt_2
-    -- @name getValueAt
     function this:getValueAt( ... )
         local arguments = { ... };
         if( #arguments == 2 )then
@@ -643,11 +639,43 @@ function BPList.new( ... )
     end
 
     ---
+    -- 指定された Tick 単位の時刻における，コントロールパラメータの値を取得する．
+    -- @param clock (integer) 値を取得する Tick 単位の時刻
+    -- @return (integer) コントロールパラメータの値
+    -- @name getValueAt<sup>1</sup>
+    function this:_getValueAt_1( clock )
+        self:_ensureBufferLength( self._length );
+        local index = self:_find( clock );
+        if( index >= 0 )then
+            return self.items[index + 1].value;
+        else
+            if( self._length <= 0 )then
+                return self.defaultValue;
+            else
+                local draft = 0;
+                local i;
+                for i = 1, self._length, 1 do
+                    local c = self.clocks[i];
+                    if( clock < c )then
+                        break;
+                    end
+                    draft = i;
+                end
+                if( draft == 0 )then
+                    return self.defaultValue;
+                else
+                    return self.items[draft].value;
+                end
+            end
+        end
+    end
+
+    ---
     -- 指定された Tick 単位の時刻における、コントロールパラメータの値を取得する
     -- @param clock (integer) 値を取得する Tick 単位の時刻
     -- @param index (table,{ value = ? }) 値の取得に使用したインデックス(最初のインデックスは0)
     -- @return (integer) コントロールパラメータの値
-    -- @name _getValueAt_2
+    -- @name getValueAt<sup>2</sup>
     function this:_getValueAt_2( clock, index )
         if( self._length == 0 )then
             return self.defaultValue;
@@ -673,38 +701,6 @@ function BPList.new( ... )
             end
             index.value = self._length - 1;
             return self.items[self._length].value;
-        end
-    end
-
-    ---
-    -- 指定された Tick 単位の時刻における，コントロールパラメータの値を取得する．
-    -- @param clock (integer) 値を取得する Tick 単位の時刻
-    -- @return (integer) コントロールパラメータの値
-    -- @name _getValueAt_1
-    function this:_getValueAt_1( clock )
-        self:_ensureBufferLength( self._length );
-        local index = self:_find( clock );
-        if( index >= 0 )then
-            return self.items[index + 1].value;
-        else
-            if( self._length <= 0 )then
-                return self.defaultValue;
-            else
-                local draft = 0;
-                local i;
-                for i = 1, self._length, 1 do
-                    local c = self.clocks[i];
-                    if( clock < c )then
-                        break;
-                    end
-                    draft = i;
-                end
-                if( draft == 0 )then
-                    return self.defaultValue;
-                else
-                    return self.items[draft].value;
-                end
-            end
         end
     end
 

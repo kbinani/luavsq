@@ -24,12 +24,9 @@ module( "luavsq" );
 -- @name luvasq.VibratoBPList
 VibratoBPList = {};
 
----
+--
 -- 初期化を行う
--- @see _init_3
--- @see _init_2
 -- @return (VibratoBPList)
--- @name <i>new</i>
 function VibratoBPList.new( ... )
     local arguments = { ... };
     local this = {};
@@ -40,7 +37,8 @@ function VibratoBPList.new( ... )
     -- @param strNum (string) データ点の個数の文字列表現
     -- @param strBPX (string) x 軸のデータ点の値をカンマ区切りで繋げた文字列
     -- @param strBPY (string) y 軸のデータ点の値をカンマ区切りで繋げた文字列
-    -- @name _init_3
+    -- @return (VibratoBPList)
+    -- @name <i>new</i><sup>1</sup>
     function this:_init_3( strNum, strBPX, strBPY )
         local num = tonumber( strNum );
         if( nil == num )then
@@ -69,7 +67,8 @@ function VibratoBPList.new( ... )
     -- 初期化を行う
     -- @param x (table<double>) x 軸の値のリスト
     -- @param y (table<integer>) y 軸の値のリスト
-    -- @name _init_2
+    -- @return (VibratoBPList)
+    -- @name <i>new</i><sup>2</sup>
     function this:_init_2( x, y )
         local len = math.min( #x, #y );
         for i = 1, len, 1 do

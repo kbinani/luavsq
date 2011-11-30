@@ -22,12 +22,9 @@ module( "luavsq" );
 -- @name Master
 Master = {};
 
----
+--
 -- 初期化を行う
--- @see _init_1
--- @see _init_2
 -- @return (Master)
--- @name <i>new</i>
 function Master.new( ... )
     local this = {};
     local arguments = { ... };
@@ -37,7 +34,8 @@ function Master.new( ... )
     ---
     -- プリメジャーを指定し、初期化を行う
     -- @param preMeasure (integer) プリメジャーの長さ(小節数)
-    -- @name _init_1
+    -- @return (Master)
+    -- @name <i>new</i><sup>1</sup>
     function this:_init_1( preMeasure )
         self.preMeasure = preMeasure;
     end
@@ -46,7 +44,8 @@ function Master.new( ... )
     -- テキストストリームから読み込むことで初期化を行う
     -- @param sr (TextStream) 読み込むテキストストリーム
     -- @param lastLine (table, { value = ? }) 読み込んだ最後の行。テーブルの ["value"] に文字列が格納される
-    -- @name _init_2
+    -- @return (Master)
+    -- @name <i>new</i><sup>2</sup>
     function this:_init_2( sr, lastLine )
         self.preMeasure = 0;
         local spl;

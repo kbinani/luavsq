@@ -20,11 +20,10 @@ module( "luavsq" );
 -- @name BPList.KeyClockIterator
 BPList.KeyClockIterator = {};
 
----
+--
 -- コンストラクタ
 -- @see _init_1
 -- @return (BPList.KeyClockIterator)
--- @name <i>new</i>
 function BPList.KeyClockIterator.new( ... )
     local this = {};
     local arguments = { ... };
@@ -34,7 +33,8 @@ function BPList.KeyClockIterator.new( ... )
     ---
     -- 初期化を行う
     -- @param list (BPList) 反復子の元になるリスト
-    -- @name _init_1
+    -- @return (BPList.KeyClockIterator)
+    -- @name <i>new</i>
     function this:_init_1( list )
         self._list = list;
         self._pos = 0;

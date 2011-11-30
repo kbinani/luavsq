@@ -20,7 +20,7 @@ module( "luavsq" );
 -- @name Id
 Id = {};
 
----
+--
 -- 初期化を行う
 -- @return (Id)
 function Id.new( ... )
@@ -71,6 +71,7 @@ function Id.new( ... )
     ---
     -- @param value (number)
     -- @return (Id)
+    -- @name <i>new</i>
     function this:_init_1( value )
         self.value = value;
     end

@@ -30,11 +30,9 @@ Sequence._MTHD = { 0x4d, 0x54, 0x68, 0x64 };
 Sequence._MASTER_TRACK = { 0x4D, 0x61, 0x73, 0x74, 0x65, 0x72, 0x20, 0x54, 0x72, 0x61, 0x63, 0x6B };
 Sequence._CURVES = { "VEL", "DYN", "BRE", "BRI", "CLE", "OPE", "GEN", "POR", "PIT", "PBS" };
 
----
+--
 -- 初期化を行う
--- @see _init_5
 -- @return (Sequence)
--- @name <i>new</i>
 function Sequence.new( ... )
     local this = {};
     local arguments = { ... };
@@ -70,7 +68,8 @@ function Sequence.new( ... )
     -- @param numerator (integer) 拍子の分子の値
     -- @param denominator (integer) 拍子の分母の値
     -- @param tempo (integer) テンポ値。四分音符の長さのマイクロ秒単位の長さ
-    -- @name _init_5
+    -- @return (Sequence)
+    -- @name <i>new</i>
     function this:_init_5( singer, pre_measure, numerator, denominator, tempo )
         self.totalClocks = pre_measure * 480 * 4 / denominator * numerator;
 
@@ -200,30 +199,48 @@ function Sequence.new( ... )
 
     ---
     -- メタテキストイベントを作成する
-    -- @see _generateMetaTextEventCore
     -- @return (table<MidiEvent>) メタテキストを格納した MidiEvent の配列
-    -- @name generateMetaTextEvent
     function this:generateMetaTextEvent( ... )
         local arguments = { ... };
         if( #arguments == 2 )then
-            return self:_generateMetaTextEventCore( arguments[1], arguments[2], self:_calculatePreMeasureInClock(), false );
+            return self:_generateMetaTextEvent_2( arguments[1], arguments[2] );
         elseif( #arguments == 3 )then
-            return self:_generateMetaTextEventCore( arguments[1], arguments[2], arguments[3], false );
+            return self:_generateMetaTextEvent_3( arguments[1], arguments[2], arguments[3] );
         elseif( #arguments == 4 )then
-            return self:_generateMetaTextEventCore( arguments[1], arguments[2], arguments[3], arguments[4] );
+            return self:_generateMetaTextEvent_4( arguments[1], arguments[2], arguments[3], arguments[4] );
         end
     end
 
     ---
     -- メタテキストイベントを作成する
-    -- @accesss private
+    -- @param track (integer) トラック番号
+    -- @param encoding (string) マルチバイト文字のテキストエンコーディング(現在は Shift_JIS 固定で、引数は無視される)
+    -- @return (table<MidiEvent>) メタテキストを格納した MidiEvent の配列
+    -- @name generateMetaTextEvent<sup>1</sup>
+    function this:_generateMetaTextEvent_2( track, encoding )
+        self:_generateMetaTextEvent_4( track, encoding, self:_calculatePreMeasureInClock(), false );
+    end
+
+    ---
+    -- メタテキストイベントを作成する
+    -- @param track (integer) トラック番号
+    -- @param encoding (string) マルチバイト文字のテキストエンコーディング(現在は Shift_JIS 固定で、引数は無視される)
+    -- @param startClock (integer) イベント作成の開始位置
+    -- @return (table<MidiEvent>) メタテキストを格納した MidiEvent の配列
+    -- @name generateMetaTextEvent<sup>2</sup>
+    function this:_generateMetaTextEvent_3( track, encoding, startClock )
+        self:_generateMetaTextEvent_4( track, encoding, startClock, false );
+    end
+
+    ---
+    -- メタテキストイベントを作成する
     -- @param track (integer) トラック番号
     -- @param encoding (string) マルチバイト文字のテキストエンコーディング(現在は Shift_JIS 固定で、引数は無視される)
     -- @param start_clock (integer) イベント作成の開始位置
     -- @param print_pitch (boolean) pitch を含めて出力するかどうか(現在は false 固定で、引数は無視される)
     -- @return (table<MidiEvent>) メタテキストを格納した MidiEvent の配列
-    -- @name _generateMetaTextEventCore
-    function this:_generateMetaTextEventCore( track, encoding, start_clock, print_pitch )
+    -- @name generateMetaTextEvent<sup>3</sup>
+    function this:_generateMetaTextEvent_4( track, encoding, start_clock, print_pitch )
         local _NL = string.char( 0x0a );
         local ret = {};--new Vector<MidiEvent>();
         local sr = TextStream.new();
@@ -380,18 +397,14 @@ function Sequence.new( ... )
         return events;
     end
 
-    ---
+    --
     -- ストリームに出力する
-    -- @param msPreSend (integer) ミリ秒単位のプリセンドタイム
-    -- @param encoding (string) マルチバイト文字のテキストエンコーディング(現在は Shift_JIS 固定で、引数は無視される)
-    -- @see _writeCore
-    -- @name write
     function this:write( ... )
         local arguments = { ... };
         if( #arguments == 3 )then
-            return self:_writeCore( arguments[1], arguments[2], arguments[3], false );
+            return self:_write_3( arguments[1], arguments[2], arguments[3] );
         elseif( #arguments == 4 )then
-            return self:_writeCore( arguments[1], arguments[2], arguments[3], arguments[4] );
+            return self:_write_4( arguments[1], arguments[2], arguments[3], arguments[4] );
         end
     end
 
@@ -399,8 +412,17 @@ function Sequence.new( ... )
     -- ストリームに出力する
     -- @param (integer) msPreSend ミリ秒単位のプリセンドタイム
     -- @param (string) encoding マルチバイト文字のテキストエンコーディング(現在は Shift_JIS 固定で、引数は無視される)
-    -- @name _writeCore
-    function this:_writeCore( fs, msPreSend, encoding, print_pitch )
+    -- @name write<sup>1</sup>
+    function this:_write_3( fs, msPreSend, encoding )
+        self:_write_4( fs, msPreSend, encoding, false );
+    end
+
+    ---
+    -- ストリームに出力する
+    -- @param (integer) msPreSend ミリ秒単位のプリセンドタイム
+    -- @param (string) encoding マルチバイト文字のテキストエンコーディング(現在は Shift_JIS 固定で、引数は無視される)
+    -- @name write<sup>2</sup>
+    function this:_write_4( fs, msPreSend, encoding, print_pitch )
         local last_clock = 0;
         local track_size = self.track:size();
         local track;
@@ -888,11 +910,8 @@ function Sequence.generateNoteNRPN( vsq, track, ve, msPreSend, note_loc, add_del
     return add;
 end
 
----
+--
 -- 指定したシーケンスの指定したトラックから、NRPN のリストを作成する
--- @see <i>_generateNRPN_3</i>
--- <!--see _generateNRPN_5-->
--- @name <i>generateNRPN</i>
 function Sequence.generateNRPN( ... )
     local arguments = { ... };
     if( #arguments == 3 )then
@@ -931,7 +950,7 @@ end
 -- @param track (integer) 出力するトラックの番号
 -- @param msPreSend (integer) ミリ秒単位のプリセンド時間
 -- @return (table<NrpnEvent>) NrpnEvent の配列
--- @name <i>_generateNRPN_3</i>
+-- @name <i>generateNRPN</i>
 function Sequence._generateNRPN_3( vsq, track, msPreSend )
     local list = {};--Vector<VsqNrpn>();
 

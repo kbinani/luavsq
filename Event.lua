@@ -23,13 +23,9 @@ module( "luavsq" );
 -- @name Event
 Event = {};
 
----
+--
 -- 初期化を行う
--- @see _init_1
--- @see _init_0
--- @see _init_2
 -- @return (Event)
--- @name <i>new</i>
 function Event.new( ... )
     local arguments = { ... };
     local this = {};
@@ -53,7 +49,8 @@ function Event.new( ... )
     ---
     -- 初期化を行う
     -- @param line (string) VSQ メタテキスト中の [EventList] セクション内のイベント宣言文字列(ex."480=ID#0001")
-    -- @name _init_1
+    -- @name <i>new</i><sup>2</sup>
+    -- @return (Event)
     function this:_init_1( line )
         local spl = Util.split( line, '=' );
         self.clock = tonumber( spl[1], 10 );
@@ -64,7 +61,8 @@ function Event.new( ... )
 
     ---
     -- 初期化を行う。この初期化メソッドは末尾のイベントリストを表すインスタンスを初期化する
-    -- @name _init_0
+    -- @name <i>new</i><sup>1</sup>
+    -- @return (Event)
     function this:_init_0()
         self.clock = 0;
         self.id = Id.new();
@@ -75,7 +73,8 @@ function Event.new( ... )
     -- 初期化を行う
     -- @param clcok (integer) Tick 単位の時刻
     -- @param id (Id) イベントに付属する ID
-    -- @name _init_2
+    -- @name <i>new</i><sup>3</sup>
+    -- @return (Event)
     function this:_init_2( clock, id )
         self.clock = clock;
         self.id = id;
@@ -261,11 +260,8 @@ function Event.new( ... )
             return true;
         end]]
 
-    ---
+    --
     -- テキストストリームに書き出す
-    -- @see _write_1
-    -- @see _write_2
-    -- @name write
     function this:write( ... )
         local arguments = { ... };
         if( #arguments == 1 )then
@@ -278,7 +274,7 @@ function Event.new( ... )
     ---
     -- テキストストリームに書き出す
     -- @param writer (TextStream) 出力先
-    -- @name _write_1
+    -- @name write<sup>1</sup>
     function this:_write_1( writer )
         local def = { "Length",
                     "Note#",
@@ -295,7 +291,7 @@ function Event.new( ... )
     -- テキストストリームに書き出す
     -- @param writer (TextStream) 出力先
     -- @param print_targets (table) 出力するアイテムのリスト
-    -- @name _write_2
+    -- @name write<sup>2</sup>
     function this:_write_2( writer, print_targets )
         writer:writeLine( "[ID#" .. string.format( "%04d", self.id.value ) .. "]" );
         writer:writeLine( "Type=" .. IdTypeEnum.toString( self.id.type ) );

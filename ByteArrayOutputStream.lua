@@ -32,11 +32,8 @@ function ByteArrayOutputStream.new()
     this._pointer = -1;
     this._array = {};
 
-    ---
+    --
     -- ストリームにデータを書き込む
-    -- @see _write_3
-    -- @see _write_1
-    -- @name write
     function this:write( ... )
         local arguments = { ... };
         if( #arguments == 1 )then
@@ -47,22 +44,9 @@ function ByteArrayOutputStream.new()
     end
 
     ---
-    -- 指定された配列の、指定した範囲のバイト値をストリームに書きこむ
-    -- @param (table) array 書きこむバイト列が格納された配列
-    -- @param (integer) startIndex 書き込み開始位置
-    -- @param (integer) length 書き込むバイト値の個数
-    -- @name _write_3
-    function this:_write_3( array, startIndex, length )
-        local i;
-        for i = 1, length, 1 do
-            self:_write_1( array[startIndex + i - 1] );
-        end
-    end
-
-    ---
     -- 指定されたバイト値をストリームに書きこむ
     -- @param (integer) 書きこむバイト値
-    -- @name _write_1
+    -- @name write<sup>1</sup>
     function this:_write_1( byte )
         if( byte == nil )then
             byte = 0;
@@ -77,6 +61,19 @@ function ByteArrayOutputStream.new()
         end
         self._array[index] = byte;
         self._pointer = self._pointer + 1;
+    end
+
+    ---
+    -- 指定された配列の、指定した範囲のバイト値をストリームに書きこむ
+    -- @param (table) array 書きこむバイト列が格納された配列
+    -- @param (integer) startIndex 書き込み開始位置
+    -- @param (integer) length 書き込むバイト値の個数
+    -- @name write<sup>2</sup>
+    function this:_write_3( array, startIndex, length )
+        local i;
+        for i = 1, length, 1 do
+            self:_write_1( array[startIndex + i - 1] );
+        end
     end
 
     ---

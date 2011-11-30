@@ -36,12 +36,9 @@ Handle.ICONID_HEAD_CRESCEND = "$0502";
 -- デクレッシェンドの場合の、IconId の最初の5文字。
 Handle.ICONID_HEAD_DECRESCEND = "$0503";
 
----
+--
 -- 初期化を行う
--- @see _init_3
--- @see _init_1
 -- @return (Handle)
--- @name <i>new</i>
 function Handle.new( ... )
     local arguments = { ... };
     local this = {};
@@ -73,7 +70,8 @@ function Handle.new( ... )
 
     ---
     -- @param type (HandleTypeEnum) ハンドルの種類
-    -- @name _init_1
+    -- @name <i>new</i><sup>1</sup>
+    -- @return (Handle)
     function this:_init_1( type )
         self._type = type;
         if( type == HandleTypeEnum.Dynamics )then
@@ -92,7 +90,8 @@ function Handle.new( ... )
     -- @param sr (TextStream) 読み込み元のテキストストリーム
     -- @param index (integer) index フィールドの値
     -- @param last_line (table, { value = ? }) 読み込んだ最後の行。テーブルの ["value"] に文字列が格納される
-    -- @name _init_3
+    -- @name <i>new</i><sup>2</sup>
+    -- @return (Handle)
     function this:_init_3( sr, index, last_line )
         self.index = index;
         local spl;

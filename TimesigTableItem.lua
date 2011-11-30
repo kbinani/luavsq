@@ -20,11 +20,9 @@ module( "luavsq" );
 -- @name TimesigTableItem
 TimesigTableItem = {};
 
----
+--
 -- 初期化を行う
--- @see _init_4
 -- @return (TimesigTableItem)
--- @name <i>new</i>
 function TimesigTableItem.new( ... )
     local this = {};
     local arguments = { ... };
@@ -51,7 +49,8 @@ function TimesigTableItem.new( ... )
     -- @param numerator (integer) 拍子の分子の値
     -- @param denominator (integer) 拍子の分母値
     -- @param bar_count (integer) 小節数
-    -- @name _init_4
+    -- @return (TimesigTableItem)
+    -- @name <i>new</i>
     function this:_init_4( clock, numerator, denominator, barCount )
         self.clock = clock;
         self.numerator = numerator;

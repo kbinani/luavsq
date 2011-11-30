@@ -22,12 +22,9 @@ module( "luavsq" );
 -- @name Lyric
 Lyric = {};
 
----
+--
 -- 初期化を行う
--- @see _init_1
--- @see _init_2
 -- @return (Lyric)
--- @name <i>new</i>
 function Lyric.new( ... )
     local arguments = { ... }
     local this = {};
@@ -40,7 +37,8 @@ function Lyric.new( ... )
     ---
     -- 文字列を元に初期化を行う
     -- @param line (string) 「"あ","a",0.0000,0.0」などのような文字列
-    -- @name _init_1
+    -- @return (Lyric)
+    -- @name <i>new</i><sup>1</sup>
     function this:_init_1( line )
         if( line == nil or (line ~= nil and line:len() == 0) )then
             self.phrase = "a";
@@ -130,7 +128,8 @@ function Lyric.new( ... )
     -- 歌詞、発音記号を指定して初期化を行う
     -- @param phrase (string) 歌詞
     -- @param phoneticSymbol (string) 発音記号
-    -- @name _init_2
+    -- @return (Lyric)
+    -- @name <i>new</i><sup>2</sup>
     function this:_init_2( phrase, phoneticSymbol )
         self.phrase = phrase;
         self._consonantAdjustment = nil;

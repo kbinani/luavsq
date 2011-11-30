@@ -24,11 +24,7 @@ Track = {};
 
 ---
 -- 初期化を行う
--- @see _init_0
--- @see _init_2a
--- @see _init_2b
 -- @return (Track)
--- @name <i>new</i>
 function Track.new( ... )
     local this = {};
     local arguments = { ... };
@@ -113,7 +109,8 @@ function Track.new( ... )
 
     ---
     -- Master Trackを構築
-    -- @name _init_0
+    -- @return (Track)
+    -- @name <i>new</i><sup>1</sup>
     function this:_init_0()
     end
 
@@ -121,7 +118,8 @@ function Track.new( ... )
     -- Master Trackでないトラックを構築
     -- @param name (string) トラック名
     -- @param singer (string) トラックのデフォルトの歌手名
-    -- @name _init_2a
+    -- @return (Track)
+    -- @name <i>new</i><sup>2</sup>
     function this:_init_2a( name, singer )
         self:_initCor( name, singer );
     end
@@ -514,17 +512,14 @@ function Track.new( ... )
             self.events:sort();
         end]]
 
-    ---
-    ---
+    --
     -- トラックのメタテキストを、テキストストリームに出力する
-    -- @see _printMetaTextCore
-    -- @name printMetaText
     function this:printMetaText( ... )
         local arguments = { ... };
         if( #arguments == 3 )then
-            self:_printMetaTextCore( arguments[1], arguments[2], arguments[3], false );
+            self:_printMetaText_3( arguments[1], arguments[2], arguments[3] );
         elseif( #arguments == 4 )then
-            self:_printMetaTextCore( arguments[1], arguments[2], arguments[3], arguments[4] );
+            self:_printMetaText_4( arguments[1], arguments[2], arguments[3], arguments[4] );
         end
     end
 
@@ -533,9 +528,19 @@ function Track.new( ... )
     -- @param sw (TextStream) 出力先のストリーム
     -- @param eos (integer) イベントリストの末尾を表す番号
     -- @param start (integer) Tick 単位の出力開始時刻
+    -- @name printMetaText<sup>1</sup>
+    function this:_printMetaText_3( sw, eos, start )
+        self:_printMetaText_4( sw, eos, start, false );
+    end
+
+    ---
+    -- トラックのメタテキストを、テキストストリームに出力する
+    -- @param sw (TextStream) 出力先のストリーム
+    -- @param eos (integer) イベントリストの末尾を表す番号
+    -- @param start (integer) Tick 単位の出力開始時刻
     -- @param print_pitch (boolean) pitch を含めて出力するかどうか(現在は false 固定で、引数は無視される)
-    -- @name _printMetaTextCore
-    function this:_printMetaTextCore( sw, eos, start, print_pitch )
+    -- @name printMetaText<sup>2</sup>
+    function this:_printMetaText_4( sw, eos, start, print_pitch )
         if( self.common ~= nil )then
             self.common:write( sw );
         end
