@@ -22,12 +22,14 @@ end
 -- IndexIterator の反復子の種類を表す列挙子
 -- @class table
 -- @name Track.IndexIteratorKindEnum
+-- @field ALL 全てのイベント
 -- @field SINGER 歌手イベント
 -- @field NOTE 音符イベント
 -- @field CRESCEND クレッシェンドイベント
 -- @field DECRESCEND デクレッシェンドイベント
 -- @field DYNAFF 強弱記号イベント
 Track.IndexIteratorKindEnum = {
+    ALL = 0xffff,
     SINGER = 1,
     NOTE = 2,
     CRESCEND = 4,
