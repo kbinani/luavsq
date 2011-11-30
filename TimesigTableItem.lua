@@ -22,8 +22,9 @@ TimesigTableItem = {};
 
 ---
 -- 初期化を行う
--- @see TimesigTableItem:_init_4
+-- @see _init_4
 -- @return (TimesigTableItem)
+-- @name <i>new</i>
 function TimesigTableItem.new( ... )
     local this = {};
     local arguments = { ... };
@@ -50,6 +51,7 @@ function TimesigTableItem.new( ... )
     -- @param numerator (integer) 拍子の分子の値
     -- @param denominator (integer) 拍子の分母値
     -- @param bar_count (integer) 小節数
+    -- @name _init_4
     function this:_init_4( clock, numerator, denominator, barCount )
         self.clock = clock;
         self.numerator = numerator;
@@ -60,6 +62,7 @@ function TimesigTableItem.new( ... )
     ---
     -- 文字列に変換する
     -- @return (string) 変換後の文字列
+    -- @name toString
     function this:toString()
         return "{Clock=" .. self.clock .. ", Numerator=" .. self.numerator .. ", Denominator=" .. self.denominator .. ", BarCount=" .. self.barCount .. "}";
     end
@@ -67,6 +70,7 @@ function TimesigTableItem.new( ... )
     ---
     -- コピーを作成する
     -- @return (TimesigTableItem) このオブジェクトのコピー
+    -- @name clone
     function this:clone()
         return TimesigTableItem.new( self.clock, self.numerator, self.denominator, self.barCount );
     end
@@ -75,6 +79,7 @@ function TimesigTableItem.new( ... )
     -- 順序を比較する
     -- @param item (TimesigTableItem) 比較対象のアイテム
     -- @return (integer) このインスタンスが比較対象よりも小さい場合は負の整数、等しい場合は 0、大きい場合は正の整数を返す
+    -- @name compareTo
     function this:compareTo( item )
         return self.barCount - item.barCount;
     end
@@ -91,6 +96,7 @@ end
 -- @param a (TimesigTableItem) 比較対象のオブジェクト
 -- @param b (TimesigTableItem) 比較対象のオブジェクト
 -- @return (boolean) a が b よりも小さい場合は true、そうでない場合は false を返す
+-- @name <i>compare</i>
 function TimesigTableItem.compare( a, b )
     return (a:compareTo( b ) < 0);
 end

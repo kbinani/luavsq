@@ -27,6 +27,7 @@ MixerItem = {};
 -- @param mute (integer) Mute値
 -- @param solo (integer) Solo値
 -- @return (MixerItem)
+-- @name <i>new</i>
 function MixerItem.new( feder, panpot, mute, solo )
     local this = {};
     this.feder = feder;
@@ -44,6 +45,7 @@ function MixerItem.new( feder, panpot, mute, solo )
     ---
     -- コピーを作成する
     -- @return (MixerItem) このオブジェクトのコピー
+    -- @name clone
     function this:clone()
         return MixerItem.new( self.feder, self.panpot, self.mute, self.solo );
     end

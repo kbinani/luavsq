@@ -25,10 +25,11 @@ Event = {};
 
 ---
 -- 初期化を行う
--- @see this:_init_1
--- @see this:_init_0
--- @see this:_init_2
+-- @see _init_1
+-- @see _init_0
+-- @see _init_2
 -- @return (Event)
+-- @name <i>new</i>
 function Event.new( ... )
     local arguments = { ... };
     local this = {};
@@ -52,6 +53,7 @@ function Event.new( ... )
     ---
     -- 初期化を行う
     -- @param line (string) VSQ メタテキスト中の [EventList] セクション内のイベント宣言文字列(ex."480=ID#0001")
+    -- @name _init_1
     function this:_init_1( line )
         local spl = Util.split( line, '=' );
         self.clock = tonumber( spl[1], 10 );
@@ -62,6 +64,7 @@ function Event.new( ... )
 
     ---
     -- 初期化を行う。この初期化メソッドは末尾のイベントリストを表すインスタンスを初期化する
+    -- @name _init_0
     function this:_init_0()
         self.clock = 0;
         self.id = Id.new();
@@ -72,6 +75,7 @@ function Event.new( ... )
     -- 初期化を行う
     -- @param clcok (integer) Tick 単位の時刻
     -- @param id (Id) イベントに付属する ID
+    -- @name _init_2
     function this:_init_2( clock, id )
         self.clock = clock;
         self.id = id;
@@ -259,8 +263,9 @@ function Event.new( ... )
 
     ---
     -- テキストストリームに書き出す
-    -- @see this:_write_1
-    -- @see this:_write_2
+    -- @see _write_1
+    -- @see _write_2
+    -- @name write
     function this:write( ... )
         local arguments = { ... };
         if( #arguments == 1 )then
@@ -273,6 +278,7 @@ function Event.new( ... )
     ---
     -- テキストストリームに書き出す
     -- @param writer (TextStream) 出力先
+    -- @name _write_1
     function this:_write_1( writer )
         local def = { "Length",
                     "Note#",
@@ -289,6 +295,7 @@ function Event.new( ... )
     -- テキストストリームに書き出す
     -- @param writer (TextStream) 出力先
     -- @param print_targets (table) 出力するアイテムのリスト
+    -- @name _write_2
     function this:_write_2( writer, print_targets )
         writer:writeLine( "[ID#" .. string.format( "%04d", self.id.value ) .. "]" );
         writer:writeLine( "Type=" .. IdTypeEnum.toString( self.id.type ) );
@@ -344,6 +351,7 @@ function Event.new( ... )
     ---
     -- コピーを作成する
     -- @return (Event) このインスタンスのコピー
+    -- @name clone
     function this:clone()
         local ret = Event.new( self.clock, self.id:clone() );
         ret.internalId = self.internalId;
@@ -358,6 +366,7 @@ function Event.new( ... )
     -- 順序を比較する
     -- @param item (Event) 比較対象のアイテム
     -- @return (integer) このインスタンスが比較対象よりも小さい場合は負の整数、等しい場合は 0、大きい場合は正の整数を返す
+    -- @name compareTo
     function this:compareTo( item )
         local ret = self.clock - item.clock;
         if( ret == 0 )then
@@ -387,6 +396,7 @@ end
 -- @param a (Event) 比較対象のオブジェクト
 -- @param b (Event) 比較対象のオブジェクト
 -- @return (boolean) a が b よりも小さい場合は true、そうでない場合は false を返す
+-- @name <i>compare</i>
 function Event.compare( a, b )
     return (a:compareTo( b ) < 0);
 end

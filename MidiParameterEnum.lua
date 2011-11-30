@@ -577,6 +577,7 @@ MidiParameterEnum = {
 -- 指定したコントロールに対応する Voice Change Parameter ID の値を取得する
 -- @param curveName (string) コントロールカーブの名前
 -- @return (integer) Voice Change Parameter ID の値
+-- @name <i>getVoiceChangeParameterId</i>
 function MidiParameterEnum.getVoiceChangeParameterId( curveName )
     local lsb = 0x31;
     if( nil == curveName )then
@@ -629,6 +630,7 @@ end
 -- 指定された NRPN が、DATA LSB が必要なものかどうかを調べる
 -- @param nrpn (integer) 対象の NRPN
 -- @return (boolean) DATA LSB が必要であれば true を、そうでなければ false を返す
+-- @name <i>isDataLsbRequire</i>
 function MidiParameterEnum.isDataLsbRequire( nrpn )
     if( nrpn == MidiParameterEnum.CVM_NM_VERSION_AND_DEVICE or
         nrpn == MidiParameterEnum.CVM_NM_DELAY or

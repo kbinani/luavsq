@@ -23,11 +23,10 @@ module( "luavsq" );
 -- @name CP932Converter
 CP932Converter = {};
 
----
+--
 -- Unicode から CP932 への変換テーブル
 -- @access private
 -- @class table
--- @name _unicode_to_cp932
 CP932Converter._unicode_to_cp932 = {
     [0] = {
         [0] = { 0 }, [1] = { 1 }, [2] = { 2 }, [3] = { 3 }, [4] = { 4 }, [5] = { 5 }, [6] = { 6 }, [7] = { 7 }, [8] = { 8 }, [9] = { 9 }, [10] = { 10 }, [11] = { 11 }, [12] = { 12 }, [13] = { 13 }, [14] = { 14 }, [15] = { 15 }, [16] = { 16 }, [17] = { 17 }, [18] = { 18 }, [19] = { 19 }, [20] = { 20 }, [21] = { 21 }, [22] = { 22 }, [23] = { 23 },
@@ -582,6 +581,7 @@ CP932Converter._unicode_to_cp932 = {
 -- UTF8 の文字列を CP932 の文字列に変換する
 -- @param (string) s 変換前の文字列
 -- @return (string) 変換後の文字列
+-- @name <i>convertFromUTF8<i>
 function CP932Converter.convertFromUTF8( s )
     local utf8codes = CP932Converter._getUnicodeBytesFromUTF8String( s );
     local result = "";
@@ -607,7 +607,7 @@ function CP932Converter.convertFromUTF8( s )
     return result;
 end
 
----
+--
 -- UTF8 の文字列を unicode のバイト列に変換する
 -- @access private
 -- @param (string) s 変換前の文字列
@@ -652,7 +652,7 @@ function CP932Converter._getUnicodeBytesFromUTF8String( s )
     return result;
 end
 
----
+--
 -- UTF8 のバイト列を Unicode のバイト列に変換する
 -- @param (table) utf8 UTF8のバイト列
 -- @return (table) Unicode のバイト列
@@ -716,7 +716,7 @@ function CP932Converter._getUnicodeBytesFromUTF8Bytes( utf8 )
 end
 
 --[[
-    ---
+    --
     -- CP932のバイト列をUTF8の文字列に変換します
     function CP932Converter.convertToUTF8( byte_array )
     end

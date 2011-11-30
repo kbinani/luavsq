@@ -24,10 +24,11 @@ Track = {};
 
 ---
 -- 初期化を行う
--- @see Track:_init_0
--- @see Track:_init_2a
--- @see Track:_init_2b
+-- @see _init_0
+-- @see _init_2a
+-- @see _init_2b
 -- @return (Track)
+-- @name <i>new</i>
 function Track.new( ... )
     local this = {};
     local arguments = { ... };
@@ -112,6 +113,7 @@ function Track.new( ... )
 
     ---
     -- Master Trackを構築
+    -- @name _init_0
     function this:_init_0()
     end
 
@@ -119,6 +121,7 @@ function Track.new( ... )
     -- Master Trackでないトラックを構築
     -- @param name (string) トラック名
     -- @param singer (string) トラックのデフォルトの歌手名
+    -- @name _init_2a
     function this:_init_2a( name, singer )
         self:_initCor( name, singer );
     end
@@ -208,7 +211,7 @@ function Track.new( ... )
             self.setName( track_name );
         end]]
 
-    ---
+    --
     -- 初期化を行う
     -- @param name [string]
     -- @param singer [string]
@@ -262,6 +265,7 @@ function Track.new( ... )
     -- 指定された種類のイベントのインデクスを順に返す反復子を取得する
     -- @param iterator_kind (IndexIteratorKindEnum) 反復子の種類
     -- @return (IndexIterator) 反復子
+    -- @name getIndexIterator
     function this:getIndexIterator( iterator_kind )
         return EventList.IndexIterator.new( self.events, iterator_kind );
     end
@@ -339,6 +343,7 @@ function Track.new( ... )
     ---
     -- トラックの名前を取得する
     -- @return (string) トラック名
+    -- @name getName
     function this:getName()
         if( self.common == nil )then
             return "Master Track";
@@ -350,6 +355,7 @@ function Track.new( ... )
     ---
     -- トラックの名前を設定する
     -- @param value (string) トラック名
+    -- @name setName
     function this:setName( value )
         if( self.common ~= nil )then
             self.common.name = value;
@@ -511,7 +517,8 @@ function Track.new( ... )
     ---
     ---
     -- トラックのメタテキストを、テキストストリームに出力する
-    -- @see Track:_printMetaTextCore
+    -- @see _printMetaTextCore
+    -- @name printMetaText
     function this:printMetaText( ... )
         local arguments = { ... };
         if( #arguments == 3 )then
@@ -527,6 +534,7 @@ function Track.new( ... )
     -- @param eos (integer) イベントリストの末尾を表す番号
     -- @param start (integer) Tick 単位の出力開始時刻
     -- @param print_pitch (boolean) pitch を含めて出力するかどうか(現在は false 固定で、引数は無視される)
+    -- @name _printMetaTextCore
     function this:_printMetaTextCore( sw, eos, start, print_pitch )
         if( self.common ~= nil )then
             self.common:write( sw );
@@ -680,6 +688,7 @@ function Track.new( ... )
     -- 指定された名前のカーブを取得します
     -- @param curve (string) カーブ名
     -- @return (BPList) カーブ
+    -- @name getCurve
     function this:getCurve( curve )
         local search = curve:lower();
         if( search == "bre" )then
@@ -739,6 +748,7 @@ function Track.new( ... )
     -- 指定された名前のカーブを設定する
     -- @param curve (string) カーブ名
     -- @param value (BPList) 設定するカーブ
+    -- @name setCurve
     function this:setCurve( curve, value )
         local search = curve:lower();
         if( search == "bre" )then
@@ -795,6 +805,7 @@ function Track.new( ... )
     ---
     -- コピーを作成する
     -- @return (Track) このオブジェクトのコピー
+    -- @name clone
     function this:clone()
         local res = Track.new();
         res:setName( self:getName() );

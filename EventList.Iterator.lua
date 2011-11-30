@@ -26,6 +26,7 @@ EventList.Iterator = {};
 -- 初期化を行う
 -- @param list (EventList) 反復子の元になるリスト
 -- @return (EventList.Iterator)
+-- @name <i>new</i>
 function EventList.Iterator.new( list )
     local this = {};
     this._list = list;
@@ -34,6 +35,7 @@ function EventList.Iterator.new( list )
     ---
     -- 反復子が次の要素を持つ場合に true を返す
     -- @return (boolean) 反復子がさらに要素を持つ場合は true を、そうでなければ false を返す
+    -- @name hasNext
     function this:hasNext()
         if( 0 <= self._pos + 1 and self._pos + 1 < self._list:size() )then
             return true;
@@ -44,6 +46,7 @@ function EventList.Iterator.new( list )
     ---
     -- 反復子の次の要素を返す
     -- @return (Event) 次の要素
+    -- @name next
     function this:next()
         self._pos = self._pos + 1;
         return self._list:get( self._pos );
@@ -51,6 +54,7 @@ function EventList.Iterator.new( list )
 
     ---
     -- 反復子によって最後に返された要素を削除する
+    -- @name remove
     function this:remove()
         if( 0 <= self._pos and self._pos < self._list:size() )then
             self._list:removeAt( self._pos );

@@ -26,6 +26,7 @@ ByteArrayOutputStream = {};
 ---
 -- 初期化を行う
 -- @return (ByteArrayOutputStream)
+-- @name <i>new</i>
 function ByteArrayOutputStream.new()
     local this = {};
     this._pointer = -1;
@@ -33,8 +34,9 @@ function ByteArrayOutputStream.new()
 
     ---
     -- ストリームにデータを書き込む
-    -- @see this:_write_3
-    -- @see this:_write_1
+    -- @see _write_3
+    -- @see _write_1
+    -- @name write
     function this:write( ... )
         local arguments = { ... };
         if( #arguments == 1 )then
@@ -49,6 +51,7 @@ function ByteArrayOutputStream.new()
     -- @param (table) array 書きこむバイト列が格納された配列
     -- @param (integer) startIndex 書き込み開始位置
     -- @param (integer) length 書き込むバイト値の個数
+    -- @name _write_3
     function this:_write_3( array, startIndex, length )
         local i;
         for i = 1, length, 1 do
@@ -59,6 +62,7 @@ function ByteArrayOutputStream.new()
     ---
     -- 指定されたバイト値をストリームに書きこむ
     -- @param (integer) 書きこむバイト値
+    -- @name _write_1
     function this:_write_1( byte )
         if( byte == nil )then
             byte = 0;
@@ -78,6 +82,7 @@ function ByteArrayOutputStream.new()
     ---
     -- バイト列を文字列に変換する
     -- @return (string) 変換された文字列
+    -- @name toString
     function this:toString()
         local result = "";
         local i;
@@ -90,6 +95,7 @@ function ByteArrayOutputStream.new()
     ---
     -- 現在のファイルポインタを取得する
     -- @return (integer) 現在のファイルポインタ
+    -- @name getPointer
     function this:getPointer()
         return self._pointer;
     end
@@ -97,12 +103,14 @@ function ByteArrayOutputStream.new()
     ---
     -- ファイルポインタを指定した位置に変更する
     -- @param (integer) position 新しいポインタ値
+    -- @name seek
     function this:seek( position )
         self._pointer = position;
     end
 
     ---
     -- ストリームを閉じる
+    -- @name close
     function this:close()
         --do nothing
     end

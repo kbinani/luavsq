@@ -24,7 +24,10 @@ Lyric = {};
 
 ---
 -- 初期化を行う
+-- @see _init_1
+-- @see _init_2
 -- @return (Lyric)
+-- @name <i>new</i>
 function Lyric.new( ... )
     local arguments = { ... }
     local this = {};
@@ -37,6 +40,7 @@ function Lyric.new( ... )
     ---
     -- 文字列を元に初期化を行う
     -- @param line (string) 「"あ","a",0.0000,0.0」などのような文字列
+    -- @name _init_1
     function this:_init_1( line )
         if( line == nil or (line ~= nil and line:len() == 0) )then
             self.phrase = "a";
@@ -126,6 +130,7 @@ function Lyric.new( ... )
     -- 歌詞、発音記号を指定して初期化を行う
     -- @param phrase (string) 歌詞
     -- @param phoneticSymbol (string) 発音記号
+    -- @name _init_2
     function this:_init_2( phrase, phoneticSymbol )
         self.phrase = phrase;
         self._consonantAdjustment = nil;
@@ -140,6 +145,7 @@ function Lyric.new( ... )
     -- たとえば、isProtectedがthisとitemで違っていても、他が同一であればtrueが返る。
     -- @param item (Lyric) 比較対象のオブジェクト
     -- @return (boolean) 比較対象と同じであれば true を、そうでなければ false を返す
+    -- @name equalsForSynth
     function this:equalsForSynth( item )
         if( self:getPhoneticSymbol() ~= item:getPhoneticSymbol() )then
             return false;
@@ -154,6 +160,7 @@ function Lyric.new( ... )
     -- このオブジェクトのインスタンスと、指定されたオブジェクトが同じかどうかを調べる
     -- @param item (Lyric) 比較対象のオブジェクト
     -- @return (boolean) 比較対象と同じであれば true を、そうでなければ false を返す
+    -- @name equals
     function this:equals( item )
         if( not self:equalsForSynth( item ) )then
             return false;
@@ -173,6 +180,7 @@ function Lyric.new( ... )
     ---
     -- Consonant Adjustmentの文字列形式を取得する
     -- @return (string) Consonant Adjustment を空白区切りで連結した文字列
+    -- @name getConsonantAdjustment
     function this:getConsonantAdjustment()
         local arr = self:getConsonantAdjustmentList();
         if( #arr == 0 )then
@@ -188,6 +196,7 @@ function Lyric.new( ... )
     ---
     -- Consonant Adjustmentを文字列形式で設定する
     -- @param value (string) Consonant Adjustment を空白区切りで連結した文字列
+    -- @name setConsonantAdjustment
     function this:setConsonantAdjustment( value )
         local spl = Util.split( value, "," );
         local arr = Util.array( #spl );
@@ -200,6 +209,7 @@ function Lyric.new( ... )
     ---
     -- Consonant Adjustment を、整数配列で取得する
     -- @return (table<integer>) Consonant Adjustment を格納した整数の配列
+    -- @name getConsonantAdjustmentList
     function this:getConsonantAdjustmentList()
         if( self._consonantAdjustment == nil )then
             if( self._phoneticSymbol == nil )then
@@ -223,6 +233,7 @@ function Lyric.new( ... )
     ---
     -- Consonant Adjustment を、整数配列形式で設定する
     -- @param value (table<integer>) Consonant Adjustment を格納した整数の配列
+    -- @name setConsonantAdjustmentList
     function this:setConsonantAdjustmentList( value )
         if( value == nil )then
             return;
@@ -236,6 +247,7 @@ function Lyric.new( ... )
     ---
     -- コピーを作成する
     -- @return (Lyric) このインスタンスのコピー
+    -- @name clone
     function this:clone()
         local result = Lyric.new();
         result.phrase = self.phrase;
@@ -259,6 +271,7 @@ function Lyric.new( ... )
     ---
     -- この歌詞の発音記号を取得する
     -- @return (string) 発音記号
+    -- @name getPhoneticSymbol
     function this:getPhoneticSymbol()
         local symbol = self:getPhoneticSymbolList();
         if( #symbol == 0 )then
@@ -274,6 +287,7 @@ function Lyric.new( ... )
     ---
     -- この歌詞の発音記号を設定する
     -- @param value (string) 発音記号
+    -- @name setPhoneticSymbol
     function this:setPhoneticSymbol( value )
         local s = value:gsub( "  ", " " );
         self._phoneticSymbol = Util.split( s, " " );
@@ -285,6 +299,7 @@ function Lyric.new( ... )
     ---
     -- この歌詞の発音記号の配列を取得する
     -- @return (table<string>) 発音記号の配列
+    -- @name getPhoneticSymbolList
     function this:getPhoneticSymbolList()
         local ret = Util.array( #self._phoneticSymbol );
         for i = 1, #self._phoneticSymbol, 1 do
@@ -297,6 +312,7 @@ function Lyric.new( ... )
     -- このインスタンスを文字列に変換する
     -- @param addQuateMark (boolean) 歌詞、発音記号の前後に引用符(")を追加するかどうか
     -- @return (string) 変換後の文字列
+    -- @name toString
     function this:toString( addQuateMark )
         local quot;
         if( addQuateMark )then

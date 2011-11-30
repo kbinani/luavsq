@@ -24,9 +24,10 @@ Mixer = {};
 
 ---
 -- 初期化を行う
--- @see Mixer._init_2
--- @see Mixer._init_4
+-- @see _init_2
+-- @see _init_4
 -- @return (Mixer)
+-- @name <i>new</i>
 function Mixer.new( ... )
     local this = {};
     local arguments = { ... };
@@ -45,6 +46,7 @@ function Mixer.new( ... )
     -- @param master_panpot (integer) MasterPanpot 値
     -- @param master_mute (integer) MasterMute 値
     -- @param output_mode (integer) OutputMode 値
+    -- @name _init_4
     function this:_init_4( master_feder, master_panpot, master_mute, output_mode )
         self.masterFeder = master_feder;
         self.masterMute = master_mute;
@@ -60,6 +62,7 @@ function Mixer.new( ... )
     -- テキストストリームから読み込みを行い、初期化を行う
     -- @param sr (TextStream) 読み込むテキストストリーム
     -- @param lastLine (table, { value = ? }) 読み込んだ最後の行。テーブルの ["value"] に文字列が格納される
+    -- @name _init_2
     function this:_init_2( stream, last_line )
         self.masterFeder = 0;
         self.masterPanpot = 0;
@@ -129,6 +132,7 @@ function Mixer.new( ... )
     ---
     -- コピーを作成する
     -- @return (Mixer) このオブジェクトのコピー
+    -- @name clone
     function this:clone()
         local res = Mixer.new( self.masterFeder, self.masterPanpot, self.masterMute, self.outputMode );
         res.slave = {};
@@ -143,6 +147,7 @@ function Mixer.new( ... )
     ---
     -- テキストストリームに出力する
     -- @param sw (TextStream) 出力先のストリーム
+    -- @name write
     function this:write( sw )
         sw:writeLine( "[Mixer]" );
         sw:writeLine( "MasterFeder=" .. self.masterFeder );

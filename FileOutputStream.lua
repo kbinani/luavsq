@@ -24,14 +24,16 @@ FileOutputStream = {};
 -- 初期化を行う
 -- @param path (string) ファイルのパス
 -- @return (FileOutputStream)
+-- @name <i>new</i>
 function FileOutputStream.new( path )
     local this = {};
     this._fileHandle = io.open( path, "wb" );
 
     ---
     -- ストリームにデータを書き込む
-    -- @see this:_write_3
-    -- @see this:_write_1
+    -- @see _write_3
+    -- @see _write_1
+    -- @name write
     function this:write( ... )
         local arguments = { ... };
         if( #arguments == 1 )then
@@ -46,6 +48,7 @@ function FileOutputStream.new( path )
     -- @param (table<integer>) array 書きこむバイト列が格納された配列
     -- @param (integer) startIndex 書き込み開始位置
     -- @param (integer) length 書き込むバイト値の個数
+    -- @name _write_3
     function this:_write_3( array, startIndex, length )
         local i;
         for i = 1, length, 1 do
@@ -56,6 +59,7 @@ function FileOutputStream.new( path )
     ---
     -- 指定されたバイト値をストリームに書きこむ
     -- @param (integer) 書きこむバイト値
+    -- @name _write_1
     function this:_write_1( byte )
         if( nil == byte )then
             byte = 0;
@@ -66,6 +70,7 @@ function FileOutputStream.new( path )
     ---
     -- 現在のファイルポインタを取得する
     -- @return (integer) 現在のファイルポインタ
+    -- @name getPointer
     function this:getPointer()
         return self._fileHandle:seek();
     end
@@ -73,12 +78,14 @@ function FileOutputStream.new( path )
     ---
     -- ファイルポインタを指定した位置に移動する
     -- @param position (integer) ファイルポインタ
+    -- @name seek
     function this:seek( position )
         self._fileHandle:seek( "set", position );
     end
 
     ---
     -- ストリームを閉じる
+    -- @name close
     function this:close()
         self._fileHandle:flush();
         self._fileHandle:close();

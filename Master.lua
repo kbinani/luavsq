@@ -24,9 +24,10 @@ Master = {};
 
 ---
 -- 初期化を行う
--- @see Master:_init_1
--- @see Master:_init_2
+-- @see _init_1
+-- @see _init_2
 -- @return (Master)
+-- @name <i>new</i>
 function Master.new( ... )
     local this = {};
     local arguments = { ... };
@@ -36,6 +37,7 @@ function Master.new( ... )
     ---
     -- プリメジャーを指定し、初期化を行う
     -- @param preMeasure (integer) プリメジャーの長さ(小節数)
+    -- @name _init_1
     function this:_init_1( preMeasure )
         self.preMeasure = preMeasure;
     end
@@ -44,6 +46,7 @@ function Master.new( ... )
     -- テキストストリームから読み込むことで初期化を行う
     -- @param sr (TextStream) 読み込むテキストストリーム
     -- @param lastLine (table, { value = ? }) 読み込んだ最後の行。テーブルの ["value"] に文字列が格納される
+    -- @name _init_2
     function this:_init_2( sr, lastLine )
         self.preMeasure = 0;
         local spl;
@@ -63,6 +66,7 @@ function Master.new( ... )
     ---
     -- コピーを作成する
     -- @return (Master) このオブジェクトのコピー
+    -- @name clone
     function this:clone()
         return Master.new( self.preMeasure );
     end
@@ -70,6 +74,7 @@ function Master.new( ... )
     ---
     -- テキストストリームに出力する
     -- @param stream (TextStream) 出力先
+    -- @name write
     function this:write( stream )
         stream:writeLine( "[Master]" );
         stream:writeLine( "PreMeasure=" .. self.preMeasure );

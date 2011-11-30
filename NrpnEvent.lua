@@ -25,9 +25,10 @@ NrpnEvent = {};
 
 ---
 -- 初期化を行う
--- @see NrpnEvent:_init_3
--- @see NrpnEvent:_init_4
+-- @see _init_3
+-- @see _init_4
 -- @return (NrpnEvent)
+-- @name <i>new</i>
 function NrpnEvent.new( ... )
     local this = {};
     local arguments = { ... };
@@ -45,6 +46,7 @@ function NrpnEvent.new( ... )
     -- @param clock (integer) Tick 単位の時刻
     -- @param nrpn (integer) NRPN
     -- @param data_msb (integer) DATA MSB
+    -- @name _init_3
     function this:_init_3( clock, nrpn, data_msb )
         self.clock = clock;
         self.nrpn = nrpn;
@@ -61,6 +63,7 @@ function NrpnEvent.new( ... )
     -- @param nrpn (integer) NRPN
     -- @param data_msb (integer) DATA MSB
     -- @param data_lsb (integer) DATA LSB
+    -- @name _init_4
     function this:_init_4( clock, nrpn, data_msb, data_lsb )
         self.clock = clock;
         self.nrpn = nrpn;
@@ -74,6 +77,7 @@ function NrpnEvent.new( ... )
     ---
     -- 親子関係によって入れ子になっている NRPN イベントを展開し、配列に変換する
     -- @return (table<NrpnEvent>) 展開後の NRPN イベントの配列
+    -- @name expand
     function this:expand()
         local ret = {};--new Vector<NrpnEvent>();
         if( self.hasLSB )then
@@ -102,6 +106,7 @@ function NrpnEvent.new( ... )
     -- 順序を比較する
     -- @param item (NrpnEvent) 比較対象のアイテム
     -- @return (integer) このインスタンスが比較対象よりも小さい場合は負の整数、等しい場合は 0、大きい場合は正の整数を返す
+    -- @name compareTo
     function this:compareTo( item )
         if( self.clock == item.clock )then
             local thisNrpnMsb = (this.nrpn - (this.nrpn % 0x100)) / 0x100;
@@ -114,10 +119,11 @@ function NrpnEvent.new( ... )
 
     ---
     -- このオブジェクトの末尾に NRPN イベントを追加する
-    -- @see NrpnEvent:_append_2
-    -- @see NrpnEvent:_append_3_int_byte_bool
-    -- @see NrpnEvent:_append_3_int_byte_byte
-    -- @see NrpnEvent:_append_4
+    -- @see _append_2
+    -- @see _append_3_int_byte_bool
+    -- @see _append_3_int_byte_byte
+    -- @see _append_4
+    -- @name append
     function this:append( ... )
         local arguments = { ... };
         if( #arguments == 2 )then
@@ -138,6 +144,7 @@ function NrpnEvent.new( ... )
     -- NRPN、DATA MSB を指定し、イベントを追加する
     -- @param nrpn (integer) NRPN
     -- @param data_msb (integer) DATA MSB
+    -- @name _append_2
     function this:_append_2( nrpn, data_msb )
         table.insert( self._list, NrpnEvent.new( self.clock, nrpn, data_msb ) );
     end
@@ -147,6 +154,7 @@ function NrpnEvent.new( ... )
     -- @param nrpn (integer) NRPN
     -- @param data_msb (integer) DATA MSB
     -- @param data_lsb (integer) DATA LSB
+    -- @name _append_3_int_byte_byte
     function this:_append_3_int_byte_byte( nrpn, data_msb, data_lsb )
         table.insert( self._list, NrpnEvent.new( self.clock, nrpn, data_msb, data_lsb ) );
     end
@@ -156,6 +164,7 @@ function NrpnEvent.new( ... )
     -- @param nrpn (integer) NRPN
     -- @param data_msb (integer) DATA MSB
     -- @param msb_omit_required (boolean) NRPN MSB を省略する場合は true を、そうでない場合は false を指定する
+    -- @name _append_3_int_byte_bool
     function this:_append_3_int_byte_bool( nrpn, data_msb, msb_omit_required )
         local v = NrpnEvent.new( self.clock, nrpn, data_msb );
         v.isMSBOmittingRequired = msb_omit_required;
@@ -168,6 +177,7 @@ function NrpnEvent.new( ... )
     -- @param data_msb (integer) DATA MSB
     -- @param data_lsb (integer) DATA LSB
     -- @param msb_omit_required (boolean) NRPN MSB を省略する場合は true を、そうでない場合は false を指定する
+    -- @name _append_4
     function this:_append_4( nrpn, data_msb, data_lsb, msb_omit_required )
         local v = NrpnEvent.new( self.clock, nrpn, data_msb, data_lsb );
         v.isMSBOmittingRequired = msb_omit_required;
@@ -188,6 +198,7 @@ end
 -- @param a (NrpnEvent) 比較対象のオブジェクト
 -- @param b (NrpnEvent) 比較対象のオブジェクト
 -- @return (boolean) a が b よりも小さい場合は true、そうでない場合は false を返す
+-- @name <i>compare</i>
 function NrpnEvent.compare( a, b )
     if( a:compareTo( b ) < 0 )then
         return true;
@@ -218,6 +229,7 @@ end
 -- NRPN イベントの配列を、MidiEvent の配列に変換する
 -- @param source (table<NrpnEvent>) NRPN イベントの配列
 -- @return (table<MidiEvent>) 変換後の MidiEvent の配列
+-- @name <i>convert</i>
 function NrpnEvent.convert( source )
     local nrpn = source[1].nrpn;
     local msb = Util.rshift( nrpn, 8 );

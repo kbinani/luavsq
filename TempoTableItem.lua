@@ -22,8 +22,9 @@ TempoTableItem = {};
 
 ---
 -- 初期化を行う
--- @see TempoTable:_init_3
+-- @see _init_3
 -- @return (TempoTableItem)
+-- @name <i>new</i>
 function TempoTableItem.new( ... )
     local this = {};
     local arguments = { ... };
@@ -34,6 +35,7 @@ function TempoTableItem.new( ... )
     ---
     -- 文字列に変換する
     -- @return (string) 変換後の文字列
+    -- @name toString
     function this:toString()
         return "{Clock=" .. self.clock .. ", Tempo=" .. self.tempo .. ", Time=" .. self.time .. "}";
     end
@@ -41,6 +43,7 @@ function TempoTableItem.new( ... )
     ---
     -- コピーを作成する
     -- @return (TempoTableItem) このオブジェクトのコピー
+    -- @name clone
     function this:clone()
         return TempoTableItem.new( self.clock, self.tempo, self.time );
     end
@@ -51,6 +54,7 @@ function TempoTableItem.new( ... )
     -- @param tempo (integer) テンポ値。四分音符の長さをマイクロ秒単位で表した値
     -- @param time (double) 秒単位の時刻。この値は最初は 0 を指定して良い。
     --                      time フィールドの値は、TempoTable:updateTempoInfo によって更新する
+    -- @name _init_3
     function this:_init_3( clock, tempo, time )
         self.clock = clock;
         self.tempo = tempo;
@@ -61,6 +65,7 @@ function TempoTableItem.new( ... )
     -- 順序を比較する
     -- @param item (TempoTableItem) 比較対象のアイテム
     -- @return (integer) このインスタンスが比較対象よりも小さい場合は負の整数、等しい場合は 0、大きい場合は正の整数を返す
+    -- @name compareTo
     function this:compareTo( entry )
         return self.clock - entry.clock;
     end
@@ -69,6 +74,7 @@ function TempoTableItem.new( ... )
     -- このオブジェクトのインスタンスと、指定されたオブジェクトが同じかどうかを調べる
     -- @param item (TempoTableItem) 比較対象のオブジェクト
     -- @return (boolean) 比較対象と同じであれば true を、そうでなければ false を返す
+    -- @name equals
     function this:equals( entry )
         if( self.clock == entry.clock )then
             return true;
@@ -89,6 +95,7 @@ end
 -- @param a (TempoTableItem) 比較対象のオブジェクト
 -- @param b (TempoTableItem) 比較対象のオブジェクト
 -- @return (boolean) a が b よりも小さい場合は true、そうでない場合は false を返す
+-- @name <i>compare</i>
 function TempoTableItem.compare( a, b )
     if( a:compareTo( b ) < 0 )then
         return true;

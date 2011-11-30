@@ -26,6 +26,7 @@ TextStream = {};
 ---
 -- 初期化を行う
 -- @return (TextStream)
+-- @name <i>new</i>
 function TextStream.new()
     local this = {};
     this.array = {};
@@ -35,6 +36,7 @@ function TextStream.new()
     ---
     -- 現在の読み書き位置を取得する
     -- @return (integer) 現在の読み書き位置
+    -- @name getPointer
     function this:getPointer()
         return self.position;
     end
@@ -42,6 +44,7 @@ function TextStream.new()
     ---
     -- 現在の読み書き位置を設定する
     -- @param value (integer) 設定する読み書き位置
+    -- @name setPointer
     function this:setPointer( value )
         self.position = value;
     end
@@ -49,6 +52,7 @@ function TextStream.new()
     ---
     -- 現在の読み込み位置から 1 文字を読み込み、読み書き位置を一つ進める
     -- @return (string) 読み込んだ文字
+    -- @name get
     function this:get()
         self.position = self.position + 1;
         return self.array[self.position + 1];
@@ -57,6 +61,7 @@ function TextStream.new()
     ---
     -- 現在の読み込み位置から、改行またはファイル末端まで読み込む
     -- @return (string) 読み込んだ文字列
+    -- @name readLine
     function this:readLine()
         local sb = "";
         -- '\n'が来るまで読み込み
@@ -74,6 +79,7 @@ function TextStream.new()
     ---
     -- テキストストリームが読み込み可能な状態かどうかを返す
     -- @return (boolean) 読み込み可能であれば true を、そうでなければ false を返す
+    -- @name ready
     function this:ready()
         if( 0 <= self.position + 1 and self.position + 1 < self.length )then
             return true;
@@ -82,7 +88,7 @@ function TextStream.new()
         end
     end
 
-    ---
+    --
     -- 内部のバッファー容量を確保する
     -- @access private
     -- @param length (integer) 確保したいバッファー容量
@@ -98,6 +104,7 @@ function TextStream.new()
     ---
     -- 文字列をストリームに書きこむ
     -- @param str (string) 書きこむ文字列
+    -- @name write
     function this:write( str )
         local len = str:len();
         local newSize = self.position + 1 + len;
@@ -113,6 +120,7 @@ function TextStream.new()
     ---
     -- 文字列をストリームに書きこむ。末尾に改行文字を追加する
     -- @param str (string) 書きこむ文字列
+    -- @name writeLine
     function this:writeLine( str )
         local len = str:len();
         local offset = self.position + 1;
@@ -128,6 +136,7 @@ function TextStream.new()
 
     ---
     -- ストリームを閉じる
+    -- @name close
     function this:close()
         self.array = nil;
         self.length = 0;
@@ -136,6 +145,7 @@ function TextStream.new()
     ---
     -- ストリームに書きこまれた文字列を連結し、返す
     -- @return (string) 文字列
+    -- @name toString
     function this:toString()
         local ret = "";
         for i = 1, self.length, 1 do

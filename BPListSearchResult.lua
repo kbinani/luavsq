@@ -23,6 +23,7 @@ BPListSearchResult = {};
 ---
 -- 初期化を行う
 -- @return (BPListSearchResult)
+-- @name <i>new</i>
 function BPListSearchResult.new()
     local this = {};
     this.clock = 0;

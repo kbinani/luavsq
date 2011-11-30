@@ -22,8 +22,9 @@ BPList.KeyClockIterator = {};
 
 ---
 -- コンストラクタ
--- @see BPList.KeyClockIterator:_init_1
+-- @see _init_1
 -- @return (BPList.KeyClockIterator)
+-- @name <i>new</i>
 function BPList.KeyClockIterator.new( ... )
     local this = {};
     local arguments = { ... };
@@ -33,7 +34,7 @@ function BPList.KeyClockIterator.new( ... )
     ---
     -- 初期化を行う
     -- @param list (BPList) 反復子の元になるリスト
-    -- @name BPList.KeyClockIterator:_init_1
+    -- @name _init_1
     function this:_init_1( list )
         self._list = list;
         self._pos = 0;
@@ -42,7 +43,7 @@ function BPList.KeyClockIterator.new( ... )
     ---
     -- 反復子が次の要素を持つ場合に true を返す
     -- @return (boolean) 反復子がさらに要素を持つ場合は true を、そうでなければ false を返す
-    -- @name BPList.KeyClockIterator:hasNext
+    -- @name hasNext
     function this:hasNext()
         if( self._pos + 1 <= self._list._length )then
             return true;
@@ -54,7 +55,7 @@ function BPList.KeyClockIterator.new( ... )
     ---
     -- 反復子の次の要素を返す
     -- @return (integer) 次の要素
-    -- @name BPList.KeyClockIterator:next
+    -- @name next
     function this:next()
         self._pos = self._pos + 1;
         return self._list.clocks[self._pos];
@@ -62,7 +63,7 @@ function BPList.KeyClockIterator.new( ... )
 
     ---
     -- 反復子によって最後に返された要素を削除する
-    -- @name BPList.KeyClockIterator:remove
+    -- @name remove
     function this:remove()
         if( 0 < self._pos and self._pos <= self._list._length )then
             local key = self._list.clocks[self._pos];

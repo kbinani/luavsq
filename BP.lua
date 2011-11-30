@@ -25,6 +25,7 @@ BP = {};
 -- @param _value (integer) データ点の値
 -- @param _id (integer) データ点のユニークID
 -- @return (BP) データ点のオブジェクト
+-- @name <i>new</i>
 function BP.new( _value, _id )
     local this = {};
     this.value = _value;
@@ -33,7 +34,7 @@ function BP.new( _value, _id )
     ---
     -- コピーを作成する
     -- @return (BP) このインスタンスのコピー
-    -- @name BP:clone
+    -- @name clone
     function this:clone()
         return BP.new( self.value, self.id );
     end

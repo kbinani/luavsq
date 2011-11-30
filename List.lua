@@ -32,6 +32,7 @@ List = {};
 ---
 -- 初期化を行う
 -- @return (List)
+-- @name <i>new</i>
 function List.new( ... )
     local this = {};
     local arguments = { ... };
@@ -41,6 +42,7 @@ function List.new( ... )
     -- リスト内の指定した位置にある要素を返す
     -- @param index (integer) インデックス(最初のインデックスは0)
     -- @return (?) 指定された位置にある要素
+    -- @name get
     function this:get( index )
         return self[index];
     end
@@ -49,6 +51,7 @@ function List.new( ... )
     -- 指定された位置にある要素を、指定の要素で置き換える
     -- @param index (integer) インデックス(最初のインデックスは0)
     -- @param value (?) 置き換える要素
+    -- @name set
     function this:set( index, value )
         self[index] = value;
     end
@@ -56,6 +59,7 @@ function List.new( ... )
     ---
     -- リスト内のデータを順番に返すイテレータを取得する
     -- @return (List.Iterator) イテレータ
+    -- @name iterator
     function this:iterator()
         return List.Iterator.new( self );
     end
@@ -63,6 +67,7 @@ function List.new( ... )
     ---
     -- リスト内のデータを並べ替える
     -- @param comparator (function) <optional> データの比較に使う比較関数
+    -- @name sort
     function this:sort( ... )
         local arguments = { ... };
         local wrappedComparator = nil;
@@ -86,6 +91,7 @@ function List.new( ... )
     ---
     -- データをリストの末尾に追加する
     -- @param value (?) 追加する要素
+    -- @name push
     function this:push( value )
         table.insert( self._array, { ["value"] = value } );
     end
@@ -93,11 +99,12 @@ function List.new( ... )
     ---
     -- リスト内のデータの個数を取得する
     -- @return (integer) データの個数
+    -- @name size
     function this:size()
         return #self._array;
     end
 
-    ---
+    --
     -- メタテーブルをセットアップする
     -- @access private
     function this:_setupMetaTable()
@@ -131,6 +138,7 @@ end
 -- lua の table から、List のインスタンスを作成する
 -- @param _table (table) 作成元の table
 -- @return (List) List のインスタンス
+-- @name <i>fromTable</i>
 function List.fromTable( _table )
     local list = List.new();
     local i;
@@ -148,6 +156,7 @@ List.Iterator = {};
 -- 初期化を行う
 -- @param list (List) 反復子の元になるリスト
 -- @return (List.Iterator) イテレータのオブジェクト
+-- @name Iterator.<i>new</i>
 function List.Iterator.new( list )
     local this = {};
     this._list = list;
@@ -156,6 +165,7 @@ function List.Iterator.new( list )
     ---
     -- 反復子が次の要素を持つ場合に true を返す
     -- @return (boolean) 反復子がさらに要素を持つ場合は true を、そうでなければ false を返す
+    -- @name Iterator.hasNext
     function this:hasNext()
         return (0 <= self._pos + 1 and self._pos + 1 < self._list:size())
     end
@@ -163,6 +173,7 @@ function List.Iterator.new( list )
     ---
     -- 反復子の次の要素を返す
     -- @return (?) 次の要素
+    -- @name Iterator.next
     function this:next()
         self._pos = self._pos + 1;
         return self._list[self._pos];

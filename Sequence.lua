@@ -32,8 +32,9 @@ Sequence._CURVES = { "VEL", "DYN", "BRE", "BRI", "CLE", "OPE", "GEN", "POR", "PI
 
 ---
 -- 初期化を行う
--- @see Sequence:_init_5
+-- @see _init_5
 -- @return (Sequence)
+-- @name <i>new</i>
 function Sequence.new( ... )
     local this = {};
     local arguments = { ... };
@@ -69,6 +70,7 @@ function Sequence.new( ... )
     -- @param numerator (integer) 拍子の分子の値
     -- @param denominator (integer) 拍子の分母の値
     -- @param tempo (integer) テンポ値。四分音符の長さのマイクロ秒単位の長さ
+    -- @name _init_5
     function this:_init_5( singer, pre_measure, numerator, denominator, tempo )
         self.totalClocks = pre_measure * 480 * 4 / denominator * numerator;
 
@@ -87,6 +89,7 @@ function Sequence.new( ... )
     ---
     -- コピーを作成する
     -- @return (Sequence) オブジェクトのコピー
+    -- @name clone
     function this:clone()
         local ret = Sequence.new();
         ret.track = List.new();
@@ -113,6 +116,7 @@ function Sequence.new( ... )
     ---
     -- テンポが一つも指定されていない場合の、基本テンポ値を取得する
     -- @return (integer) テンポ値。四分音符の長さのマイクロ秒単位の長さ
+    -- @name getBaseTempo
     function this:getBaseTempo()
         return Sequence.baseTempo;
     end
@@ -120,6 +124,7 @@ function Sequence.new( ... )
     ---
     -- プリメジャー値を取得する
     -- @return (integer) 小節単位のプリメジャー長さ
+    -- @name getPreMeasure
     function this:getPreMeasure()
         return self.master.preMeasure;
     end
@@ -127,11 +132,12 @@ function Sequence.new( ... )
     ---
     -- Tick 単位のプリメジャー部分の長さを取得する
     -- @return (integer) Tick 単位のプリメジャー長さ
+    -- @name getPreMeasureClocks
     function this:getPreMeasureClocks()
         return self:_calculatePreMeasureInClock();
     end
 
-    ---
+    --
     -- プリメジャーの Tick 単位の長さを計算する
     -- @access private
     -- @return (integer) Tick 単位のプリメジャー長さ
@@ -159,12 +165,14 @@ function Sequence.new( ... )
     ---
     -- 四分音符あたりの Tick 数を取得する
     -- @return (integer) 四分音符一つあたりの Tick 数
+    -- @name getTickPerQuarter
     function this:getTickPerQuarter()
         return self._tickPerQuarter;
     end
 
     ---
     -- totalClock の値を更新する
+    -- @name updateTotalClocks
     function this:updateTotalClocks()
         local max = self:getPreMeasureClocks();
         for i = 1, self.track:size() - 1, 1 do
@@ -192,8 +200,9 @@ function Sequence.new( ... )
 
     ---
     -- メタテキストイベントを作成する
-    -- @see Sequence:_generateMetaTextEventCore
+    -- @see _generateMetaTextEventCore
     -- @return (table<MidiEvent>) メタテキストを格納した MidiEvent の配列
+    -- @name generateMetaTextEvent
     function this:generateMetaTextEvent( ... )
         local arguments = { ... };
         if( #arguments == 2 )then
@@ -213,6 +222,7 @@ function Sequence.new( ... )
     -- @param start_clock (integer) イベント作成の開始位置
     -- @param print_pitch (boolean) pitch を含めて出力するかどうか(現在は false 固定で、引数は無視される)
     -- @return (table<MidiEvent>) メタテキストを格納した MidiEvent の配列
+    -- @name _generateMetaTextEventCore
     function this:_generateMetaTextEventCore( track, encoding, start_clock, print_pitch )
         local _NL = string.char( 0x0a );
         local ret = {};--new Vector<MidiEvent>();
@@ -309,6 +319,7 @@ function Sequence.new( ... )
     -- @param clock (integer) Tick 単位の時刻
     -- @param msPreSend (integer) ミリ秒単位のプリセンド時間
     -- @return (integer) Tick 単位の時間
+    -- @name getPresendClockAt
     function this:getPresendClockAt( clock, msPreSend )
         local clock_msec = self.tempoTable:getSecFromClock( clock ) * 1000.0;
         local draft_clock_sec = (clock_msec - msPreSend) / 1000.0;
@@ -338,6 +349,7 @@ function Sequence.new( ... )
     ---
     -- 拍子情報のテーブルから、拍子変更の MidiEvent を作成する
     -- @return (table<MidiEvent>) 拍子変更イベントを格納した MidiEvent の配列
+    -- @name generateTimeSig
     function this:generateTimeSig()
         local events = {};--new Vector<MidiEvent>();
         local itr = self.timesigTable:iterator();
@@ -356,6 +368,7 @@ function Sequence.new( ... )
     ---
     -- テンポ情報のテーブルから、テンポ変更の MidiEvent を作成する
     -- @return (table<MidiEvent>) テンポ変更イベントを格納した MidiEvent の配列
+    -- @name generateTempoChange
     function this:generateTempoChange()
         local events = {};--new Vector<MidiEvent>();
         local itr = self.tempoTable:iterator();
@@ -371,7 +384,8 @@ function Sequence.new( ... )
     -- ストリームに出力する
     -- @param msPreSend (integer) ミリ秒単位のプリセンドタイム
     -- @param encoding (string) マルチバイト文字のテキストエンコーディング(現在は Shift_JIS 固定で、引数は無視される)
-    -- @see Sequence:_writeCore
+    -- @see _writeCore
+    -- @name write
     function this:write( ... )
         local arguments = { ... };
         if( #arguments == 3 )then
@@ -385,6 +399,7 @@ function Sequence.new( ... )
     -- ストリームに出力する
     -- @param (integer) msPreSend ミリ秒単位のプリセンドタイム
     -- @param (string) encoding マルチバイト文字のテキストエンコーディング(現在は Shift_JIS 固定で、引数は無視される)
+    -- @name _writeCore
     function this:_writeCore( fs, msPreSend, encoding, print_pitch )
         local last_clock = 0;
         local track_size = self.track:size();
@@ -490,6 +505,7 @@ end
 -- @param s (string) 切り取り元の文字列
 -- @param encoding (string) マルチバイト文字のテキストエンコーディング(現在は Shift_JIS 固定で、引数は無視される)
 -- @return (string) 切り取った文字列
+-- @name <i>substring127Bytes</i>
 function Sequence.substring127Bytes( s, encoding )
     local count = math.min( 127, s:len() );
     local arr = CP932Converter.convertFromUTF( s:sub( 1, count ) );
@@ -524,6 +540,7 @@ end
 -- @param msPreSend (integer) ミリ秒単位のプリセンド時間
 -- @param encoding (string) マルチバイト文字のテキストエンコーディング(現在は Shift_JIS 固定で、引数は無視される)
 -- @param print_pitch (boolean) pitch を含めて出力するかどうか(現在は false 固定で、引数は無視される)
+-- @name <i>printTrack</i>
 function Sequence.printTrack( vsq, track, fs, msPreSend, encoding, print_pitch )
     local _NL = string.char( 0x0a );
     --ヘッダ
@@ -580,6 +597,7 @@ end
 -- @param track (integer) 出力するトラックの番号
 -- @param msPreSend (integer) ミリ秒単位のプリセンド時間
 -- @return (table<NrpnEvent>) NrpnEvent の配列
+-- @name <i>generateExpressionNRPN</i>
 function Sequence.generateExpressionNRPN( vsq, track, msPreSend )
     local ret = {};--Array.new();--Vector<VsqNrpn>();
     local dyn = vsq.track:get( track ):getCurve( "DYN" );
@@ -630,6 +648,7 @@ end
 ---
 -- トラックの先頭に記録される NRPN のリストを作成する
 -- @return (table<NrpnEvent>) NrpnEvent の配列
+-- @name <i>generateHeaderNRPN</i>
 function Sequence.generateHeaderNRPN()
     local ret = NrpnEvent.new( 0, MidiParameterEnum.CC_BS_VERSION_AND_DEVICE, 0x00, 0x00 );
     ret:append( MidiParameterEnum.CC_BS_DELAY, 0x00, 0x00 );
@@ -643,6 +662,7 @@ end
 -- @param ve (Event) 出力する歌手変更イベント
 -- @param msPreSend (integer) ミリ秒単位のプリセンド時間
 -- @return (table<NrpnEvent>) NrpnEvent の配列
+-- @name <i>generateSingerNRPN</i>
 function Sequence.generateSingerNRPN( vsq, ve, msPreSend )
     local clock = ve.clock;
     local singer_handle = nil; --IconHandle
@@ -688,6 +708,7 @@ end
 --                           </ul>
 -- @param add_delay_sign (boolean) ディレイイベントを追加するかどうか
 -- @return (table<NrpnEvent>) NrpnEvent の配列
+-- @name <i>generateNoteNRPN</i>
 function Sequence.generateNoteNRPN( vsq, track, ve, msPreSend, note_loc, add_delay_sign )
     local clock = ve.clock;
     local renderer = vsq.track:get( track ).common.version;
@@ -869,8 +890,9 @@ end
 
 ---
 -- 指定したシーケンスの指定したトラックから、NRPN のリストを作成する
--- @see Sequence._generateNRPN_3
--- see Sequence._generateNRPN_5
+-- @see <i>_generateNRPN_3</i>
+-- <!--see _generateNRPN_5-->
+-- @name <i>generateNRPN</i>
 function Sequence.generateNRPN( ... )
     local arguments = { ... };
     if( #arguments == 3 )then
@@ -909,6 +931,7 @@ end
 -- @param track (integer) 出力するトラックの番号
 -- @param msPreSend (integer) ミリ秒単位のプリセンド時間
 -- @return (table<NrpnEvent>) NrpnEvent の配列
+-- @name <i>_generateNRPN_3</i>
 function Sequence._generateNRPN_3( vsq, track, msPreSend )
     local list = {};--Vector<VsqNrpn>();
 
@@ -1058,6 +1081,7 @@ end
 -- @param track (integer) 出力するトラックの番号
 -- @param msPreSend (integer) ミリ秒単位のプリセンド時間
 -- @return (table<NrpnEvent>) NrpnEvent の配列
+-- @name <i>generatePitchBendNRPN</i>
 function Sequence.generatePitchBendNRPN( vsq, track, msPreSend )
     local ret = {};--Vector<VsqNrpn>();
     local pit = vsq.track:get( track ):getCurve( "PIT" );
@@ -1082,8 +1106,9 @@ function Sequence.generatePitchBendNRPN( vsq, track, msPreSend )
     return ret;
 end
 
----
+--
 -- 配列を連結する
+-- @access private
 -- @param src_array (table) 連結先のテーブル。参照として更新される
 -- @param add_array (table) 追加される要素が格納されたテーブル
 -- @return (table) src_array と同じインスタンス
@@ -1101,6 +1126,7 @@ end
 -- @param track (integer) 出力するトラックの番号
 -- @param msPreSend (integer) ミリ秒単位のプリセンド時間
 -- @return (table<NrpnEvent>) NrpnEvent の配列
+-- @name <i>generatePitchBendSensitivityNRPN</i>
 function Sequence.generatePitchBendSensitivityNRPN( vsq, track, msPreSend )
     local ret = {};-- Vector<VsqNrpn>();
     local pbs = vsq.track:get( track ):getCurve( "PBS" );
@@ -1128,6 +1154,7 @@ end
 -- @param ve (Event) 出力する音符イベント
 -- @param msPreSend (integer) ミリ秒単位のプリセンド時間
 -- @return (table<NrpnEvent>) NrpnEvent の配列
+-- @name <i>generateVibratoNRPN</i>
 function Sequence.generateVibratoNRPN( vsq, ve, msPreSend )
     local ret = {};--Vector<VsqNrpn>();
     if( ve.id.vibratoHandle ~= nil )then
@@ -1191,6 +1218,7 @@ end
 -- @param track (integer) 出力するトラックの番号
 -- @param msPreSend (integer) ミリ秒単位のプリセンド時間
 -- @return (table<NrpnEvent>) NrpnEvent の配列
+-- @name <i>generateVoiceChangeParameterNRPN</i>
 function Sequence.generateVoiceChangeParameterNRPN( vsq, track, msPreSend )
     local premeasure_clock = vsq:getPreMeasureClocks();
     local renderer = vsq.track:get( track ).common.version;
@@ -1241,6 +1269,7 @@ end
 -- @param value (integer) 分解する値
 -- @return (integer) MSB の値
 -- @return (integer) LSB の値
+-- @name <i>getMsbAndLsb</i>
 function Sequence.getMsbAndLsb( value )
     if( 0x3fff < value )then
         return 0x7f, 0x7f;
@@ -1254,6 +1283,7 @@ end
 -- "DM:0001:"といった、VSQメタテキストの行の先頭につくヘッダー文字列のバイト列表現を取得する
 -- @param count (integer) ヘッダーの番号
 -- @return (table<integer>) バイト列
+-- @name <i>getLinePrefixBytes</i>
 function Sequence.getLinePrefixBytes( count )
     local digits = Sequence.getHowManyDigits( count );
     local c = math.floor( (digits - 1) / 4 ) + 1;
@@ -1275,6 +1305,7 @@ end
 -- 数値の 10 進数での桁数を取得する
 -- @param number (integer) 検査対象の数値
 -- @return (integer) 数値の 10 進数での桁数
+-- @name <i>getHowManyDigits</i>
 function Sequence.getHowManyDigits( number )
     number = math.abs( number );
     if( number == 0 )then
@@ -1288,6 +1319,7 @@ end
 -- 16 ビットの unsigned int 値をビッグエンディアンでストリームに書きこむ
 -- @param stream (? extends OutputStream) 出力先のストリーム
 -- @param data (integer) 出力する値
+-- @name <i>writeUnsignedShort</i>
 function Sequence.writeUnsignedShort( stream, data )
     local dat = Util.getBytesUInt16BE( data );
     stream:write( dat, 1, #dat );
@@ -1297,6 +1329,7 @@ end
 -- 32 ビットの unsigned int 値をビッグエンディアンでストリームに書きこむ
 -- @param fs (? extends OutputStram) 出力先のストリーム
 -- @param data (integer) 出力する値
+-- @name <i>writeUnsignedInt</i>
 function Sequence.writeUnsignedInt( fs, data )
     local dat = Util.getBytesUInt32BE( data );
     fs:write( dat, 1, #dat );

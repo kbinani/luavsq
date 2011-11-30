@@ -25,6 +25,7 @@ VibratoBP = {};
 -- @param x (double) x 軸の値
 -- @param y (integer) y 軸の値
 -- @return (VibratoBP)
+-- @name <i>new</i>
 function VibratoBP.new( ... )
     local arguments = { ... };
     local this = {};
@@ -39,6 +40,7 @@ function VibratoBP.new( ... )
     -- 順序を比較する
     -- @param item (VibratoBP) 比較対象のアイテム
     -- @return (integer) このインスタンスが比較対象よりも小さい場合は負の整数、等しい場合は 0、大きい場合は正の整数を返す
+    -- @name compareTo
     function this:compareTo( item )
         local v = self.x - item.x;
         if( v > 0.0 )then
@@ -58,6 +60,7 @@ end
 -- @param a (VibratoBP)
 -- @param b (VibratoBP)
 -- @return (integer)
+-- @name <i>compare</i>
 function VibratoBP.compare( a, b )
     return a:compareTo( b );
 end

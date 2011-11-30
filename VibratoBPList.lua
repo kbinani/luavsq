@@ -26,9 +26,10 @@ VibratoBPList = {};
 
 ---
 -- 初期化を行う
--- @see VibratoBPList:_init_3
--- @see VibratoBPList:_init_2
+-- @see _init_3
+-- @see _init_2
 -- @return (VibratoBPList)
+-- @name <i>new</i>
 function VibratoBPList.new( ... )
     local arguments = { ... };
     local this = {};
@@ -39,6 +40,7 @@ function VibratoBPList.new( ... )
     -- @param strNum (string) データ点の個数の文字列表現
     -- @param strBPX (string) x 軸のデータ点の値をカンマ区切りで繋げた文字列
     -- @param strBPY (string) y 軸のデータ点の値をカンマ区切りで繋げた文字列
+    -- @name _init_3
     function this:_init_3( strNum, strBPX, strBPY )
         local num = tonumber( strNum );
         if( nil == num )then
@@ -67,6 +69,7 @@ function VibratoBPList.new( ... )
     -- 初期化を行う
     -- @param x (table<double>) x 軸の値のリスト
     -- @param y (table<integer>) y 軸の値のリスト
+    -- @name _init_2
     function this:_init_2( x, y )
         local len = math.min( #x, #y );
         for i = 1, len, 1 do
@@ -87,6 +90,7 @@ function VibratoBPList.new( ... )
     -- @param x (double) 取得したい x 軸の値
     -- @param defaultValue (integer) ビブラートカーブのデフォルト値
     -- @return (integer) ビブラートカーブの値
+    -- @name getValueAt
     function this:getValueAt( x, defaultValue )
         if( #self._list <= 0 )then
             return defaultValue;
@@ -108,6 +112,7 @@ function VibratoBPList.new( ... )
     ---
     -- コピーを作成する
     -- @return (VibratoBPList) このオブジェクトのコピー
+    -- @name clone
     function this:clone()
         local ret = VibratoBPList.new();
         for i = 1, #self._list, 1 do
@@ -119,6 +124,7 @@ function VibratoBPList.new( ... )
     ---
     -- データ点の個数を返す
     -- @return (integer) データ点の個数
+    -- @name size
     function this:size()
         return #self._list;
     end
@@ -127,6 +133,7 @@ function VibratoBPList.new( ... )
     -- 指定したインデックスのデータ点を取得する
     -- @param index (integer) 0から始まるインデックス
     -- @return (VibratoBP) データ点
+    -- @name get
     function this:get( index )
         return self._list[index + 1];
     end
@@ -135,6 +142,7 @@ function VibratoBPList.new( ... )
     -- 指定したインデックスのデータ点を設定する
     -- @param index (integer) インデックス(最初のインデックスは0)
     -- @param value (VibratoBP) 設定するデータ点
+    -- @name set
     function this:set( index, value )
         self._list[index + 1] = value;
     end
@@ -142,6 +150,7 @@ function VibratoBPList.new( ... )
     ---
     -- データ点のリストを、文字列に変換する。例えば "key1=value1,key2=value2" のように変換される
     -- @return (string) 変換後の文字列
+    -- @name getData
     function this:getData()
         local ret = "";
         for i = 1, #self._list, 1 do
@@ -156,6 +165,7 @@ function VibratoBPList.new( ... )
     ---
     -- "key1=value=1,key2=value2" のような文字列から、データ点のリストを設定する
     -- @param value (string) データ点の文字列形式
+    -- @name setData
     function this:setData( value )
         self._list = {};
         local spl = Util.split( value, ',' );
@@ -184,6 +194,7 @@ end
 -- @param a (VibratoBP) 比較対象のオブジェクト
 -- @param b (VibratoBP) 比較対象のオブジェクト
 -- @return (boolean) a が b よりも小さい場合は true、そうでない場合は false を返す
+-- @name <i>_comparator</i>
 function VibratoBPList._comparator( a, b )
     if( a:compareTo( b ) < 0 )then
         return true;
