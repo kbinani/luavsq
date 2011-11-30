@@ -1,5 +1,5 @@
 --[[
-  Track.IndexIterator.lua
+  EventList.IndexIterator.lua
   Copyright © 2011 kbinani
 
   This file is part of luavsq.
@@ -14,22 +14,22 @@
 
 module( "luavsq" );
 
-if( nil == Track )then
-    Track = {};
+if( nil == EventList )then
+    EventList = {};
 end
 
 ---
 -- イベントリスト中の、インデックスを順に返す反復子
 -- @class table
--- @name Track.IndexIterator
-Track.IndexIterator = {};
+-- @name EventList.IndexIterator
+EventList.IndexIterator = {};
 
 ---
 -- 初期化を行う
 -- @param list (EventList) 反復子の元になるリスト
--- @param iterator_kind (IndexIteratorKindEnum) 反復子の種類
--- @return (IndexIterator) 反復子
-function Track.IndexIterator.new( list, iteratorKind )
+-- @param iterator_kind (EventList.IndexIteratorKindEnum) 反復子の種類
+-- @return (EventListIndexIterator) 反復子
+function EventList.IndexIterator.new( list, iteratorKind )
     local this = {};
     ---
     -- @local [VsqEventList]
@@ -38,28 +38,28 @@ function Track.IndexIterator.new( list, iteratorKind )
     this._kindSinger =
         Util.band(
             iteratorKind,
-            Track.IndexIteratorKindEnum.SINGER
-        ) == Track.IndexIteratorKindEnum.SINGER;
+            EventList.IndexIteratorKindEnum.SINGER
+        ) == EventList.IndexIteratorKindEnum.SINGER;
     this._kindNote =
         Util.band(
             iteratorKind,
-            Track.IndexIteratorKindEnum.NOTE
-        ) == Track.IndexIteratorKindEnum.NOTE;
+            EventList.IndexIteratorKindEnum.NOTE
+        ) == EventList.IndexIteratorKindEnum.NOTE;
     this._kindCrescend =
         Util.band(
             iteratorKind,
-            Track.IndexIteratorKindEnum.CRESCEND
-        ) == Track.IndexIteratorKindEnum.CRESCEND;
+            EventList.IndexIteratorKindEnum.CRESCEND
+        ) == EventList.IndexIteratorKindEnum.CRESCEND;
     this._kindDecrescend =
         Util.band(
             iteratorKind,
-            Track.IndexIteratorKindEnum.DECRESCEND
-        ) == Track.IndexIteratorKindEnum.DECRESCEND;
+            EventList.IndexIteratorKindEnum.DECRESCEND
+        ) == EventList.IndexIteratorKindEnum.DECRESCEND;
     this._kindDynaff =
         Util.band(
             iteratorKind,
-            Track.IndexIteratorKindEnum.DYNAFF
-        ) == Track.IndexIteratorKindEnum.DYNAFF;
+            EventList.IndexIteratorKindEnum.DYNAFF
+        ) == EventList.IndexIteratorKindEnum.DYNAFF;
 
     ---
     -- 反復子の次の要素を返す

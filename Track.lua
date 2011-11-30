@@ -263,7 +263,7 @@ function Track.new( ... )
     -- @param iterator_kind (IndexIteratorKindEnum) 反復子の種類
     -- @return (IndexIterator) 反復子
     function this:getIndexIterator( iterator_kind )
-        return Track.IndexIterator.new( self.events, iterator_kind );
+        return EventList.IndexIterator.new( self.events, iterator_kind );
     end
 
     --[[

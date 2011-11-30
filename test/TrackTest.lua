@@ -9,8 +9,8 @@ dofile( "../Id.lua" );
 dofile( "../IdTypeEnum.lua" );
 dofile( "../SingerHandle.lua" );
 dofile( "../Event.lua" );
-dofile( "../Track.IndexIteratorKindEnum.lua" );
-dofile( "../Track.IndexIterator.lua" );
+dofile( "../EventList.IndexIteratorKindEnum.lua" );
+dofile( "../EventList.IndexIterator.lua" );
 dofile( "../Util.lua" );
 dofile( "../IconDynamicsHandle.lua" );
 dofile( "../IconParameter.lua" );
@@ -200,10 +200,10 @@ end
 
 function testGetIndexIterator()
     local track = luavsq.Track.new( "DummyTrackName", "DummySingerName" );
-    local iterator = track:getIndexIterator( luavsq.Track.IndexIteratorKindEnum.NOTE );
+    local iterator = track:getIndexIterator( luavsq.EventList.IndexIteratorKindEnum.NOTE );
     assert_false( iterator:hasNext() );
 
-    iterator = track:getIndexIterator( luavsq.Track.IndexIteratorKindEnum.SINGER );
+    iterator = track:getIndexIterator( luavsq.EventList.IndexIteratorKindEnum.SINGER );
     assert_true( iterator:hasNext() );
     assert_equal( 0, iterator:next() );
     assert_false( iterator:hasNext() );
@@ -242,7 +242,7 @@ end
 
 function testGetIndexIteratorSinger()
     local track = luavsq.Track.new( "DummyTrackName", "DummySingerName" );
-    local iterator = track:getIndexIterator( luavsq.Track.IndexIteratorKindEnum.SINGER );
+    local iterator = track:getIndexIterator( luavsq.EventList.IndexIteratorKindEnum.SINGER );
     assert_true( iterator:hasNext() );
     local event = track.events:get( iterator:next() );
     assert_equal( "DummySingerName", event.id.singerHandle.ids );
@@ -251,13 +251,13 @@ end
 
 function testGetIndexIteratorNote()
     local track = luavsq.Track.new( "DummyTrackName", "DummySingerName" );
-    local iterator = track:getIndexIterator( luavsq.Track.IndexIteratorKindEnum.NOTE );
+    local iterator = track:getIndexIterator( luavsq.EventList.IndexIteratorKindEnum.NOTE );
     assert_false( iterator:hasNext() );
 
     local event = luavsq.Event.new( 480, luavsq.Id.new( 0 ) );
     event.id.type = luavsq.IdTypeEnum.Anote;
     track.events:add( event, 10 );
-    iterator = track:getIndexIterator( luavsq.Track.IndexIteratorKindEnum.NOTE );
+    iterator = track:getIndexIterator( luavsq.EventList.IndexIteratorKindEnum.NOTE );
     assert_true( iterator:hasNext() );
     local obtained = track.events:get( iterator:next() );
     assert_equal( event, obtained );
@@ -267,7 +267,7 @@ end
 
 function testGetIndexIteratorDynamics()
     local track = luavsq.Track.new( "DummyTrackName", "DummySingerName" );
-    local iterator = track:getIndexIterator( luavsq.Track.IndexIteratorKindEnum.DYNAFF );
+    local iterator = track:getIndexIterator( luavsq.EventList.IndexIteratorKindEnum.DYNAFF );
     assert_false( iterator:hasNext() );
 
     local event = luavsq.Event.new( 480, luavsq.Id.new( 0 ) );
@@ -275,7 +275,7 @@ function testGetIndexIteratorDynamics()
     event.id.iconDynamicsHandle = luavsq.IconDynamicsHandle.new();
     event.id.iconDynamicsHandle.iconId = "$05019999";
     track.events:add( event, 10 );
-    iterator = track:getIndexIterator( luavsq.Track.IndexIteratorKindEnum.DYNAFF );
+    iterator = track:getIndexIterator( luavsq.EventList.IndexIteratorKindEnum.DYNAFF );
     assert_true( iterator:hasNext() );
     local obtained = track.events:get( iterator:next() );
     assert_equal( event, obtained );

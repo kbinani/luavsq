@@ -1,5 +1,5 @@
 --[[
-  Track.IndexItertorKindEnum.lua
+  EventList.IndexItertorKindEnum.lua
   Copyright © 2011 kbinani
 
   This file is part of luavsq.
@@ -14,21 +14,21 @@
 
 module( "luavsq" );
 
-if( nil == Track )then
-    Track = {};
+if( nil == EventList )then
+    EventList = {};
 end
 
 ---
 -- IndexIterator の反復子の種類を表す列挙子
 -- @class table
--- @name Track.IndexIteratorKindEnum
+-- @name EventList.IndexIteratorKindEnum
 -- @field ALL 全てのイベント
 -- @field SINGER 歌手イベント
 -- @field NOTE 音符イベント
 -- @field CRESCEND クレッシェンドイベント
 -- @field DECRESCEND デクレッシェンドイベント
 -- @field DYNAFF 強弱記号イベント
-Track.IndexIteratorKindEnum = {
+EventList.IndexIteratorKindEnum = {
     ALL = 0xffff,
     SINGER = 1,
     NOTE = 2,

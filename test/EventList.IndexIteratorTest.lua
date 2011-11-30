@@ -1,15 +1,15 @@
 require( "lunit" );
-dofile( "../Track.IndexIterator.lua" );
 dofile( "../EventList.lua" );
+dofile( "../EventList.IndexIterator.lua" );
 dofile( "../Event.lua" );
 dofile( "../Id.lua" );
 dofile( "../IdTypeEnum.lua" );
 dofile( "../IconDynamicsHandle.lua" );
 dofile( "../IconParameter.lua" );
 dofile( "../ArticulationTypeEnum.lua" );
-dofile( "../Track.IndexIteratorKindEnum.lua" );
+dofile( "../EventList.IndexIteratorKindEnum.lua" );
 dofile( "../Util.lua" );
-module( "Track.IndexIteratorTest", package.seeall, lunit.testcase );
+module( "EventList.IndexIteratorTest", package.seeall, lunit.testcase );
 
 function test()
     local list = luavsq.EventList.new();
@@ -41,7 +41,7 @@ function test()
     list:add( decrescendoEvent, 4 );
 
     --音符イベントのみのイテレータ
-    local noteIterator = luavsq.Track.IndexIterator.new( list, luavsq.Track.IndexIteratorKindEnum.NOTE );
+    local noteIterator = luavsq.EventList.IndexIterator.new( list, luavsq.EventList.IndexIteratorKindEnum.NOTE );
     assert_true( noteIterator:hasNext() );
     assert_equal( 4, noteIterator:next() );
     assert_false( noteIterator:hasNext() );
@@ -50,7 +50,7 @@ function test()
     assert_equal( 5, event.internalId );
 
     --歌手変更イベントのみのイテレータ
-    local singerIterator = luavsq.Track.IndexIterator.new( list, luavsq.Track.IndexIteratorKindEnum.SINGER );
+    local singerIterator = luavsq.EventList.IndexIterator.new( list, luavsq.EventList.IndexIteratorKindEnum.SINGER );
     assert_true( singerIterator:hasNext() );
     assert_equal( 0, singerIterator:next() );
     assert_false( singerIterator:hasNext() );
@@ -59,7 +59,7 @@ function test()
     assert_equal( 1, event.internalId );
 
     --強弱記号のみのイテレータ
-    local dynaffIterator = luavsq.Track.IndexIterator.new( list, luavsq.Track.IndexIteratorKindEnum.DYNAFF );
+    local dynaffIterator = luavsq.EventList.IndexIterator.new( list, luavsq.EventList.IndexIteratorKindEnum.DYNAFF );
     assert_true( dynaffIterator:hasNext() );
     assert_equal( 2, dynaffIterator:next() );
     assert_false( dynaffIterator:hasNext() );
@@ -68,7 +68,7 @@ function test()
     assert_equal( 3, event.internalId );
 
     --クレッシェンドのみのイテレータ
-    local crescendoIterator = luavsq.Track.IndexIterator.new( list, luavsq.Track.IndexIteratorKindEnum.CRESCEND );
+    local crescendoIterator = luavsq.EventList.IndexIterator.new( list, luavsq.EventList.IndexIteratorKindEnum.CRESCEND );
     assert_true( crescendoIterator:hasNext() );
     assert_equal( 1, crescendoIterator:next() );
     assert_false( crescendoIterator:hasNext() );
@@ -76,7 +76,7 @@ function test()
     assert_equal( 240, event.clock );
     assert_equal( 2, event.internalId );
 
-    local decrescendoIterator = luavsq.Track.IndexIterator.new( list, luavsq.Track.IndexIteratorKindEnum.DECRESCEND );
+    local decrescendoIterator = luavsq.EventList.IndexIterator.new( list, luavsq.EventList.IndexIteratorKindEnum.DECRESCEND );
     assert_true( decrescendoIterator:hasNext() );
     assert_equal( 3, decrescendoIterator:next() );
     assert_false( decrescendoIterator:hasNext() );
@@ -85,13 +85,13 @@ function test()
     assert_equal( 4, event.internalId );
 
     local kindAll = luavsq.Util.bor(
-        luavsq.Track.IndexIteratorKindEnum.NOTE,
-        luavsq.Track.IndexIteratorKindEnum.SINGER,
-        luavsq.Track.IndexIteratorKindEnum.DYNAFF,
-        luavsq.Track.IndexIteratorKindEnum.CRESCEND,
-        luavsq.Track.IndexIteratorKindEnum.DECRESCEND
+        luavsq.EventList.IndexIteratorKindEnum.NOTE,
+        luavsq.EventList.IndexIteratorKindEnum.SINGER,
+        luavsq.EventList.IndexIteratorKindEnum.DYNAFF,
+        luavsq.EventList.IndexIteratorKindEnum.CRESCEND,
+        luavsq.EventList.IndexIteratorKindEnum.DECRESCEND
     );
-    local iteratorAll = luavsq.Track.IndexIterator.new( list, kindAll );
+    local iteratorAll = luavsq.EventList.IndexIterator.new( list, kindAll );
     assert_true( iteratorAll:hasNext() );
     assert_equal( 0, iteratorAll:next() );
     assert_equal( 0, list:get( 0 ).clock );
