@@ -128,8 +128,8 @@ function BPList.new( ... )
     -- コントロールカーブのデフォルト値を設定する
     -- @param value (integer) コントロールカーブのデフォルト値
     -- @name setDefault
-    function this:setDefault( _value )
-        self.defaultValue = _value;
+    function this:setDefault( value )
+        self.defaultValue = value;
     end
 
     --[[

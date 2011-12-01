@@ -197,7 +197,7 @@ function Sequence.new( ... )
         self.totalClocks = max;
     end
 
-    ---
+    --
     -- メタテキストイベントを作成する
     -- @return (table<MidiEvent>) メタテキストを格納した MidiEvent の配列
     function this:generateMetaTextEvent( ... )
@@ -345,7 +345,7 @@ function Sequence.new( ... )
     end
 
 --[[
-        ---
+        --
         -- 指定したクロックにおける、音符長さ(ゲートタイム単位)の最大値を調べます
         -- @param clock [int]
         -- @return [int]
@@ -922,7 +922,7 @@ function Sequence.generateNRPN( ... )
 end
 
 --[[
-    ---
+    --
     --  指定したトラックのデータから，NRPNを作成します
     -- @param vsq [VsqFile]
     -- @param track [int]

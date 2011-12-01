@@ -22,7 +22,7 @@ module( "luavsq" );
 -- @name Track
 Track = {};
 
----
+--
 -- 初期化を行う
 -- @return (Track)
 function Track.new( ... )
