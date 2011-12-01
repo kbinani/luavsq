@@ -160,3 +160,49 @@ function testDump()
 
     assert_equal( expected, actual );
 end
+
+function testExplodeUTF8String()
+    local s =
+        "0" .. -- 0x30
+        "Ǻ" .. --0xC7 0xBA
+        "☺" .. -- 0xE2 0x98 0xBA
+        string.char( 0xF7 ) .. string.char( 0xBF ) .. string.char( 0xBF ) .. string.char( 0xBF ) ..
+        string.char( 0xFB ) .. string.char( 0xBF ) .. string.char( 0xBF ) .. string.char( 0xBF ) .. string.char( 0xBF ) ..
+        string.char( 0xFC ) .. string.char( 0x84 ) .. string.char( 0x80 ) .. string.char( 0x80 ) .. string.char( 0x80 ) .. string.char( 0x80 );
+    local actual = luavsq.Util.explodeUTF8String( s );
+
+    assert_equal( 6, #actual );
+
+    assert_equal( 1, #actual[1] );
+    assert_equal( 0x30, actual[1][1] );
+
+    assert_equal( 2, #actual[2] );
+    assert_equal( 0xC7, actual[2][1] );
+    assert_equal( 0xBA, actual[2][2] );
+
+    assert_equal( 3, #actual[3] );
+    assert_equal( 0xE2, actual[3][1] );
+    assert_equal( 0x98, actual[3][2] );
+    assert_equal( 0xBA, actual[3][3] );
+
+    assert_equal( 4, #actual[4] );
+    assert_equal( 0xF7, actual[4][1] );
+    assert_equal( 0xBF, actual[4][2] );
+    assert_equal( 0xBF, actual[4][3] );
+    assert_equal( 0xBF, actual[4][4] );
+
+    assert_equal( 5, #actual[5] );
+    assert_equal( 0xFB, actual[5][1] );
+    assert_equal( 0xBF, actual[5][2] );
+    assert_equal( 0xBF, actual[5][3] );
+    assert_equal( 0xBF, actual[5][4] );
+    assert_equal( 0xBF, actual[5][5] );
+
+    assert_equal( 6, #actual[6] );
+    assert_equal( 0xFC, actual[6][1] );
+    assert_equal( 0x84, actual[6][2] );
+    assert_equal( 0x80, actual[6][3] );
+    assert_equal( 0x80, actual[6][4] );
+    assert_equal( 0x80, actual[6][5] );
+    assert_equal( 0x80, actual[6][6] );
+end

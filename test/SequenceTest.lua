@@ -204,11 +204,63 @@ function testGetMaximumNoteLengthAt()
 end
 
 function testGenerateTimeSig()
-    fail();
+    local sequence = luavsq.Sequence.new( "Miku", 1, 4, 4, 500000 );
+    sequence.timesigTable = luavsq.TimesigTable.new();
+    sequence.timesigTable:push( luavsq.TimesigTableItem.new( 0, 4, 4, 0 ) );
+    sequence.timesigTable:push( luavsq.TimesigTableItem.new( 0, 6, 8, 1 ) );
+    sequence.timesigTable:updateTimesigInfo();
+
+    local actual = sequence:generateTimeSig();
+
+    assert_equal( 2, #actual );
+    local item = actual[1];
+    assert_equal( 0, item.clock );
+    assert_equal( 0xff, item.firstByte );
+    assert_equal( 5, #item.data );
+    assert_equal( 0x58, item.data[1] );
+    assert_equal( 4, item.data[2] );
+    assert_equal( 2, item.data[3] );
+    assert_equal( 0x18, item.data[4] );
+    assert_equal( 0x08, item.data[5] );
+
+    item = actual[2];
+    assert_equal( 1920, item.clock );
+    assert_equal( 0xff, item.firstByte );
+    assert_equal( 5, #item.data );
+    assert_equal( 0x58, item.data[1] );
+    assert_equal( 6, item.data[2] );
+    assert_equal( 3, item.data[3] );
+    assert_equal( 0x18, item.data[4] );
+    assert_equal( 0x08, item.data[5] );
 end
 
 function testGenerateTempoChange()
-    fail();
+    local sequence = luavsq.Sequence.new( "Miku", 1, 4, 4, 500000 );
+    sequence.tempoTable = luavsq.TempoTable.new();
+    sequence.tempoTable:push( luavsq.TempoTableItem.new( 0, 500000, 0.0 ) );
+    sequence.tempoTable:push( luavsq.TempoTableItem.new( 1920, 600000, 0.0 ) );
+    sequence.tempoTable:updateTempoInfo();
+
+    local actual = sequence:generateTempoChange();
+
+    assert_equal( 2, #actual );
+    local item = actual[1];
+    assert_equal( 0, item.clock );
+    assert_equal( 0xff, item.firstByte );
+    assert_equal( 4, #item.data );
+    assert_equal( 0x51, item.data[1] );
+    assert_equal( 0x07, item.data[2] );
+    assert_equal( 0xA1, item.data[3] );
+    assert_equal( 0x20, item.data[4] );
+
+    item = actual[2];
+    assert_equal( 1920, item.clock );
+    assert_equal( 0xff, item.firstByte );
+    assert_equal( 4, #item.data );
+    assert_equal( 0x51, item.data[1] );
+    assert_equal( 0x09, item.data[2] );
+    assert_equal( 0x27, item.data[3] );
+    assert_equal( 0xc0, item.data[4] );
 end
 
 function testWriteWithoutPitch()
@@ -217,10 +269,6 @@ end
 
 function testWriteWithPitch()
 --    fail();
-end
-
-function testSubstring127Bytes()
-    fail();
 end
 
 function testPrintTrack()
@@ -232,11 +280,32 @@ function testGenerateExpressionNRPN()
 end
 
 function testGenerateFx2DepthNRPN()
-    fail();
+--    fail();
 end
 
 function testGenerateHeaderNRPN()
-    fail();
+    local actual = luavsq.Sequence.generateHeaderNRPN():expand();
+    assert_equal( 3, #actual );
+
+    assert_equal( 0, actual[1].clock );
+    assert_equal( luavsq.MidiParameterEnum.CC_BS_VERSION_AND_DEVICE, actual[1].nrpn );
+    assert_equal( 0x00, actual[1].dataMSB );
+    assert_equal( 0x00, actual[1].dataLSB );
+    assert_true( actual[1].hasLSB );
+    assert_false( actual[1].isMSBOmittingRequired );
+
+    assert_equal( 0, actual[2].clock );
+    assert_equal( luavsq.MidiParameterEnum.CC_BS_DELAY, actual[2].nrpn );
+    assert_equal( 0x00, actual[2].dataMSB );
+    assert_equal( 0x00, actual[2].dataLSB );
+    assert_true( actual[2].hasLSB );
+    assert_false( actual[2].isMSBOmittingRequired );
+
+    assert_equal( 0, actual[3].clock );
+    assert_equal( luavsq.MidiParameterEnum.CC_BS_LANGUAGE_TYPE, actual[3].nrpn );
+    assert_equal( 0x00, actual[3].dataMSB );
+    assert_false( actual[3].hasLSB );
+    assert_false( actual[3].isMSBOmittingRequired );
 end
 
 function testGenerateSingerNRPN()
@@ -285,7 +354,10 @@ function testGenerateVoiceChangeParameterNRPN()
 end
 
 function testGetMsbAndLsb()
-    fail();
+    local msb, lsb;
+    msb, lsb = luavsq.Sequence.getMsbAndLsb( 264 );
+    assert_equal( 2, msb );
+    assert_equal( 8, lsb );
 end
 
 function testGetLinePrefixBytes()
@@ -375,14 +447,18 @@ function testGetHowManyDigits()
     assert_equal( 2, luavsq.Sequence.getHowManyDigits( -10 ) );
 end
 
-function testWriteCharArray()
-    fail();
-end
-
 function testWriteUnsignedShort()
-    fail();
+    local stream = luavsq.ByteArrayOutputStream.new();
+    luavsq.Sequence.writeUnsignedShort( stream, 0x8421 );
+    local actual = stream:toString();
+    local expected = string.char( 0x84 ) .. string.char( 0x21 );
+    assert_equal( expected, actual );
 end
 
 function testWriteUnsignedInt()
-    fail();
+    local stream = luavsq.ByteArrayOutputStream.new();
+    luavsq.Sequence.writeUnsignedInt( stream, 0x84212184 );
+    local actual = stream:toString();
+    local expected = string.char( 0x84 ) .. string.char( 0x21 ) .. string.char( 0x21 ) .. string.char( 0x84 );
+    assert_equal( expected, actual );
 end

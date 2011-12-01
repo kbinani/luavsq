@@ -368,7 +368,7 @@ function Sequence.new( ... )
     -- @return (table<MidiEvent>) 拍子変更イベントを格納した MidiEvent の配列
     -- @name generateTimeSig
     function this:generateTimeSig()
-        local events = {};--new Vector<MidiEvent>();
+        local events = {};
         local itr = self.timesigTable:iterator();
         while( itr:hasNext() )do
             local item = itr:next();
@@ -522,39 +522,6 @@ function Sequence.new( ... )
     end
 
     return this;
-end
-
----
--- 文字列 s の先頭から、先頭から 127 バイト以下の文字を切り取る。
--- ただし、指定されたテキストエンコーディングでエンコードした場合にも、127 バイト以下となるよう切り取りを行う
--- @param s (string) 切り取り元の文字列
--- @param encoding (string) マルチバイト文字のテキストエンコーディング(現在は Shift_JIS 固定で、引数は無視される)
--- @return (string) 切り取った文字列
--- @name <i>substring127Bytes</i>
-function Sequence.substring127Bytes( s, encoding )
-    local count = math.min( 127, s:len() );
-    local arr = CP932Converter.convertFromUTF( s:sub( 1, count ) );
-    local c = #arr;--PortUtil.getEncodedByteCount( encoding, s.Substring( 0, count ) );
-    if( c == 127 )then
-        return s:sub( 1, count );
-    end
-    local delta;
-    if( c > 127 )then
-        delta = -1;
-    else
-        delta = 1;
-    end
-    while( (delta == -1 and c > 127) or (delta == 1 and c < 127) )do
-        count = count + delta;
-        if( delta == -1 and count == 0 )then
-            break;
-        elseif( delta == 1 and count == s:len() )then
-            break;
-        end
-        arr = CP932Converter.convertFromUTF( s:sub( 1, count ) );
-        c = #arr;--PortUtil.getEncodedByteCount( encoding, s.Substring( 0, count ) );
-    end
-    return s:sub( 1, count );
 end
 
 ---

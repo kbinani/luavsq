@@ -365,3 +365,47 @@ function Util._dump( value, depth, state )
         end
     end
 end
+
+---
+-- UTF8 の文字列を、1 文字ずつに分解した配列に変換します
+-- @param utf8 (string) UTF8 の文字列
+-- @return (table) 1 要素に 1 文字分の文字コードが入った配列
+--                 例えば、utf8 = "0あ" の場合、戻り値は { { 0x30 }, { 0xE3, 0x81, 0x82 } }となる
+-- @name <i>explodeUTF8String</i>
+function Util.explodeUTF8String( utf8 )
+    if( nil == utf8 )then
+        return {};
+    end
+
+    local result = {};
+    local count = utf8:len();
+    local i = 1;
+
+    while( i <= count )do
+        local codeBytes = {};
+        local code = string.byte( utf8:sub( i, i ) );
+        table.insert( codeBytes, code );
+        local remain = 1;
+        if( code <= 0x7F )then
+            remain = 0;
+        elseif( code <= 0xDF )then
+            remain = 1;
+        elseif( code <= 0xEF )then
+            remain = 2;
+        elseif( code <= 0xF7 )then
+            remain = 3;
+        elseif( code <= 0xFB )then
+            remain = 4;
+        else
+            remain = 5;
+        end
+        local j;
+        for j = 1, remain, 1 do
+            table.insert( codeBytes, string.byte( utf8:sub( i + j, i + j ) ) );
+        end
+        table.insert( result, codeBytes );
+        i = i + remain + 1;
+    end
+
+    return result;
+end
