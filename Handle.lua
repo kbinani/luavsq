@@ -87,12 +87,12 @@ function Handle.new( ... )
 
     ---
     -- テキストストリームからハンドルの内容を読み込み初期化する
-    -- @param sr (TextStream) 読み込み元のテキストストリーム
+    -- @param stream (TextStream) 読み込み元のテキストストリーム
     -- @param index (integer) index フィールドの値
-    -- @param last_line (table, { value = ? }) 読み込んだ最後の行。テーブルの ["value"] に文字列が格納される
+    -- @param lastLine (table, { value = ? }) 読み込んだ最後の行。テーブルの ["value"] に文字列が格納される
     -- @name <i>new</i><sup>2</sup>
     -- @return (Handle)
-    function this:_init_3( sr, index, last_line )
+    function this:_init_3( stream, index, lastLine )
         self.index = index;
         local spl;
         local spl2;
@@ -127,9 +127,9 @@ function Handle.new( ... )
         local tmpDynBPNum = "";
 
         -- "["にぶち当たるまで読込む
-        last_line.value = sr:readLine();
-        while( last_line.value:find( "[", 1, true ) ~= 1 )do
-            spl = Util.split( last_line.value, '=' );
+        lastLine.value = stream:readLine();
+        while( lastLine.value:find( "[", 1, true ) ~= 1 )do
+            spl = Util.split( lastLine.value, '=' );
             local search = spl[1];
             if( search == "Language" )then
                 self._type = HandleTypeEnum.Singer;
@@ -195,10 +195,10 @@ function Handle.new( ... )
                     self.lyrics[index + 1] = lyric;
                 end
             end
-            if( not sr:ready() )then
+            if( not stream:ready() )then
                 break;
             end
-            last_line.value = sr:readLine();
+            lastLine.value = stream:readLine();
         end
 
         -- RateBPX, RateBPYの設定
@@ -707,10 +707,10 @@ end
 
 ---
 -- ハンドル指定子（例えば"h#0123"という文字列）からハンドル番号を取得する
--- @param string (string) ハンドル指定子
+-- @param s (string) ハンドル指定子
 -- @return (integer) ハンドル番号
 -- @name <i>getHandleIndexFromString</i>
-function Handle.getHandleIndexFromString( _string )
-    local spl = Util.split( _string, "#" );
+function Handle.getHandleIndexFromString( s )
+    local spl = Util.split( s, "#" );
     return tonumber( spl[2], 10 );
 end

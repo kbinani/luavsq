@@ -284,15 +284,15 @@ end
 
 ---
 -- 文字列のバイトを取り出して配列にしたものを返す
--- @param string_ (string) 変換元の文字列
+-- @param s (string) 変換元の文字列
 -- @return (table<integer>) 変換後のバイト列
 -- @name <i>stringToArray</i>
-function Util.stringToArray( string_ )
-    local count = string_:len();
+function Util.stringToArray( s )
+    local count = s:len();
     local result = {};
     local i;
     for i = 1, count, 1 do
-        table.insert( result, string.byte( string_:sub( i, i ) ) );
+        table.insert( result, string.byte( s:sub( i, i ) ) );
     end
     return result;
 end

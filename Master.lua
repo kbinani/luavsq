@@ -42,23 +42,23 @@ function Master.new( ... )
 
     ---
     -- テキストストリームから読み込むことで初期化を行う
-    -- @param sr (TextStream) 読み込むテキストストリーム
+    -- @param stream (TextStream) 読み込むテキストストリーム
     -- @param lastLine (table, { value = ? }) 読み込んだ最後の行。テーブルの ["value"] に文字列が格納される
     -- @return (Master)
     -- @name <i>new</i><sup>2</sup>
-    function this:_init_2( sr, lastLine )
+    function this:_init_2( stream, lastLine )
         self.preMeasure = 0;
         local spl;
-        lastLine.value = sr:readLine();
+        lastLine.value = stream:readLine();
         while( lastLine.value:find( "[", 1, true ) ~= 1 )do
             spl = Util.split( lastLine.value, "=" );
             if( spl[1] == "PreMeasure" )then
                 self.preMeasure = tonumber( spl[2], 10 );
             end
-            if( not sr:ready() )then
+            if( not stream:ready() )then
                 break;
             end
-            lastLine.value = sr:readLine();
+            lastLine.value = stream:readLine();
         end
     end
 

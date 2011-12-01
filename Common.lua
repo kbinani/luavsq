@@ -44,18 +44,18 @@ function Common.new( ... )
     ---
     -- 初期化を行う
     -- @param sr (TextStream) 読み込み元のテキストストリーム
-    -- @param last_line (table, { value = ? }) 読み込んだ最後の行。テーブルの ["value"] に文字列が格納される
+    -- @param lastLine (table, { value = ? }) 読み込んだ最後の行。テーブルの ["value"] に文字列が格納される
     -- @return (Common)
     -- @name <i>new</i><sup>1</sup>
-    function this:_init_2( sr, last_line )
+    function this:_init_2( sr, lastLine )
         self.version = "";
         self.name = "";
         self.color = "0,0,0";
         self.dynamicsMode = 0;
         self.playMode = 1;
-        last_line.value = sr:readLine();
-        while( last_line.value:sub( 1, 1 ) ~= "[" )do
-            local spl = Util.split( last_line.value, "=" );
+        lastLine.value = sr:readLine();
+        while( lastLine.value:sub( 1, 1 ) ~= "[" )do
+            local spl = Util.split( lastLine.value, "=" );
             local search = spl[1];
             if( search == "Version" )then
                 self.version = spl[2];
@@ -71,7 +71,7 @@ function Common.new( ... )
             if( not sr:ready() )then
                 break;
             end
-            last_line.value = sr:readLine();
+            lastLine.value = sr:readLine();
         end
     end
 
@@ -110,15 +110,15 @@ function Common.new( ... )
 
     ---
     -- テキストストリームに出力する
-    -- @param sw (TextStream) 出力先のストリーム
+    -- @param stream (TextStream) 出力先のストリーム
     -- @name write
-    function this:write( sw )
-        sw:writeLine( "[Common]" );
-        sw:writeLine( "Version=" .. self.version );
-        sw:writeLine( "Name=" .. self.name );
-        sw:writeLine( "Color=" .. self.color );
-        sw:writeLine( "DynamicsMode=" .. self.dynamicsMode );
-        sw:writeLine( "PlayMode=" .. self.playMode );
+    function this:write( stream )
+        stream:writeLine( "[Common]" );
+        stream:writeLine( "Version=" .. self.version );
+        stream:writeLine( "Name=" .. self.name );
+        stream:writeLine( "Color=" .. self.color );
+        stream:writeLine( "DynamicsMode=" .. self.dynamicsMode );
+        stream:writeLine( "PlayMode=" .. self.playMode );
     end
 
     if( #arguments == 2 )then

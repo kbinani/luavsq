@@ -42,13 +42,13 @@ function NrpnEvent.new( ... )
     -- 時刻、NRPN、DATA MSB を指定し、初期化を行う
     -- @param clock (integer) Tick 単位の時刻
     -- @param nrpn (integer) NRPN
-    -- @param data_msb (integer) DATA MSB
+    -- @param dataMsb (integer) DATA MSB
     -- @return (NrpnEvent)
     -- @name <i>new</i><sup>1</sup>
-    function this:_init_3( clock, nrpn, data_msb )
+    function this:_init_3( clock, nrpn, dataMsb )
         self.clock = clock;
         self.nrpn = nrpn;
-        self.dataMSB = data_msb;
+        self.dataMSB = dataMsb;
         self.dataLSB = 0x0;
         self.hasLSB = false;
         self.isMSBOmittingRequired = false;
@@ -59,15 +59,15 @@ function NrpnEvent.new( ... )
     -- 時刻、NRPN、DATA MSB、DATA LSB を指定し、初期化を行う
     -- @param clock (integer) Tick 単位の時刻
     -- @param nrpn (integer) NRPN
-    -- @param data_msb (integer) DATA MSB
-    -- @param data_lsb (integer) DATA LSB
+    -- @param dataMsb (integer) DATA MSB
+    -- @param dataLsb (integer) DATA LSB
     -- @return (NrpnEvent)
     -- @name <i>new</i><sup>2</sup>
-    function this:_init_4( clock, nrpn, data_msb, data_lsb )
+    function this:_init_4( clock, nrpn, dataMsb, dataLsb )
         self.clock = clock;
         self.nrpn = nrpn;
-        self.dataMSB = data_msb;
-        self.dataLSB = data_lsb;
+        self.dataMSB = dataMsb;
+        self.dataLSB = dataLsb;
         self.hasLSB = true;
         self.isMSBOmittingRequired = false;
         self._list = {};--new Vector<NrpnEvent>();
@@ -137,44 +137,44 @@ function NrpnEvent.new( ... )
     ---
     -- NRPN、DATA MSB を指定し、イベントを追加する
     -- @param nrpn (integer) NRPN
-    -- @param data_msb (integer) DATA MSB
+    -- @param dataMsb (integer) DATA MSB
     -- @name append<sup>1</sup>
-    function this:_append_2( nrpn, data_msb )
-        table.insert( self._list, NrpnEvent.new( self.clock, nrpn, data_msb ) );
+    function this:_append_2( nrpn, dataMsb )
+        table.insert( self._list, NrpnEvent.new( self.clock, nrpn, dataMsb ) );
     end
 
     ---
     -- NRPN、DATA MSB、DATA LSB を指定し、イベントを追加する
     -- @param nrpn (integer) NRPN
-    -- @param data_msb (integer) DATA MSB
-    -- @param data_lsb (integer) DATA LSB
+    -- @param dataMsb (integer) DATA MSB
+    -- @param dataLsb (integer) DATA LSB
     -- @name append<sup>2</sup>
-    function this:_append_3_int_byte_byte( nrpn, data_msb, data_lsb )
-        table.insert( self._list, NrpnEvent.new( self.clock, nrpn, data_msb, data_lsb ) );
+    function this:_append_3_int_byte_byte( nrpn, dataMsb, dataLsb )
+        table.insert( self._list, NrpnEvent.new( self.clock, nrpn, dataMsb, dataLsb ) );
     end
 
     ---
     -- NRPN、DATA MSB、MSB 省略フラグを指定し、イベントを追加する
     -- @param nrpn (integer) NRPN
-    -- @param data_msb (integer) DATA MSB
-    -- @param msb_omit_required (boolean) NRPN MSB を省略する場合は true を、そうでない場合は false を指定する
+    -- @param dataMsb (integer) DATA MSB
+    -- @param isMsbOmittingRequired (boolean) NRPN MSB を省略する場合は true を、そうでない場合は false を指定する
     -- @name append<sup>3</sup>
-    function this:_append_3_int_byte_bool( nrpn, data_msb, msb_omit_required )
-        local v = NrpnEvent.new( self.clock, nrpn, data_msb );
-        v.isMSBOmittingRequired = msb_omit_required;
+    function this:_append_3_int_byte_bool( nrpn, dataMsb, isMsbOmittingRequired )
+        local v = NrpnEvent.new( self.clock, nrpn, dataMsb );
+        v.isMSBOmittingRequired = isMsbOmittingRequired;
         table.insert( self._list, v );
     end
 
     ---
     -- NRPN、DATA MSB、DATA LSB、MSB 省略フラグを指定し、イベントを追加する
     -- @param nrpn (integer) NRPN
-    -- @param data_msb (integer) DATA MSB
-    -- @param data_lsb (integer) DATA LSB
-    -- @param msb_omit_required (boolean) NRPN MSB を省略する場合は true を、そうでない場合は false を指定する
+    -- @param dataMsb (integer) DATA MSB
+    -- @param dataLsb (integer) DATA LSB
+    -- @param isMsbOmittingRequired (boolean) NRPN MSB を省略する場合は true を、そうでない場合は false を指定する
     -- @name append<sup>4</sup>
-    function this:_append_4( nrpn, data_msb, data_lsb, msb_omit_required )
-        local v = NrpnEvent.new( self.clock, nrpn, data_msb, data_lsb );
-        v.isMSBOmittingRequired = msb_omit_required;
+    function this:_append_4( nrpn, dataMsb, dataLsb, isMsbOmittingRequired )
+        local v = NrpnEvent.new( self.clock, nrpn, dataMsb, dataLsb );
+        v.isMSBOmittingRequired = isMsbOmittingRequired;
         table.insert( self._list, v );
     end
 

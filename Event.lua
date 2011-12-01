@@ -344,40 +344,40 @@ function Event.new( ... )
     ---
     -- テキストストリームに書き出す
     -- @param writer (TextStream) 出力先
-    -- @param print_targets (table) 出力するアイテムのリスト
+    -- @param printTargets (table) 出力するアイテムのリスト
     -- @name write<sup>2</sup>
-    function this:_write_2( writer, print_targets )
+    function this:_write_2( writer, printTargets )
         writer:writeLine( "[ID#" .. string.format( "%04d", self.value ) .. "]" );
         writer:writeLine( "Type=" .. EventTypeEnum.toString( self.type ) );
         if( self.type == EventTypeEnum.Anote )then
-            if( Util.searchArray( print_targets, "Length" ) >= 1 )then
+            if( Util.searchArray( printTargets, "Length" ) >= 1 )then
                 writer:writeLine( "Length=" .. self:getLength() );
             end
-            if( Util.searchArray( print_targets, "Note#" ) >= 1 )then
+            if( Util.searchArray( printTargets, "Note#" ) >= 1 )then
                 writer:writeLine( "Note#=" .. self.note );
             end
-            if( Util.searchArray( print_targets, "Dynamics" ) >= 1 )then
+            if( Util.searchArray( printTargets, "Dynamics" ) >= 1 )then
                 writer:writeLine( "Dynamics=" .. self.dynamics );
             end
-            if( Util.searchArray( print_targets, "PMBendDepth" ) >= 1 )then
+            if( Util.searchArray( printTargets, "PMBendDepth" ) >= 1 )then
                 writer:writeLine( "PMBendDepth=" .. self.pmBendDepth );
             end
-            if( Util.searchArray( print_targets, "PMBendLength" ) >= 1 )then
+            if( Util.searchArray( printTargets, "PMBendLength" ) >= 1 )then
                 writer:writeLine( "PMBendLength=" .. self.pmBendLength );
             end
-            if( Util.searchArray( print_targets, "PMbPortamentoUse" ) >= 1 )then
+            if( Util.searchArray( printTargets, "PMbPortamentoUse" ) >= 1 )then
                 writer:writeLine( "PMbPortamentoUse=" .. self.pmbPortamentoUse );
             end
-            if( Util.searchArray( print_targets, "DEMdecGainRate" ) >= 1 )then
+            if( Util.searchArray( printTargets, "DEMdecGainRate" ) >= 1 )then
                 writer:writeLine( "DEMdecGainRate=" .. self.demDecGainRate );
             end
-            if( Util.searchArray( print_targets, "DEMaccent" ) >= 1 )then
+            if( Util.searchArray( printTargets, "DEMaccent" ) >= 1 )then
                 writer:writeLine( "DEMaccent=" .. self.demAccent );
             end
-            if( Util.searchArray( print_targets, "PreUtterance" ) >= 1 )then
+            if( Util.searchArray( printTargets, "PreUtterance" ) >= 1 )then
                 writer:writeLine( "PreUtterance=" .. self.ustEvent.preUtterance );
             end
-            if( Util.searchArray( print_targets, "VoiceOverlap" ) >= 1 )then
+            if( Util.searchArray( printTargets, "VoiceOverlap" ) >= 1 )then
                 writer:writeLine( "VoiceOverlap=" .. self.ustEvent.voiceOverlap );
             end
             if( self.lyricHandle ~= nil )then

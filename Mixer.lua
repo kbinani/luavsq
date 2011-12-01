@@ -39,17 +39,17 @@ function Mixer.new( ... )
 
     ---
     -- 各パラメータを指定し、初期化を行う
-    -- @param master_fader (integer) MasterFader 値
-    -- @param master_panpot (integer) MasterPanpot 値
-    -- @param master_mute (integer) MasterMute 値
-    -- @param output_mode (integer) OutputMode 値
+    -- @param masterFeder (integer) MasterFader 値
+    -- @param masterPanpot (integer) MasterPanpot 値
+    -- @param masterMute (integer) MasterMute 値
+    -- @param outputMode (integer) OutputMode 値
     -- @return (Mixer)
     -- @name <i>new</i><sup>2</sup>
-    function this:_init_4( master_feder, master_panpot, master_mute, output_mode )
-        self.masterFeder = master_feder;
-        self.masterMute = master_mute;
-        self.masterPanpot = master_panpot;
-        self.outputMode = output_mode;
+    function this:_init_4( masterFeder, masterPanpot, masterMute, outputMode )
+        self.masterFeder = masterFeder;
+        self.masterMute = masterMute;
+        self.masterPanpot = masterPanpot;
+        self.outputMode = outputMode;
 
         ---
         -- vsqファイルの各トラックのfader, panpot, muteおよびoutputmode値を保持します
@@ -62,7 +62,7 @@ function Mixer.new( ... )
     -- @param lastLine (table, { value = ? }) 読み込んだ最後の行。テーブルの ["value"] に文字列が格納される
     -- @return (Mixer)
     -- @name <i>new</i><sup>1</sup>
-    function this:_init_2( stream, last_line )
+    function this:_init_2( stream, lastLine )
         self.masterFeder = 0;
         self.masterPanpot = 0;
         self.masterMute = 0;
@@ -70,9 +70,9 @@ function Mixer.new( ... )
         local tracks = 0;
         local spl;
         local buffer = "";
-        last_line.value = stream:readLine();
-        while( last_line.value:sub( 1, 1 ) ~= "[" )do
-            spl = Util.split( last_line.value, "=" );
+        lastLine.value = stream:readLine();
+        while( lastLine.value:sub( 1, 1 ) ~= "[" )do
+            spl = Util.split( lastLine.value, "=" );
             if( spl[1] == "MasterFeder" )then
                 self.masterFeder = tonumber( spl[2], 10 );
             elseif( spl[1] == "MasterPanpot" )then
@@ -94,7 +94,7 @@ function Mixer.new( ... )
             if( not stream:ready() )then
                 break;
             end
-            last_line.value = stream:readLine();
+            lastLine.value = stream:readLine();
         end
 
         self.slave = {};
@@ -145,23 +145,23 @@ function Mixer.new( ... )
 
     ---
     -- テキストストリームに出力する
-    -- @param sw (TextStream) 出力先のストリーム
+    -- @param stream (TextStream) 出力先のストリーム
     -- @name write
-    function this:write( sw )
-        sw:writeLine( "[Mixer]" );
-        sw:writeLine( "MasterFeder=" .. self.masterFeder );
-        sw:writeLine( "MasterPanpot=" .. self.masterPanpot );
-        sw:writeLine( "MasterMute=" .. self.masterMute );
-        sw:writeLine( "OutputMode=" .. self.outputMode );
+    function this:write( stream )
+        stream:writeLine( "[Mixer]" );
+        stream:writeLine( "MasterFeder=" .. self.masterFeder );
+        stream:writeLine( "MasterPanpot=" .. self.masterPanpot );
+        stream:writeLine( "MasterMute=" .. self.masterMute );
+        stream:writeLine( "OutputMode=" .. self.outputMode );
         local count = #self.slave;
-        sw:writeLine( "Tracks=" .. count );
+        stream:writeLine( "Tracks=" .. count );
         local i;
         for i = 1, count, 1 do
             local item = self.slave[i];
-            sw:writeLine( "Feder" .. (i - 1) .. "=" .. item.feder );
-            sw:writeLine( "Panpot" .. (i - 1) .. "=" .. item.panpot );
-            sw:writeLine( "Mute" .. (i - 1) .. "=" .. item.mute );
-            sw:writeLine( "Solo" .. (i - 1) .. "=" .. item.solo );
+            stream:writeLine( "Feder" .. (i - 1) .. "=" .. item.feder );
+            stream:writeLine( "Panpot" .. (i - 1) .. "=" .. item.panpot );
+            stream:writeLine( "Mute" .. (i - 1) .. "=" .. item.mute );
+            stream:writeLine( "Solo" .. (i - 1) .. "=" .. item.solo );
         end
     end
 

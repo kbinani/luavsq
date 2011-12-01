@@ -22,14 +22,14 @@ BP = {};
 
 ---
 -- コンストラクタ
--- @param _value (integer) データ点の値
--- @param _id (integer) データ点のユニークID
+-- @param value (integer) データ点の値
+-- @param id (integer) データ点のユニークID
 -- @return (BP) データ点のオブジェクト
 -- @name <i>new</i>
-function BP.new( _value, _id )
+function BP.new( value, id )
     local this = {};
-    this.value = _value;
-    this.id = _id;
+    this.value = value;
+    this.id = id;
 
     ---
     -- コピーを作成する

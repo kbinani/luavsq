@@ -58,11 +58,11 @@ function EventList.new()
 
     ---
     -- イベント ID を基にイベントを検索し、そのオブジェクトを返す
-    -- @param internal_id (integer) 検索するイベント ID
+    -- @param internalId (integer) 検索するイベント ID
     -- @return (Event) 検索結果のイベント。イベントが見つからなければ nil を返す
     -- @name findFromId
-    function this:findFromId( internal_id )
-        local index = self:findIndexFromId( internal_id );
+    function this:findFromId( internalId )
+        local index = self:findIndexFromId( internalId );
         if( 0 <= index and index < #self._events )then
             return self._events[index + 1];
         else

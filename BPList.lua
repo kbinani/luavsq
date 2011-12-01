@@ -402,22 +402,22 @@ function BPList.new( ... )
     ---
     -- コントロールカーブをテキストストリームに出力する
     -- @param writer (TextStream) 出力先のストリーム
-    -- @param start_clock (integer) Tick 単位の出力開始時刻
+    -- @param startClock (integer) Tick 単位の出力開始時刻
     -- @param header (string) 最初に出力するヘッダー文字列
     -- @name print
-    function this:print( writer, start_clock, header )
+    function this:print( writer, startClock, header )
         writer:writeLine( header );
         local lastvalue = self.defaultValue;
         local value_at_start_written = false;
         local i;
         for i = 1, self._length, 1 do
             local key = self.clocks[i];
-            if( start_clock == key )then
+            if( startClock == key )then
                 writer:writeLine( key .. "=" .. self.items[i].value );
                 value_at_start_written = true;
-            elseif( start_clock < key )then
+            elseif( startClock < key )then
                 if( (not value_at_start_written) and (lastvalue ~= self.defaultValue) )then
-                    writer:writeLine( start_clock .. "=" .. lastvalue );
+                    writer:writeLine( startClock .. "=" .. lastvalue );
                     value_at_start_written = true;
                 end
                 local val = self.items[i].value;
@@ -427,7 +427,7 @@ function BPList.new( ... )
             end
         end
         if( (not value_at_start_written) and (lastvalue ~= self.defaultValue) )then
-            writer:writeLine( start_clock .. "=" .. lastvalue );
+            writer:writeLine( startClock .. "=" .. lastvalue );
         end
     end
 

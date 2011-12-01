@@ -34,18 +34,18 @@ function VibratoBPList.new( ... )
 
     ---
     -- 初期化を行う
-    -- @param strNum (string) データ点の個数の文字列表現
-    -- @param strBPX (string) x 軸のデータ点の値をカンマ区切りで繋げた文字列
-    -- @param strBPY (string) y 軸のデータ点の値をカンマ区切りで繋げた文字列
+    -- @param textNum (string) データ点の個数の文字列表現
+    -- @param textBPX (string) x 軸のデータ点の値をカンマ区切りで繋げた文字列
+    -- @param textBPY (string) y 軸のデータ点の値をカンマ区切りで繋げた文字列
     -- @return (VibratoBPList)
     -- @name <i>new</i><sup>1</sup>
-    function this:_init_3( strNum, strBPX, strBPY )
-        local num = tonumber( strNum );
+    function this:_init_3( textNum, textBPX, textBPY )
+        local num = tonumber( textNum );
         if( nil == num )then
             num = 0;
         end
-        local bpx = Util.split( strBPX, ',' );
-        local bpy = Util.split( strBPY, ',' );
+        local bpx = Util.split( textBPX, ',' );
+        local bpy = Util.split( textBPY, ',' );
         local actNum = math.min( num, math.min( #bpx, #bpy ) );
         if( actNum > 0 )then
             local x = Util.array( actNum );

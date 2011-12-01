@@ -579,11 +579,11 @@ CP932Converter._unicode_to_cp932 = {
 
 ---
 -- UTF8 の文字列を CP932 の文字列に変換する
--- @param (string) s 変換前の文字列
+-- @param (string) utf8 変換前の文字列
 -- @return (string) 変換後の文字列
 -- @name <i>convertFromUTF8<i>
-function CP932Converter.convertFromUTF8( s )
-    local utf8codes = CP932Converter._getUnicodeBytesFromUTF8String( s );
+function CP932Converter.convertFromUTF8( utf8 )
+    local utf8codes = CP932Converter._getUnicodeBytesFromUTF8String( utf8 );
     local result = "";
     local i;
     for i = 1, #utf8codes, 1 do
