@@ -94,18 +94,18 @@ function EventList.IndexIterator.new( list, iteratorKind )
         for i = self._pos + 1, count, 1 do
             local item = self._list:get( i - 1 );
             if( self._kindSinger )then
-                if( item.id.type == IdTypeEnum.Singer )then
+                if( item.type == EventTypeEnum.Singer )then
                     return i;
                 end
             end
             if( self._kindNote )then
-                if( item.id.type == IdTypeEnum.Anote )then
+                if( item.type == EventTypeEnum.Anote )then
                     return i;
                 end
             end
             if( self._kindDynaff or self._kindCrescend or self._kindDecrescend )then
-                if( item.id.type == IdTypeEnum.Aicon and item.id.iconDynamicsHandle ~= nil and item.id.iconDynamicsHandle.iconId ~= nil )then
-                    local iconid = item.id.iconDynamicsHandle.iconId;
+                if( item.type == EventTypeEnum.Aicon and item.iconDynamicsHandle ~= nil and item.iconDynamicsHandle.iconId ~= nil )then
+                    local iconid = item.iconDynamicsHandle.iconId;
                     if( self._kindDynaff )then
                         if( iconid:find( Handle.ICONID_HEAD_DYNAFF ) == 1 )then
                             return i;

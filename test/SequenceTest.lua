@@ -7,8 +7,7 @@ dofile( "../DynamicsModeEnum.lua" );
 dofile( "../PlayModeEnum.lua" );
 dofile( "../BPList.lua" );
 dofile( "../EventList.lua" );
-dofile( "../Id.lua" );
-dofile( "../IdTypeEnum.lua" );
+dofile( "../EventTypeEnum.lua" );
 dofile( "../Event.lua" );
 dofile( "../Master.lua" );
 dofile( "../Mixer.lua" );
@@ -100,7 +99,7 @@ function isEqualToDefaultSequence( sequence )
     assert_equal( "", track1.tag );
     assert_equal( 1, track1.events:size() );
     assert_equal( 0, track1.events:get( 0 ).clock );
-    assert_equal( luavsq.IdTypeEnum.Singer, track1.events:get( 0 ).id.type );
+    assert_equal( luavsq.EventTypeEnum.Singer, track1.events:get( 0 ).type );
 
     -- master
     assert_equal( 1, sequence.master.preMeasure );
@@ -133,12 +132,11 @@ end
 
 function test()
     local sequence = luavsq.Sequence.new( "Miku", 1, 4, 4, 500000 );
-    local note = luavsq.Event.new( 1920, luavsq.Id.new( 0 ) );
-    note.id.type = luavsq.IdTypeEnum.Anote;
-    note.id.note = 60;
-    note.id:setLength( 480 );
-    note.id.lyricHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Lyric );
-    note.id.lyricHandle:setLyricAt( 0, luavsq.Lyric.new( "あ", "a" ) );
+    local note = luavsq.Event.new( 1920, luavsq.EventTypeEnum.Anote );
+    note.note = 60;
+    note:setLength( 480 );
+    note.lyricHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Lyric );
+    note.lyricHandle:setLyricAt( 0, luavsq.Lyric.new( "あ", "a" ) );
     sequence.track:get( 1 ).events:add( note );
     local fileHandle = io.open( "foo.vsq", "wb" );
     fileHandle:write( sequence:write( 500, "Shift_JIS" ) );
@@ -181,10 +179,9 @@ end
 function testUpdateTotalClocks()
     local sequence = luavsq.Sequence.new( "Miku", 1, 4, 4, 500000 );
     assert_equal( 1 * 480 * 4 / 4 * 4, sequence.totalClocks );
-    local note = luavsq.Event.new( 1920, luavsq.Id.new( 0 ) );
-    note.id.type = luavsq.IdTypeEnum.Anote;
-    note.id:setLength( 480 );
-    note.id.note = 60;
+    local note = luavsq.Event.new( 1920, luavsq.EventTypeEnum.Anote );
+    note:setLength( 480 );
+    note.note = 60;
     sequence.track[1].events:add( note );
     sequence:updateTotalClocks();
     assert_equal( 2400, sequence.totalClocks );

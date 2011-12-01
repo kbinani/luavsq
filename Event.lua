@@ -14,6 +14,8 @@
 
 local string = string;
 local tonumber = tonumber;
+local type = type;
+local assert = assert;
 
 module( "luavsq" );
 
@@ -38,9 +40,47 @@ function Event.new( ... )
 
     this.clock = 0;
 
+    this.value = -1;
+    this.singerHandleIndex = 0;
+    this.lyricHandleIndex = 0;
+    this.vibratoHandleIndex = 0;
+    this.noteHeadHandleIndex = 0;
+    this.type = EventTypeEnum.Note;
+
     ---
-    -- @var (Id)
-    this.id = nil;
+    -- [SingerHandle]
+    this.singerHandle = nil;
+    this._length = 0;
+    this.note = 0;
+    this.dynamics = 0;
+    this.pmBendDepth = 0;
+    this.pmBendLength = 0;
+    this.pmbPortamentoUse = 0;
+    this.demDecGainRate = 0;
+    this.demAccent = 0;
+
+    ---
+    -- [LyricHandle]
+    this.lyricHandle = nil;
+
+    ---
+    -- [VibratoHandle]
+    this.vibratoHandle = nil;
+
+    this.vibratoDelay = 0;
+
+    ---
+    -- [NoteHeadHandle]
+    this.noteHeadHandle = nil;
+
+    this.pMeanOnsetFirstNote = 10;
+    this.vMeanNoteTransition = 12;
+    this.d4mean = 24;
+    this.pMeanEndingNote = 12;
+
+    ---
+    -- [IconDynamicsHandle]
+    this.iconDynamicsHandle = nil;
 
     ---
     -- @var (UstEvent)
@@ -55,7 +95,7 @@ function Event.new( ... )
         local spl = Util.split( line, '=' );
         self.clock = tonumber( spl[1], 10 );
         if( spl[2] == "EOS" )then
-            self.id = Id.getEOS();
+            self.value = -1;
         end
     end
 
@@ -65,20 +105,34 @@ function Event.new( ... )
     -- @return (Event)
     function this:_init_0()
         self.clock = 0;
-        self.id = Id.new();
+        self.value = -1;
         self.internalId = 0;
     end
 
     ---
     -- 初期化を行う
     -- @param clcok (integer) Tick 単位の時刻
-    -- @param id (Id) イベントに付属する ID
+    -- @param eventType (EventTypeEnum) イベントの種類
     -- @name <i>new</i><sup>3</sup>
     -- @return (Event)
-    function this:_init_2( clock, id )
+    function this:_init_2( clock, eventType )
         self.clock = clock;
-        self.id = id;
+        self.type = eventType;
         self.internalId = 0;
+    end
+
+    ---
+    -- 長さを取得する
+    -- @return (integer) 長さ
+    function this:getLength()
+        return self._length;
+    end
+
+    ---
+    -- 長さを設定する
+    -- @param value (integer) 長さ
+    function this:setLength( value )
+        self._length = value;
     end
 
     --[[
@@ -88,83 +142,83 @@ function Event.new( ... )
             if( self.clock ~= item.clock )then
                 return false;
             end
-            if( self.id.type ~= item.id.type )then
+            if( self.type ~= item.type )then
                 return false;
             end
-            if( self.id.type == idType.Anote )then
-                if( self.id.note ~= item.id.note )then
+            if( self.type == idType.Anote )then
+                if( self.note ~= item.note )then
                     return false;
                 end
-                if( self.id:getLength() ~= item.id:getLength() )then
+                if( self:getLength() ~= item:getLength() )then
                     return false;
                 end
-                if( self.id.d4mean ~= item.id.d4mean )then
+                if( self.d4mean ~= item.d4mean )then
                     return false;
                 end
-                if( self.id.demAccent ~= item.id.demAccent )then
+                if( self.demAccent ~= item.demAccent )then
                     return false;
                 end
-                if( self.id.demDecGainRate ~= item.id.demDecGainRate )then
+                if( self.demDecGainRate ~= item.demDecGainRate )then
                     return false;
                 end
-                if( self.id.dynamics ~= item.id.dynamics )then
+                if( self.dynamics ~= item.dynamics )then
                     return false;
                 end
-                if( self.id.lyricHandle ~= nil and item.id.lyricHandle ~= nil )then
+                if( self.lyricHandle ~= nil and item.lyricHandle ~= nil )then
                     return false;
                 end
-                if( self.id.lyricHandle ~= nil and item.id.lyricHandle == nil )then
+                if( self.lyricHandle ~= nil and item.lyricHandle == nil )then
                     return false;
                 end
-                if( self.id.lyricHandle ~= nil and item.id.lyricHandle ~= nil )then
-                    if( self.id.lyricHandle:size() ~= item.id.lyricHandle:size() )then
+                if( self.lyricHandle ~= nil and item.lyricHandle ~= nil )then
+                    if( self.lyricHandle:size() ~= item.lyricHandle:size() )then
                         return false;
                     end
-                    local count = self.id.lyricHandle:size();
+                    local count = self.lyricHandle:size();
                     local k;
                     for k = 0, count - 1, 1 do
-                        if( not self.id.lyricHandle:getLyricAt( k ):equalsForSynth( item.id.lyricHandle:getLyricAt( k ) ) )then
+                        if( not self.lyricHandle:getLyricAt( k ):equalsForSynth( item.lyricHandle:getLyricAt( k ) ) )then
                             return false;
                         end
                     end
                 end
-                if( self.id.noteHeadHandle == nil and item.id.noteHeadHandle ~= nil )then
+                if( self.noteHeadHandle == nil and item.noteHeadHandle ~= nil )then
                     return false;
                 end
-                if( self.id.noteHeadHandle ~= nil and item.id.noteHeadHandle == nil )then
+                if( self.noteHeadHandle ~= nil and item.noteHeadHandle == nil )then
                     return false;
                 end
-                if( self.id.noteHeadHandle ~= nil and item.id.noteHeadHandle ~= nil )then
-                    if( self.id.NoteHeadHandle.iconId ~= item.id.noteHeadHandle.iconId )then
+                if( self.noteHeadHandle ~= nil and item.noteHeadHandle ~= nil )then
+                    if( self.NoteHeadHandle.iconId ~= item.noteHeadHandle.iconId )then
                         return false;
                     end
-                    if( self.id.noteHeadHandle:getDepth() ~= item.id.noteHeadHandle:getDepth() )then
+                    if( self.noteHeadHandle:getDepth() ~= item.noteHeadHandle:getDepth() )then
                         return false;
                     end
-                    if( self.id.noteHeadHandle:getDuration() ~= item.id.noteHeadHandle:getDuration() )then
+                    if( self.noteHeadHandle:getDuration() ~= item.noteHeadHandle:getDuration() )then
                         return false;
                     end
-                    if( self.id.noteHeadHandle:getLength() ~= item.id.noteHeadHandle:getLength() )then
+                    if( self.noteHeadHandle:getLength() ~= item.noteHeadHandle:getLength() )then
                         return false;
                     end
                 end
-                if( self.id.pmBendDepth ~= item.id.pmBendDepth )then
+                if( self.pmBendDepth ~= item.pmBendDepth )then
                     return false;
                 end
-                if( self.id.pmBendLength ~= item.id.pmBendLength )then
+                if( self.pmBendLength ~= item.pmBendLength )then
                     return false;
                 end
-                if( self.id.pmbPortamentoUse ~= item.id.pmbPortamentoUse )then
+                if( self.pmbPortamentoUse ~= item.pmbPortamentoUse )then
                     return false;
                 end
-                if( self.id.pMeanEndingNote ~= item.id.pMeanEndingNote )then
+                if( self.pMeanEndingNote ~= item.pMeanEndingNote )then
                     return false;
                 end
-                if( self.id.pMeanOnsetFirstNote ~= item.id.pMeanOnsetFirstNote )then
+                if( self.pMeanOnsetFirstNote ~= item.pMeanOnsetFirstNote )then
                     return false;
                 end
-                local hVibratoThis = self.id.vibratoHandle;
-                local hVibratoItem = item.id.vibratoHandle;
+                local hVibratoThis = self.vibratoHandle;
+                local hVibratoItem = item.vibratoHandle;
                 if( hVibratoThis == nil and hVibratoItem ~= nil )then
                     return false;
                 end
@@ -172,7 +226,7 @@ function Event.new( ... )
                     return false;
                 end
                 if( hVibratoThis ~= nil and hVibratoItem ~= nil )then
-                    if( self.id.vibratoDelay ~= item.id.vibratoDelay )then
+                    if( self.vibratoDelay ~= item.vibratoDelay )then
                         return false;
                     end
                     if( hVibratoThis.iconId ~= hVibratoItem.iconId )then
@@ -235,23 +289,23 @@ function Event.new( ... )
                         end
                     end
                 end
-                if( self.id.vMeanNoteTransition ~= item.id.vMeanNoteTransition )then
+                if( self.vMeanNoteTransition ~= item.vMeanNoteTransition )then
                     return false;
                 end
-            elseif( self.id.type == IdTypeEnum.Singer )then
+            elseif( self.type == EventTypeEnum.Singer )then
                 -- シンガーイベントの比較
-                if( self.id.singerHandle.program ~= item.id.singerHandle.program )then
+                if( self.singerHandle.program ~= item.singerHandle.program )then
                     return false;
                 end
-            elseif( self.id.type == IdTypeEnum.Aicon )then
-                if( self.id.iconDynamicsHandle.iconId ~= item.id.iconDynamicsHandle.iconId )then
+            elseif( self.type == EventTypeEnum.Aicon )then
+                if( self.iconDynamicsHandle.iconId ~= item.iconDynamicsHandle.iconId )then
                     return false;
                 end
-                if( self.id.iconDynamicsHandle:isDynaffType() )then
+                if( self.iconDynamicsHandle:isDynaffType() )then
                     -- 強弱記号
                 else
                     -- クレッシェンド・デクレッシェンド
-                    if( self.id:getLength() ~= item.id:getLength() )then
+                    if( self:getLength() ~= item:getLength() )then
                         return false;
                     end
                 end
@@ -293,32 +347,32 @@ function Event.new( ... )
     -- @param print_targets (table) 出力するアイテムのリスト
     -- @name write<sup>2</sup>
     function this:_write_2( writer, print_targets )
-        writer:writeLine( "[ID#" .. string.format( "%04d", self.id.value ) .. "]" );
-        writer:writeLine( "Type=" .. IdTypeEnum.toString( self.id.type ) );
-        if( self.id.type == IdTypeEnum.Anote )then
+        writer:writeLine( "[ID#" .. string.format( "%04d", self.value ) .. "]" );
+        writer:writeLine( "Type=" .. EventTypeEnum.toString( self.type ) );
+        if( self.type == EventTypeEnum.Anote )then
             if( Util.searchArray( print_targets, "Length" ) >= 1 )then
-                writer:writeLine( "Length=" .. self.id:getLength() );
+                writer:writeLine( "Length=" .. self:getLength() );
             end
             if( Util.searchArray( print_targets, "Note#" ) >= 1 )then
-                writer:writeLine( "Note#=" .. self.id.note );
+                writer:writeLine( "Note#=" .. self.note );
             end
             if( Util.searchArray( print_targets, "Dynamics" ) >= 1 )then
-                writer:writeLine( "Dynamics=" .. self.id.dynamics );
+                writer:writeLine( "Dynamics=" .. self.dynamics );
             end
             if( Util.searchArray( print_targets, "PMBendDepth" ) >= 1 )then
-                writer:writeLine( "PMBendDepth=" .. self.id.pmBendDepth );
+                writer:writeLine( "PMBendDepth=" .. self.pmBendDepth );
             end
             if( Util.searchArray( print_targets, "PMBendLength" ) >= 1 )then
-                writer:writeLine( "PMBendLength=" .. self.id.pmBendLength );
+                writer:writeLine( "PMBendLength=" .. self.pmBendLength );
             end
             if( Util.searchArray( print_targets, "PMbPortamentoUse" ) >= 1 )then
-                writer:writeLine( "PMbPortamentoUse=" .. self.id.pmbPortamentoUse );
+                writer:writeLine( "PMbPortamentoUse=" .. self.pmbPortamentoUse );
             end
             if( Util.searchArray( print_targets, "DEMdecGainRate" ) >= 1 )then
-                writer:writeLine( "DEMdecGainRate=" .. self.id.demDecGainRate );
+                writer:writeLine( "DEMdecGainRate=" .. self.demDecGainRate );
             end
             if( Util.searchArray( print_targets, "DEMaccent" ) >= 1 )then
-                writer:writeLine( "DEMaccent=" .. self.id.demAccent );
+                writer:writeLine( "DEMaccent=" .. self.demAccent );
             end
             if( Util.searchArray( print_targets, "PreUtterance" ) >= 1 )then
                 writer:writeLine( "PreUtterance=" .. self.ustEvent.preUtterance );
@@ -326,21 +380,21 @@ function Event.new( ... )
             if( Util.searchArray( print_targets, "VoiceOverlap" ) >= 1 )then
                 writer:writeLine( "VoiceOverlap=" .. self.ustEvent.voiceOverlap );
             end
-            if( self.id.lyricHandle ~= nil )then
-                writer:writeLine( "LyricHandle=h#" .. string.format( "%04d", self.id.lyricHandleIndex ) );
+            if( self.lyricHandle ~= nil )then
+                writer:writeLine( "LyricHandle=h#" .. string.format( "%04d", self.lyricHandleIndex ) );
             end
-            if( self.id.vibratoHandle ~= nil )then
-                writer:writeLine( "VibratoHandle=h#" .. string.format( "%04d", self.id.vibratoHandleIndex ) );
-                writer:writeLine( "VibratoDelay=" .. self.id.vibratoDelay );
+            if( self.vibratoHandle ~= nil )then
+                writer:writeLine( "VibratoHandle=h#" .. string.format( "%04d", self.vibratoHandleIndex ) );
+                writer:writeLine( "VibratoDelay=" .. self.vibratoDelay );
             end
-            if( self.id.noteHeadHandle ~= nil )then
-                writer:writeLine( "NoteHeadHandle=h#" .. string.format( "%04d", self.id.noteHeadHandleIndex ) );
+            if( self.noteHeadHandle ~= nil )then
+                writer:writeLine( "NoteHeadHandle=h#" .. string.format( "%04d", self.noteHeadHandleIndex ) );
             end
-        elseif( self.id.type == IdTypeEnum.Singer )then
-            writer:writeLine( "IconHandle=h#" .. string.format( "%04d", self.id.singerHandleIndex ) );
-        elseif( self.id.type == IdTypeEnum.Aicon )then
-            writer:writeLine( "IconHandle=h#" .. string.format( "%04d", self.id.singerHandleIndex ) );
-            writer:writeLine( "Note#=" .. self.id.note );
+        elseif( self.type == EventTypeEnum.Singer )then
+            writer:writeLine( "IconHandle=h#" .. string.format( "%04d", self.singerHandleIndex ) );
+        elseif( self.type == EventTypeEnum.Aicon )then
+            writer:writeLine( "IconHandle=h#" .. string.format( "%04d", self.singerHandleIndex ) );
+            writer:writeLine( "Note#=" .. self.note );
         end
     end
 
@@ -349,13 +403,127 @@ function Event.new( ... )
     -- @return (Event) このインスタンスのコピー
     -- @name clone
     function this:clone()
-        local ret = Event.new( self.clock, self.id:clone() );
-        ret.internalId = self.internalId;
-        if( self.ustEvent ~= nil )then
-            ret.ustEvent = self.ustEvent:clone();
+        local result = Event.new( self.clock, self.type );
+
+        result.type = self.type;
+        if( self.singerHandle ~= nil )then
+            result.singerHandle = self.singerHandle:clone();
         end
-        ret.tag = self.tag;
-        return ret;
+        result:setLength( self:getLength() );
+        result.note = self.note;
+        result.dynamics = self.dynamics;
+        result.pmBendDepth = self.pmBendDepth;
+        result.pmBendLength = self.pmBendLength;
+        result.pmbPortamentoUse = self.pmbPortamentoUse;
+        result.demDecGainRate = self.demDecGainRate;
+        result.demAccent = self.demAccent;
+        result.d4mean = self.d4mean;
+        result.pMeanOnsetFirstNote = self.pMeanOnsetFirstNote;
+        result.vMeanNoteTransition = self.vMeanNoteTransition;
+        result.pMeanEndingNote = self.pMeanEndingNote;
+        if( self.lyricHandle ~= nil )then
+            result.lyricHandle = self.lyricHandle:clone();
+        end
+        if( self.vibratoHandle ~= nil )then
+            result.vibratoHandle = self.vibratoHandle:clone();
+        end
+        result.vibratoDelay = self.vibratoDelay;
+        if( self.noteHeadHandle ~= nil )then
+            result.noteHeadHandle = self.noteHeadHandle:clone();
+        end
+        if( self.iconDynamicsHandle ~= nil )then
+            result.iconDynamicsHandle = self.iconDynamicsHandle:clone();
+        end
+        result.value = self.value;
+
+        result.internalId = self.internalId;
+        if( self.ustEvent ~= nil )then
+            result.ustEvent = self.ustEvent:clone();
+        end
+        result.tag = self.tag;
+        return result;
+    end
+
+    --[[
+        -- テキストファイルからのコンストラクタ
+        -- @param sr [TextStream] 読み込み対象
+        -- @param value [int]
+        -- @param last_line [ByRef<string>] 読み込んだ最後の行が返されます
+        -- @return (Id)
+        function this:_init_3( sr, value, last_line )
+            local spl;
+            self.value = value;
+            self.type = EventTypeEnum.Unknown;
+            self.singerHandleIndex = -2;
+            self.lyricHandleIndex = -1;
+            self.vibratoHandleIndex = -1;
+            self.noteHeadHandleIndex = -1;
+            self:setLength( 0 );
+            self.note = 0;
+            self.dynamics = 64;
+            self.pmBendDepth = 8;
+            self.pmBendLength = 0;
+            self.pmbPortamentoUse = 0;
+            self.demDecGainRate = 50;
+            self.demAccent = 50;
+            self.vibratoDelay = 0;
+            last_line.value = sr:readLine();
+            while( last_line.value:find( "[" ) ~= 0 )do
+                spl = Util.split( last_line.value, '=' );
+                local search = spl[1];
+                if( search == "Type" )then
+                    if( spl[2] == "Anote" )then
+                        self.type = EventTypeEnum.Anote;
+                    elseif( spl[2] == "Singer" )then
+                        self.type = EventTypeEnum.Singer;
+                    elseif( spl[2] == "Aicon" )then
+                        self.type = EventTypeEnum.Aicon;
+                    else
+                        self.type = EventTypeEnum.Unknown;
+                    end
+                elseif( search == "Length" )then
+                    self:setLength( tonumber( spl[2], 10 ) );
+                elseif( search == "Note#" )then
+                    self.note = tonumber( spl[2], 10 );
+                elseif( search == "Dynamics" )then
+                    self.dynamics = tonumber( spl[2], 10 );
+                elseif( search == "PMBendDepth" )then
+                    self.pmBendDepth = tonumber( spl[2], 10 );
+                elseif( search == "PMBendLength" )then
+                    self.pmBendLength = tonumber( spl[2], 10 );
+                elseif( search == "DEMdecGainRate" )then
+                    self.demDecGainRate = tonumber( spl[2], 10 );
+                elseif( search ==  "DEMaccent" )then
+                    self.demAccent = tonumber( spl[2], 10 );
+                elseif( search == "LyricHandle" )then
+                    self.lyricHandleIndex = Handle.getHandleIndexFromString( spl[2] );
+                elseif( search == "IconHandle" )then
+                    self.singerHandleIndex = Handle.getHandleIndexFromString( spl[2] );
+                elseif( search == "VibratoHandle" )then
+                    self.vibratoHandleIndex = Handle.getHandleIndexFromString( spl[2] );
+                elseif( search == "VibratoDelay" )then
+                    self.vibratoDelay = tonumber( spl[2], 10 );
+                elseif( search == "PMbPortamentoUse" )then
+                    self.pmbPortamentoUse = tonumber( spl[2], 10 );
+                elseif( search == "NoteHeadHandle" )then
+                    self.noteHeadHandleIndex = Handle.getHandleIndexFromString( spl[2] );
+                end
+                if( not sr:ready() )then
+                    break;
+                end
+                last_line.value = sr:readLine();
+            end
+        end]]
+
+    ---
+    -- このオブジェクトがイベントリストの末尾の要素( EOS )かどうかを取得する
+    -- @return (boolean) このオブジェクトが EOS 要素であれば true を、そうでなければ false を返す
+    function this:isEOS()
+        if( self.value == -1 )then
+            return true;
+        else
+            return false;
+        end
     end
 
     ---
@@ -366,11 +534,7 @@ function Event.new( ... )
     function this:compareTo( item )
         local ret = self.clock - item.clock;
         if( ret == 0 )then
-            if( self.id ~= nil and item.id ~= nil )then
-                return self.id.type - item.id.type;
-            else
-                return ret;
-            end
+            return self.type - item.type;
         else
             return ret;
         end
@@ -396,3 +560,14 @@ end
 function Event.compare( a, b )
     return (a:compareTo( b ) < 0);
 end
+
+---
+-- イベントリストの末尾の要素を表すオブジェクトを取得する
+-- @return (Id) 末尾の要素を表す Id
+function Event.getEOS()
+    return Event.new();
+end
+
+---
+-- ミリ秒で表した、音符の最大長さ
+Event.MAX_NOTE_MILLISEC_LENGTH = 16383;

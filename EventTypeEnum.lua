@@ -1,5 +1,5 @@
 --[[
-  IdTypeEnum.lua
+  EventTypeEnum.lua
   Copyright © 2011 kbinani
 
   This file is part of luavsq.
@@ -15,14 +15,14 @@
 module( "luavsq" );
 
 ---
--- Id の種類を表現する列挙子
+-- Event の種類を表現する列挙子
 -- @class table
--- @name IdTypeEnum
+-- @name EventTypeEnum
 -- @field Singer 歌手
 -- @field Anote 歌詞
 -- @field Aicon アイコン
 -- @field Unknown 不明
-IdTypeEnum = {
+EventTypeEnum = {
 
     Singer = 0,
     Anote = 1,
@@ -33,13 +33,13 @@ IdTypeEnum = {
 
 ---
 -- 文字列に変換する
--- @param value (IdTypeEnum) 指定された列挙子の文字列表現
-function IdTypeEnum.toString( value )
-    if( value == IdTypeEnum.Singer )then
+-- @param value (EventTypeEnum) 指定された列挙子の文字列表現
+function EventTypeEnum.toString( value )
+    if( value == EventTypeEnum.Singer )then
         return "Singer";
-    elseif( value == IdTypeEnum.Anote )then
+    elseif( value == EventTypeEnum.Anote )then
         return "Anote";
-    elseif( value == IdTypeEnum.Aicon )then
+    elseif( value == EventTypeEnum.Aicon )then
         return "Aicon";
     else
         return "Unknown";

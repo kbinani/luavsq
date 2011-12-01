@@ -2,8 +2,7 @@ require( "lunit" );
 dofile( "../EventList.lua" );
 dofile( "../EventList.IndexIterator.lua" );
 dofile( "../Event.lua" );
-dofile( "../Id.lua" );
-dofile( "../IdTypeEnum.lua" );
+dofile( "../EventTypeEnum.lua" );
 dofile( "../ArticulationTypeEnum.lua" );
 dofile( "../EventList.IndexIteratorKindEnum.lua" );
 dofile( "../Util.lua" );
@@ -14,30 +13,25 @@ module( "EventList.IndexIteratorTest", package.seeall, lunit.testcase );
 function test()
     local list = luavsq.EventList.new();
 
-    local noteEvent = luavsq.Event.new( 1920, luavsq.Id.new( 0 ) );
-    noteEvent.id.type = luavsq.IdTypeEnum.Anote;
+    local noteEvent = luavsq.Event.new( 1920, luavsq.EventTypeEnum.Anote );
     list:add( noteEvent, 5 );
 
-    local singerEvent = luavsq.Event.new( 0, luavsq.Id.new( 0 ) );
-    singerEvent.id.type = luavsq.IdTypeEnum.Singer;
+    local singerEvent = luavsq.Event.new( 0, luavsq.EventTypeEnum.Singer );
     list:add( singerEvent, 1 );
 
-    local dynaffEvent = luavsq.Event.new( 480, luavsq.Id.new( 0 ) );
-    dynaffEvent.id.type = luavsq.IdTypeEnum.Aicon;
-    dynaffEvent.id.iconDynamicsHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Dynamics );
-    dynaffEvent.id.iconDynamicsHandle.iconId = "$05010001";
+    local dynaffEvent = luavsq.Event.new( 480, luavsq.EventTypeEnum.Aicon );
+    dynaffEvent.iconDynamicsHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Dynamics );
+    dynaffEvent.iconDynamicsHandle.iconId = "$05010001";
     list:add( dynaffEvent, 3 );
 
-    local crescendoEvent = luavsq.Event.new( 240, luavsq.Id.new( 0 ) );
-    crescendoEvent.id.type = luavsq.IdTypeEnum.Aicon;
-    crescendoEvent.id.iconDynamicsHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Dynamics );
-    crescendoEvent.id.iconDynamicsHandle.iconId = "$05020001";
+    local crescendoEvent = luavsq.Event.new( 240, luavsq.EventTypeEnum.Aicon );
+    crescendoEvent.iconDynamicsHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Dynamics );
+    crescendoEvent.iconDynamicsHandle.iconId = "$05020001";
     list:add( crescendoEvent, 2 );
 
-    local decrescendoEvent = luavsq.Event.new( 720, luavsq.Id.new( 0 ) );
-    decrescendoEvent.id.type = luavsq.IdTypeEnum.Aicon;
-    decrescendoEvent.id.iconDynamicsHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Dynamics );
-    decrescendoEvent.id.iconDynamicsHandle.iconId = "$05030001";
+    local decrescendoEvent = luavsq.Event.new( 720, luavsq.EventTypeEnum.Aicon );
+    decrescendoEvent.iconDynamicsHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Dynamics );
+    decrescendoEvent.iconDynamicsHandle.iconId = "$05030001";
     list:add( decrescendoEvent, 4 );
 
     --音符イベントのみのイテレータ

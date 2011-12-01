@@ -245,8 +245,8 @@ function Track.new( ... )
                 self.master = null;
             }]]
         self.events = EventList.new();
-        local id = Id.new( 0 );
-        id.type = IdTypeEnum.Singer;
+
+        local event = Event.new( 0, EventTypeEnum.Singer );
         local ish = Handle.new( HandleTypeEnum.Singer );
         ish.iconId = "$07010000";
         ish.ids = singer;
@@ -255,8 +255,8 @@ function Track.new( ... )
         ish:setLength( 1 );
         ish.language = 0;
         ish.program = 0;
-        id.singerHandle = ish;
-        self.events:add( Event.new( 0, id ) );
+        event.singerHandle = ish;
+        self.events:add( event );
     end
 
     ---
@@ -382,12 +382,12 @@ function Track.new( ... )
             local itr;
             for itr = self.getDynamicsEventIterator(); itr.hasNext();
                 local item = itr.next();
-                local handle = item.id.IconDynamicsHandle;
+                local handle = item.IconDynamicsHandle;
                 if( handle == nil )then
                     continue;
                 end
                 local clock = item.Clock;
-                local length = item.id.getLength();
+                local length = item.getLength();
 
                 if( handle.isDynaffType() )then
                     -- 強弱記号
@@ -650,7 +650,7 @@ function Track.new( ... )
             local singers_size = #singers;
             if( singers_size <= 0 )then
                 default_id = Id.new();
-                default_id.type = IdTypeEnum.Singer;
+                default_id.type = EventTypeEnum.Singer;
                 local singer_handle = Handle.new( HandleTypeEnum.Singer );
                 singer_handle.IconID = "$0701" + org.kbinani.PortUtil.sprintf( "%04X", 0 );
                 singer_handle.ids = "Unknown";
@@ -668,7 +668,7 @@ function Track.new( ... )
             local itr;
             for ( itr = self.getSingerEventIterator(); itr.hasNext();
                 local ve = itr.next();
-                local singer_handle = ve.id.IconHandle;
+                local singer_handle = ve.IconHandle;
                 local program = singer_handle.Program;
                 local found = false;
                 local i;
@@ -915,7 +915,7 @@ function Track.new( ... )
             local counter = 0;
             local i;
             for i = 0; i < self.events:size(); i++
-                if( self.events:getElement( i ).id.type == IdTypeEnum.Anote )then
+                if( self.events:getElement( i ).type == EventTypeEnum.Anote )then
                     counter++;
                 end
             end

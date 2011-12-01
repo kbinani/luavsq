@@ -5,8 +5,7 @@ dofile( "../DynamicsModeEnum.lua" );
 dofile( "../PlayModeEnum.lua" );
 dofile( "../BPList.lua" );
 dofile( "../EventList.lua" );
-dofile( "../Id.lua" );
-dofile( "../IdTypeEnum.lua" );
+dofile( "../EventTypeEnum.lua" );
 dofile( "../Event.lua" );
 dofile( "../EventList.IndexIteratorKindEnum.lua" );
 dofile( "../EventList.IndexIterator.lua" );
@@ -63,8 +62,8 @@ function testConstructNormalTrack()
     local track = luavsq.Track.new( "DummyTrackName", "DummySingerName" );
     assert_equal( "DummyTrackName", track:getName() );
     assert_equal( 1, track.events:size() );
-    assert_equal( luavsq.IdTypeEnum.Singer, track.events:get( 0 ).id.type );
-    assert_equal( "DummySingerName", track.events:get( 0 ).id.singerHandle.ids );
+    assert_equal( luavsq.EventTypeEnum.Singer, track.events:get( 0 ).type );
+    assert_equal( "DummySingerName", track.events:get( 0 ).singerHandle.ids );
 
     assert_not_nil( track.common );
     assert_nil( track.master );
@@ -239,7 +238,7 @@ function testGetIndexIteratorSinger()
     local iterator = track:getIndexIterator( luavsq.EventList.IndexIteratorKindEnum.SINGER );
     assert_true( iterator:hasNext() );
     local event = track.events:get( iterator:next() );
-    assert_equal( "DummySingerName", event.id.singerHandle.ids );
+    assert_equal( "DummySingerName", event.singerHandle.ids );
     assert_false( iterator:hasNext() );
 end
 
@@ -248,8 +247,7 @@ function testGetIndexIteratorNote()
     local iterator = track:getIndexIterator( luavsq.EventList.IndexIteratorKindEnum.NOTE );
     assert_false( iterator:hasNext() );
 
-    local event = luavsq.Event.new( 480, luavsq.Id.new( 0 ) );
-    event.id.type = luavsq.IdTypeEnum.Anote;
+    local event = luavsq.Event.new( 480, luavsq.EventTypeEnum.Anote );
     track.events:add( event, 10 );
     iterator = track:getIndexIterator( luavsq.EventList.IndexIteratorKindEnum.NOTE );
     assert_true( iterator:hasNext() );
@@ -264,113 +262,106 @@ function testGetIndexIteratorDynamics()
     local iterator = track:getIndexIterator( luavsq.EventList.IndexIteratorKindEnum.DYNAFF );
     assert_false( iterator:hasNext() );
 
-    local event = luavsq.Event.new( 480, luavsq.Id.new( 0 ) );
-    event.id.type = luavsq.IdTypeEnum.Aicon;
-    event.id.iconDynamicsHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Dynamics );
-    event.id.iconDynamicsHandle.iconId = "$05019999";
+    local event = luavsq.Event.new( 480, luavsq.EventTypeEnum.Aicon );
+    event.iconDynamicsHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Dynamics );
+    event.iconDynamicsHandle.iconId = "$05019999";
     track.events:add( event, 10 );
     iterator = track:getIndexIterator( luavsq.EventList.IndexIteratorKindEnum.DYNAFF );
     assert_true( iterator:hasNext() );
     local obtained = track.events:get( iterator:next() );
     assert_equal( event, obtained );
     assert_equal( 10, obtained.internalId );
-    assert_equal( "$05019999", obtained.id.iconDynamicsHandle.iconId );
+    assert_equal( "$05019999", obtained.iconDynamicsHandle.iconId );
     assert_false( iterator:hasNext() );
 end
 
 function testPrintMetaText()
     local track = luavsq.Track.new( "DummyTrackName", "DummySingerName" );
 
-    local singerEvent = luavsq.Event.new( 0, luavsq.Id.new( 0 ) );
-    singerEvent.id.type = luavsq.IdTypeEnum.Singer;
-    singerEvent.id.singerHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Singer ); --h#0000
-    singerEvent.id.singerHandle.iconId = "$07010002";
-    singerEvent.id.singerHandle.ids = "Miku";
-    singerEvent.id.singerHandle.original = 1;
-    singerEvent.id.singerHandle.caption = "caption for miku";
-    singerEvent.id.singerHandle.language = 1;
-    singerEvent.id.singerHandle.program = 2;
+    local singerEvent = luavsq.Event.new( 0, luavsq.EventTypeEnum.Singer );
+    singerEvent.singerHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Singer ); --h#0000
+    singerEvent.singerHandle.iconId = "$07010002";
+    singerEvent.singerHandle.ids = "Miku";
+    singerEvent.singerHandle.original = 1;
+    singerEvent.singerHandle.caption = "caption for miku";
+    singerEvent.singerHandle.language = 1;
+    singerEvent.singerHandle.program = 2;
     track.events:set( 0, singerEvent );
 
-    local crescendoEvent = luavsq.Event.new( 240, luavsq.Id.new( 0 ) );
-    crescendoEvent.id.type = luavsq.IdTypeEnum.Aicon;
-    crescendoEvent.id.note = 64;
-    crescendoEvent.id.iconDynamicsHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Dynamics ); --h#0001
-    crescendoEvent.id.iconDynamicsHandle.iconId = "$05020001";
-    crescendoEvent.id.iconDynamicsHandle.ids = "crescendo";
-    crescendoEvent.id.iconDynamicsHandle.original = 1;
-    crescendoEvent.id.iconDynamicsHandle.caption = "caption for crescendo";
-    crescendoEvent.id.iconDynamicsHandle.startDyn = 4;
-    crescendoEvent.id.iconDynamicsHandle.endDyn = 7;
-    crescendoEvent.id:setLength( 10 );
+    local crescendoEvent = luavsq.Event.new( 240, luavsq.EventTypeEnum.Aicon );
+    crescendoEvent.note = 64;
+    crescendoEvent.iconDynamicsHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Dynamics ); --h#0001
+    crescendoEvent.iconDynamicsHandle.iconId = "$05020001";
+    crescendoEvent.iconDynamicsHandle.ids = "crescendo";
+    crescendoEvent.iconDynamicsHandle.original = 1;
+    crescendoEvent.iconDynamicsHandle.caption = "caption for crescendo";
+    crescendoEvent.iconDynamicsHandle.startDyn = 4;
+    crescendoEvent.iconDynamicsHandle.endDyn = 7;
+    crescendoEvent:setLength( 10 );
     track.events:add( crescendoEvent, 2 );
 
-    local dynaffEvent = luavsq.Event.new( 480, luavsq.Id.new( 0 ) );
-    dynaffEvent.id.type = luavsq.IdTypeEnum.Aicon;
-    dynaffEvent.id.note = 65;
-    dynaffEvent.id.iconDynamicsHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Dynamics );--h#0002
-    dynaffEvent.id.iconDynamicsHandle.iconId = "$05010001";
-    dynaffEvent.id.iconDynamicsHandle.ids = "dynaff";
-    dynaffEvent.id.iconDynamicsHandle.original = 2;
-    dynaffEvent.id.iconDynamicsHandle.caption = "caption for dynaff";
-    dynaffEvent.id.iconDynamicsHandle.startDyn = 5;
-    dynaffEvent.id.iconDynamicsHandle.endDyn = 8;
-    dynaffEvent.id:setLength( 11 );
+    local dynaffEvent = luavsq.Event.new( 480, luavsq.EventTypeEnum.Aicon );
+    dynaffEvent.note = 65;
+    dynaffEvent.iconDynamicsHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Dynamics );--h#0002
+    dynaffEvent.iconDynamicsHandle.iconId = "$05010001";
+    dynaffEvent.iconDynamicsHandle.ids = "dynaff";
+    dynaffEvent.iconDynamicsHandle.original = 2;
+    dynaffEvent.iconDynamicsHandle.caption = "caption for dynaff";
+    dynaffEvent.iconDynamicsHandle.startDyn = 5;
+    dynaffEvent.iconDynamicsHandle.endDyn = 8;
+    dynaffEvent:setLength( 11 );
     track.events:add( dynaffEvent, 3 );
 
-    local decrescendoEvent = luavsq.Event.new( 720, luavsq.Id.new( 0 ) );
-    decrescendoEvent.id.type = luavsq.IdTypeEnum.Aicon;
-    decrescendoEvent.id.note = 66;
-    decrescendoEvent.id.iconDynamicsHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Dynamics );--h#0003
-    decrescendoEvent.id.iconDynamicsHandle.iconId = "$05030001";
-    decrescendoEvent.id.iconDynamicsHandle.ids = "decrescendo";
-    decrescendoEvent.id.iconDynamicsHandle.original = 3;
-    decrescendoEvent.id.iconDynamicsHandle.caption = "caption for decrescendo";
-    decrescendoEvent.id.iconDynamicsHandle.startDyn = 6;
-    decrescendoEvent.id.iconDynamicsHandle.endDyn = 9;
-    decrescendoEvent.id:setLength( 12 );
+    local decrescendoEvent = luavsq.Event.new( 720, luavsq.EventTypeEnum.Aicon );
+    decrescendoEvent.note = 66;
+    decrescendoEvent.iconDynamicsHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Dynamics );--h#0003
+    decrescendoEvent.iconDynamicsHandle.iconId = "$05030001";
+    decrescendoEvent.iconDynamicsHandle.ids = "decrescendo";
+    decrescendoEvent.iconDynamicsHandle.original = 3;
+    decrescendoEvent.iconDynamicsHandle.caption = "caption for decrescendo";
+    decrescendoEvent.iconDynamicsHandle.startDyn = 6;
+    decrescendoEvent.iconDynamicsHandle.endDyn = 9;
+    decrescendoEvent:setLength( 12 );
     track.events:add( decrescendoEvent, 4 );
 
-    local singerEvent2 = luavsq.Event.new( 1920, luavsq.Id.new( 0 ) );
-    singerEvent2.id.type = luavsq.IdTypeEnum.Singer;
-    singerEvent2.id.singerHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Singer );--h#0004
-    singerEvent2.id.singerHandle.iconId = "$07020003";
-    singerEvent2.id.singerHandle.ids = "Luka_EN";
-    singerEvent2.id.singerHandle.original = 0x82;
-    singerEvent2.id.singerHandle.caption = "caption for luka";
-    singerEvent2.id.singerHandle.language = 2;
-    singerEvent2.id.singerHandle.program = 3;
+    local singerEvent2 = luavsq.Event.new( 1920, luavsq.EventTypeEnum.Singer );
+    singerEvent2.singerHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Singer );--h#0004
+    singerEvent2.singerHandle.iconId = "$07020003";
+    singerEvent2.singerHandle.ids = "Luka_EN";
+    singerEvent2.singerHandle.original = 0x82;
+    singerEvent2.singerHandle.caption = "caption for luka";
+    singerEvent2.singerHandle.language = 2;
+    singerEvent2.singerHandle.program = 3;
     track.events:add( singerEvent2, 5 );
 
-    local noteEvent = luavsq.Event.new( 1920, luavsq.Id.new( 0 ) );
-    noteEvent.id.type = luavsq.IdTypeEnum.Anote;
-    noteEvent.id.note = 67;
-    noteEvent.id.dynamics = 68;
-    noteEvent.id.pmBendDepth = 69;
-    noteEvent.id.pmBendLength = 70;
-    noteEvent.id.pmbPortamentoUse = 3;
-    noteEvent.id.demDecGainRate = 71;
-    noteEvent.id.demAccent = 72;
-    noteEvent.id:setLength( 480 );
-    noteEvent.id.lyricHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Lyric );
-    noteEvent.id.lyricHandle:setLyricAt( 0, luavsq.Lyric.new( "ら", "4 a" ) );--h#0005
-    noteEvent.id.vibratoHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Vibrato );--h#0006
-    noteEvent.id.vibratoDelay = 73;
-    noteEvent.id.vibratoHandle.iconId ="$04040004";
-    noteEvent.id.vibratoHandle.ids = "vibrato";
-    noteEvent.id.vibratoHandle.original = 1;
-    noteEvent.id.vibratoHandle.caption = "caption for vibrato";
-    noteEvent.id.vibratoHandle:setLength( 407 );
-    noteEvent.id.vibratoHandle.startDepth = 13;
-    noteEvent.id.vibratoHandle.startRate = 14;
-    noteEvent.id.noteHeadHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.NoteHead );--h#0007
-    noteEvent.id.noteHeadHandle.iconId = "$05030000";
-    noteEvent.id.noteHeadHandle.ids = "attack";
-    noteEvent.id.noteHeadHandle.original = 15;
-    noteEvent.id.noteHeadHandle.caption = "caption for attack";
-    noteEvent.id.noteHeadHandle:setLength( 120 );
-    noteEvent.id.noteHeadHandle.duration = 62;
-    noteEvent.id.noteHeadHandle.depth = 65;
+    local noteEvent = luavsq.Event.new( 1920, luavsq.EventTypeEnum.Anote );
+    noteEvent.note = 67;
+    noteEvent.dynamics = 68;
+    noteEvent.pmBendDepth = 69;
+    noteEvent.pmBendLength = 70;
+    noteEvent.pmbPortamentoUse = 3;
+    noteEvent.demDecGainRate = 71;
+    noteEvent.demAccent = 72;
+    noteEvent:setLength( 480 );
+    noteEvent.lyricHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Lyric );
+    noteEvent.lyricHandle:setLyricAt( 0, luavsq.Lyric.new( "ら", "4 a" ) );--h#0005
+    noteEvent.vibratoHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Vibrato );--h#0006
+    noteEvent.vibratoDelay = 73;
+    noteEvent.vibratoHandle.iconId ="$04040004";
+    noteEvent.vibratoHandle.ids = "vibrato";
+    noteEvent.vibratoHandle.original = 1;
+    noteEvent.vibratoHandle.caption = "caption for vibrato";
+    noteEvent.vibratoHandle:setLength( 407 );
+    noteEvent.vibratoHandle.startDepth = 13;
+    noteEvent.vibratoHandle.startRate = 14;
+    noteEvent.noteHeadHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.NoteHead );--h#0007
+    noteEvent.noteHeadHandle.iconId = "$05030000";
+    noteEvent.noteHeadHandle.ids = "attack";
+    noteEvent.noteHeadHandle.original = 15;
+    noteEvent.noteHeadHandle.caption = "caption for attack";
+    noteEvent.noteHeadHandle:setLength( 120 );
+    noteEvent.noteHeadHandle.duration = 62;
+    noteEvent.noteHeadHandle.depth = 65;
     track.events:add( noteEvent, 6 );
 
     track.master = luavsq.Master.new( 1 );
@@ -633,8 +624,7 @@ end
 
 function testClone()
     local track = luavsq.Track.new( "DummyTrackName", "DummySingerName" );
-    local event = luavsq.Event.new( 480, luavsq.Id.new( 0 ) );
-    event.id.type = luavsq.IdTypeEnum.Anote;
+    local event = luavsq.Event.new( 480, luavsq.EventTypeEnum.Anote );
     track.events:add( event );
     track:getCurve( "pit" ):add( 480, 100 );
     track.tag = "valueOfTag";
@@ -642,10 +632,10 @@ function testClone()
     local copy = track:clone();
     assert_equal( 2, copy.events:size() );
     assert_equal( 0, copy.events:get( 0 ).clock );
-    assert_equal( luavsq.IdTypeEnum.Singer, copy.events:get( 0 ).id.type );
-    assert_equal( "DummySingerName", copy.events:get( 0 ).id.singerHandle.ids );
+    assert_equal( luavsq.EventTypeEnum.Singer, copy.events:get( 0 ).type );
+    assert_equal( "DummySingerName", copy.events:get( 0 ).singerHandle.ids );
     assert_equal( 480, copy.events:get( 1 ).clock );
-    assert_equal( luavsq.IdTypeEnum.Anote, copy.events:get( 1 ).id.type );
+    assert_equal( luavsq.EventTypeEnum.Anote, copy.events:get( 1 ).type );
     assert_equal( 1, copy:getCurve( "pit" ):size() );
     assert_equal( 480, copy:getCurve( "pit" ):getKeyClock( 0 ) );
     assert_equal( 100, copy:getCurve( "pit" ):get( 0 ).value );

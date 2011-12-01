@@ -179,7 +179,7 @@ function Sequence.new( ... )
             local numEvents = track.events:size();
             if( numEvents > 0 )then
                 local lastItem = track.events:get( numEvents - 1 );
-                max = math.max( max, lastItem.clock + lastItem.id:getLength() );
+                max = math.max( max, lastItem.clock + lastItem:getLength() );
             end
             local j;
             for j = 1, #Sequence._CURVES, 1 do
@@ -430,7 +430,7 @@ function Sequence.new( ... )
             if( self.track:get( track ).events:size() > 0 )then
                 local index = self.track:get( track ).events:size() - 1;
                 local last = self.track:get( track ).events:get( index );
-                last_clock = math.max( last_clock, last.clock + last.id:getLength() );
+                last_clock = math.max( last_clock, last.clock + last:getLength() );
             end
         end
 
@@ -602,7 +602,7 @@ function Sequence.printTrack( vsq, track, fs, msPreSend, encoding, print_pitch )
 
     --トラックエンド
     local last_event = vsq.track:get( track ).events:get( vsq.track:get( track ).events:size() - 1 );
-    local last_clock = last_event.clock + last_event.id:getLength();
+    local last_clock = last_event.clock + last_event:getLength();
     MidiEvent.writeDeltaClock( fs, last_clock );
     fs:write( 0xff );
     fs:write( 0x2f );
@@ -688,8 +688,8 @@ end
 function Sequence.generateSingerNRPN( vsq, ve, msPreSend )
     local clock = ve.clock;
     local singer_handle = nil; --IconHandle
-    if( ve.id.singerHandle ~= nil )then
-        singer_handle = ve.id.singerHandle;
+    if( ve.singerHandle ~= nil )then
+        singer_handle = ve.singerHandle;
     end
     if( singer_handle == nil )then
         return {};--VsqNrpn[] { end;
@@ -699,7 +699,7 @@ function Sequence.generateSingerNRPN( vsq, ve, msPreSend )
 
     local ttempo = vsq.tempoTable:getTempoAt( clock );
     local tempo = 6e7 / ttempo;
-    local msEnd = vsq.tempoTable:getSecFromClock( ve.clock + ve.id:getLength() ) * 1000.0;
+    local msEnd = vsq.tempoTable:getSecFromClock( ve.clock + ve:getLength() ) * 1000.0;
     local duration = math.floor( math.ceil( msEnd - clock_msec ) );
 
     local duration0, duration1 = Sequence.getMsbAndLsb( duration );
@@ -739,7 +739,7 @@ function Sequence.generateNoteNRPN( vsq, track, ve, msPreSend, note_loc, add_del
 
     local ttempo = vsq.tempoTable:getTempoAt( clock );
     local tempo = 6e7 / ttempo;
-    local msEnd = vsq.tempoTable:getSecFromClock( ve.clock + ve.id:getLength() ) * 1000.0;
+    local msEnd = vsq.tempoTable:getSecFromClock( ve.clock + ve:getLength() ) * 1000.0;
     local duration = math.floor( msEnd - clock_msec );
     local duration0, duration1 = Sequence.getMsbAndLsb( duration );
 
@@ -752,31 +752,31 @@ function Sequence.generateNoteNRPN( vsq, track, ve, msPreSend, note_loc, add_del
             0x00, 0x00
         );
         add:append( MidiParameterEnum.CVM_NM_DELAY, delay0, delay1, true );
-        add:append( MidiParameterEnum.CVM_NM_NOTE_NUMBER, ve.id.note, true ); -- Note number
+        add:append( MidiParameterEnum.CVM_NM_NOTE_NUMBER, ve.note, true ); -- Note number
     else
         add = NrpnEvent.new(
             clock - vsq:getPresendClockAt( clock, msPreSend ),
-            MidiParameterEnum.CVM_NM_NOTE_NUMBER, ve.id.note
+            MidiParameterEnum.CVM_NM_NOTE_NUMBER, ve.note
         ); -- Note number
     end
-    add:append( MidiParameterEnum.CVM_NM_VELOCITY, ve.id.dynamics, true ); -- Velocity
+    add:append( MidiParameterEnum.CVM_NM_VELOCITY, ve.dynamics, true ); -- Velocity
     add:append( MidiParameterEnum.CVM_NM_NOTE_DURATION, duration0, duration1, true ); -- Note duration
     add:append( MidiParameterEnum.CVM_NM_NOTE_LOCATION, note_loc, true ); -- Note Location
 
-    if( ve.id.vibratoHandle ~= nil )then
+    if( ve.vibratoHandle ~= nil )then
         add:append( MidiParameterEnum.CVM_NM_INDEX_OF_VIBRATO_DB, 0x00, 0x00, true );
-        local icon_id = ve.id.vibratoHandle.iconId;
+        local icon_id = ve.vibratoHandle.iconId;
         local num = icon_id:sub( icon_id:len() - 4 );
         local vibrato_type = math.floor( tonumber( num, 16 ) );
-        local note_length = ve.id:getLength();
-        local vibrato_delay = ve.id.vibratoDelay;
+        local note_length = ve:getLength();
+        local vibrato_delay = ve.vibratoDelay;
         local bVibratoDuration = math.floor( (note_length - vibrato_delay) / note_length * 127.0 );
         local bVibratoDelay = 0x7f - bVibratoDuration;
         add:append( MidiParameterEnum.CVM_NM_VIBRATO_CONFIG, vibrato_type, bVibratoDuration, true );
         add:append( MidiParameterEnum.CVM_NM_VIBRATO_DELAY, bVibratoDelay, true );
     end
 
-    local spl = ve.id.lyricHandle:getLyricAt( 0 ):getPhoneticSymbolList();
+    local spl = ve.lyricHandle:getLyricAt( 0 ):getPhoneticSymbolList();
     local s = "";
     local j;
     for j = 1, #spl, 1 do
@@ -792,7 +792,7 @@ function Sequence.generateNoteNRPN( vsq, track, ve, msPreSend, note_loc, add_del
     end
     add:append( MidiParameterEnum.CVM_NM_PHONETIC_SYMBOL_BYTES, #symbols, true );-- (byte)0x12(Number of phonetic symbols in bytes)
     local count = -1;
-    local consonantAdjustment = ve.id.lyricHandle:getLyricAt( 0 ):getConsonantAdjustmentList();
+    local consonantAdjustment = ve.lyricHandle:getLyricAt( 0 ):getConsonantAdjustmentList();
     for j = 1, #spl, 1 do
         local chars = Util.stringToArray( spl[j] );--Array.new();
         local k;
@@ -809,27 +809,27 @@ function Sequence.generateNoteNRPN( vsq, track, ve, msPreSend, note_loc, add_del
         add:append( MidiParameterEnum.CVM_NM_PHONETIC_SYMBOL_CONTINUATION, 0x7f, true ); -- End of phonetic symbols
     end
     if( renderer:sub( 1, 4 ) == "DSB3" )then
-        local v1mean = math.floor( ve.id.pmBendDepth * 60 / 100 );
+        local v1mean = math.floor( ve.pmBendDepth * 60 / 100 );
         if( v1mean < 0 )then
             v1mean = 0;
         end
         if( 60 < v1mean )then
             v1mean = 60;
         end
-        local d1mean = math.floor( 0.3196 * ve.id.pmBendLength + 8.0 );
-        local d2mean = math.floor( 0.92 * ve.id.pmBendLength + 28.0 );
+        local d1mean = math.floor( 0.3196 * ve.pmBendLength + 8.0 );
+        local d2mean = math.floor( 0.92 * ve.pmBendLength + 28.0 );
         add:append( MidiParameterEnum.CVM_NM_V1MEAN, v1mean, true );-- (byte)0x50(v1mean)
         add:append( MidiParameterEnum.CVM_NM_D1MEAN, d1mean, true );-- (byte)0x51(d1mean)
         add:append( MidiParameterEnum.CVM_NM_D1MEAN_FIRST_NOTE, 0x14, true );-- (byte)0x52(d1meanFirstNote)
         add:append( MidiParameterEnum.CVM_NM_D2MEAN, d2mean, true );-- (byte)0x53(d2mean)
-        add:append( MidiParameterEnum.CVM_NM_D4MEAN, ve.id.d4mean, true );-- (byte)0x54(d4mean)
-        add:append( MidiParameterEnum.CVM_NM_PMEAN_ONSET_FIRST_NOTE, ve.id.pMeanOnsetFirstNote, true ); -- 055(pMeanOnsetFirstNote)
-        add:append( MidiParameterEnum.CVM_NM_VMEAN_NOTE_TRNSITION, ve.id.vMeanNoteTransition, true ); -- (byte)0x56(vMeanNoteTransition)
-        add:append( MidiParameterEnum.CVM_NM_PMEAN_ENDING_NOTE, ve.id.pMeanEndingNote, true );-- (byte)0x57(pMeanEndingNote)
-        add:append( MidiParameterEnum.CVM_NM_ADD_PORTAMENTO, ve.id.pmbPortamentoUse, true );-- (byte)0x58(AddScoopToUpInternals&AddPortamentoToDownIntervals)
-        local decay = math.floor( ve.id.demDecGainRate / 100.0 * 0x64 );
+        add:append( MidiParameterEnum.CVM_NM_D4MEAN, ve.d4mean, true );-- (byte)0x54(d4mean)
+        add:append( MidiParameterEnum.CVM_NM_PMEAN_ONSET_FIRST_NOTE, ve.pMeanOnsetFirstNote, true ); -- 055(pMeanOnsetFirstNote)
+        add:append( MidiParameterEnum.CVM_NM_VMEAN_NOTE_TRNSITION, ve.vMeanNoteTransition, true ); -- (byte)0x56(vMeanNoteTransition)
+        add:append( MidiParameterEnum.CVM_NM_PMEAN_ENDING_NOTE, ve.pMeanEndingNote, true );-- (byte)0x57(pMeanEndingNote)
+        add:append( MidiParameterEnum.CVM_NM_ADD_PORTAMENTO, ve.pmbPortamentoUse, true );-- (byte)0x58(AddScoopToUpInternals&AddPortamentoToDownIntervals)
+        local decay = math.floor( ve.demDecGainRate / 100.0 * 0x64 );
         add:append( MidiParameterEnum.CVM_NM_CHANGE_AFTER_PEAK, decay, true );-- (byte)0x59(changeAfterPeak)
-        local accent = math.floor( 0x64 * ve.id.demAccent / 100.0 );
+        local accent = math.floor( 0x64 * ve.demAccent / 100.0 );
         add:append( MidiParameterEnum.CVM_NM_ACCENT, accent, true );-- (byte)0x5a(Accent)
     end
 --[[
@@ -978,7 +978,7 @@ function Sequence._generateNRPN_3( vsq, track, msPreSend )
     -- 最初の歌手を決める
     local singer_event = -1;
     for i = note_start, 0, -1 do
-        if( target.events:get( i ).id.type == IdTypeEnum.Singer )then
+        if( target.events:get( i ).type == EventTypeEnum.Singer )then
             singer_event = i;
             break;
         end
@@ -1034,24 +1034,24 @@ function Sequence._generateNRPN_3( vsq, track, msPreSend )
     local last_note_end = 0;
     for i = note_start, note_end, 1 do
         local item = target.events:get( i );
-        if( item.id.type == IdTypeEnum.Anote )then
+        if( item.type == EventTypeEnum.Anote )then
             local note_loc = 0x03;
             if( item.clock == last_note_end )then
                 note_loc = note_loc - 0x02;
             end
 
             -- 次に現れる音符イベントを探す
-            local nextclock = item.clock + item.id:getLength() + 1;
+            local nextclock = item.clock + item:getLength() + 1;
             local event_count = target.events:size();
             local j;
             for j = i + 1, event_count - 1, 1 do
                 local itemj = target.events:get( j );
-                if( itemj.id.type == IdTypeEnum.Anote )then
+                if( itemj.type == EventTypeEnum.Anote )then
                     nextclock = itemj.clock;
                     break;
                 end
             end
-            if( item.clock + item.id:getLength() == nextclock )then
+            if( item.clock + item:getLength() == nextclock )then
                 note_loc = note_loc - 0x01;
             end
 
@@ -1075,8 +1075,8 @@ function Sequence._generateNRPN_3( vsq, track, msPreSend )
                     msPreSend
                 )
             );
-            last_note_end = item.clock + item.id:getLength();
-        elseif( item.id.type == IdTypeEnum.Singer )then
+            last_note_end = item.clock + item:getLength();
+        elseif( item.type == EventTypeEnum.Singer )then
             if( i > note_start and i ~= singer_event )then
                 Sequence._array_add_all(
                     list,
@@ -1176,8 +1176,8 @@ end
 -- @name <i>generateVibratoNRPN</i>
 function Sequence.generateVibratoNRPN( vsq, ve, msPreSend )
     local ret = {};--Vector<VsqNrpn>();
-    if( ve.id.vibratoHandle ~= nil )then
-        local vclock = ve.clock + ve.id.vibratoDelay;
+    if( ve.vibratoHandle ~= nil )then
+        local vclock = ve.clock + ve.vibratoDelay;
         local delayMSB, delayLSB = Sequence.getMsbAndLsb( msPreSend );
         local add2 = NrpnEvent.new(
             vclock - vsq:getPresendClockAt( vclock, msPreSend ),
@@ -1186,11 +1186,11 @@ function Sequence.generateVibratoNRPN( vsq, ve, msPreSend )
             0x00
         );
         add2:append( MidiParameterEnum.CC_VD_DELAY, delayMSB, delayLSB, true );
-        add2:append( MidiParameterEnum.CC_VD_VIBRATO_DEPTH, ve.id.vibratoHandle:getStartDepth(), true );
-        add2:append( MidiParameterEnum.CC_VR_VIBRATO_RATE, ve.id.vibratoHandle:getStartRate() );
+        add2:append( MidiParameterEnum.CC_VD_VIBRATO_DEPTH, ve.vibratoHandle:getStartDepth(), true );
+        add2:append( MidiParameterEnum.CC_VR_VIBRATO_RATE, ve.vibratoHandle:getStartRate() );
         table.insert( ret, add2 );
-        local vlength = ve.id:getLength() - ve.id.vibratoDelay;
-        local rateBP = ve.id.vibratoHandle:getRateBP();
+        local vlength = ve:getLength() - ve.vibratoDelay;
+        local rateBP = ve.vibratoHandle:getRateBP();
         local count = rateBP:size();
         if( count > 0 )then
             local i;
@@ -1208,7 +1208,7 @@ function Sequence.generateVibratoNRPN( vsq, ve, msPreSend )
                 );
             end
         end
-        local depthBP = ve.id.vibratoHandle:getDepthBP();
+        local depthBP = ve.vibratoHandle:getDepthBP();
         count = depthBP:size();
         if( count > 0 )then
             local i;

@@ -249,12 +249,12 @@ function EventList.new()
         local i = 1;
         while( i <= #temp )do
             local item = temp[i];
-            if( not item.id:isEOS() )then
-                local ids = "ID#" .. string.format( "%04d", item.id.value );
+            if( not item:isEOS() )then
+                local ids = "ID#" .. string.format( "%04d", item.value );
                 local clock = temp[i].clock;
                 while( i + 1 <= #temp and clock == temp[i + 1].clock )do
                     i = i + 1;
-                    ids = ids .. ",ID#" .. string.format( "%04d", temp[i].id.value );
+                    ids = ids .. ",ID#" .. string.format( "%04d", temp[i].value );
                 end
                 writer:writeLine( clock .. "=" .. ids );
             end
@@ -277,45 +277,45 @@ function EventList.new()
         while( itr:hasNext() )do
             local item = itr:next();
             current_id = current_id + 1;
-            item.id.value = current_id;
+            item.value = current_id;
             -- SingerHandle
-            if( item.id.singerHandle ~= nil )then
+            if( item.singerHandle ~= nil )then
                 current_handle = current_handle + 1;
-                item.id.singerHandle.index = current_handle;
-                table.insert( handle, item.id.singerHandle );
-                item.id.singerHandleIndex = current_handle;
-                local lang = VoiceLanguageEnum.valueFromSingerName( item.id.singerHandle.ids );
+                item.singerHandle.index = current_handle;
+                table.insert( handle, item.singerHandle );
+                item.singerHandleIndex = current_handle;
+                local lang = VoiceLanguageEnum.valueFromSingerName( item.singerHandle.ids );
                 add_quotation_mark = lang == VoiceLanguageEnum.Japanese;
             end
             -- LyricHandle
-            if( item.id.lyricHandle ~= nil )then
+            if( item.lyricHandle ~= nil )then
                 current_handle = current_handle + 1;
-                item.id.lyricHandle.index = current_handle;
-                item.id.lyricHandle.addQuotationMark = add_quotation_mark;
-                table.insert( handle, item.id.lyricHandle );
-                item.id.lyricHandleIndex = current_handle;
+                item.lyricHandle.index = current_handle;
+                item.lyricHandle.addQuotationMark = add_quotation_mark;
+                table.insert( handle, item.lyricHandle );
+                item.lyricHandleIndex = current_handle;
             end
             -- VibratoHandle
-            if( item.id.vibratoHandle ~= nil )then
+            if( item.vibratoHandle ~= nil )then
                 current_handle = current_handle + 1;
-                item.id.vibratoHandle.index = current_handle;
-                table.insert( handle, item.id.vibratoHandle );
-                item.id.vibratoHandleIndex = current_handle;
+                item.vibratoHandle.index = current_handle;
+                table.insert( handle, item.vibratoHandle );
+                item.vibratoHandleIndex = current_handle;
             end
             -- NoteHeadHandle
-            if( item.id.noteHeadHandle ~= nil )then
+            if( item.noteHeadHandle ~= nil )then
                 current_handle = current_handle + 1;
-                item.id.noteHeadHandle.index = current_handle;
-                table.insert( handle, item.id.noteHeadHandle );
-                item.id.noteHeadHandleIndex = current_handle;
+                item.noteHeadHandle.index = current_handle;
+                table.insert( handle, item.noteHeadHandle );
+                item.noteHeadHandleIndex = current_handle;
             end
             -- IconDynamicsHandle
-            if( item.id.iconDynamicsHandle ~= nil )then
+            if( item.iconDynamicsHandle ~= nil )then
                 current_handle = current_handle + 1;
-                item.id.iconDynamicsHandle.index = current_handle;
-                item.id.iconDynamicsHandle:setLength( item.id:getLength() );
-                table.insert( handle, item.id.iconDynamicsHandle );
-                item.id.singerHandleIndex = current_handle;
+                item.iconDynamicsHandle.index = current_handle;
+                item.iconDynamicsHandle:setLength( item:getLength() );
+                table.insert( handle, item.iconDynamicsHandle );
+                item.singerHandleIndex = current_handle;
             end
         end
         return handle;
