@@ -253,7 +253,7 @@ function testGetIndexIteratorNote()
     assert_true( iterator:hasNext() );
     local obtained = track.events:get( iterator:next() );
     assert_equal( event, obtained );
-    assert_equal( 10, obtained.internalId );
+    assert_equal( 10, obtained.id );
     assert_false( iterator:hasNext() );
 end
 
@@ -270,7 +270,7 @@ function testGetIndexIteratorDynamics()
     assert_true( iterator:hasNext() );
     local obtained = track.events:get( iterator:next() );
     assert_equal( event, obtained );
-    assert_equal( 10, obtained.internalId );
+    assert_equal( 10, obtained.id );
     assert_equal( "$05019999", obtained.iconDynamicsHandle.iconId );
     assert_false( iterator:hasNext() );
 end

@@ -46,16 +46,16 @@ function testSetForId()
     local list = luavsq.EventList.new();
     local event = luavsq.Event.new( 0, luavsq.EventTypeEnum.Anote );
     event.note = 60;
-    event.internalId = 10;
+    event.id = 10;
 
     local replace = luavsq.Event.new( 0, luavsq.EventTypeEnum.Anote );
     replace.note = 90;
-    replace.internalId = 100;
+    replace.id = 100;
 
     list:add( event, 10 );
     list:setForId( 10, replace );
 
-    assert_equal( 10, list:get( 0 ).internalId );
+    assert_equal( 10, list:get( 0 ).id );
     assert_equal( 90, list:get( 0 ).note );
 
     -- 無効なinternalIdを渡すので、setが行われない場合
@@ -69,8 +69,8 @@ function testSort()
     local list = luavsq.EventList.new();
     local b = luavsq.Event.new( 480, luavsq.EventTypeEnum.Anote );
     local a = luavsq.Event.new( 0, luavsq.EventTypeEnum.Anote );
-    b.internalId = 14;
-    a.internalId = 20;
+    b.id = 14;
+    a.id = 20;
     list._events = { b, a };
     list._ids = { 14, 20 };
 
@@ -90,7 +90,7 @@ function testClear()
     list:add( a, 20 );
 
     assert_equal( 2, list:size() );
-    assert_equal( 20, list:get( 0 ).internalId );
+    assert_equal( 20, list:get( 0 ).id );
 
     list:clear();
 
@@ -109,8 +109,8 @@ function testAddWithoutInternalId()
     local idOfB = list:add( b );
 
     -- bよりaのほうがclockが大きいので、並べ替えが起きるはず
-    assert_equal( idOfB, list:get( 0 ).internalId );
-    assert_equal( idOfA, list:get( 1 ).internalId );
+    assert_equal( idOfB, list:get( 0 ).id );
+    assert_equal( idOfA, list:get( 1 ).id );
     assert_true( idOfA ~= idOfB );
 end
 
@@ -122,8 +122,8 @@ function testAddWithInternalId()
     local idOfB = list:add( b, 2 );
     assert_equal( 100, idOfA );
     assert_equal( 2, idOfB );
-    assert_equal( 100, list:get( 0 ).internalId );
-    assert_equal( 2, list:get( 1 ).internalId );
+    assert_equal( 100, list:get( 0 ).id );
+    assert_equal( 2, list:get( 1 ).id );
 end
 
 function testRemoveAt()
@@ -132,14 +132,14 @@ function testRemoveAt()
     local b = luavsq.Event.new( 0, luavsq.EventTypeEnum.Anote );
     list:add( a, 100 );
     list:add( b, 2 );
-    assert_equal( 100, list:get( 0 ).internalId );
-    assert_equal( 2, list:get( 1 ).internalId );
+    assert_equal( 100, list:get( 0 ).id );
+    assert_equal( 2, list:get( 1 ).id );
     assert_equal( 2, list:size() );
 
     list:removeAt( 0 );
 
     assert_equal( 1, list:size() );
-    assert_equal( 2, list:get( 0 ).internalId );
+    assert_equal( 2, list:get( 0 ).id );
 end
 
 function testSize()
@@ -156,15 +156,15 @@ function testGetAndSetElement()
     local b = luavsq.Event.new( 0, luavsq.EventTypeEnum.Anote );
     list:add( a, 100 );
     list:add( b, 2 );
-    assert_equal( 100, list:get( 0 ).internalId );
-    assert_equal( 2, list:get( 1 ).internalId );
+    assert_equal( 100, list:get( 0 ).id );
+    assert_equal( 2, list:get( 1 ).id );
 
     local c = luavsq.Event.new( 480, luavsq.EventTypeEnum.Anote );
-    c.internalId = 99;
+    c.id = 99;
     list:set( 1, c );
 
-    assert_equal( 100, list:get( 0 ).internalId );
-    assert_equal( 2, list:get( 1 ).internalId );
+    assert_equal( 100, list:get( 0 ).id );
+    assert_equal( 2, list:get( 1 ).id );
     assert_equal( 480, list:get( 1 ).clock );
 end
 

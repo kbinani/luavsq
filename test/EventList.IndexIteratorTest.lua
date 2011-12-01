@@ -41,7 +41,7 @@ function test()
     assert_false( noteIterator:hasNext() );
     local event = list:get( 4 );
     assert_equal( 1920, event.clock );
-    assert_equal( 5, event.internalId );
+    assert_equal( 5, event.id );
 
     --歌手変更イベントのみのイテレータ
     local singerIterator = luavsq.EventList.IndexIterator.new( list, luavsq.EventList.IndexIteratorKindEnum.SINGER );
@@ -50,7 +50,7 @@ function test()
     assert_false( singerIterator:hasNext() );
     event = list:get( 0 );
     assert_equal( 0, event.clock );
-    assert_equal( 1, event.internalId );
+    assert_equal( 1, event.id );
 
     --強弱記号のみのイテレータ
     local dynaffIterator = luavsq.EventList.IndexIterator.new( list, luavsq.EventList.IndexIteratorKindEnum.DYNAFF );
@@ -59,7 +59,7 @@ function test()
     assert_false( dynaffIterator:hasNext() );
     event = list:get( 2 );
     assert_equal( 480, event.clock );
-    assert_equal( 3, event.internalId );
+    assert_equal( 3, event.id );
 
     --クレッシェンドのみのイテレータ
     local crescendoIterator = luavsq.EventList.IndexIterator.new( list, luavsq.EventList.IndexIteratorKindEnum.CRESCEND );
@@ -68,7 +68,7 @@ function test()
     assert_false( crescendoIterator:hasNext() );
     event = list:get( 1 );
     assert_equal( 240, event.clock );
-    assert_equal( 2, event.internalId );
+    assert_equal( 2, event.id );
 
     local decrescendoIterator = luavsq.EventList.IndexIterator.new( list, luavsq.EventList.IndexIteratorKindEnum.DECRESCEND );
     assert_true( decrescendoIterator:hasNext() );
@@ -76,7 +76,7 @@ function test()
     assert_false( decrescendoIterator:hasNext() );
     event = list:get( 3 );
     assert_equal( 720, event.clock );
-    assert_equal( 4, event.internalId );
+    assert_equal( 4, event.id );
 
     local kindAll = luavsq.Util.bor(
         luavsq.EventList.IndexIteratorKindEnum.NOTE,
@@ -89,27 +89,27 @@ function test()
     assert_true( iteratorAll:hasNext() );
     assert_equal( 0, iteratorAll:next() );
     assert_equal( 0, list:get( 0 ).clock );
-    assert_equal( 1, list:get( 0 ).internalId );
+    assert_equal( 1, list:get( 0 ).id );
 
     assert_true( iteratorAll:hasNext() );
     assert_equal( 1, iteratorAll:next() );
     assert_equal( 240, list:get( 1 ).clock );
-    assert_equal( 2, list:get( 1 ).internalId );
+    assert_equal( 2, list:get( 1 ).id );
 
     assert_true( iteratorAll:hasNext() );
     assert_equal( 2, iteratorAll:next() );
     assert_equal( 480, list:get( 2 ).clock );
-    assert_equal( 3, list:get( 2 ).internalId );
+    assert_equal( 3, list:get( 2 ).id );
 
     assert_true( iteratorAll:hasNext() );
     assert_equal( 3, iteratorAll:next() );
     assert_equal( 720, list:get( 3 ).clock );
-    assert_equal( 4, list:get( 3 ).internalId );
+    assert_equal( 4, list:get( 3 ).id );
 
     assert_true( iteratorAll:hasNext() );
     assert_equal( 4, iteratorAll:next() );
     assert_equal( 1920, list:get( 4 ).clock );
-    assert_equal( 5, list:get( 4 ).internalId );
+    assert_equal( 5, list:get( 4 ).id );
 
     assert_false( iteratorAll:hasNext() );
 end

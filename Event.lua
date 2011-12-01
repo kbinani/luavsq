@@ -36,11 +36,11 @@ function Event.new( ... )
     ---
     -- 内部で使用するインスタンス固有のID
     -- @var (integer)
-    this.internalId = -1;
+    this.id = -1;
 
     this.clock = 0;
 
-    this.value = -1;
+    this.index = -1;
     this.singerHandleIndex = 0;
     this.lyricHandleIndex = 0;
     this.vibratoHandleIndex = 0;
@@ -95,7 +95,7 @@ function Event.new( ... )
         local spl = Util.split( line, '=' );
         self.clock = tonumber( spl[1], 10 );
         if( spl[2] == "EOS" )then
-            self.value = -1;
+            self.index = -1;
         end
     end
 
@@ -105,8 +105,8 @@ function Event.new( ... )
     -- @return (Event)
     function this:_init_0()
         self.clock = 0;
-        self.value = -1;
-        self.internalId = 0;
+        self.index = -1;
+        self.id = 0;
     end
 
     ---
@@ -118,7 +118,7 @@ function Event.new( ... )
     function this:_init_2( clock, eventType )
         self.clock = clock;
         self.type = eventType;
-        self.internalId = 0;
+        self.id = 0;
     end
 
     ---
@@ -348,7 +348,7 @@ function Event.new( ... )
     -- @param printTargets (table) 出力するアイテムのリスト
     -- @name write<sup>2</sup>
     function this:_write_2( stream, printTargets )
-        stream:writeLine( "[ID#" .. string.format( "%04d", self.value ) .. "]" );
+        stream:writeLine( "[ID#" .. string.format( "%04d", self.index ) .. "]" );
         stream:writeLine( "Type=" .. EventTypeEnum.toString( self.type ) );
         if( self.type == EventTypeEnum.Anote )then
             if( Util.searchArray( printTargets, "Length" ) >= 1 )then
@@ -435,9 +435,9 @@ function Event.new( ... )
         if( self.iconDynamicsHandle ~= nil )then
             result.iconDynamicsHandle = self.iconDynamicsHandle:clone();
         end
-        result.value = self.value;
+        result.index = self.index;
 
-        result.internalId = self.internalId;
+        result.id = self.id;
         if( self.ustEvent ~= nil )then
             result.ustEvent = self.ustEvent:clone();
         end
@@ -453,7 +453,7 @@ function Event.new( ... )
         -- @return (Id)
         function this:_init_3( sr, value, last_line )
             local spl;
-            self.value = value;
+            self.index = value;
             self.type = EventTypeEnum.Unknown;
             self.singerHandleIndex = -2;
             self.lyricHandleIndex = -1;
@@ -470,7 +470,7 @@ function Event.new( ... )
             self.vibratoDelay = 0;
             last_line.value = sr:readLine();
             while( last_line.value:find( "[" ) ~= 0 )do
-                spl = Util.split( last_line.value, '=' );
+                spl = Util.split( last_line.index, '=' );
                 local search = spl[1];
                 if( search == "Type" )then
                     if( spl[2] == "Anote" )then
@@ -521,7 +521,7 @@ function Event.new( ... )
     -- @return (boolean) このオブジェクトが EOS 要素であれば true を、そうでなければ false を返す
     -- @name isEOS
     function this:isEOS()
-        if( self.value == -1 )then
+        if( self.index == -1 )then
             return true;
         else
             return false;

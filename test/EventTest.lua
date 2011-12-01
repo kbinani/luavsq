@@ -36,7 +36,7 @@ function getSingerEvent()
     local singerEvent = luavsq.Event.new( 0, luavsq.EventTypeEnum.Singer );
     singerEvent.singerHandle = nil;
     singerEvent.singerHandleIndex = 16;
-    singerEvent.value = 15;
+    singerEvent.index = 15;
     return singerEvent;
 end
 
@@ -45,14 +45,14 @@ function getIconEvent()
     iconEvent.singerHandle = nil;
     iconEvent.singerHandleIndex = 18;
     iconEvent.note = 19;
-    iconEvent.value = 17;
+    iconEvent.index = 17;
     return iconEvent;
 end
 
 function testConstruct()
     local event = luavsq.Event.new();
     assert_equal( 0, event.clock );
-    assert_equal( 0, event.internalId );
+    assert_equal( 0, event.id );
 end
 
 function testConstructWithLine()
@@ -67,10 +67,10 @@ end
 function testConstructWithClockAndId()
     local event = luavsq.Event.new( 1, luavsq.EventTypeEnum.Anote );
     event.note = 60;
-    event.value = 12;
-    
+    event.index = 12;
+
     assert_equal( 1, event.clock );
-    assert_equal( 12, event.value );
+    assert_equal( 12, event.index );
     assert_equal( 60, event.note );
 end
 
@@ -81,7 +81,7 @@ end
 function testWriteNoteWithOption()
     local event = getNoteEvent();
     event.clock = 20;
-    event.value = 1;
+    event.index = 1;
     local optionAll = {
         "Length",
         "Note#",
@@ -179,7 +179,7 @@ end
 function testWriteSinger()
     local event = getSingerEvent();
     event.clock = 1;
-    event.value = 15;
+    event.index = 15;
     local stream = luavsq.TextStream.new();
     event:write( stream );
     local expected =
@@ -192,7 +192,7 @@ end
 function testWriteIcon()
     local event = getIconEvent();
     event.clock = 2;
-    event.value = 17;
+    event.index = 17;
     local stream = luavsq.TextStream.new();
     event:write( stream );
     local expected =
@@ -206,17 +206,17 @@ end
 function testClone()
     local event = getSingerEvent();
     event.clock = 40;
-    event.internalId = 4;
+    event.id = 4;
     event.singerHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Singer );
     event.singerHandle.index = 12;
     local copy = event:clone();
     assert_equal( 40, copy.clock );
-    assert_equal( 4, copy.internalId );
+    assert_equal( 4, copy.id );
     assert_equal( 12, copy.singerHandle.index );
 --TODO: ustEventのclone
 
     local id = luavsq.Event.new( 0, luavsq.EventTypeEnum.Anote );
-    id.value = 1;
+    id.index = 1;
     id.note = 6;
     id.dynamics = 7;
     id.pmBendDepth = 8;
@@ -236,7 +236,7 @@ function testClone()
     assert_nil( id.iconDynamicsHandle );
 
     local copy = id:clone();
-    assert_equal( 1, copy.value );
+    assert_equal( 1, copy.index );
     assert_equal( luavsq.EventTypeEnum.Anote, copy.type );
     assert_equal( 6, copy.note );
     assert_equal( 7, copy.dynamics );

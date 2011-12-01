@@ -19,18 +19,18 @@ function test()
     assert_true( iterator:hasNext() );
     local eventA = iterator:next();
     assert_equal( 480, eventA.clock );
-    assert_equal( 2, eventA.internalId );
+    assert_equal( 2, eventA.id );
     assert_equal( luavsq.EventTypeEnum.Aicon, eventA.type );
     assert_true( iterator:hasNext() );
     iterator:remove();
     assert_true( iterator:hasNext() );
     local eventB = iterator:next();
     assert_equal( 1920, eventB.clock );
-    assert_equal( 1, eventB.internalId );
+    assert_equal( 1, eventB.id );
     assert_equal( luavsq.EventTypeEnum.Anote, eventB.type );
     assert_false( iterator:hasNext() );
 
     assert_equal( 1, list:size() );
     assert_equal( 1920, list:get( 0 ).clock );
-    assert_equal( 1, list:get( 0 ).internalId );
+    assert_equal( 1, list:get( 0 ).id );
 end

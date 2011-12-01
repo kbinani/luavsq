@@ -49,7 +49,7 @@ function EventList.new()
         local i;
         for i = 1, c, 1 do
             local item = self._events[i];
-            if( item.internalId == internalId )then
+            if( item.id == internalId )then
                 return i - 1;
             end
         end
@@ -79,8 +79,8 @@ function EventList.new()
         local c = #self._events;
         local i;
         for i = 1, c, 1 do
-            if( self._events[i].internalId == internalId )then
-                value.internalId = internalId;
+            if( self._events[i].id == internalId )then
+                value.id = internalId;
                 self._events[i] = value;
                 break;
             end
@@ -136,7 +136,7 @@ function EventList.new()
         local count = #self._events;
         local i;
         for i = 1, count, 1 do
-            self._ids[i] = self._events[i].internalId;
+            self._ids[i] = self._events[i].id;
         end
         return id;
     end
@@ -160,7 +160,7 @@ function EventList.new()
     -- @param internal_id (integer) 追加するオブジェクトに割り振るイベント ID
     function this:_addCor( item, internalId )
         self:updateIdList();
-        item.internalId = internalId;
+        item.id = internalId;
         table.insert( self._events, item );
         table.insert( self._ids, internalId );
     end
@@ -213,7 +213,7 @@ function EventList.new()
     -- @param value (Event) 設定するイベント
     -- @name set
     function this:set( index, value )
-        value.internalId = self._events[index + 1].internalId;
+        value.id = self._events[index + 1].id;
         self._events[index + 1] = value;
     end
 
@@ -227,7 +227,7 @@ function EventList.new()
         local count = #self._events;
         local i;
         for i = 1, count, 1 do
-            self._ids[i] = self._events[i].internalId;
+            self._ids[i] = self._events[i].id;
         end
     end
 
@@ -250,11 +250,11 @@ function EventList.new()
         while( i <= #temp )do
             local item = temp[i];
             if( not item:isEOS() )then
-                local ids = "ID#" .. string.format( "%04d", item.value );
+                local ids = "ID#" .. string.format( "%04d", item.index );
                 local clock = temp[i].clock;
                 while( i + 1 <= #temp and clock == temp[i + 1].clock )do
                     i = i + 1;
-                    ids = ids .. ",ID#" .. string.format( "%04d", temp[i].value );
+                    ids = ids .. ",ID#" .. string.format( "%04d", temp[i].index );
                 end
                 stream:writeLine( clock .. "=" .. ids );
             end
@@ -277,7 +277,7 @@ function EventList.new()
         while( itr:hasNext() )do
             local item = itr:next();
             current_id = current_id + 1;
-            item.value = current_id;
+            item.index = current_id;
             -- SingerHandle
             if( item.singerHandle ~= nil )then
                 current_handle = current_handle + 1;
