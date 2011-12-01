@@ -11,7 +11,6 @@ dofile( "../Event.lua" );
 dofile( "../EventList.IndexIteratorKindEnum.lua" );
 dofile( "../EventList.IndexIterator.lua" );
 dofile( "../Util.lua" );
-dofile( "../IconParameter.lua" );
 dofile( "../ArticulationTypeEnum.lua" );
 dofile( "../BP.lua" );
 dofile( "../EventList.Iterator.lua" );

@@ -3,7 +3,6 @@ dofile( "../Id.lua" );
 dofile( "../IdTypeEnum.lua" );
 dofile( "../ArticulationTypeEnum.lua" );
 dofile( "../Lyric.lua" );
-dofile( "../IconParameter.lua" );
 dofile( "../VibratoBPList.lua" );
 dofile( "../Util.lua" );
 dofile( "../Handle.lua" );

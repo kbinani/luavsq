@@ -6,7 +6,6 @@ dofile( "../Lyric.lua" );
 dofile( "../Util.lua" );
 dofile( "../VibratoBPList.lua" );
 dofile( "../VibratoBP.lua" );
-dofile( "../IconParameter.lua" );
 dofile( "../ArticulationTypeEnum.lua" );
 dofile( "../PhoneticSymbol.lua" );
 module( "HandleTest", package.seeall, lunit.testcase );

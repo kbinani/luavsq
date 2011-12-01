@@ -6,7 +6,6 @@ dofile( "../IdTypeEnum.lua" );
 dofile( "../TextStream.lua" );
 dofile( "../ArticulationTypeEnum.lua" );
 dofile( "../Lyric.lua" );
-dofile( "../IconParameter.lua" );
 dofile( "../VibratoBPList.lua" );
 dofile( "../Handle.lua" );
 dofile( "../HandleTypeEnum.lua" );

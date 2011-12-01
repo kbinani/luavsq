@@ -4,7 +4,6 @@ dofile( "../EventList.IndexIterator.lua" );
 dofile( "../Event.lua" );
 dofile( "../Id.lua" );
 dofile( "../IdTypeEnum.lua" );
-dofile( "../IconParameter.lua" );
 dofile( "../ArticulationTypeEnum.lua" );
 dofile( "../EventList.IndexIteratorKindEnum.lua" );
 dofile( "../Util.lua" );
