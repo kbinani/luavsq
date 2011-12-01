@@ -144,26 +144,26 @@ function TimesigTable.new()
     ---
     -- 指定した小節の開始クロックを取得する。
     -- ここで使用する小節数は、プリメジャーを考慮しない。即ち、曲頭の小節が 0 となる
-    -- @param bar_count (integer) 小節数
+    -- @param barCount (integer) 小節数
     -- @return (integer) Tick 単位の時刻
     -- @name getClockFromBarCount
-    function this:getClockFromBarCount( bar_count )
+    function this:getClockFromBarCount( barCount )
         local index = 0;
         local c = self._list:size();
         local i;
         for i = c - 1, 0, -1 do
             index = i;
-            if( self._list[i].barCount <= bar_count )then
+            if( self._list[i].barCount <= barCount )then
                 break;
             end
         end
         local item = self._list[index];
         local numerator = item.numerator;
         local denominator = item.denominator;
-        local init_clock = item.clock;
-        local init_bar_count = item.barCount;
-        local clock_per_bar = numerator * 480 * 4 / denominator;
-        return init_clock + (bar_count - init_bar_count) * clock_per_bar;
+        local initClock = item.clock;
+        local initBarCount = item.barCount;
+        local clockPerBar = numerator * 480 * 4 / denominator;
+        return initClock + (barCount - initBarCount) * clockPerBar;
     end
 
     ---

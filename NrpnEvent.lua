@@ -202,7 +202,7 @@ function NrpnEvent.compare( a, b )
 end
 
 --[[
-    ---
+    --
     -- @param src1 [NrpnEvent[] ]
     -- @param src2 [NrpnEvent[] ]
     -- @return [NrpnEvent[] ]

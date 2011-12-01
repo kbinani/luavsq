@@ -72,7 +72,7 @@ function EventList.new()
 
     ---
     -- 指定されたイベント ID をもつイベントのオブジェクトを置き換える。イベントが見つからなければ何もしない
-    -- @param internal_id (integer) 検索するイベント ID
+    -- @param internalId (integer) 検索するイベント ID
     -- @param value (Event) 置換するオブジェクト
     -- @name setForId
     function this:setForId( internalId, value )
@@ -144,7 +144,7 @@ function EventList.new()
     ---
     -- イベントを追加する
     -- @param item (Event) 追加するオブジェクト
-    -- @param internal_id (integer) 追加するオブジェクトに割り振るイベント ID
+    -- @param internalId (integer) 追加するオブジェクトに割り振るイベント ID
     -- @return (integer) オブジェクトに割り振られたイベント ID
     -- @name add<sup>2</sup>
     function this:_add_2( item, internalId )
@@ -233,13 +233,13 @@ function EventList.new()
 
     ---
     -- イベントリストをテキストストリームに出力する
-    -- @param writer (TexStream) 出力先のストリーム
+    -- @param stream (TexStream) 出力先のストリーム
     -- @param eos (integer) EOS として出力する Tick 単位の時刻
     -- @return (table<Handle>) リスト中のイベントに含まれるハンドルの一覧
     -- @name write
-    function this:write( writer, eos )
+    function this:write( stream, eos )
         local handles = self:_buildHandleList();
-        writer:writeLine( "[EventList]" );
+        stream:writeLine( "[EventList]" );
         local temp = {};
         local itr = self:iterator();
         while( itr:hasNext() )do
@@ -256,11 +256,11 @@ function EventList.new()
                     i = i + 1;
                     ids = ids .. ",ID#" .. string.format( "%04d", temp[i].value );
                 end
-                writer:writeLine( clock .. "=" .. ids );
+                stream:writeLine( clock .. "=" .. ids );
             end
             i = i + 1;
         end
-        writer:writeLine( eos .. "=EOS" );
+        stream:writeLine( eos .. "=EOS" );
         return handles;
     end
 

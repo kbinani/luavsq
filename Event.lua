@@ -124,6 +124,7 @@ function Event.new( ... )
     ---
     -- 長さを取得する
     -- @return (integer) 長さ
+    -- @name getLength
     function this:getLength()
         return self._length;
     end
@@ -327,9 +328,9 @@ function Event.new( ... )
 
     ---
     -- テキストストリームに書き出す
-    -- @param writer (TextStream) 出力先
+    -- @param stream (TextStream) 出力先
     -- @name write<sup>1</sup>
-    function this:_write_1( writer )
+    function this:_write_1( stream )
         local def = { "Length",
                     "Note#",
                     "Dynamics",
@@ -338,63 +339,63 @@ function Event.new( ... )
                     "PMbPortamentoUse",
                     "DEMdecGainRate",
                     "DEMaccent" };
-        self:_write_2( writer, def );
+        self:_write_2( stream, def );
     end
 
     ---
     -- テキストストリームに書き出す
-    -- @param writer (TextStream) 出力先
+    -- @param stream (TextStream) 出力先
     -- @param printTargets (table) 出力するアイテムのリスト
     -- @name write<sup>2</sup>
-    function this:_write_2( writer, printTargets )
-        writer:writeLine( "[ID#" .. string.format( "%04d", self.value ) .. "]" );
-        writer:writeLine( "Type=" .. EventTypeEnum.toString( self.type ) );
+    function this:_write_2( stream, printTargets )
+        stream:writeLine( "[ID#" .. string.format( "%04d", self.value ) .. "]" );
+        stream:writeLine( "Type=" .. EventTypeEnum.toString( self.type ) );
         if( self.type == EventTypeEnum.Anote )then
             if( Util.searchArray( printTargets, "Length" ) >= 1 )then
-                writer:writeLine( "Length=" .. self:getLength() );
+                stream:writeLine( "Length=" .. self:getLength() );
             end
             if( Util.searchArray( printTargets, "Note#" ) >= 1 )then
-                writer:writeLine( "Note#=" .. self.note );
+                stream:writeLine( "Note#=" .. self.note );
             end
             if( Util.searchArray( printTargets, "Dynamics" ) >= 1 )then
-                writer:writeLine( "Dynamics=" .. self.dynamics );
+                stream:writeLine( "Dynamics=" .. self.dynamics );
             end
             if( Util.searchArray( printTargets, "PMBendDepth" ) >= 1 )then
-                writer:writeLine( "PMBendDepth=" .. self.pmBendDepth );
+                stream:writeLine( "PMBendDepth=" .. self.pmBendDepth );
             end
             if( Util.searchArray( printTargets, "PMBendLength" ) >= 1 )then
-                writer:writeLine( "PMBendLength=" .. self.pmBendLength );
+                stream:writeLine( "PMBendLength=" .. self.pmBendLength );
             end
             if( Util.searchArray( printTargets, "PMbPortamentoUse" ) >= 1 )then
-                writer:writeLine( "PMbPortamentoUse=" .. self.pmbPortamentoUse );
+                stream:writeLine( "PMbPortamentoUse=" .. self.pmbPortamentoUse );
             end
             if( Util.searchArray( printTargets, "DEMdecGainRate" ) >= 1 )then
-                writer:writeLine( "DEMdecGainRate=" .. self.demDecGainRate );
+                stream:writeLine( "DEMdecGainRate=" .. self.demDecGainRate );
             end
             if( Util.searchArray( printTargets, "DEMaccent" ) >= 1 )then
-                writer:writeLine( "DEMaccent=" .. self.demAccent );
+                stream:writeLine( "DEMaccent=" .. self.demAccent );
             end
             if( Util.searchArray( printTargets, "PreUtterance" ) >= 1 )then
-                writer:writeLine( "PreUtterance=" .. self.ustEvent.preUtterance );
+                stream:writeLine( "PreUtterance=" .. self.ustEvent.preUtterance );
             end
             if( Util.searchArray( printTargets, "VoiceOverlap" ) >= 1 )then
-                writer:writeLine( "VoiceOverlap=" .. self.ustEvent.voiceOverlap );
+                stream:writeLine( "VoiceOverlap=" .. self.ustEvent.voiceOverlap );
             end
             if( self.lyricHandle ~= nil )then
-                writer:writeLine( "LyricHandle=h#" .. string.format( "%04d", self.lyricHandleIndex ) );
+                stream:writeLine( "LyricHandle=h#" .. string.format( "%04d", self.lyricHandleIndex ) );
             end
             if( self.vibratoHandle ~= nil )then
-                writer:writeLine( "VibratoHandle=h#" .. string.format( "%04d", self.vibratoHandleIndex ) );
-                writer:writeLine( "VibratoDelay=" .. self.vibratoDelay );
+                stream:writeLine( "VibratoHandle=h#" .. string.format( "%04d", self.vibratoHandleIndex ) );
+                stream:writeLine( "VibratoDelay=" .. self.vibratoDelay );
             end
             if( self.noteHeadHandle ~= nil )then
-                writer:writeLine( "NoteHeadHandle=h#" .. string.format( "%04d", self.noteHeadHandleIndex ) );
+                stream:writeLine( "NoteHeadHandle=h#" .. string.format( "%04d", self.noteHeadHandleIndex ) );
             end
         elseif( self.type == EventTypeEnum.Singer )then
-            writer:writeLine( "IconHandle=h#" .. string.format( "%04d", self.singerHandleIndex ) );
+            stream:writeLine( "IconHandle=h#" .. string.format( "%04d", self.singerHandleIndex ) );
         elseif( self.type == EventTypeEnum.Aicon )then
-            writer:writeLine( "IconHandle=h#" .. string.format( "%04d", self.singerHandleIndex ) );
-            writer:writeLine( "Note#=" .. self.note );
+            stream:writeLine( "IconHandle=h#" .. string.format( "%04d", self.singerHandleIndex ) );
+            stream:writeLine( "Note#=" .. self.note );
         end
     end
 
@@ -518,6 +519,7 @@ function Event.new( ... )
     ---
     -- このオブジェクトがイベントリストの末尾の要素( EOS )かどうかを取得する
     -- @return (boolean) このオブジェクトが EOS 要素であれば true を、そうでなければ false を返す
+    -- @name isEOS
     function this:isEOS()
         if( self.value == -1 )then
             return true;

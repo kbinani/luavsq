@@ -27,7 +27,7 @@ EventList.IndexIterator = {};
 ---
 -- 初期化を行う
 -- @param list (EventList) 反復子の元になるリスト
--- @param iterator_kind (EventList.IndexIteratorKindEnum) 反復子の種類
+-- @param iteratorKind (EventList.IndexIteratorKindEnum) 反復子の種類
 -- @return (EventListIndexIterator) 反復子
 -- @name <i>new</i>
 function EventList.IndexIterator.new( list, iteratorKind )

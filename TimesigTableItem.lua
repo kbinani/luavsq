@@ -48,7 +48,7 @@ function TimesigTableItem.new( ... )
     -- @param clock (integer) Tick 単位の時刻
     -- @param numerator (integer) 拍子の分子の値
     -- @param denominator (integer) 拍子の分母値
-    -- @param bar_count (integer) 小節数
+    -- @param barCount (integer) 小節数
     -- @return (TimesigTableItem)
     -- @name <i>new</i>
     function this:_init_4( clock, numerator, denominator, barCount )

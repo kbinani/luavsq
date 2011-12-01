@@ -159,14 +159,14 @@ end
 
 ---
 -- lua の table から、List のインスタンスを作成する
--- @param _table (table) 作成元の table
+-- @param array (table) 作成元の table
 -- @return (List) List のインスタンス
 -- @name <i>fromTable</i>
-function List.fromTable( _table )
+function List.fromTable( array )
     local list = List.new();
     local i;
-    for i = 1, #_table, 1 do
-        table.insert( list._array, { ["value"] = _table[i] } );
+    for i = 1, #array, 1 do
+        table.insert( list._array, { ["value"] = array[i] } );
     end
     return list;
 end

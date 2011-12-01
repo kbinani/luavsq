@@ -320,6 +320,7 @@ end
 -- @param a (MidiEvent) 比較対象のオブジェクト
 -- @param b (MidiEvent) 比較対象のオブジェクト
 -- @return (boolean) a が b よりも小さい場合は true、そうでない場合は false を返す
+-- @name <i>compare</i>
 function MidiEvent.compare( a, b )
     return (a:compareTo( b ) < 0);
 end

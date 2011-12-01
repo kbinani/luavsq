@@ -58,7 +58,7 @@ function Mixer.new( ... )
 
     ---
     -- テキストストリームから読み込みを行い、初期化を行う
-    -- @param sr (TextStream) 読み込むテキストストリーム
+    -- @param stream (TextStream) 読み込むテキストストリーム
     -- @param lastLine (table, { value = ? }) 読み込んだ最後の行。テーブルの ["value"] に文字列が格納される
     -- @return (Mixer)
     -- @name <i>new</i><sup>1</sup>

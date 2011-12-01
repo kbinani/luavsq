@@ -261,11 +261,11 @@ function Track.new( ... )
 
     ---
     -- 指定された種類のイベントのインデクスを順に返す反復子を取得する
-    -- @param iterator_kind (IndexIteratorKindEnum) 反復子の種類
+    -- @param iteratorKind (IndexIteratorKindEnum) 反復子の種類
     -- @return (IndexIterator) 反復子
     -- @name getIndexIterator
-    function this:getIndexIterator( iterator_kind )
-        return EventList.IndexIterator.new( self.events, iterator_kind );
+    function this:getIndexIterator( iteratorKind )
+        return EventList.IndexIterator.new( self.events, iteratorKind );
     end
 
     --[[
@@ -525,117 +525,117 @@ function Track.new( ... )
 
     ---
     -- トラックのメタテキストを、テキストストリームに出力する
-    -- @param sw (TextStream) 出力先のストリーム
+    -- @param stream (TextStream) 出力先のストリーム
     -- @param eos (integer) イベントリストの末尾を表す番号
     -- @param start (integer) Tick 単位の出力開始時刻
     -- @name printMetaText<sup>1</sup>
-    function this:_printMetaText_3( sw, eos, start )
-        self:_printMetaText_4( sw, eos, start, false );
+    function this:_printMetaText_3( stream, eos, start )
+        self:_printMetaText_4( stream, eos, start, false );
     end
 
     ---
     -- トラックのメタテキストを、テキストストリームに出力する
-    -- @param sw (TextStream) 出力先のストリーム
+    -- @param stream (TextStream) 出力先のストリーム
     -- @param eos (integer) イベントリストの末尾を表す番号
     -- @param start (integer) Tick 単位の出力開始時刻
-    -- @param print_pitch (boolean) pitch を含めて出力するかどうか(現在は false 固定で、引数は無視される)
+    -- @param printPitch (boolean) pitch を含めて出力するかどうか(現在は false 固定で、引数は無視される)
     -- @name printMetaText<sup>2</sup>
-    function this:_printMetaText_4( sw, eos, start, print_pitch )
+    function this:_printMetaText_4( stream, eos, start, printPitch )
         if( self.common ~= nil )then
-            self.common:write( sw );
+            self.common:write( stream );
         end
         if( self.master ~= nil )then
-            self.master:write( sw );
+            self.master:write( stream );
         end
         if( self.mixer ~= nil )then
-            self.mixer:write( sw );
+            self.mixer:write( stream );
         end
-        local handle = self.events:write( sw, eos );
+        local handle = self.events:write( stream, eos );
         local itr = self.events:iterator()
         while( itr:hasNext() )do
             local item = itr:next();
-            item:write( sw );
+            item:write( stream );
         end
         local i;
         for i = 1, #handle, 1 do
-            handle[i]:write( sw );
+            handle[i]:write( stream );
         end
         local version = self.common.version;
         if( self.pit:size() > 0 )then
-            self.pit:print( sw, start, "[PitchBendBPList]" );
+            self.pit:print( stream, start, "[PitchBendBPList]" );
         end
         if( self.pbs:size() > 0 )then
-            self.pbs:print( sw, start, "[PitchBendSensBPList]" );
+            self.pbs:print( stream, start, "[PitchBendSensBPList]" );
         end
         if( self.dyn:size() > 0 )then
-            self.dyn:print( sw, start, "[DynamicsBPList]" );
+            self.dyn:print( stream, start, "[DynamicsBPList]" );
         end
         if( self.bre:size() > 0 )then
-            self.bre:print( sw, start, "[EpRResidualBPList]" );
+            self.bre:print( stream, start, "[EpRResidualBPList]" );
         end
         if( self.bri:size() > 0 )then
-            self.bri:print( sw, start, "[EpRESlopeBPList]" );
+            self.bri:print( stream, start, "[EpRESlopeBPList]" );
         end
         if( self.cle:size() > 0 )then
-            self.cle:print( sw, start, "[EpRESlopeDepthBPList]" );
+            self.cle:print( stream, start, "[EpRESlopeDepthBPList]" );
         end
         if( version:sub( 1, 4 ) == "DSB2" )then
             if( self.harmonics:size() > 0 )then
-                self.harmonics:print( sw, start, "[EpRSineBPList]" );
+                self.harmonics:print( stream, start, "[EpRSineBPList]" );
             end
             if( self.fx2depth:size() > 0 )then
-                self.fx2depth:print( sw, start, "[VibTremDepthBPList]" );
+                self.fx2depth:print( stream, start, "[VibTremDepthBPList]" );
             end
 
             if( self.reso1FreqBPList:size() > 0 )then
-                self.reso1FreqBPList:print( sw, start, "[Reso1FreqBPList]" );
+                self.reso1FreqBPList:print( stream, start, "[Reso1FreqBPList]" );
             end
             if( self.reso2FreqBPList:size() > 0 )then
-                self.reso2FreqBPList:print( sw, start, "[Reso2FreqBPList]" );
+                self.reso2FreqBPList:print( stream, start, "[Reso2FreqBPList]" );
             end
             if( self.reso3FreqBPList:size() > 0 )then
-                self.reso3FreqBPList:print( sw, start, "[Reso3FreqBPList]" );
+                self.reso3FreqBPList:print( stream, start, "[Reso3FreqBPList]" );
             end
             if( self.reso4FreqBPList:size() > 0 )then
-                self.reso4FreqBPList:print( sw, start, "[Reso4FreqBPList]" );
+                self.reso4FreqBPList:print( stream, start, "[Reso4FreqBPList]" );
             end
 
             if( self.reso1BWBPList:size() > 0 )then
-                self.reso1BWBPList:print( sw, start, "[Reso1BWBPList]" );
+                self.reso1BWBPList:print( stream, start, "[Reso1BWBPList]" );
             end
             if( self.reso2BWBPList:size() > 0 )then
-                self.reso2BWBPList:print( sw, start, "[Reso2BWBPList]" );
+                self.reso2BWBPList:print( stream, start, "[Reso2BWBPList]" );
             end
             if( self.reso3BWBPList:size() > 0 )then
-                self.reso3BWBPList:print( sw, start, "[Reso3BWBPList]" );
+                self.reso3BWBPList:print( stream, start, "[Reso3BWBPList]" );
             end
             if( self.reso4BWBPList:size() > 0 )then
-                self.reso4BWBPList:print( sw, start, "[Reso4BWBPList]" );
+                self.reso4BWBPList:print( stream, start, "[Reso4BWBPList]" );
             end
 
             if( self.reso1AmpBPList:size() > 0 )then
-                self.reso1AmpBPList:print( sw, start, "[Reso1AmpBPList]" );
+                self.reso1AmpBPList:print( stream, start, "[Reso1AmpBPList]" );
             end
             if( self.reso2AmpBPList:size() > 0 )then
-                self.reso2AmpBPList:print( sw, start, "[Reso2AmpBPList]" );
+                self.reso2AmpBPList:print( stream, start, "[Reso2AmpBPList]" );
             end
             if( self.reso3AmpBPList:size() > 0 )then
-                self.reso3AmpBPList:print( sw, start, "[Reso3AmpBPList]" );
+                self.reso3AmpBPList:print( stream, start, "[Reso3AmpBPList]" );
             end
             if( self.reso4AmpBPList:size() > 0 )then
-                self.reso4AmpBPList:print( sw, start, "[Reso4AmpBPList]" );
+                self.reso4AmpBPList:print( stream, start, "[Reso4AmpBPList]" );
             end
         end
 
         if( self.gen:size() > 0 )then
-            self.gen:print( sw, start, "[GenderFactorBPList]" );
+            self.gen:print( stream, start, "[GenderFactorBPList]" );
         end
         if( self.por:size() > 0 )then
-            self.por:print( sw, start, "[PortamentoTimingBPList]" );
+            self.por:print( stream, start, "[PortamentoTimingBPList]" );
         end
         if( version:sub( 1, 4 ) == "DSB3" )then
             if( self.ope:size() > 0 )then
-                self.ope:print( sw, start, "[OpeningBPList]" );
+                self.ope:print( stream, start, "[OpeningBPList]" );
             end
         end
     end

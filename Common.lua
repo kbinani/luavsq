@@ -43,17 +43,17 @@ function Common.new( ... )
 
     ---
     -- 初期化を行う
-    -- @param sr (TextStream) 読み込み元のテキストストリーム
+    -- @param stream (TextStream) 読み込み元のテキストストリーム
     -- @param lastLine (table, { value = ? }) 読み込んだ最後の行。テーブルの ["value"] に文字列が格納される
     -- @return (Common)
     -- @name <i>new</i><sup>1</sup>
-    function this:_init_2( sr, lastLine )
+    function this:_init_2( stream, lastLine )
         self.version = "";
         self.name = "";
         self.color = "0,0,0";
         self.dynamicsMode = 0;
         self.playMode = 1;
-        lastLine.value = sr:readLine();
+        lastLine.value = stream:readLine();
         while( lastLine.value:sub( 1, 1 ) ~= "[" )do
             local spl = Util.split( lastLine.value, "=" );
             local search = spl[1];
@@ -68,10 +68,10 @@ function Common.new( ... )
             elseif( search == "PlayMode" )then
                 self.playMode = tonumber( spl[2], 10 );
             end
-            if( not sr:ready() )then
+            if( not stream:ready() )then
                 break;
             end
-            lastLine.value = sr:readLine();
+            lastLine.value = stream:readLine();
         end
     end
 
