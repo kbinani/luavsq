@@ -332,16 +332,17 @@ function Sequence.new( ... )
     end
 
     ---
-    -- 指定した時刻におけるプリセンド・クロックを取得する
+    -- 指定した時刻における、プリセンド込の時刻と、ディレイを取得する
     -- @param clock (integer) Tick 単位の時刻
     -- @param msPreSend (integer) ミリ秒単位のプリセンド時間
-    -- @return (integer) Tick 単位の時間
-    -- @name getPresendClockAt
-    function this:getPresendClockAt( clock, msPreSend )
+    -- @return (integer) プリセンド分のクロックを引いた Tick 単位の時刻
+    -- @return (integer) ミリ秒単位のプリセンド時間
+    -- @name getActualClockAndDelay
+    function this:getActualClockAndDelay( clock, msPreSend )
         local clock_msec = self.tempoTable:getSecFromClock( clock ) * 1000.0;
         local draft_clock_sec = (clock_msec - msPreSend) / 1000.0;
-        local draft_clock = math.floor( self.tempoTable:getClockFromSec( draft_clock_sec ) );
-        return clock - draft_clock;
+        local actualClock = math.floor( self.tempoTable:getClockFromSec( draft_clock_sec ) );
+        return actualClock, math.floor( clock_msec - self.tempoTable:getSecFromClock( actualClock ) * 1000.0 );
     end
 
 --[[
@@ -591,14 +592,23 @@ end
 -- @return (table<NrpnEvent>) NrpnEvent の配列
 -- @name <i>generateExpressionNRPN</i>
 function Sequence.generateExpressionNRPN( sequence, track, msPreSend )
-    local ret = {};--Array.new();--Vector<VsqNrpn>();
+    local ret = {};
     local dyn = sequence.track:get( track ):getCurve( "DYN" );
     local count = dyn:size();
     local i;
+    local lastDelay = 0;
     for i = 0, count - 1, 1 do
         local clock = dyn:getKeyClock( i );
-        local c = clock - sequence:getPresendClockAt( clock, msPreSend );
+        local c, delay = sequence:getActualClockAndDelay( clock, msPreSend );
         if( c >= 0 )then
+            if( lastDelay ~= delay )then
+                local delayMsb, delayLsb;
+                delayMsb, delayLsb = Sequence.getMsbAndLsb( delay );
+                local delayNrpn = NrpnEvent.new( c, MidiParameterEnum.CC_E_DELAY, delayMsb, delayLsb );
+                table.insert( ret, delayNrpn );
+            end
+            lastDelay = delay;
+
             local add = NrpnEvent.new(
                 c,
                 MidiParameterEnum.CC_E_EXPRESSION,
@@ -657,28 +667,28 @@ end
 -- @name <i>generateSingerNRPN</i>
 function Sequence.generateSingerNRPN( sequence, singerEvent, msPreSend )
     local clock = singerEvent.clock;
-    local singer_handle = nil; --IconHandle
+    local singer_handle = nil;
     if( singerEvent.singerHandle ~= nil )then
         singer_handle = singerEvent.singerHandle;
     end
     if( singer_handle == nil )then
-        return {};--VsqNrpn[] { end;
+        return {};
     end
 
     local clock_msec = sequence.tempoTable:getSecFromClock( clock ) * 1000.0;
 
-    local ttempo = sequence.tempoTable:getTempoAt( clock );
-    local tempo = 6e7 / ttempo;
     local msEnd = sequence.tempoTable:getSecFromClock( singerEvent.clock + singerEvent:getLength() ) * 1000.0;
     local duration = math.floor( math.ceil( msEnd - clock_msec ) );
 
     local duration0, duration1 = Sequence.getMsbAndLsb( duration );
-    local delay0, delay1 = Sequence.getMsbAndLsb( msPreSend );
-    local ret = {};-- Vector<VsqNrpn>();
 
-    local i = clock - sequence:getPresendClockAt( clock, msPreSend );
-    local add = NrpnEvent.new( i, MidiParameterEnum.CC_BS_VERSION_AND_DEVICE, 0x00, 0x00 );
-    add:append( MidiParameterEnum.CC_BS_DELAY, delay0, delay1, true );
+    local actualClock, delay;
+    actualClock, delay = sequence:getActualClockAndDelay( clock, msPreSend );
+    local delayMsb, delayLsb = Sequence.getMsbAndLsb( delay );
+    local ret = {};
+
+    local add = NrpnEvent.new( actualClock, MidiParameterEnum.CC_BS_VERSION_AND_DEVICE, 0x00, 0x00 );
+    add:append( MidiParameterEnum.CC_BS_DELAY, delayMsb, delayLsb, true );
     add:append( MidiParameterEnum.CC_BS_LANGUAGE_TYPE, singer_handle.language, true );
     add:append( MidiParameterEnum.PC_VOICE_TYPE, singer_handle.program );
     local arr = {};
@@ -698,10 +708,11 @@ end
 --                               <li>02:前にのみ連続した音符がある
 --                               <li>03:前後どちらにも連続した音符が無い
 --                           </ul>
--- @param addDelaySign (boolean) ディレイイベントを追加するかどうか
+-- @param lastDelay (integer) 直前の音符イベントに指定された、ミリ秒単位のディレイ値。最初の音符イベントの場合は nil を指定する
 -- @return (table<NrpnEvent>) NrpnEvent の配列
+-- @return (integer) この音符に対して設定された、ミリ秒単位のディレイ値
 -- @name <i>generateNoteNRPN</i>
-function Sequence.generateNoteNRPN( sequence, track, noteEvent, msPreSend, noteLocation, addDelaySign )
+function Sequence.generateNoteNRPN( sequence, track, noteEvent, msPreSend, noteLocation, lastDelay )
     local clock = noteEvent.clock;
     local renderer = sequence.track:get( track ).common.version;
 
@@ -713,22 +724,30 @@ function Sequence.generateNoteNRPN( sequence, track, noteEvent, msPreSend, noteL
     local duration = math.floor( msEnd - clock_msec );
     local duration0, duration1 = Sequence.getMsbAndLsb( duration );
 
-    local add;
-    if( addDelaySign )then
-        local delay0, delay1 = Sequence.getMsbAndLsb( msPreSend );
+    local add = nil;
+
+    local actualClock, delay;
+    actualClock, delay = sequence:getActualClockAndDelay( clock, msPreSend );
+    local delayMsb, delayLsb = sequence:getMsbAndLsb( delay );
+
+    if( lastDelay == nil )then
         add = NrpnEvent.new(
-            clock - sequence:getPresendClockAt( clock, msPreSend ),
+            actualClock,
             MidiParameterEnum.CVM_NM_VERSION_AND_DEVICE,
             0x00, 0x00
         );
-        add:append( MidiParameterEnum.CVM_NM_DELAY, delay0, delay1, true );
-        add:append( MidiParameterEnum.CVM_NM_NOTE_NUMBER, noteEvent.note, true ); -- Note number
-    else
-        add = NrpnEvent.new(
-            clock - sequence:getPresendClockAt( clock, msPreSend ),
-            MidiParameterEnum.CVM_NM_NOTE_NUMBER, noteEvent.note
-        ); -- Note number
+        lastDelay = 0;
     end
+
+    if( lastDelay ~= delay )then
+        if( add == nil )then
+            add = NrpnEvent.new( actualClock, MidiParameterEnum.CVM_NM_DELAY, delayMsb, delayLsb, true );
+        else
+            add:append( MidiParameterEnum.CVM_NM_DELAY, delayMsb, delayLsb, true );
+        end
+    end
+    add:append( MidiParameterEnum.CVM_NM_NOTE_NUMBER, noteEvent.note, true );
+
     add:append( MidiParameterEnum.CVM_NM_VELOCITY, noteEvent.dynamics, true ); -- Velocity
     add:append( MidiParameterEnum.CVM_NM_NOTE_DURATION, duration0, duration1, true ); -- Note duration
     add:append( MidiParameterEnum.CVM_NM_NOTE_LOCATION, noteLocation, true ); -- Note Location
@@ -877,7 +896,7 @@ function Sequence.generateNoteNRPN( sequence, track, noteEvent, msPreSend, noteL
         end
 ]]
     add:append( MidiParameterEnum.CVM_NM_NOTE_MESSAGE_CONTINUATION, 0x7f, true );-- (byte)0x7f(Note message continuation)
-    return add;
+    return add, delay;
 end
 
 --
@@ -1000,7 +1019,7 @@ function Sequence._generateNRPN_3( sequence, track, msPreSend )
         end
     end
 
-    local first = true;
+    local lastDelay = nil;
     local last_note_end = 0;
     for i = note_start, note_end, 1 do
         local item = target.events:get( i );
@@ -1025,25 +1044,20 @@ function Sequence._generateNRPN_3( sequence, track, msPreSend )
                 note_loc = note_loc - 0x01;
             end
 
-            table.insert(
-                list,
-                Sequence.generateNoteNRPN(
-                    sequence,
-                    track,
-                    item,
-                    msPreSend,
-                    note_loc,
-                    first
-                )
+            local noteNrpn;
+            noteNrpn, lastDelay = Sequence.generateNoteNRPN(
+                sequence,
+                track,
+                item,
+                msPreSend,
+                note_loc,
+                lastDelay
             );
-            first = false;
+
+            table.insert( list, noteNrpn );
             Sequence._array_add_all(
                 list,
-                Sequence.generateVibratoNRPN(
-                    sequence,
-                    item,
-                    msPreSend
-                )
+                Sequence.generateVibratoNRPN( sequence, item, msPreSend )
             );
             last_note_end = item.clock + item:getLength();
         elseif( item.type == EventTypeEnum.Singer )then
@@ -1071,25 +1085,34 @@ end
 -- @param msPreSend (integer) ミリ秒単位のプリセンド時間
 -- @return (table<NrpnEvent>) NrpnEvent の配列
 -- @name <i>generatePitchBendNRPN</i>
+-- @todo ディレイを設定する必要があるのでは？
 function Sequence.generatePitchBendNRPN( sequence, track, msPreSend )
     local ret = {};--Vector<VsqNrpn>();
     local pit = sequence.track:get( track ):getCurve( "PIT" );
     local count = pit:size();
-    local i;
+    local i, lastDelay;
     for i = 0, count - 1, 1 do
         local clock = pit:getKeyClock( i );
-        local value = pit:getValue( i ) + 0x2000;
 
-        local msb, lsb = Sequence.getMsbAndLsb( value );
-        local c = clock - sequence:getPresendClockAt( clock, msPreSend );
-        if( c >= 0 )then
-            local add = NrpnEvent.new(
-                c,
-                MidiParameterEnum.PB_PITCH_BEND,
-                msb,
-                lsb
+        local actualClock, delay;
+        actualClock, delay = sequence:getActualClockAndDelay( clock, msPreSend );
+        if( actualClock >= 0 )then
+            if( lastDelay ~= delay )then
+                local delayMsb, delayLsb;
+                delayMsb, delayLsb = Sequence:getMsbAndLsb( delay );
+                table.insert(
+                    ret,
+                    NrpnEvent.new( actualClock, MidiParameterEnum.PB_DELAY, delayMsb, delayLsb )
+                );
+            end
+            lastDelay = delay;
+
+            local value = pit:getValue( i ) + 0x2000;
+            local msb, lsb = Sequence.getMsbAndLsb( value );
+            table.insert(
+                ret,
+                NrpnEvent.new( actualClock, MidiParameterEnum.PB_PITCH_BEND, msb, lsb )
             );
-            table.insert( ret, add );
         end
     end
     return ret;
@@ -1116,17 +1139,30 @@ end
 -- @param msPreSend (integer) ミリ秒単位のプリセンド時間
 -- @return (table<NrpnEvent>) NrpnEvent の配列
 -- @name <i>generatePitchBendSensitivityNRPN</i>
+-- @todo ディレイを設定する必要があるのでは？
 function Sequence.generatePitchBendSensitivityNRPN( sequence, track, msPreSend )
     local ret = {};-- Vector<VsqNrpn>();
     local pbs = sequence.track:get( track ):getCurve( "PBS" );
     local count = pbs:size();
     local i;
+    local lastDelay = 0;
     for i = 0, count - 1, 1 do
         local clock = pbs:getKeyClock( i );
-        local c = clock - sequence:getPresendClockAt( clock, msPreSend );
-        if( c >= 0 )then
+        local actualClock, delay;
+        actualClock, delay = sequence:getActualClockAndDelay( clock, msPreSend );
+        if( actualClock >= 0 )then
+            if( lastDelay ~= delay )then
+                local delayMsb, delayLsb;
+                delayMsb, delayLsb = Sequence.getMsbAndLsb( delay );
+                table.insert(
+                    ret,
+                    NrpnEvent.new( actualClock, MidiParameterEnum.CC_PBS_DELAY, delayMsb, delayLsb )
+                );
+            end
+            lastDelay = delay;
+
             local add = NrpnEvent.new(
-                c,
+                actualClock,
                 MidiParameterEnum.CC_PBS_PITCH_BEND_SENSITIVITY,
                 pbs:getValue( i ),
                 0x00
@@ -1148,14 +1184,16 @@ function Sequence.generateVibratoNRPN( sequence, noteEvent, msPreSend )
     local ret = {};--Vector<VsqNrpn>();
     if( noteEvent.vibratoHandle ~= nil )then
         local vclock = noteEvent.clock + noteEvent.vibratoDelay;
-        local delayMSB, delayLSB = Sequence.getMsbAndLsb( msPreSend );
+        local actualClock, delay;
+        actualClock, delay = sequence:getActualClockAndDelay( vclock, msPreSend );
+        local delayMsb, delayLsb = Sequence.getMsbAndLsb( delay );
         local add2 = NrpnEvent.new(
-            vclock - sequence:getPresendClockAt( vclock, msPreSend ),
+            actualClock,
             MidiParameterEnum.CC_VD_VERSION_AND_DEVICE,
             0x00,
             0x00
         );
-        add2:append( MidiParameterEnum.CC_VD_DELAY, delayMSB, delayLSB, true );
+        add2:append( MidiParameterEnum.CC_VD_DELAY, delayMsb, delayLsb, true );
         add2:append( MidiParameterEnum.CC_VD_VIBRATO_DEPTH, noteEvent.vibratoHandle:getStartDepth(), true );
         add2:append( MidiParameterEnum.CC_VR_VIBRATO_RATE, noteEvent.vibratoHandle:getStartRate() );
         table.insert( ret, add2 );
@@ -1163,36 +1201,50 @@ function Sequence.generateVibratoNRPN( sequence, noteEvent, msPreSend )
         local rateBP = noteEvent.vibratoHandle:getRateBP();
         local count = rateBP:size();
         if( count > 0 )then
-            local i;
+            local i, lastDelay;
+            lastDelay = 0;
             for i = 0, count - 1, 1 do
                 local itemi = rateBP:get( i );
                 local percent = itemi.x;
                 local cl = vclock + math.floor( percent * vlength );
+                actualClock, delay = sequence:getActualClockAndDelay( cl, msPreSend );
+                if( lastDelay ~= delay )then
+                    delayMsb, delayLsb = Sequence.getMsbAndLsb( delay );
+                    table.insert(
+                        ret,
+                        NrpnEvent.new( actualClock, MidiParameterEnum.CC_VR_DELAY, delayMsb, delayLsb )
+                    );
+                end
+                lastDelay = delay;
+
                 table.insert(
                     ret,
-                    NrpnEvent.new(
-                        cl - sequence:getPresendClockAt( cl, msPreSend ),
-                        MidiParameterEnum.CC_VR_VIBRATO_RATE,
-                        itemi.y
-                    )
+                    NrpnEvent.new( actualClock, MidiParameterEnum.CC_VR_VIBRATO_RATE, itemi.y )
                 );
             end
         end
         local depthBP = noteEvent.vibratoHandle:getDepthBP();
         count = depthBP:size();
         if( count > 0 )then
-            local i;
+            local i, lastDelay;
+            lastDelay = 0;
             for i = 0, count - 1, 1 do
                 local itemi = depthBP:get( i );
                 local percent = itemi.x;
                 local cl = vclock + math.floor( percent * vlength );
+                actualClock, delay = sequence:getActualClockAndDelay( cl, msPreSend );
+                if( lastDelay ~= delay )then
+                    delayMsb, delayLsb = Sequence.getMsbAndLsb( delay );
+                    table.insert(
+                        ret,
+                        NrpnEvent.new( actualClock, MidiParameterEnum.CC_VD_DELAY, delayMsb, delayLsb )
+                    );
+                end
+                lastDelay = delay;
+
                 table.insert(
                     ret,
-                    NrpnEvent.new(
-                        cl - sequence:getPresendClockAt( cl, msPreSend ),
-                        MidiParameterEnum.CC_VD_VIBRATO_DEPTH,
-                        itemi.y
-                    )
+                    NrpnEvent.new( actualClock, MidiParameterEnum.CC_VD_VIBRATO_DEPTH, itemi.y )
                 );
             end
         end
@@ -1227,7 +1279,8 @@ function Sequence.generateVoiceChangeParameterNRPN( sequence, track, msPreSend )
         curves = { "BRE", "BRI", "CLE", "POR", "GEN" };
     end
 
-    local i;
+    local i, lastDelay;
+    lastDelay = 0;
     for i = 1, #curves, 1 do
         local vbpl = sequence.track:get( track ):getCurve( curves[i] );
         if( vbpl:size() > 0 )then
@@ -1236,13 +1289,23 @@ function Sequence.generateVoiceChangeParameterNRPN( sequence, track, msPreSend )
             local j;
             for j = 0, count - 1, 1 do
                 local clock = vbpl:getKeyClock( j );
-                local c = clock - sequence:getPresendClockAt( clock, msPreSend );
-                if( c >= 0 )then
-                    local add = NrpnEvent.new(
-                        c,
-                        MidiParameterEnum.VCP_VOICE_CHANGE_PARAMETER_ID,
-                        lsb
-                    );
+                local actualClock, delay;
+                actualClock, delay = sequence:getActualClockAndDelay( clock, msPreSend );
+
+                if( actualClock >= 0 )then
+                    local add = nil;
+                    if( lastDelay ~= delay )then
+                        local delayMsb, delayLsb;
+                        delayMsb, delayLsb = Sequence.getMsbAndLsb( delay );
+                        add = NrpnEvent.new( actualClock, MidiParameterEnum.VCP_DELAY, delayMsb, delayLsb );
+                    end
+                    lastDelay = delay;
+
+                    if( add == nil )then
+                        add = NrpnEvent.new( actualClock, MidiParameterEnum.VCP_VOICE_CHANGE_PARAMETER_ID, lsb );
+                    else
+                        add:append( MidiParameterEnum.VCP_VOICE_CHANGE_PARAMETER_ID, lsb );
+                    end
                     add:append( MidiParameterEnum.VCP_VOICE_CHANGE_PARAMETER, vbpl:getValue( j ), true );
                     table.insert( res, add );
                 end

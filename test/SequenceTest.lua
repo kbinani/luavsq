@@ -30,6 +30,7 @@ dofile( "../MidiParameterEnum.lua" );
 dofile( "../ArticulationTypeEnum.lua" );
 dofile( "../Lyric.lua" );
 dofile( "../PhoneticSymbol.lua" );
+dofile( "../BP.lua" );
 module( "SequenceTest", package.seeall, lunit.testcase );
 
 ---
@@ -195,8 +196,21 @@ function testGenerateMetaTextEventWithPitch()
 --    fail();
 end
 
-function testGetPresendClockAt()
-    fail();
+function testGetActualClockAndDelay()
+    local sequence = luavsq.Sequence.new( "Miku", 1, 4, 4, 500000 );
+    local actualClock, delay;
+
+    actualClock, delay = sequence:getActualClockAndDelay( 1920, 500 );
+    assert_equal( 1440, actualClock );
+    assert_equal( 500, delay );
+
+    actualClock, delay = sequence:getActualClockAndDelay( 1920, 499 );
+    assert_equal( 1440, actualClock );
+    assert_equal( 500, delay );
+
+    actualClock, delay = sequence:getActualClockAndDelay( 1920, 498 );
+    assert_equal( 1441, actualClock );
+    assert_equal( 498, delay );
 end
 
 function testGetMaximumNoteLengthAt()
@@ -276,7 +290,32 @@ function testPrintTrack()
 end
 
 function testGenerateExpressionNRPN()
-    fail();
+    local sequence = luavsq.Sequence.new( "Miku", 1, 4, 4, 500000 );
+    local dynamics = sequence.track:get( 1 ):getCurve( "DYN" );
+    dynamics:add( 480, 127 );
+    dynamics:add( 1920, 0 );
+
+    local actual = luavsq.Sequence.generateExpressionNRPN( sequence, 1, 500 );
+    assert_equal( 3, #actual );
+
+    assert_equal( 0, actual[1].clock );
+    assert_equal( luavsq.MidiParameterEnum.CC_E_DELAY, actual[1].nrpn );
+    assert_equal( 0x03, actual[1].dataMSB );
+    assert_equal( 0x74, actual[1].dataLSB );
+    assert_true( actual[1].hasLSB );
+    assert_false( actual[1].isMSBOmittingRequired );
+
+    assert_equal( 0, actual[2].clock );
+    assert_equal( luavsq.MidiParameterEnum.CC_E_EXPRESSION, actual[2].nrpn );
+    assert_equal( 127, actual[2].dataMSB );
+    assert_false( actual[2].hasLSB );
+    assert_false( actual[2].isMSBOmittingRequired );
+
+    assert_equal( 1440, actual[3].clock );
+    assert_equal( luavsq.MidiParameterEnum.CC_E_EXPRESSION, actual[3].nrpn );
+    assert_equal( 0, actual[3].dataMSB );
+    assert_false( actual[3].hasLSB );
+    assert_false( actual[3].isMSBOmittingRequired );
 end
 
 function testGenerateFx2DepthNRPN()
