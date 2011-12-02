@@ -45,14 +45,12 @@ function TimesigTableItem.new( ... )
 
     ---
     -- 初期化を行う
-    -- @param clock (integer) Tick 単位の時刻
     -- @param numerator (integer) 拍子の分子の値
     -- @param denominator (integer) 拍子の分母値
     -- @param barCount (integer) 小節数
     -- @return (TimesigTableItem)
     -- @name <i>new</i>
-    function this:_init_4( clock, numerator, denominator, barCount )
-        self.clock = clock;
+    function this:_init_3( numerator, denominator, barCount )
         self.numerator = numerator;
         self.denominator = denominator;
         self.barCount = barCount;
@@ -71,7 +69,9 @@ function TimesigTableItem.new( ... )
     -- @return (TimesigTableItem) このオブジェクトのコピー
     -- @name clone
     function this:clone()
-        return TimesigTableItem.new( self.clock, self.numerator, self.denominator, self.barCount );
+        local result = TimesigTableItem.new( self.numerator, self.denominator, self.barCount );
+        result.clock = self.clock;
+        return result;
     end
 
     ---
@@ -83,8 +83,8 @@ function TimesigTableItem.new( ... )
         return self.barCount - item.barCount;
     end
 
-    if( #arguments == 4 )then
-        this:_init_4( arguments[1], arguments[2], arguments[3], arguments[4] );
+    if( #arguments == 3 )then
+        this:_init_3( arguments[1], arguments[2], arguments[3] );
     end
 
     return this;

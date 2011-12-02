@@ -80,7 +80,7 @@ function Sequence.new( ... )
         self.mixer = Mixer.new( 0, 0, 0, 0 );
         self.mixer.slave[1] = MixerItem.new( 0, 0, 0, 0 );
         self.timesigTable = TimesigTable.new();
-        self.timesigTable:push( TimesigTableItem.new( 0, numerator, denominator, 0 ) );
+        self.timesigTable:push( TimesigTableItem.new( numerator, denominator, 0 ) );
         self.tempoTable = TempoTable.new();
         self.tempoTable:push( TempoTableItem.new( 0, tempo, 0.0 ) );
     end

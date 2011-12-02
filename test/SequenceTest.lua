@@ -206,8 +206,8 @@ end
 function testGenerateTimeSig()
     local sequence = luavsq.Sequence.new( "Miku", 1, 4, 4, 500000 );
     sequence.timesigTable = luavsq.TimesigTable.new();
-    sequence.timesigTable:push( luavsq.TimesigTableItem.new( 0, 4, 4, 0 ) );
-    sequence.timesigTable:push( luavsq.TimesigTableItem.new( 0, 6, 8, 1 ) );
+    sequence.timesigTable:push( luavsq.TimesigTableItem.new( 4, 4, 0 ) );
+    sequence.timesigTable:push( luavsq.TimesigTableItem.new( 6, 8, 1 ) );
     sequence.timesigTable:updateTimesigInfo();
 
     local actual = sequence:generateTimeSig();

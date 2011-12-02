@@ -6,9 +6,9 @@ module( "TimesigTableTest", package.seeall, lunit.testcase );
 
 function testUpdateTimesigInfo()
     local table = luavsq.TimesigTable.new();
-    table:push( luavsq.TimesigTableItem.new( 0, 4, 4, 2 ) );
-    table:push( luavsq.TimesigTableItem.new( 0, 4, 4, 0 ) );
-    table:push( luavsq.TimesigTableItem.new( 0, 3, 4, 1 ) );
+    table:push( luavsq.TimesigTableItem.new( 4, 4, 2 ) );
+    table:push( luavsq.TimesigTableItem.new( 4, 4, 0 ) );
+    table:push( luavsq.TimesigTableItem.new( 3, 4, 1 ) );
     table:updateTimesigInfo();
 
     assert_equal( 0, table:get( 0 ).clock );
@@ -21,9 +21,9 @@ end
 
 function testGetTimesigAt()
     local table = luavsq.TimesigTable.new();
-    table:push( luavsq.TimesigTableItem.new( 0, 4, 6, 2 ) );
-    table:push( luavsq.TimesigTableItem.new( 0, 4, 4, 0 ) );
-    table:push( luavsq.TimesigTableItem.new( 0, 3, 4, 1 ) );
+    table:push( luavsq.TimesigTableItem.new( 4, 6, 2 ) );
+    table:push( luavsq.TimesigTableItem.new( 4, 4, 0 ) );
+    table:push( luavsq.TimesigTableItem.new( 3, 4, 1 ) );
     table:updateTimesigInfo();
 
     local timesig = table:getTimesigAt( 480 );
@@ -41,9 +41,9 @@ end
 
 function testFindTimesigAt()
     local table = luavsq.TimesigTable.new();
-    table:push( luavsq.TimesigTableItem.new( 0, 4, 6, 2 ) );-- 3360 clock開始
-    table:push( luavsq.TimesigTableItem.new( 0, 4, 4, 0 ) );--    0 clock開始
-    table:push( luavsq.TimesigTableItem.new( 0, 3, 4, 1 ) );-- 1920 clock開始
+    table:push( luavsq.TimesigTableItem.new( 4, 6, 2 ) );-- 3360 clock開始
+    table:push( luavsq.TimesigTableItem.new( 4, 4, 0 ) );--    0 clock開始
+    table:push( luavsq.TimesigTableItem.new( 3, 4, 1 ) );-- 1920 clock開始
     table:updateTimesigInfo();
 
     local timesig = table:findTimesigAt( 480 );
@@ -69,9 +69,9 @@ end
 
 function testGetClockFromBarCount()
     local table = luavsq.TimesigTable.new();
-    table:push( luavsq.TimesigTableItem.new( 0, 4, 6, 2 ) );-- 3360 clock開始
-    table:push( luavsq.TimesigTableItem.new( 0, 4, 4, 0 ) );--    0 clock開始
-    table:push( luavsq.TimesigTableItem.new( 0, 3, 4, 1 ) );-- 1920 clock開始
+    table:push( luavsq.TimesigTableItem.new( 4, 6, 2 ) );-- 3360 clock開始
+    table:push( luavsq.TimesigTableItem.new( 4, 4, 0 ) );--    0 clock開始
+    table:push( luavsq.TimesigTableItem.new( 3, 4, 1 ) );-- 1920 clock開始
     table:updateTimesigInfo();
 
     assert_equal( 0, table:getClockFromBarCount( 0 ) );
@@ -82,9 +82,9 @@ end
 
 function testGetBarCountFromClock()
     local table = luavsq.TimesigTable.new();
-    table:push( luavsq.TimesigTableItem.new( 0, 4, 6, 2 ) );-- 3360 clock開始
-    table:push( luavsq.TimesigTableItem.new( 0, 4, 4, 0 ) );--    0 clock開始
-    table:push( luavsq.TimesigTableItem.new( 0, 3, 4, 1 ) );-- 1920 clock開始
+    table:push( luavsq.TimesigTableItem.new( 4, 6, 2 ) );-- 3360 clock開始
+    table:push( luavsq.TimesigTableItem.new( 4, 4, 0 ) );--    0 clock開始
+    table:push( luavsq.TimesigTableItem.new( 3, 4, 1 ) );-- 1920 clock開始
     table:updateTimesigInfo();
 
     assert_equal( 0, table:getBarCountFromClock( 0 ) );
@@ -96,9 +96,9 @@ end
 
 function testIterator()
     local table = luavsq.TimesigTable.new();
-    table:push( luavsq.TimesigTableItem.new( 0, 4, 4, 2 ) );
-    table:push( luavsq.TimesigTableItem.new( 0, 4, 4, 0 ) );
-    table:push( luavsq.TimesigTableItem.new( 0, 3, 4, 1 ) );
+    table:push( luavsq.TimesigTableItem.new( 4, 4, 2 ) );
+    table:push( luavsq.TimesigTableItem.new( 4, 4, 0 ) );
+    table:push( luavsq.TimesigTableItem.new( 3, 4, 1 ) );
     table:updateTimesigInfo();
 
     local i = table:iterator();
@@ -113,6 +113,6 @@ end
 function testSize()
     local table = luavsq.TimesigTable.new();
     assert_equal( 0, table:size() );
-    table:push( luavsq.TimesigTableItem.new( 0, 4, 4, 2 ) );
+    table:push( luavsq.TimesigTableItem.new( 4, 4, 2 ) );
     assert_equal( 1, table:size() );
 end
