@@ -9,8 +9,10 @@ module( "TempoTableTest", package.seeall, lunit.testcase );
 function test()
     local list = luavsq.TempoTable.new();
     assert_equal( 0, list:size() );
-    list:push( luavsq.TempoTableItem.new( 0, 500000, 0.0 ) );
-    list:push( luavsq.TempoTableItem.new( 480, 525000, 0.5 ) );
+    list:push( luavsq.TempoTableItem.new( 0, 500000 ) );
+    list:push( luavsq.TempoTableItem.new( 480, 525000 ) );
+    list:updateTempoInfo();
+
     assert_equal( 2, list:size() );
     assert_equal( 0, list:get( 0 ).clock );
     assert_equal( 500000, list:get( 0 ).tempo );
@@ -23,8 +25,10 @@ end
 function testIterator()
     local list = luavsq.TempoTable.new();
     assert_equal( 0, list:size() );
-    list:push( luavsq.TempoTableItem.new( 0, 500000, 0.0 ) );
-    list:push( luavsq.TempoTableItem.new( 480, 525000, 0.5 ) );
+    list:push( luavsq.TempoTableItem.new( 0, 500000 ) );
+    list:push( luavsq.TempoTableItem.new( 480, 525000 ) );
+    list:updateTempoInfo();
+
     local i = list:iterator();
     assert_true( i:hasNext() );
     local item = i:next();
@@ -41,8 +45,9 @@ end
 
 function testSort()
     local list = luavsq.TempoTable.new();
-    list:push( luavsq.TempoTableItem.new( 480, 525000, 0.5 ) );
-    list:push( luavsq.TempoTableItem.new( 0, 500000, 0.0 ) );
+    list:push( luavsq.TempoTableItem.new( 480, 525000 ) );
+    list:push( luavsq.TempoTableItem.new( 0, 500000 ) );
+    list:get( 0 ).time = 0.5;
 
     list:sort();
 
@@ -56,8 +61,8 @@ end
 
 function testClockFromSec()
     local list = luavsq.TempoTable.new();
-    list:push( luavsq.TempoTableItem.new( 480, 480000, 0.0 ) );
-    list:push( luavsq.TempoTableItem.new( 0, 500000, 0.0 ) );
+    list:push( luavsq.TempoTableItem.new( 480, 480000 ) );
+    list:push( luavsq.TempoTableItem.new( 0, 500000 ) );
     list:updateTempoInfo();
 
     assert_equal( 0, list:getClockFromSec( 0.0 ) );
@@ -75,8 +80,8 @@ function testUpdateTempoInfo()
     assert_equal( 0.0, list:get( 0 ).time );
 
     list = luavsq.TempoTable.new();
-    list:push( luavsq.TempoTableItem.new( 480, 525000, 0.0 ) );
-    list:push( luavsq.TempoTableItem.new( 0, 500000, 0.0 ) );
+    list:push( luavsq.TempoTableItem.new( 480, 525000 ) );
+    list:push( luavsq.TempoTableItem.new( 0, 500000 ) );
     list:updateTempoInfo();
     assert_equal( 2, list:size() );
     assert_equal( 0, list:get( 0 ).clock );
@@ -89,8 +94,8 @@ end
 
 function testGetSecFromClock()
     list = luavsq.TempoTable.new();
-    list:push( luavsq.TempoTableItem.new( 480, 480000, 0.0 ) );
-    list:push( luavsq.TempoTableItem.new( 0, 500000, 0.0 ) );
+    list:push( luavsq.TempoTableItem.new( 480, 480000 ) );
+    list:push( luavsq.TempoTableItem.new( 0, 500000 ) );
     list:updateTempoInfo();
 
     assert_equal( 0.0, list:getSecFromClock( 0 ) );
@@ -101,8 +106,8 @@ end
 
 function testGetTempoAt()
     local list = luavsq.TempoTable.new();
-    list:push( luavsq.TempoTableItem.new( 480, 480000, 0.0 ) );
-    list:push( luavsq.TempoTableItem.new( 0, 500000, 0.0 ) );
+    list:push( luavsq.TempoTableItem.new( 480, 480000 ) );
+    list:push( luavsq.TempoTableItem.new( 0, 500000 ) );
     list:updateTempoInfo();
 
     assert_equal( 500000, list:getTempoAt( 0 ) );

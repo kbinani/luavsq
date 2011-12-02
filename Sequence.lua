@@ -82,7 +82,7 @@ function Sequence.new( ... )
         self.timesigTable = TimesigTable.new();
         self.timesigTable:push( TimesigTableItem.new( numerator, denominator, 0 ) );
         self.tempoTable = TempoTable.new();
-        self.tempoTable:push( TempoTableItem.new( 0, tempo, 0.0 ) );
+        self.tempoTable:push( TempoTableItem.new( 0, tempo ) );
     end
 
     ---

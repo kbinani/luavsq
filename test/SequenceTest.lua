@@ -237,8 +237,8 @@ end
 function testGenerateTempoChange()
     local sequence = luavsq.Sequence.new( "Miku", 1, 4, 4, 500000 );
     sequence.tempoTable = luavsq.TempoTable.new();
-    sequence.tempoTable:push( luavsq.TempoTableItem.new( 0, 500000, 0.0 ) );
-    sequence.tempoTable:push( luavsq.TempoTableItem.new( 1920, 600000, 0.0 ) );
+    sequence.tempoTable:push( luavsq.TempoTableItem.new( 0, 500000 ) );
+    sequence.tempoTable:push( luavsq.TempoTableItem.new( 1920, 600000 ) );
     sequence.tempoTable:updateTempoInfo();
 
     local actual = sequence:generateTempoChange();

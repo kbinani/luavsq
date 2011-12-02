@@ -115,7 +115,7 @@ function TempoTable.new()
     function this:updateTempoInfo()
         local c = self._array:size();
         if( c == 0 )then
-            self._array:push( TempoTableItem.new( 0, TempoTable.baseTempo, 0.0 ) );
+            self._array:push( TempoTableItem.new( 0, TempoTable.baseTempo ) );
         end
         self._array:sort( TempoTableItem.compare );
         local item0 = self._array[0];

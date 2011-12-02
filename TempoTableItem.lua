@@ -43,21 +43,20 @@ function TempoTableItem.new( ... )
     -- @return (TempoTableItem) このオブジェクトのコピー
     -- @name clone
     function this:clone()
-        return TempoTableItem.new( self.clock, self.tempo, self.time );
+        local result = TempoTableItem.new( self.clock, self.tempo );
+        result.time = self.time;
+        return result;
     end
 
     ---
     -- 初期化を行う
     -- @param clock (integer) Tick 単位の時刻
     -- @param tempo (integer) テンポ値。四分音符の長さをマイクロ秒単位で表した値
-    -- @param time (double) 秒単位の時刻。この値は最初は 0 を指定して良い。
-    --                      time フィールドの値は、TempoTable:updateTempoInfo によって更新する
     -- @return (TempoTableItem)
     -- @name <i>new</i>
-    function this:_init_3( clock, tempo, time )
+    function this:_init_2( clock, tempo )
         self.clock = clock;
         self.tempo = tempo;
-        self.time = time;
     end
 
     ---
@@ -82,8 +81,8 @@ function TempoTableItem.new( ... )
         end
     end
 
-    if( #arguments == 3 )then
-        this:_init_3( arguments[1], arguments[2], arguments[3] );
+    if( #arguments == 2 )then
+        this:_init_2( arguments[1], arguments[2] );
     end
 
     return this;
