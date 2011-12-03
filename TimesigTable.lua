@@ -76,10 +76,10 @@ function TimesigTable.new()
     -- リスト内の拍子変更情報の clock の部分を更新する
     -- @name updateTimesigInfo
     function this:updateTimesigInfo()
-        if( self:get( 0 ).clock ~= 0 )then
+        if( self:get( 0 )._clock ~= 0 )then
             return;
         end
-        self:get( 0 ).clock = 0;
+        self:get( 0 )._clock = 0;
         self._list:sort( TimesigTableItem.compare );-- Collections.sort( this );
         local count = self:size();
         local j;
@@ -87,11 +87,11 @@ function TimesigTable.new()
             local item = self:get( j - 1 );
             local numerator = item.numerator;
             local denominator = item.denominator;
-            local clock = item.clock;
+            local clock = item._clock;
             local bar_count = item.barCount;
             local dif = math.floor( 480 * 4 / denominator * numerator );--1小節が何クロックか？
             clock = clock + (self:get( j ).barCount - bar_count) * dif;
-            self:get( j ).clock = clock;
+            self:get( j )._clock = clock;
         end
     end
 
@@ -109,7 +109,7 @@ function TimesigTable.new()
         local i;
         for i = c - 1, 0, -1 do
             index = i;
-            if( self._list[i].clock <= clock )then
+            if( self._list[i]._clock <= clock )then
                 break;
             end
         end
@@ -129,13 +129,13 @@ function TimesigTable.new()
         local i;
         for i = c - 1, 0, -1 do
             index = i;
-            if( self._list[i].clock <= clock )then
+            if( self._list[i]._clock <= clock )then
                 break;
             end
         end
         local item = self._list[index];
         local ret = item:clone();
-        local diff = clock - item.clock;
+        local diff = clock - item._clock;
         local clockPerBar = math.floor( 480 * 4 / ret.denominator * ret.numerator );
         ret.barCount = item.barCount + math.floor( diff / clockPerBar );
         return ret;
@@ -160,7 +160,7 @@ function TimesigTable.new()
         local item = self._list[index];
         local numerator = item.numerator;
         local denominator = item.denominator;
-        local initClock = item.clock;
+        local initClock = item._clock;
         local initBarCount = item.barCount;
         local clockPerBar = numerator * 480 * 4 / denominator;
         return initClock + (barCount - initBarCount) * clockPerBar;
@@ -178,14 +178,14 @@ function TimesigTable.new()
         local i;
         for i = c - 1, 0, -1 do
             index = i;
-            if( self._list[i].clock <= clock )then
+            if( self._list[i]._clock <= clock )then
                 break;
             end
         end
         local bar_count = 0;
         if( index >= 0 )then
             local item = self._list[index];
-            local last_clock = item.clock;
+            local last_clock = item._clock;
             local t_bar_count = item.barCount;
             local numerator = item.numerator;
             local denominator = item.denominator;

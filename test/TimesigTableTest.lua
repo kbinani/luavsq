@@ -11,11 +11,11 @@ function testUpdateTimesigInfo()
     table:push( luavsq.TimesigTableItem.new( 3, 4, 1 ) );
     table:updateTimesigInfo();
 
-    assert_equal( 0, table:get( 0 ).clock );
+    assert_equal( 0, table:get( 0 ):getTick() );
     assert_equal( 0, table:get( 0 ).barCount );
-    assert_equal( 1920, table:get( 1 ).clock );
+    assert_equal( 1920, table:get( 1 ):getTick() );
     assert_equal( 1, table:get( 1 ).barCount );
-    assert_equal( 3360, table:get( 2 ).clock );
+    assert_equal( 3360, table:get( 2 ):getTick() );
     assert_equal( 2, table:get( 2 ).barCount );
 end
 
@@ -103,11 +103,11 @@ function testIterator()
 
     local i = table:iterator();
     assert_true( i:hasNext() );
-    assert_equal( 0, i:next().clock );
+    assert_equal( 0, i:next():getTick() );
     assert_true( i:hasNext() );
-    assert_equal( 1920, i:next().clock );
+    assert_equal( 1920, i:next():getTick() );
     assert_true( i:hasNext() );
-    assert_equal( 3360, i:next().clock );
+    assert_equal( 3360, i:next():getTick() );
 end
 
 function testSize()

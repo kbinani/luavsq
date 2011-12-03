@@ -33,7 +33,7 @@ function TimesigTableItem.new( ... )
 
     ---
     -- クロック数
-    this.clock = 0;
+    this._clock = 0;
 
     ---
     -- 拍子の分子
@@ -61,11 +61,19 @@ function TimesigTableItem.new( ... )
     end
 
     ---
+    -- Tick 単位の時刻を取得する
+    -- @return (integer) 単位の時刻
+    -- @name getTick
+    function this:getTick()
+        return self._clock;
+    end
+
+    ---
     -- 文字列に変換する
     -- @return (string) 変換後の文字列
     -- @name toString
     function this:toString()
-        return "{Clock=" .. self.clock .. ", Numerator=" .. self.numerator .. ", Denominator=" .. self.denominator .. ", BarCount=" .. self.barCount .. "}";
+        return "{Clock=" .. self._clock .. ", Numerator=" .. self.numerator .. ", Denominator=" .. self.denominator .. ", BarCount=" .. self.barCount .. "}";
     end
 
     ---
@@ -74,7 +82,7 @@ function TimesigTableItem.new( ... )
     -- @name clone
     function this:clone()
         local result = TimesigTableItem.new( self.numerator, self.denominator, self.barCount );
-        result.clock = self.clock;
+        result._clock = self._clock;
         return result;
     end
 

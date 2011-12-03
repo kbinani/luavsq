@@ -121,7 +121,7 @@ function isEqualToDefaultSequence( sequence )
 
     -- timesigTable
     assert_equal( 1, sequence.timesigTable:size() );
-    assert_equal( 0, sequence.timesigTable:get( 0 ).clock );
+    assert_equal( 0, sequence.timesigTable:get( 0 ):getTick() );
     assert_equal( 4, sequence.timesigTable:get( 0 ).denominator );
     assert_equal( 4, sequence.timesigTable:get( 0 ).numerator );
     assert_equal( 0, sequence.timesigTable:get( 0 ).barCount );

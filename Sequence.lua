@@ -160,7 +160,7 @@ function Sequence.new( ... )
     function this:_calculatePreMeasureInClock()
         local pre_measure = self.master.preMeasure;
         local last_bar_count = self.timesigTable:get( 0 ).barCount;
-        local last_clock = self.timesigTable:get( 0 ).clock;
+        local last_clock = self.timesigTable:get( 0 ):getTick();
         local last_denominator = self.timesigTable:get( 0 ).denominator;
         local last_numerator = self.timesigTable:get( 0 ).numerator;
         for i = 1, self.timesigTable:size() - 1, 1 do
@@ -168,7 +168,7 @@ function Sequence.new( ... )
                 break;
             else
                 last_bar_count = self.timesigTable:get( i ).barCount;
-                last_clock = self.timesigTable:get( i ).clock;
+                last_clock = self.timesigTable:get( i ):getTick();
                 last_denominator = self.timesigTable:get( i ).denominator;
                 last_numerator = self.timesigTable:get( i ).numerator;
             end
@@ -391,7 +391,7 @@ function Sequence.new( ... )
         while( itr:hasNext() )do
             local item = itr:next();
             local event = MidiEvent.generateTimeSigEvent(
-                item.clock,
+                item:getTick(),
                 item.numerator,
                 item.denominator
             );
@@ -491,8 +491,8 @@ function Sequence.new( ... )
         local itr = self.timesigTable:iterator();
         while( itr:hasNext() )do
             local entry = itr:next();
-            table.insert( events, MidiEvent.generateTimeSigEvent( entry.clock, entry.numerator, entry.denominator ) );
-            last_clock = math.max( last_clock, entry.clock );
+            table.insert( events, MidiEvent.generateTimeSigEvent( entry:getTick(), entry.numerator, entry.denominator ) );
+            last_clock = math.max( last_clock, entry:getTick() );
         end
         itr = self.tempoTable.iterator();
         while( itr:hasNext() )do
@@ -1171,19 +1171,11 @@ function Sequence.generateVibratoNRPN( sequence, noteEvent, msPreSend )
                 end
                 lastDelay = delay;
                 table.insert( ret, nrpnEvent );
-do
-    print( "#ret=" .. #ret );
-end
             end
         end
 
         local rateBP = noteEvent.vibratoHandle:getRateBP();
         count = rateBP:size();
-do
-    print( "process rateBP" );
-    print( "count=" .. count );
-    print( "#ret=" .. #ret );
-end
         if( count > 0 )then
             local i, lastDelay;
             lastDelay = 0;
@@ -1202,9 +1194,6 @@ end
                 end
                 lastDelay = delay;
                 table.insert( ret, nrpnEvent );
-do
-    print( "#ret=" .. #ret );
-end
             end
         end
     end
