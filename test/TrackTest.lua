@@ -283,7 +283,7 @@ function testPrintMetaText()
     singerEvent.singerHandle.iconId = "$07010002";
     singerEvent.singerHandle.ids = "Miku";
     singerEvent.singerHandle.original = 1;
-    singerEvent.singerHandle.caption = "caption for miku";
+    singerEvent.singerHandle:setCaption( "caption for miku" );
     singerEvent.singerHandle.language = 1;
     singerEvent.singerHandle.program = 2;
     track.events:set( 0, singerEvent );
@@ -294,9 +294,9 @@ function testPrintMetaText()
     crescendoEvent.iconDynamicsHandle.iconId = "$05020001";
     crescendoEvent.iconDynamicsHandle.ids = "crescendo";
     crescendoEvent.iconDynamicsHandle.original = 1;
-    crescendoEvent.iconDynamicsHandle.caption = "caption for crescendo";
-    crescendoEvent.iconDynamicsHandle.startDyn = 4;
-    crescendoEvent.iconDynamicsHandle.endDyn = 7;
+    crescendoEvent.iconDynamicsHandle:setCaption( "caption for crescendo" );
+    crescendoEvent.iconDynamicsHandle:setStartDyn( 4 );
+    crescendoEvent.iconDynamicsHandle:setEndDyn( 7 );
     crescendoEvent:setLength( 10 );
     track.events:add( crescendoEvent, 2 );
 
@@ -306,9 +306,9 @@ function testPrintMetaText()
     dynaffEvent.iconDynamicsHandle.iconId = "$05010001";
     dynaffEvent.iconDynamicsHandle.ids = "dynaff";
     dynaffEvent.iconDynamicsHandle.original = 2;
-    dynaffEvent.iconDynamicsHandle.caption = "caption for dynaff";
-    dynaffEvent.iconDynamicsHandle.startDyn = 5;
-    dynaffEvent.iconDynamicsHandle.endDyn = 8;
+    dynaffEvent.iconDynamicsHandle:setCaption( "caption for dynaff" );
+    dynaffEvent.iconDynamicsHandle:setStartDyn( 5 );
+    dynaffEvent.iconDynamicsHandle:setEndDyn( 8 );
     dynaffEvent:setLength( 11 );
     track.events:add( dynaffEvent, 3 );
 
@@ -318,9 +318,9 @@ function testPrintMetaText()
     decrescendoEvent.iconDynamicsHandle.iconId = "$05030001";
     decrescendoEvent.iconDynamicsHandle.ids = "decrescendo";
     decrescendoEvent.iconDynamicsHandle.original = 3;
-    decrescendoEvent.iconDynamicsHandle.caption = "caption for decrescendo";
-    decrescendoEvent.iconDynamicsHandle.startDyn = 6;
-    decrescendoEvent.iconDynamicsHandle.endDyn = 9;
+    decrescendoEvent.iconDynamicsHandle:setCaption( "caption for decrescendo" );
+    decrescendoEvent.iconDynamicsHandle:setStartDyn( 6 );
+    decrescendoEvent.iconDynamicsHandle:setEndDyn( 9 );
     decrescendoEvent:setLength( 12 );
     track.events:add( decrescendoEvent, 4 );
 
@@ -329,7 +329,7 @@ function testPrintMetaText()
     singerEvent2.singerHandle.iconId = "$07020003";
     singerEvent2.singerHandle.ids = "Luka_EN";
     singerEvent2.singerHandle.original = 0x82;
-    singerEvent2.singerHandle.caption = "caption for luka";
+    singerEvent2.singerHandle:setCaption( "caption for luka" );
     singerEvent2.singerHandle.language = 2;
     singerEvent2.singerHandle.program = 3;
     track.events:add( singerEvent2, 5 );
@@ -350,18 +350,18 @@ function testPrintMetaText()
     noteEvent.vibratoHandle.iconId ="$04040004";
     noteEvent.vibratoHandle.ids = "vibrato";
     noteEvent.vibratoHandle.original = 1;
-    noteEvent.vibratoHandle.caption = "caption for vibrato";
+    noteEvent.vibratoHandle:setCaption( "caption for vibrato" );
     noteEvent.vibratoHandle:setLength( 407 );
-    noteEvent.vibratoHandle.startDepth = 13;
-    noteEvent.vibratoHandle.startRate = 14;
+    noteEvent.vibratoHandle:setStartDepth( 13 );
+    noteEvent.vibratoHandle:setStartRate( 14 );
     noteEvent.noteHeadHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.NoteHead );--h#0007
     noteEvent.noteHeadHandle.iconId = "$05030000";
     noteEvent.noteHeadHandle.ids = "attack";
     noteEvent.noteHeadHandle.original = 15;
-    noteEvent.noteHeadHandle.caption = "caption for attack";
+    noteEvent.noteHeadHandle:setCaption( "caption for attack" );
     noteEvent.noteHeadHandle:setLength( 120 );
-    noteEvent.noteHeadHandle.duration = 62;
-    noteEvent.noteHeadHandle.depth = 65;
+    noteEvent.noteHeadHandle:setDuration( 62 );
+    noteEvent.noteHeadHandle:setDepth( 65 );
     track.events:add( noteEvent, 6 );
 
     track.master = luavsq.Master.new( 1 );

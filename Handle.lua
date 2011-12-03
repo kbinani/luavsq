@@ -22,6 +22,13 @@ module( "luavsq" );
 -- ハンドルを取り扱います。ハンドルにはLyricHandle、VibratoHandle、SingerHandleおよびNoteHeadHandleがある
 -- @class table
 -- @name Handle
+-- @field index (integer) VSQ メタテキストに出力されるこのオブジェクトの ID
+-- @field iconId (string) ハンドルを特定するための文字列
+-- @field ids (string) ハンドルの名前
+-- @field original (integer) ハンドルのオリジナル
+-- @field language (integer) 歌手の歌唱言語を表す番号(バンクセレクト)。歌手ハンドルでのみ使われる
+-- @field program (integer) 歌手の種類を表す番号(プログラムチェンジ)。歌手ハンドルでのみ使われる
+-- @field addQuotationMark (boolean) 歌詞・発音記号列の前後にクォーテーションマークを付けるかどうか
 Handle = {};
 
 ---
@@ -47,21 +54,21 @@ function Handle.new( ... )
     this.index = 0;
     this.iconId = "";
     this.ids = "";
-    this.lyrics = {};
+    this._lyrics = {};
     this.original = 0;
-    this.caption = "";
-    this.length = 0;
-    this.startDepth = 0;
-    this.depthBP = nil;
-    this.startRate = 0;
-    this.rateBP = nil;
+    this._caption = "";
+    this._length = 0;
+    this._startDepth = 0;
+    this._depthBP = nil;
+    this._startRate = 0;
+    this._rateBP = nil;
     this.language = 0;
     this.program = 0;
-    this.duration = 0;
-    this.depth = 0;
-    this.startDyn = 0;
-    this.endDyn = 0;
-    this.dynBP = nil;
+    this._duration = 0;
+    this._depth = 0;
+    this._startDyn = 0;
+    this._endDyn = 0;
+    this._dynBP = nil;
 
     ---
     -- @field
@@ -101,18 +108,18 @@ function Handle.new( ... )
         self._type = HandleTypeEnum.Vibrato;
         self.iconId = "";
         self.ids = "normal";
-        self.lyrics = { Lyric.new( "" ) };
+        self._lyrics = { Lyric.new( "" ) };
         self.original = 0;
-        self.caption = "";
-        self.length = 0;
-        self.startDepth = 0;
-        self.depthBP = null;
-        self.startRate = 0;
-        self.rateBP = null;
+        self._caption = "";
+        self._length = 0;
+        self._startDepth = 0;
+        self._depthBP = null;
+        self._startRate = 0;
+        self._rateBP = null;
         self.language = 0;
         self.program = 0;
-        self.duration = 0;
-        self.depth = 64;
+        self._duration = 0;
+        self._depth = 64;
 
         local tmpDepthBPX = "";
         local tmpDepthBPY = "";
@@ -146,14 +153,14 @@ function Handle.new( ... )
             elseif( search == "Original" )then
                 self.original = tonumber( spl[2], 10 );
             elseif( search == "Caption" )then
-                self.caption = spl[2];
+                self._caption = spl[2];
                 for i = 3, #spl, 1 do
-                    self.caption = self.caption .. "=" .. spl[i];
+                    self._caption = self._caption .. "=" .. spl[i];
                 end
             elseif( search == "Length" )then
-                self.length = tonumber( spl[2], 10 );
+                self._length = tonumber( spl[2], 10 );
             elseif( search == "StartDepth" )then
-                self.startDepth = tonumber( spl[2], 10 );
+                self._startDepth = tonumber( spl[2], 10 );
             elseif( search == "DepthBPNum" )then
                 tmpDepthBPNum = spl[2];
             elseif( search == "DepthBPX" )then
@@ -162,7 +169,7 @@ function Handle.new( ... )
                 tmpDepthBPY = spl[2];
             elseif( search == "StartRate" )then
                 self._type = HandleTypeEnum.Vibrato;
-                self.startRate = tonumber( spl[2], 10 );
+                self._startRate = tonumber( spl[2], 10 );
             elseif( search == "RateBPNum" )then
                 tmpRateBPNum = spl[2];
             elseif( search == "RateBPX" )then
@@ -171,15 +178,15 @@ function Handle.new( ... )
                 tmpRateBPY = spl[2];
             elseif( search == "Duration" )then
                 self._type = HandleTypeEnum.NoteHead;
-                self.duration = tonumber( spl[2], 10 );
+                self._duration = tonumber( spl[2], 10 );
             elseif( search == "Depth" )then
-                self.depth = tonumber( spl[2], 10 );
+                self._depth = tonumber( spl[2], 10 );
             elseif( search == "StartDyn" )then
                 self._type = HandleTypeEnum.Dynamics;
-                self.startDyn = tonumber( spl[2], 10 );
+                self._startDyn = tonumber( spl[2], 10 );
             elseif( search == "EndDyn" )then
                 self._type = HandleTypeEnum.Dynamics;
-                self.endDyn = tonumber( spl[2], 10 );
+                self._endDyn = tonumber( spl[2], 10 );
             elseif( search == "DynBPNum" )then
                 tmpDynBPNum = spl[2];
             elseif( search == "DynBPX" )then
@@ -192,7 +199,7 @@ function Handle.new( ... )
                     local lyric = Lyric.new( spl[2] );
                     self._type = HandleTypeEnum.Lyric;
                     local index = tonumber( num );
-                    self.lyrics[index + 1] = lyric;
+                    self._lyrics[index + 1] = lyric;
                 end
             end
             if( not stream:ready() )then
@@ -204,26 +211,26 @@ function Handle.new( ... )
         -- RateBPX, RateBPYの設定
         if( self._type == HandleTypeEnum.Vibrato )then
             if( tmpRateBPNum ~= "" )then
-                self.rateBP = VibratoBPList.new( tmpRateBPNum, tmpRateBPX, tmpRateBPY );
+                self._rateBP = VibratoBPList.new( tmpRateBPNum, tmpRateBPX, tmpRateBPY );
             else
-                self.rateBP = VibratoBPList.new();
+                self._rateBP = VibratoBPList.new();
             end
 
             -- DepthBPX, DepthBPYの設定
             if( tmpDepthBPNum ~= "" )then
-                self.depthBP = VibratoBPList.new( tmpDepthBPNum, tmpDepthBPX, tmpDepthBPY );
+                self._depthBP = VibratoBPList.new( tmpDepthBPNum, tmpDepthBPX, tmpDepthBPY );
             else
-                self.depthBP = VibratoBPList.new();
+                self._depthBP = VibratoBPList.new();
             end
         else
-            self.depthBP = VibratoBPList.new();
-            self.rateBP = VibratoBPList.new();
+            self._depthBP = VibratoBPList.new();
+            self._rateBP = VibratoBPList.new();
         end
 
         if( tmpDynBPNum ~= "" )then
-            self.dynBP = VibratoBPList.new( tmpDynBPNum, tmpDynBPX, tmpDynBPY );
+            self._dynBP = VibratoBPList.new( tmpDynBPNum, tmpDynBPX, tmpDynBPY );
         else
-            self.dynBP = VibratoBPList.new();
+            self._dynBP = VibratoBPList.new();
         end
     end
 
@@ -236,10 +243,10 @@ function Handle.new( ... )
         self.iconId = "$04040000";
         self.ids = "";
         self.original = 0;
-        self.startRate = 64;
-        self.startDepth = 64;
-        self.rateBP = VibratoBPList.new();
-        self.depthBP = VibratoBPList.new();
+        self._startRate = 64;
+        self._startDepth = 64;
+        self._rateBP = VibratoBPList.new();
+        self._depthBP = VibratoBPList.new();
     end
 
     --
@@ -256,7 +263,7 @@ function Handle.new( ... )
     -- @access private
     function this:_init_lyric()
         self.index = 0;
-        self.lyrics = {};
+        self._lyrics = {};
     end
 
     ---
@@ -308,7 +315,7 @@ function Handle.new( ... )
     -- @return (integer)
     -- @name getLength
     function this:getLength()
-        return self.length;
+        return self._length;
     end
 
     ---
@@ -316,7 +323,7 @@ function Handle.new( ... )
     -- @param value (integer) Tick単位の長さ
     -- @name setLength
     function this:setLength( value )
-        self.length = value;
+        self._length = value;
     end
 
     ---
@@ -324,7 +331,7 @@ function Handle.new( ... )
     -- @return (string) キャプション
     -- @name getCaption
     function this:getCaption()
-        return self.caption;
+        return self._caption;
     end
 
     ---
@@ -332,7 +339,7 @@ function Handle.new( ... )
     -- @param value (string)
     -- @name setCaption
     function this:setCaption( value )
-        self.caption = value;
+        self._caption = value;
     end
 
     ---
@@ -340,7 +347,7 @@ function Handle.new( ... )
     -- @return (integer) DYN の開始値
     -- @name getStartDyn
     function this:getStartDyn()
-        return self.startDyn;
+        return self._startDyn;
     end
 
     ---
@@ -348,7 +355,7 @@ function Handle.new( ... )
     -- @param value (integer) DYN の開始値
     -- @name setStartDyn
     function this:setStartDyn( value )
-        self.startDyn = value;
+        self._startDyn = value;
     end
 
     ---
@@ -356,7 +363,7 @@ function Handle.new( ... )
     -- @return (integer) DYN の終了値
     -- @name getEndDyn
     function this:getEndDyn()
-        return self.endDyn;
+        return self._endDyn;
     end
 
     ---
@@ -364,7 +371,7 @@ function Handle.new( ... )
     -- @param value (integer) DYN の終了値
     -- @name setEndDyn
     function this:setEndDyn( value )
-        self.endDyn = value;
+        self._endDyn = value;
     end
 
     ---
@@ -372,7 +379,7 @@ function Handle.new( ... )
     -- @return (VibratoBPList) DYN カーブ
     -- @name getDynBP
     function this:getDynBP()
-        return self.dynBP;
+        return self._dynBP;
     end
 
     ---
@@ -380,7 +387,7 @@ function Handle.new( ... )
     -- @param value (VibratoBPList) DYN カーブ
     -- @name setDynBP
     function this:setDynBP( value )
-        self.dynBP = value;
+        self._dynBP = value;
     end
 
     ---
@@ -388,7 +395,7 @@ function Handle.new( ... )
     -- @return (integer) Depth 値
     -- @name getDepth
     function this:getDepth()
-        return self.depth;
+        return self._depth;
     end
 
     ---
@@ -396,7 +403,7 @@ function Handle.new( ... )
     -- @param value (integer) Depth 値
     -- @name setDepth
     function this:setDepth( value )
-        self.depth = value;
+        self._depth = value;
     end
 
     ---
@@ -404,7 +411,7 @@ function Handle.new( ... )
     -- @return (integer) Duration 値
     -- @name getDuration
     function this:getDuration()
-        return self.duration;
+        return self._duration;
     end
 
     ---
@@ -412,7 +419,7 @@ function Handle.new( ... )
     -- @param value (integer) Duration 値
     -- @name setDuration
     function this:setDuration( value )
-        self.duration = value;
+        self._duration = value;
     end
 
     ---
@@ -420,7 +427,7 @@ function Handle.new( ... )
     -- @return (VibratoBPList) Rate のビブラートカーブ
     -- @name getRateBP
     function this:getRateBP()
-        return self.rateBP;
+        return self._rateBP;
     end
 
     ---
@@ -428,7 +435,7 @@ function Handle.new( ... )
     -- @param value (VibratoBPList) 設定するビブラートカーブ
     -- @name setRateBP
     function this:setRateBP( value )
-        self.rateBP = value;
+        self._rateBP = value;
     end
 
     ---
@@ -436,7 +443,7 @@ function Handle.new( ... )
     -- @return (VibratoBPList) Depth のビビラートカーブ
     -- @name getDepthBP
     function this:getDepthBP()
-        return self.depthBP;
+        return self._depthBP;
     end
 
     ---
@@ -444,7 +451,7 @@ function Handle.new( ... )
     -- @param value (VibratoBPList) 設定するビブラートカーブ
     -- @name setDepthBP
     function this:setDepthBP( value )
-        self.depthBP = value;
+        self._depthBP = value;
     end
 
     ---
@@ -452,7 +459,7 @@ function Handle.new( ... )
     -- @return (integer) Rate の開始値
     -- @name getStartRate
     function this:getStartRate()
-        return self.startRate;
+        return self._startRate;
     end
 
     ---
@@ -460,7 +467,7 @@ function Handle.new( ... )
     -- @param value (integer) Rate の開始値
     -- @name setStartRate
     function this:setStartRate( value )
-        self.startRate = value;
+        self._startRate = value;
     end
 
     ---
@@ -468,7 +475,7 @@ function Handle.new( ... )
     -- @return (integer) Depth の開始値
     -- @name getStartDepth
     function this:getStartDepth()
-        return self.startDepth;
+        return self._startDepth;
     end
 
     ---
@@ -476,7 +483,7 @@ function Handle.new( ... )
     -- @param value (integer) Depth の開始値
     -- @name setStartDepth
     function this:setStartDepth( value )
-        self.startDepth = value;
+        self._startDepth = value;
     end
 
     ---
@@ -485,7 +492,7 @@ function Handle.new( ... )
     -- @return (Lyric) 歌詞
     -- @name getLyricAt
     function this:getLyricAt( index )
-        return self.lyrics[index + 1];
+        return self._lyrics[index + 1];
     end
 
     ---
@@ -494,14 +501,14 @@ function Handle.new( ... )
     -- @param value (Lyric) 置き換える要素
     -- @name setLyricAt
     function this:setLyricAt( index, value )
-        if( index + 1 >= #self.lyrics )then
-            local remain = index + 1 - #self.lyrics;
+        if( index + 1 >= #self._lyrics )then
+            local remain = index + 1 - #self._lyrics;
             local i;
             for i = 1, remain, 1 do
-                table.insert( self.lyrics, false );
+                table.insert( self._lyrics, false );
             end
         end
-        self.lyrics[index + 1] = value;
+        self._lyrics[index + 1] = value;
     end
 
     ---
@@ -509,7 +516,7 @@ function Handle.new( ... )
     -- @return (integer) 歌詞の個数
     -- @name size
     function this:size()
-        return #self.lyrics;
+        return #self._lyrics;
     end
 
     ---
@@ -517,7 +524,7 @@ function Handle.new( ... )
     -- @return (string) Display String 値
     -- @name getDisplayString
     function this:getDisplayString()
-        return self.ids .. self.caption;
+        return self.ids .. self._caption;
     end
 
     ---
@@ -544,77 +551,77 @@ function Handle.new( ... )
         local result = "";
         result = result .. "[h#" .. string.format( "%04d", self.index ) .. "]";
         if( self._type == HandleTypeEnum.Lyric )then
-            for i = 1, #self.lyrics, 1 do
-                result = result .. "\n" .. "L" .. (i - 1) .. "=" .. self.lyrics[i]:toString( self.addQuotationMark );
+            for i = 1, #self._lyrics, 1 do
+                result = result .. "\n" .. "L" .. (i - 1) .. "=" .. self._lyrics[i]:toString( self.addQuotationMark );
             end
         elseif( self._type == HandleTypeEnum.Vibrato )then
             result = result .. "\n" .. "IconID=" .. self.iconId .. "\n";
             result = result .. "IDS=" .. self.ids .. "\n";
             result = result .. "Original=" .. self.original .. "\n";
-            result = result .. "Caption=" .. self.caption .. "\n";
-            result = result .. "Length=" .. self.length .. "\n";
-            result = result .. "StartDepth=" .. self.startDepth .. "\n";
-            result = result .. "DepthBPNum=" .. self.depthBP:size() .. "\n";
-            if( self.depthBP:size() > 0 )then
-                result = result .. "DepthBPX=" .. string.format( "%.6f", self.depthBP:get( 0 ).x );
-                for i = 1, self.depthBP:size() - 1, 1 do
-                    result = result .. "," .. string.format( "%.6f", self.depthBP:get( i ).x );
+            result = result .. "Caption=" .. self._caption .. "\n";
+            result = result .. "Length=" .. self._length .. "\n";
+            result = result .. "StartDepth=" .. self._startDepth .. "\n";
+            result = result .. "DepthBPNum=" .. self._depthBP:size() .. "\n";
+            if( self._depthBP:size() > 0 )then
+                result = result .. "DepthBPX=" .. string.format( "%.6f", self._depthBP:get( 0 ).x );
+                for i = 1, self._depthBP:size() - 1, 1 do
+                    result = result .. "," .. string.format( "%.6f", self._depthBP:get( i ).x );
                 end
-                result = result .. "\n" .. "DepthBPY=" .. self.depthBP:get( 0 ).y;
-                for i = 1, self.depthBP:size() - 1, 1 do
-                    result = result .. "," .. self.depthBP:get( i ).y;
+                result = result .. "\n" .. "DepthBPY=" .. self._depthBP:get( 0 ).y;
+                for i = 1, self._depthBP:size() - 1, 1 do
+                    result = result .. "," .. self._depthBP:get( i ).y;
                 end
                 result = result .. "\n";
             end
-            result = result .. "StartRate=" .. self.startRate .. "\n";
-            result = result .. "RateBPNum=" .. self.rateBP:size();
-            if( self.rateBP:size() > 0 )then
-                result = result .. "\n" .. "RateBPX=" .. string.format( "%.6f", self.rateBP:get( 0 ).x );
-                for i = 1, self.rateBP:size() - 1, 1 do
-                    result = result .. "," .. string.format( "%.6f", self.rateBP:get( i ).x );
+            result = result .. "StartRate=" .. self._startRate .. "\n";
+            result = result .. "RateBPNum=" .. self._rateBP:size();
+            if( self._rateBP:size() > 0 )then
+                result = result .. "\n" .. "RateBPX=" .. string.format( "%.6f", self._rateBP:get( 0 ).x );
+                for i = 1, self._rateBP:size() - 1, 1 do
+                    result = result .. "," .. string.format( "%.6f", self._rateBP:get( i ).x );
                 end
-                result = result .. "\n" .. "RateBPY=" .. self.rateBP:get( 0 ).y;
-                for i = 1, self.rateBP:size() - 1, 1 do
-                    result = result .. "," .. self.rateBP:get( i ).y;
+                result = result .. "\n" .. "RateBPY=" .. self._rateBP:get( 0 ).y;
+                for i = 1, self._rateBP:size() - 1, 1 do
+                    result = result .. "," .. self._rateBP:get( i ).y;
                 end
             end
         elseif( self._type == HandleTypeEnum.Singer )then
             result = result .. "\n" .. "IconID=" .. self.iconId .. "\n";
             result = result .. "IDS=" .. self.ids .. "\n";
             result = result .. "Original=" .. self.original .. "\n";
-            result = result .. "Caption=" .. self.caption .. "\n";
-            result = result .. "Length=" .. self.length .. "\n";
+            result = result .. "Caption=" .. self._caption .. "\n";
+            result = result .. "Length=" .. self._length .. "\n";
             result = result .. "Language=" .. self.language .. "\n";
             result = result .. "Program=" .. self.program;
         elseif( self._type == HandleTypeEnum.NoteHead )then
             result = result .. "\n" .. "IconID=" .. self.iconId .. "\n";
             result = result .. "IDS=" .. self.ids .. "\n";
             result = result .. "Original=" .. self.original .. "\n";
-            result = result .. "Caption=" .. self.caption .. "\n";
-            result = result .. "Length=" .. self.length .. "\n";
-            result = result .. "Duration=" .. self.duration .. "\n";
-            result = result .. "Depth=" .. self.depth;
+            result = result .. "Caption=" .. self._caption .. "\n";
+            result = result .. "Length=" .. self._length .. "\n";
+            result = result .. "Duration=" .. self._duration .. "\n";
+            result = result .. "Depth=" .. self._depth;
         elseif( self._type == HandleTypeEnum.Dynamics )then
             result = result .. "\n" .. "IconID=" .. self.iconId .. "\n";
             result = result .. "IDS=" .. self.ids .. "\n";
             result = result .. "Original=" .. self.original .. "\n";
-            result = result .. "Caption=" .. self.caption .. "\n";
-            result = result .. "StartDyn=" .. self.startDyn .. "\n";
-            result = result .. "EndDyn=" .. self.endDyn .. "\n";
+            result = result .. "Caption=" .. self._caption .. "\n";
+            result = result .. "StartDyn=" .. self._startDyn .. "\n";
+            result = result .. "EndDyn=" .. self._endDyn .. "\n";
             result = result .. "Length=" .. self:getLength() .. "\n";
-            if( nil ~= self.dynBP )then
-                if( self.dynBP:size() <= 0 )then
+            if( nil ~= self._dynBP )then
+                if( self._dynBP:size() <= 0 )then
                     result = result .. "DynBPNum=0";
                 else
-                    local c = self.dynBP:size();
+                    local c = self._dynBP:size();
                     result = result .. "DynBPNum=" .. c .. "\n";
-                    result = result .. "DynBPX=" .. string.format( "%.6f", self.dynBP:get( 0 ).x );
+                    result = result .. "DynBPX=" .. string.format( "%.6f", self._dynBP:get( 0 ).x );
                     for i = 1, c - 1, 1 do
-                        result = result .. "," .. string.format( "%.6f", self.dynBP:get( i ).x );
+                        result = result .. "," .. string.format( "%.6f", self._dynBP:get( i ).x );
                     end
-                    result = result .. "\n" .. "DynBPY=" .. self.dynBP:get( 0 ).y;
+                    result = result .. "\n" .. "DynBPY=" .. self._dynBP:get( 0 ).y;
                     for i = 1, c - 1, 1 do
-                        result = result .. "," .. self.dynBP:get( i ).y;
+                        result = result .. "," .. self._dynBP:get( i ).y;
                     end
                 end
             else
@@ -637,18 +644,18 @@ function Handle.new( ... )
             ret:setCaption( self:getCaption() );
             ret:setStartDyn( self:getStartDyn() );
             ret:setEndDyn( self:getEndDyn() );
-            if( nil ~= self.dynBP )then
-                ret:setDynBP( self.dynBP:clone() );
+            if( nil ~= self._dynBP )then
+                ret:setDynBP( self._dynBP:clone() );
             end
             ret:setLength( self:getLength() );
             return ret;
         elseif( self._type == HandleTypeEnum.Lyric )then
             local result = Handle.new( HandleTypeEnum.Lyric );
             result.index = self.index;
-            result.lyrics = {};
-            for i = 1, #self.lyrics, 1 do
-                local buf = self.lyrics[i]:clone();
-                table.insert( result.lyrics, buf );
+            result._lyrics = {};
+            for i = 1, #self._lyrics, 1 do
+                local buf = self._lyrics[i]:clone();
+                table.insert( result._lyrics, buf );
             end
             return result;
         elseif( self._type == HandleTypeEnum.NoteHead )then
@@ -664,12 +671,12 @@ function Handle.new( ... )
             return result;
         elseif( self._type == HandleTypeEnum.Singer )then
             local ret = Handle.new( HandleTypeEnum.Singer );
-            ret.caption = self.caption;
+            ret._caption = self._caption;
             ret.iconId = self.iconId;
             ret.ids = self.ids;
             ret.index = self.index;
             ret.language = self.language;
-            ret:setLength( self.length );
+            ret:setLength( self._length );
             ret.original = self.original;
             ret.program = self.program;
             return ret;
@@ -679,15 +686,15 @@ function Handle.new( ... )
             result.iconId = self.iconId;
             result.ids = self.ids;
             result.original = self.original;
-            result:setCaption( self.caption );
+            result:setCaption( self._caption );
             result:setLength( self:getLength() );
-            result:setStartDepth( self.startDepth );
-            if( nil ~= self.depthBP )then
-                result:setDepthBP( self.depthBP:clone() );
+            result:setStartDepth( self._startDepth );
+            if( nil ~= self._depthBP )then
+                result:setDepthBP( self._depthBP:clone() );
             end
-            result:setStartRate( self.startRate );
-            if( nil ~= self.rateBP )then
-                result:setRateBP( self.rateBP:clone() );
+            result:setStartRate( self._startRate );
+            if( nil ~= self._rateBP )then
+                result:setRateBP( self._rateBP:clone() );
             end
             return result;
         end

@@ -252,7 +252,7 @@ function testClone()
     assert_equal( 17, copy.pMeanEndingNote );
 
     local iconHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Singer );
-    iconHandle.caption = "foo";
+    iconHandle:setCaption( "foo" );
     id.singerHandle = iconHandle;
     local lyricHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Lyric );
     lyricHandle.index = 102;
@@ -268,7 +268,7 @@ function testClone()
     id.iconDynamicsHandle = iconDynamicsHandle;
 
     copy = id:clone();
-    assert_equal( "foo", copy.singerHandle.caption );
+    assert_equal( "foo", copy.singerHandle:getCaption() );
     assert_equal( 102, copy.lyricHandle.index );
     assert_equal( "aho", copy.vibratoHandle.iconId );
     assert_equal( "baka", copy.noteHeadHandle.ids );
