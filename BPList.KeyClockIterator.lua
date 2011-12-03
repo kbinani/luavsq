@@ -58,7 +58,7 @@ function BPList.KeyClockIterator.new( ... )
     -- @name next
     function this:next()
         self._pos = self._pos + 1;
-        return self._list.clocks[self._pos];
+        return self._list._clocks[self._pos];
     end
 
     ---
@@ -66,12 +66,12 @@ function BPList.KeyClockIterator.new( ... )
     -- @name remove
     function this:remove()
         if( 0 < self._pos and self._pos <= self._list._length )then
-            local key = self._list.clocks[self._pos];
+            local key = self._list._clocks[self._pos];
             local i;
             for i = self._pos, self._list._length - 1, 1 do
-                self._list.clocks[i] = self._list.clocks[i + 1];
-                self._list.items[i].value = self._list.items[i + 1].value;
-                self._list.items[i].id = self._list.items[i + 1].id;
+                self._list._clocks[i] = self._list._clocks[i + 1];
+                self._list._items[i].value = self._list._items[i + 1].value;
+                self._list._items[i].id = self._list._items[i + 1].id;
             end
             self._list._length = self._list._length - 1;
         end

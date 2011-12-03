@@ -29,14 +29,14 @@ BPList = {};
 function BPList.new( ... )
     local this = {};
     local arguments = { ... };
-    this.clocks = nil;
-    this.items = nil;
+    this._clocks = nil;
+    this._items = nil;
     this._length = 0; -- clocks, itemsに入っているアイテムの個数
-    this.defaultValue = 0;
-    this.maxValue = 127;
-    this.minValue = 0;
-    this.maxId = 0;
-    this.name = "";
+    this._defaultValue = 0;
+    this._maxValue = 127;
+    this._minValue = 0;
+    this._maxId = 0;
+    this._name = "";
 
     ---
     -- 初期化を行う
@@ -47,11 +47,11 @@ function BPList.new( ... )
     -- @name <i>new</i>
     -- @return (BPList)
     function this:_init_4( name, defaultValue, minimum, maximum )
-        self.name = name;
-        self.defaultValue = defaultValue;
-        self.maxValue = maximum;
-        self.minValue = minimum;
-        self.maxId = 0;
+        self._name = name;
+        self._defaultValue = defaultValue;
+        self._maxValue = maximum;
+        self._minValue = minimum;
+        self._maxId = 0;
     end
 
     --
@@ -59,28 +59,28 @@ function BPList.new( ... )
     -- @access private
     -- @param length (integer) 確保するバッファの最小長さ
     function this:_ensureBufferLength( length )
-        if( self.clocks == nil )then
-            self.clocks = {};
+        if( self._clocks == nil )then
+            self._clocks = {};
         end
-        if( self.items == nil )then
-            self.items = {};
+        if( self._items == nil )then
+            self._items = {};
         end
-        if( length > #self.clocks )then
+        if( length > #self._clocks )then
             local newLength = length;
-            if( #self.clocks <= 0 )then
+            if( #self._clocks <= 0 )then
                 newLength = math.floor( length * 1.2 );
             else
-                local order = math.floor( length / #self.clocks );
+                local order = math.floor( length / #self._clocks );
                 if( order <= 1 )then
                     order = 2;
                 end
-                newLength = #self.clocks * order;
+                newLength = #self._clocks * order;
             end
-            local delta = newLength - #self.clocks;
+            local delta = newLength - #self._clocks;
             local i;
             for i = 1, delta, 1 do
-                table.insert( self.clocks, 0 );
-                table.insert( self.items, BP.new() );
+                table.insert( self._clocks, 0 );
+                table.insert( self._items, BP.new() );
             end
         end
     end
@@ -90,10 +90,10 @@ function BPList.new( ... )
     -- @return (string) コントロールカーブの名前
     -- @name getName
     function this:getName()
-        if( self.name == nil )then
-            self.name = "";
+        if( self._name == nil )then
+            self._name = "";
         end
-        return self.name;
+        return self._name;
     end
 
     ---
@@ -102,9 +102,9 @@ function BPList.new( ... )
     -- @name setName
     function this:setName( value )
         if( value == nil )then
-            self.name = "";
+            self._name = "";
         else
-            self.name = value;
+            self._name = value;
         end
     end
 
@@ -113,7 +113,7 @@ function BPList.new( ... )
     -- @return (integer) 使用されている ID の最大値
     -- @name getMaxId
     function this:getMaxId()
-        return self.maxId;
+        return self._maxId;
     end
 
     ---
@@ -121,7 +121,7 @@ function BPList.new( ... )
     -- @return (integer) コントロールカーブのデフォルト値
     -- @name getDefault
     function this:getDefault()
-        return self.defaultValue;
+        return self._defaultValue;
     end
 
     ---
@@ -129,7 +129,7 @@ function BPList.new( ... )
     -- @param value (integer) コントロールカーブのデフォルト値
     -- @name setDefault
     function this:setDefault( value )
-        self.defaultValue = value;
+        self._defaultValue = value;
     end
 
     --[[
@@ -137,11 +137,11 @@ function BPList.new( ... )
         -- ID は，Redo, Undo 用コマンドが使用するため，このメソッドを呼ぶと Redo, Undo 操作が破綻する．XML からのデシリアライズ直後のみ使用するべき．
         -- @return [void]
         function this:renumberIds()
-            self.maxId = 0;
+            self._maxId = 0;
             local i;
             for i = 1, self._length, 1 do
-                self.maxId = self.maxId + 1;
-                self.items[i].id = self.maxId;
+                self._maxId = self._maxId + 1;
+                self._items[i].id = self._maxId;
             end
         end]]
 
@@ -154,7 +154,7 @@ function BPList.new( ... )
                 if( i > 1 )then
                     ret = ret .. ",";
                 end
-                ret = ret .. self.clocks[i] .. "=" + self.items[i].value;
+                ret = ret .. self._clocks[i] .. "=" + self._items[i].value;
             end
             return ret;
         end
@@ -164,7 +164,7 @@ function BPList.new( ... )
         -- @return [void]
         function this:setData( value )
             self._length = 0;
-            self.maxId = 0;
+            self._maxId = 0;
             var spl = value.split( ',' );
             for ( var i = 0; i < spl.length; i++ ) {
                 var spl2 = spl[i].split( '=' );
@@ -174,9 +174,9 @@ function BPList.new( ... )
                 var clock = parseInt( spl2[0], 10 );
                 if( !isNaN( clock ) ){
                     self._ensureBufferLength( self._length + 1 );
-                    self.clocks[self._length] = clock;
-                    self.items[self._length] = new org.kbinani.vsq.VsqBPPair( parseInt( spl2[1], 10 ), self.maxId + 1 );
-                    self.maxId++;
+                    self._clocks[self._length] = clock;
+                    self._items[self._length] = new org.kbinani.vsq.VsqBPPair( parseInt( spl2[1], 10 ), self._maxId + 1 );
+                    self._maxId++;
                     self._length++;
                 }
             }
@@ -187,15 +187,15 @@ function BPList.new( ... )
     -- @return (BPList) このオブジェクトのコピー
     -- @name clone
     function this:clone()
-        local res = BPList.new( self.name, self.defaultValue, self.minValue, self.maxValue );
+        local res = BPList.new( self._name, self._defaultValue, self._minValue, self._maxValue );
         res:_ensureBufferLength( self._length );
         local i;
         for i = 1, self._length, 1 do
-            res.clocks[i] = self.clocks[i];
-            res.items[i] = self.items[i]:clone();
+            res._clocks[i] = self._clocks[i];
+            res._items[i] = self._items[i]:clone();
         end
         res._length = self._length;
-        res.maxId = self.maxId;
+        res._maxId = self._maxId;
         return res;
     end
 
@@ -204,7 +204,7 @@ function BPList.new( ... )
     -- @return (integer) コントロールカーブの最大値
     -- @name getMaximum
     function this:getMaximum()
-        return self.maxValue;
+        return self._maxValue;
     end
 
     ---
@@ -212,7 +212,7 @@ function BPList.new( ... )
     -- @param value (integer) コントロールカーブの最大値
     -- @name setMaximum
     function this:setMaximum( value )
-        self.maxValue = value;
+        self._maxValue = value;
     end
 
     ---
@@ -220,7 +220,7 @@ function BPList.new( ... )
     -- @return (integer) コントロールカーブの最小値
     -- @name getMinimum
     function this:getMinimum()
-        return self.minValue;
+        return self._minValue;
     end
 
     ---
@@ -228,7 +228,7 @@ function BPList.new( ... )
     -- @param value (integer) コントロールカーブの最小値
     -- @name setMinimum
     function this:setMinimum( value )
-        self.minValue = value;
+        self._minValue = value;
     end
 
     --[[
@@ -248,9 +248,9 @@ function BPList.new( ... )
             if( index >= 1 )then
                 local i;
                 for i = index + 1, self._length - 1, 1 do
-                    self.clocks[i] = self.clocks[i + 1];
-                    self.items[i].value = self.items[i + 1].value;
-                    self.items[i].id = self.items[i + 1].id;
+                    self._clocks[i] = self._clocks[i + 1];
+                    self._items[i].value = self._items[i + 1].value;
+                    self._items[i].id = self._items[i + 1].id;
                 end
                 self._length = self._length - 1;
             end
@@ -281,33 +281,33 @@ function BPList.new( ... )
             if( index < 0 )then
                 return;
             end
-            local item = self.items[index + 1];
+            local item = self._items[index + 1];
             local i;
             for i = index + 1, self._length - 2, 1 do
-                self.clocks[i] = self.clocks[i + 1];
-                self.items[i].value = self.items[i + 1].value;
-                self.items[i].id = self.items[i + 1].id;
+                self._clocks[i] = self._clocks[i + 1];
+                self._items[i].value = self._items[i + 1].value;
+                self._items[i].id = self._items[i + 1].id;
             end
             self._length = self._length - 1;
             local index_new = self:_find( new_clock );
             if( index_new >= 0 )then
-                self.items[index_new + 1].value = new_value;
-                self.items[index_new + 1].id = item.id;
+                self._items[index_new + 1].value = new_value;
+                self._items[index_new + 1].id = item.id;
                 return;
             else
                 self._length = self._length + 1;
                 self:_ensureBufferLength( self._length );
-                self.clocks[self._length] = new_clock;
-                Util.sort( self.clocks, 0, self._length );
+                self._clocks[self._length] = new_clock;
+                Util.sort( self._clocks, 0, self._length );
                 index_new = self:_find( new_clock );
                 --item.value = new_value;
                 local i;
                 for i = self._length, index_new + 2, -1 do
-                    self.items[i].value = self.items[i - 1].value;
-                    self.items[i].id = self.items[i - 1].id;
+                    self._items[i].value = self._items[i - 1].value;
+                    self._items[i].id = self._items[i - 1].id;
                 end
-                self.items[index_new + 1].value = new_value;
-                self.items[index_new + 1].id = item.id;
+                self._items[index_new + 1].value = new_value;
+                self._items[index_new + 1].id = item.id;
             end
         end]]
 
@@ -324,7 +324,7 @@ function BPList.new( ... )
     -- @return (integer) データ点の値
     -- @name getValue
     function this:getValue( index )
-        return self.items[index + 1].value;
+        return self._items[index + 1].value;
     end
 
     ---
@@ -333,7 +333,7 @@ function BPList.new( ... )
     -- @return (BP) データ点のインスタンス
     -- @name get
     function this:get( index )
-        return self.items[index + 1]:clone();
+        return self._items[index + 1]:clone();
     end
 
     ---
@@ -342,7 +342,7 @@ function BPList.new( ... )
     -- @return (integer) データ点の Tick 単位の時刻
     -- @name getKeyClock
     function this:getKeyClock( index )
-        return self.clocks[index + 1];
+        return self._clocks[index + 1];
     end
 
     ---
@@ -353,12 +353,12 @@ function BPList.new( ... )
     function this:findValueFromId( id )
         local i;
         for i = 1, self._length, 1 do
-            local item = self.items[i];
+            local item = self._items[i];
             if( item.id == id )then
                 return item.value;
             end
         end
-        return self.defaultValue;
+        return self._defaultValue;
     end
 
     ---
@@ -370,9 +370,9 @@ function BPList.new( ... )
         local context = BPListSearchResult.new();
         local i;
         for i = 1, self._length, 1 do
-            local item = self.items[i];
+            local item = self._items[i];
             if( item.id == id )then
-                context.clock = self.clocks[i];
+                context.clock = self._clocks[i];
                 context.index = i - 1;
                 context.point = item:clone();
                 return context;
@@ -380,7 +380,7 @@ function BPList.new( ... )
         end
         context.clock = -1;
         context.index = -1;
-        context.point = BP.new( self.defaultValue, -1 );
+        context.point = BP.new( self._defaultValue, -1 );
         return context;
     end
 
@@ -392,8 +392,8 @@ function BPList.new( ... )
     function this:setValueForId( id, value )
         local i;
         for i = 1, self._length, 1 do
-            if( self.items[i].id == id )then
-                self.items[i].value = value;
+            if( self._items[i].id == id )then
+                self._items[i].value = value;
                 break;
             end
         end
@@ -407,26 +407,26 @@ function BPList.new( ... )
     -- @name print
     function this:print( stream, startClock, header )
         stream:writeLine( header );
-        local lastvalue = self.defaultValue;
+        local lastvalue = self._defaultValue;
         local value_at_start_written = false;
         local i;
         for i = 1, self._length, 1 do
-            local key = self.clocks[i];
+            local key = self._clocks[i];
             if( startClock == key )then
-                stream:writeLine( key .. "=" .. self.items[i].value );
+                stream:writeLine( key .. "=" .. self._items[i].value );
                 value_at_start_written = true;
             elseif( startClock < key )then
-                if( (not value_at_start_written) and (lastvalue ~= self.defaultValue) )then
+                if( (not value_at_start_written) and (lastvalue ~= self._defaultValue) )then
                     stream:writeLine( startClock .. "=" .. lastvalue );
                     value_at_start_written = true;
                 end
-                local val = self.items[i].value;
+                local val = self._items[i].value;
                 stream:writeLine( key .. "=" .. val );
             else
-                lastvalue = self.items[i].value;
+                lastvalue = self._items[i].value;
             end
         end
-        if( (not value_at_start_written) and (lastvalue ~= self.defaultValue) )then
+        if( (not value_at_start_written) and (lastvalue ~= self._defaultValue) )then
             stream:writeLine( startClock .. "=" .. lastvalue );
         end
     end
@@ -526,7 +526,7 @@ function BPList.new( ... )
     function this:_find( value )
         local i;
         for i = 1, self._length, 1 do
-            if( self.clocks[i] == value )then
+            if( self._clocks[i] == value )then
                 return i - 1;
             end
         end
@@ -540,10 +540,10 @@ function BPList.new( ... )
     -- @name addWithoutSort
     function this:addWithoutSort( clock, value )
         self:_ensureBufferLength( self._length + 1 );
-        self.clocks[self._length + 1] = clock;
-        self.maxId = self.maxId + 1;
-        self.items[self._length + 1].value = value;
-        self.items[self._length + 1].id = self.maxId;
+        self._clocks[self._length + 1] = clock;
+        self._maxId = self._maxId + 1;
+        self._items[self._length + 1].value = value;
+        self._items[self._length + 1].id = self._maxId;
         self._length = self._length + 1;
     end
 
@@ -557,23 +557,23 @@ function BPList.new( ... )
         self:_ensureBufferLength( self._length );
         local index = self:_find( clock );
         if( index >= 0 )then
-            self.items[index + 1].value = value;
-            return self.items[index + 1].id;
+            self._items[index + 1].value = value;
+            return self._items[index + 1].id;
         else
             self._length = self._length + 1;
             self:_ensureBufferLength( self._length );
-            self.clocks[self._length] = clock;
-            Util.sort( self.clocks, 0, self._length );
+            self._clocks[self._length] = clock;
+            Util.sort( self._clocks, 0, self._length );
             index = self:_find( clock );
-            self.maxId = self.maxId + 1;
+            self._maxId = self._maxId + 1;
             local i;
             for i = self._length, index + 2, -1 do
-                self.items[i].value = self.items[i - 1].value;
-                self.items[i].id = self.items[i - 1].id;
+                self._items[i].value = self._items[i - 1].value;
+                self._items[i].id = self._items[i - 1].id;
             end
-            self.items[index + 1].value = value;
-            self.items[index + 1].id = self.maxId;
-            return self.maxId;
+            self._items[index + 1].value = value;
+            self._items[index + 1].id = self._maxId;
+            return self._maxId;
         end
     end
 
@@ -588,23 +588,23 @@ function BPList.new( ... )
         self:_ensureBufferLength( self._length );
         local index = self:_find( clock );
         if( index >= 0 )then
-            self.items[index + 1].value = value;
-            self.items[index + 1].id = id;
+            self._items[index + 1].value = value;
+            self._items[index + 1].id = id;
         else
             self._length = self._length + 1;
             self:_ensureBufferLength( self._length );
-            self.clocks[self._length] = clock;
-            Util.sort( self.clocks, 0, self._length );
+            self._clocks[self._length] = clock;
+            Util.sort( self._clocks, 0, self._length );
             index = self:_find( clock );
             local i;
             for i = self._length, index + 2, -1 do
-                self.items[i].value = self.items[i - 1].value;
-                self.items[i].id = self.items[i - 1].id;
+                self._items[i].value = self._items[i - 1].value;
+                self._items[i].id = self._items[i - 1].id;
             end
-            self.items[index + 1].value = value;
-            self.items[index + 1].id = id;
+            self._items[index + 1].value = value;
+            self._items[index + 1].id = id;
         end
-        self.maxId = math.max( self.maxId, id );
+        self._maxId = math.max( self._maxId, id );
         return id;
     end
 
@@ -614,12 +614,12 @@ function BPList.new( ... )
         function this:removeWithId( id )
             local i;
             for i = 1, self._length, 1 do
-                if( self.items[i].id == id )then
+                if( self._items[i].id == id )then
                     local j;
                     for j = i, self._length - 1, 1 do
-                        self.items[j].value = self.items[j + 1].value;
-                        self.items[j].id = self.items[j + 1].id;
-                        self.clocks[j] = self.clocks[j + 1];
+                        self._items[j].value = self._items[j + 1].value;
+                        self._items[j].id = self._items[j + 1].id;
+                        self._clocks[j] = self._clocks[j + 1];
                     end
                     self._length = self._length - 1;
                     break;
@@ -647,24 +647,24 @@ function BPList.new( ... )
         self:_ensureBufferLength( self._length );
         local index = self:_find( clock );
         if( index >= 0 )then
-            return self.items[index + 1].value;
+            return self._items[index + 1].value;
         else
             if( self._length <= 0 )then
-                return self.defaultValue;
+                return self._defaultValue;
             else
                 local draft = 0;
                 local i;
                 for i = 1, self._length, 1 do
-                    local c = self.clocks[i];
+                    local c = self._clocks[i];
                     if( clock < c )then
                         break;
                     end
                     draft = i;
                 end
                 if( draft == 0 )then
-                    return self.defaultValue;
+                    return self._defaultValue;
                 else
-                    return self.items[draft].value;
+                    return self._items[draft].value;
                 end
             end
         end
@@ -678,29 +678,29 @@ function BPList.new( ... )
     -- @name getValueAt<sup>2</sup>
     function this:_getValueAt_2( clock, index )
         if( self._length == 0 )then
-            return self.defaultValue;
+            return self._defaultValue;
         else
             if( index.value < 0 )then
                 index.value = 0;
             end
-            if( index.value > 0 and clock < self.clocks[index.value + 1] )then
+            if( index.value > 0 and clock < self._clocks[index.value + 1] )then
                 index.value = 0;
             end
             local i;
             for i = index.value + 1, self._length, 1 do
-                local keyclock = self.clocks[i];
+                local keyclock = self._clocks[i];
                 if( clock < keyclock )then
                     if( i > 1 )then
                         index.value = i - 2;
-                        return self.items[i - 1].value;
+                        return self._items[i - 1].value;
                     else
                         index.value = 0;
-                        return self.defaultValue;
+                        return self._defaultValue;
                     end
                 end
             end
             index.value = self._length - 1;
-            return self.items[self._length].value;
+            return self._items[self._length].value;
         end
     end
 
