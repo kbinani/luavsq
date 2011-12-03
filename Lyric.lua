@@ -20,6 +20,9 @@ module( "luavsq" );
 -- 歌詞ハンドルに格納する歌詞情報を保持するクラス
 -- @class table
 -- @name Lyric
+-- @field phrase (string) 歌詞
+-- @field lengthRatio (double) 歌詞ハンドル内に複数の歌詞が入る場合の、この歌詞の長さ分率。デフォルトは 1.0
+-- @field isProtected (boolean) 発音記号がプロテクトされた状態かどうか
 Lyric = {};
 
 --
