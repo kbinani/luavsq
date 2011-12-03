@@ -233,7 +233,7 @@ function Handle.new( ... )
     function this:_init_vibrato()
         self._articulation = ArticulationTypeEnum.Vibrato;
         self.index = 0;
-        self.iconId = "";
+        self.iconId = "$04040000";
         self.ids = "";
         self.original = 0;
         self.startRate = 64;

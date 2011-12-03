@@ -111,7 +111,7 @@ function Event.new( ... )
 
     ---
     -- 初期化を行う
-    -- @param clcok (integer) Tick 単位の時刻
+    -- @param clock (integer) Tick 単位の時刻
     -- @param eventType (EventTypeEnum) イベントの種類
     -- @name <i>new</i><sup>3</sup>
     -- @return (Event)
@@ -132,6 +132,7 @@ function Event.new( ... )
     ---
     -- 長さを設定する
     -- @param value (integer) 長さ
+    -- @name setLength
     function this:setLength( value )
         self._length = value;
     end

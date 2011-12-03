@@ -15,6 +15,8 @@
 local table = table;
 local math = math;
 local string = string;
+local tonumber = tonumber;
+local print = print;
 
 module( "luavsq" );
 
@@ -564,6 +566,10 @@ function Sequence.printTrack( sequence, track, stream, msPreSend, encoding, prin
     local data = Sequence.generateNRPN( sequence, track, msPreSend );
     -- @var nrpns (table<MidiEvent>)
     local nrpns = NrpnEvent.convert( data );
+do
+    Log.println( "Sequence.printTrack; #data=" .. #data );
+    Log.println( "Sequence.printTrack; #nrpns=" .. #nrpns );
+end
     for i = 1, #nrpns, 1 do
         local item = nrpns[i];
         MidiEvent.writeDeltaClock( stream, item.clock - last );
@@ -659,7 +665,9 @@ function Sequence.generateHeaderNRPN()
 end
 
 ---
--- 歌手変更イベントの NRPN リストを作成する
+-- 歌手変更イベントの NRPN リストを作成する。
+-- トラック先頭の歌手変更イベントについては、このメソッドで作成してはいけない。
+-- トラック先頭のgenerateNRPN メソッドが担当する
 -- @param sequence (Sequence) 出力元のシーケンス
 -- @param singerEvent (Event) 出力する歌手変更イベント
 -- @param msPreSend (integer) ミリ秒単位のプリセンド時間
@@ -709,26 +717,15 @@ end
 --                               <li>03:前後どちらにも連続した音符が無い
 --                           </ul>
 -- @param lastDelay (integer) 直前の音符イベントに指定された、ミリ秒単位のディレイ値。最初の音符イベントの場合は nil を指定する
--- @return (table<NrpnEvent>) NrpnEvent の配列
+-- @return (NrpnEvent) NrpnEvent
 -- @return (integer) この音符に対して設定された、ミリ秒単位のディレイ値
 -- @name <i>generateNoteNRPN</i>
 function Sequence.generateNoteNRPN( sequence, track, noteEvent, msPreSend, noteLocation, lastDelay )
     local clock = noteEvent.clock;
-    local renderer = sequence.track:get( track ).common.version;
-
-    local clock_msec = sequence.tempoTable:getSecFromClock( clock ) * 1000.0;
-
-    local ttempo = sequence.tempoTable:getTempoAt( clock );
-    local tempo = 6e7 / ttempo;
-    local msEnd = sequence.tempoTable:getSecFromClock( noteEvent.clock + noteEvent:getLength() ) * 1000.0;
-    local duration = math.floor( msEnd - clock_msec );
-    local duration0, duration1 = Sequence.getMsbAndLsb( duration );
-
     local add = nil;
 
     local actualClock, delay;
     actualClock, delay = sequence:getActualClockAndDelay( clock, msPreSend );
-    local delayMsb, delayLsb = sequence:getMsbAndLsb( delay );
 
     if( lastDelay == nil )then
         add = NrpnEvent.new(
@@ -740,22 +737,37 @@ function Sequence.generateNoteNRPN( sequence, track, noteEvent, msPreSend, noteL
     end
 
     if( lastDelay ~= delay )then
+        local delayMsb, delayLsb = Sequence.getMsbAndLsb( delay );
         if( add == nil )then
-            add = NrpnEvent.new( actualClock, MidiParameterEnum.CVM_NM_DELAY, delayMsb, delayLsb, true );
+            add = NrpnEvent.new( actualClock, MidiParameterEnum.CVM_NM_DELAY, delayMsb, delayLsb );
         else
             add:append( MidiParameterEnum.CVM_NM_DELAY, delayMsb, delayLsb, true );
         end
     end
-    add:append( MidiParameterEnum.CVM_NM_NOTE_NUMBER, noteEvent.note, true );
 
-    add:append( MidiParameterEnum.CVM_NM_VELOCITY, noteEvent.dynamics, true ); -- Velocity
-    add:append( MidiParameterEnum.CVM_NM_NOTE_DURATION, duration0, duration1, true ); -- Note duration
-    add:append( MidiParameterEnum.CVM_NM_NOTE_LOCATION, noteLocation, true ); -- Note Location
+    if( add == nil )then
+        add = NrpnEvent.new( actualClock, MidiParameterEnum.CVM_NM_NOTE_NUMBER, noteEvent.note );
+    else
+        add:append( MidiParameterEnum.CVM_NM_NOTE_NUMBER, noteEvent.note, true );
+    end
+
+    -- Velocity
+    add:append( MidiParameterEnum.CVM_NM_VELOCITY, noteEvent.dynamics, true );
+
+    -- Note Duration
+    local msEnd = sequence.tempoTable:getSecFromClock( clock + noteEvent:getLength() ) * 1000.0;
+    local clock_msec = sequence.tempoTable:getSecFromClock( clock ) * 1000.0;
+    local duration = math.floor( msEnd - clock_msec );
+    local duration0, duration1 = Sequence.getMsbAndLsb( duration );
+    add:append( MidiParameterEnum.CVM_NM_NOTE_DURATION, duration0, duration1, true );
+
+    -- Note Location
+    add:append( MidiParameterEnum.CVM_NM_NOTE_LOCATION, noteLocation, true );
 
     if( noteEvent.vibratoHandle ~= nil )then
         add:append( MidiParameterEnum.CVM_NM_INDEX_OF_VIBRATO_DB, 0x00, 0x00, true );
         local icon_id = noteEvent.vibratoHandle.iconId;
-        local num = icon_id:sub( icon_id:len() - 4 );
+        local num = icon_id:sub( icon_id:len() - 3 );
         local vibrato_type = math.floor( tonumber( num, 16 ) );
         local note_length = noteEvent:getLength();
         local vibrato_delay = noteEvent.vibratoDelay;
@@ -775,10 +787,13 @@ function Sequence.generateNoteNRPN( sequence, track, noteEvent, msPreSend, noteL
     local i;
     for i = 1, s:len(), 1 do
         symbols[i] = s:sub( i, i );
-    end--s.ToCharArray();
+    end
+
+    local renderer = sequence.track:get( track ).common.version;
     if( renderer:sub( 1, 4 ) == "DSB2" )then
         add:append( 0x5011, 0x01, true );--TODO: (byte)0x5011の意味は解析中
     end
+
     add:append( MidiParameterEnum.CVM_NM_PHONETIC_SYMBOL_BYTES, #symbols, true );-- (byte)0x12(Number of phonetic symbols in bytes)
     local count = -1;
     local consonantAdjustment = noteEvent.lyricHandle:getLyricAt( 0 ):getConsonantAdjustmentList();
@@ -821,80 +836,6 @@ function Sequence.generateNoteNRPN( sequence, track, noteEvent, msPreSend, noteL
         local accent = math.floor( 0x64 * noteEvent.demAccent / 100.0 );
         add:append( MidiParameterEnum.CVM_NM_ACCENT, accent, true );-- (byte)0x5a(Accent)
     end
---[[
-        if( renderer:sub( 1, 4 ) == "UTU0" )then
-            -- エンベロープ
-            if( noteEvent.ustEvent ~= nil )then
-                local env = nil;
-                if( noteEvent.ustEvent.envelope ~= nil )then
-                    env = noteEvent.ustEvent.envelope;
-                else
-                    env = UstEnvelope.new();
-                end
-                local vals = nil;
-                vals = Array.new();--int[10];
-                vals[0] = env.p1;
-                vals[1] = env.p2;
-                vals[2] = env.p3;
-                vals[3] = env.v1;
-                vals[4] = env.v2;
-                vals[5] = env.v3;
-                vals[6] = env.v4;
-                vals[7] = env.p4;
-                vals[8] = env.p5;
-                vals[9] = env.v5;
-                for ( local i = 0; i < vals.length; i++ ) {
-                    --(value3.msb & (byte)0xf) << 28 | (value2.msb & (byte)0x7f) << 21 | (value2.lsb & (byte)0x7f) << 14 | (value1.msb & (byte)0x7f) << 7 | (value1.lsb & (byte)0x7f)
-                    local msb, lsb;
-                    local v = vals[i];
-                    lsb = (v & 0x7f);
-                    v = v >> 7;
-                    msb = (v & 0x7f);
-                    v = v >> 7;
-                    add.append( MidiParameterEnum.CVM_EXNM_ENV_DATA1, msb, lsb );
-                    lsb = (v & 0x7f);
-                    v = v >> 7;
-                    msb = (v & 0x7f);
-                    v = v >> 7;
-                    add.append( MidiParameterEnum.CVM_EXNM_ENV_DATA2, msb, lsb );
-                    msb = (v & 0xf);
-                    add.append( MidiParameterEnum.CVM_EXNM_ENV_DATA3, msb );
-                    add.append( MidiParameterEnum.CVM_EXNM_ENV_DATA_CONTINUATION, 0x00 );
-                end
-                add.append( MidiParameterEnum.CVM_EXNM_ENV_DATA_CONTINUATION, 0x7f );
-
-                -- モジュレーション
-                --ValuePair<Byte, Byte>
-                local m;
-                if( -100 <= noteEvent.UstEvent.Moduration and noteEvent.UstEvent.Moduration <= 100 )then
-                    m = this.getMsbAndLsb( noteEvent.UstEvent.Moduration + 100 );
-                    add.append( MidiParameterEnum.CVM_EXNM_MODURATION, m.getKey(), m.getValue() );
-                end
-
-                -- 先行発声
-                if( noteEvent.UstEvent.PreUtterance ~= 0 )then
-                    m = getMsbAndLsb( org.kbinani.PortUtil.castToInt( noteEvent.UstEvent.PreUtterance + 8192 ) );
-                    add.append( MidiParameterEnum.CVM_EXNM_PRE_UTTERANCE, m.getKey(), m.getValue() );
-                end
-
-                -- Flags
-                if( noteEvent.UstEvent.Flags ~= "" )then
-                    add.append( MidiParameterEnum.CVM_EXNM_FLAGS_BYTES, noteEvent.UstEvent.Flags.length );
-                    for ( local i = 0; i < arr.length; i++ ) {
-                        local b = noteEvent.UstEvent.Flags.charAt( i );
-                        add.append( MidiParameterEnum.CVM_EXNM_FLAGS, b );
-                    end
-                    add.append( MidiParameterEnum.CVM_EXNM_FLAGS_CONINUATION, 0x7f );
-                end
-
-                -- オーバーラップ
-                if( noteEvent.UstEvent.VoiceOverlap ~= 0 )then
-                    m = this.getMsbAndLsb( org.kbinani.PortUtil.castToInt( noteEvent.UstEvent.VoiceOverlap + 8192 ) );
-                    add.append( MidiParameterEnum.CVM_EXNM_VOICE_OVERLAP, m.getKey(), m.getValue() );
-                end
-            end
-        end
-]]
     add:append( MidiParameterEnum.CVM_NM_NOTE_MESSAGE_CONTINUATION, 0x7f, true );-- (byte)0x7f(Note message continuation)
     return add, delay;
 end
@@ -1087,7 +1028,7 @@ end
 -- @name <i>generatePitchBendNRPN</i>
 -- @todo ディレイを設定する必要があるのでは？
 function Sequence.generatePitchBendNRPN( sequence, track, msPreSend )
-    local ret = {};--Vector<VsqNrpn>();
+    local ret = {};
     local pit = sequence.track:get( track ):getCurve( "PIT" );
     local count = pit:size();
     local i, lastDelay;
@@ -1099,7 +1040,7 @@ function Sequence.generatePitchBendNRPN( sequence, track, msPreSend )
         if( actualClock >= 0 )then
             if( lastDelay ~= delay )then
                 local delayMsb, delayLsb;
-                delayMsb, delayLsb = Sequence:getMsbAndLsb( delay );
+                delayMsb, delayLsb = Sequence.getMsbAndLsb( delay );
                 table.insert(
                     ret,
                     NrpnEvent.new( actualClock, MidiParameterEnum.PB_DELAY, delayMsb, delayLsb )
@@ -1181,7 +1122,7 @@ end
 -- @return (table<NrpnEvent>) NrpnEvent の配列
 -- @name <i>generateVibratoNRPN</i>
 function Sequence.generateVibratoNRPN( sequence, noteEvent, msPreSend )
-    local ret = {};--Vector<VsqNrpn>();
+    local ret = {};
     if( noteEvent.vibratoHandle ~= nil )then
         local vclock = noteEvent.clock + noteEvent.vibratoDelay;
         local actualClock, delay;
@@ -1195,36 +1136,12 @@ function Sequence.generateVibratoNRPN( sequence, noteEvent, msPreSend )
         );
         add2:append( MidiParameterEnum.CC_VD_DELAY, delayMsb, delayLsb, true );
         add2:append( MidiParameterEnum.CC_VD_VIBRATO_DEPTH, noteEvent.vibratoHandle:getStartDepth(), true );
-        add2:append( MidiParameterEnum.CC_VR_VIBRATO_RATE, noteEvent.vibratoHandle:getStartRate() );
+        add2:append( MidiParameterEnum.CC_VR_VIBRATO_RATE, noteEvent.vibratoHandle:getStartRate(), true );
         table.insert( ret, add2 );
         local vlength = noteEvent:getLength() - noteEvent.vibratoDelay;
-        local rateBP = noteEvent.vibratoHandle:getRateBP();
-        local count = rateBP:size();
-        if( count > 0 )then
-            local i, lastDelay;
-            lastDelay = 0;
-            for i = 0, count - 1, 1 do
-                local itemi = rateBP:get( i );
-                local percent = itemi.x;
-                local cl = vclock + math.floor( percent * vlength );
-                actualClock, delay = sequence:getActualClockAndDelay( cl, msPreSend );
-                if( lastDelay ~= delay )then
-                    delayMsb, delayLsb = Sequence.getMsbAndLsb( delay );
-                    table.insert(
-                        ret,
-                        NrpnEvent.new( actualClock, MidiParameterEnum.CC_VR_DELAY, delayMsb, delayLsb )
-                    );
-                end
-                lastDelay = delay;
 
-                table.insert(
-                    ret,
-                    NrpnEvent.new( actualClock, MidiParameterEnum.CC_VR_VIBRATO_RATE, itemi.y )
-                );
-            end
-        end
         local depthBP = noteEvent.vibratoHandle:getDepthBP();
-        count = depthBP:size();
+        local count = depthBP:size();
         if( count > 0 )then
             local i, lastDelay;
             lastDelay = 0;
@@ -1233,23 +1150,54 @@ function Sequence.generateVibratoNRPN( sequence, noteEvent, msPreSend )
                 local percent = itemi.x;
                 local cl = vclock + math.floor( percent * vlength );
                 actualClock, delay = sequence:getActualClockAndDelay( cl, msPreSend );
+                local nrpnEvent = nil;
                 if( lastDelay ~= delay )then
                     delayMsb, delayLsb = Sequence.getMsbAndLsb( delay );
-                    table.insert(
-                        ret,
-                        NrpnEvent.new( actualClock, MidiParameterEnum.CC_VD_DELAY, delayMsb, delayLsb )
-                    );
+                    nrpnEvent = NrpnEvent.new( actualClock, MidiParameterEnum.CC_VD_DELAY, delayMsb, delayLsb );
+                    nrpnEvent:append( MidiParameterEnum.CC_VD_VIBRATO_DEPTH, itemi.y );
+                else
+                    nrpnEvent = NrpnEvent.new( actualClock, MidiParameterEnum.CC_VD_VIBRATO_DEPTH, itemi.y );
                 end
                 lastDelay = delay;
+                table.insert( ret, nrpnEvent );
+do
+    print( "#ret=" .. #ret );
+end
+            end
+        end
 
-                table.insert(
-                    ret,
-                    NrpnEvent.new( actualClock, MidiParameterEnum.CC_VD_VIBRATO_DEPTH, itemi.y )
-                );
+        local rateBP = noteEvent.vibratoHandle:getRateBP();
+        count = rateBP:size();
+do
+    print( "process rateBP" );
+    print( "count=" .. count );
+    print( "#ret=" .. #ret );
+end
+        if( count > 0 )then
+            local i, lastDelay;
+            lastDelay = 0;
+            for i = 0, count - 1, 1 do
+                local itemi = rateBP:get( i );
+                local percent = itemi.x;
+                local cl = vclock + math.floor( percent * vlength );
+                actualClock, delay = sequence:getActualClockAndDelay( cl, msPreSend );
+                local nrpnEvent = nil;
+                if( lastDelay ~= delay )then
+                    delayMsb, delayLsb = Sequence.getMsbAndLsb( delay );
+                    nrpnEvent = NrpnEvent.new( actualClock, MidiParameterEnum.CC_VR_DELAY, delayMsb, delayLsb );
+                    nrpnEvent:append( MidiParameterEnum.CC_VR_VIBRATO_RATE, itemi.y );
+                else
+                    nrpnEvent = NrpnEvent.new( actualClock, MidiParameterEnum.CC_VR_VIBRATO_RATE, itemi.y );
+                end
+                lastDelay = delay;
+                table.insert( ret, nrpnEvent );
+do
+    print( "#ret=" .. #ret );
+end
             end
         end
     end
-    table.sort( ret, NrpnEvent.compare );--Collections.sort( ret );
+    table.sort( ret, NrpnEvent.compare );
     return ret;
 end
 

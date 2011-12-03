@@ -57,7 +57,7 @@ end
 
 function Log._getFileHandle()
     if( Log._fileHandle == nil )then
-        Log._fileHandle = io.open( "..\\log", "a" );
+        Log._fileHandle = io.open( "..\\luavsq.log", "a" );
         Log._fileHandle:write( "========================================================================\n" );
         Log._fileHandle:write( "Log start: " .. os.date() .. "\n" );
     end
