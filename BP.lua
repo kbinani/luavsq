@@ -18,12 +18,14 @@ module( "luavsq" );
 -- コントロールカーブのデータ点を表現するクラス
 -- @class table
 -- @name BP
+-- @field value (integer) データ点の値
+-- @field id (integer) データ点のユニーク ID
 BP = {};
 
 ---
 -- コンストラクタ
 -- @param value (integer) データ点の値
--- @param id (integer) データ点のユニークID
+-- @param id (integer) データ点のユニーク ID
 -- @return (BP) データ点のオブジェクト
 -- @name <i>new</i>
 function BP.new( value, id )
