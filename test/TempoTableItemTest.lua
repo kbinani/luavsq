@@ -6,7 +6,7 @@ function testConstructor()
     local entry = luavsq.TempoTableItem.new();
     assert_equal( 0, entry.clock );
     assert_equal( 0, entry.tempo );
-    assert_equal( 0.0, entry.time );
+    assert_equal( 0.0, entry:getTime() );
 
     entry = luavsq.TempoTableItem.new( 480, 500000 );
     assert_equal( 480, entry.clock );
@@ -20,12 +20,12 @@ end
 
 function testClone()
     local entry = luavsq.TempoTableItem.new( 480, 500000 );
-    entry.time = 0.5;
+    entry._time = 0.5;
 
     local copy = entry:clone();
     assert_equal( 480, copy.clock );
     assert_equal( 500000, copy.tempo );
-    assert_equal( 0.5, copy.time );
+    assert_equal( 0.5, copy:getTime() );
 end
 
 function testCompareTo()
@@ -39,14 +39,14 @@ end
 function testEquals()
     local a = luavsq.TempoTableItem.new( 480, 500000 );
     local b = luavsq.TempoTableItem.new( 480, 500000 );
-    a.time = 0.5;
-    b.time = 0.5;
+    a._time = 0.5;
+    b._time = 0.5;
     assert_true( a:equals( b ) );
     -- クロックは同じだがtimeが違う
-    b.time = 1;
+    b._time = 1;
     assert_true( a:equals( b ) );
     b.clock = 1;
-    b.time = 0.5;
+    b._time = 0.5;
     assert_false( a:equals( b ) );
 end
 

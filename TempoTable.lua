@@ -95,13 +95,13 @@ function TempoTable.new()
         elseif( c == 1 )then
             tempo = self._array[0].tempo;
             base_clock = self._array[0].clock;
-            base_time = self._array[0].time;
+            base_time = self._array[0]._time;
         else
             local i;
             for i = c - 1, 0, -1 do
                 local item = self._array[i];
-                if( item.time < time )then
-                    return item.clock + (time - item.time) * TempoTable.gatetimePerQuater * 1000000.0 / item.tempo;
+                if( item._time < time )then
+                    return item.clock + (time - item._time) * TempoTable.gatetimePerQuater * 1000000.0 / item.tempo;
                 end
             end
         end
@@ -120,19 +120,19 @@ function TempoTable.new()
         self._array:sort( TempoTableItem.compare );
         local item0 = self._array[0];
         if( item0.clock ~= 0 )then
-            item0.time = TempoTable.baseTempo * item0.clock / (TempoTable.gatetimePerQuater * 1000000.0);
+            item0._time = TempoTable.baseTempo * item0.clock / (TempoTable.gatetimePerQuater * 1000000.0);
         else
-            item0.time = 0.0;
+            item0._time = 0.0;
         end
-        local prev_time = item0.time;
+        local prev_time = item0._time;
         local prev_clock = item0.clock;
         local prev_tempo = item0.tempo;
         local inv_tpq_sec = 1.0 / (TempoTable.gatetimePerQuater * 1000000.0);
         local i;
         for i = 1, c - 1, 1 do
             local itemi = self._array[i];
-            itemi.time = prev_time + prev_tempo * (itemi.clock - prev_clock) * inv_tpq_sec;
-            prev_time = itemi.time;
+            itemi._time = prev_time + prev_tempo * (itemi.clock - prev_clock) * inv_tpq_sec;
+            prev_time = itemi._time;
             prev_tempo = itemi.tempo;
             prev_clock = itemi.clock;
         end
@@ -149,7 +149,7 @@ function TempoTable.new()
         for i = c - 1, 0, -1 do
             local item = self._array[i];
             if( item.clock < clock )then
-                local init = item.time;
+                local init = item:getTime();
                 local dclock = clock - item.clock;
                 local sec_per_clock1 = item.tempo * 1e-6 / 480.0;
                 return init + dclock * sec_per_clock1;

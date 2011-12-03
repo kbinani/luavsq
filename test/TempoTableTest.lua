@@ -16,10 +16,10 @@ function test()
     assert_equal( 2, list:size() );
     assert_equal( 0, list:get( 0 ).clock );
     assert_equal( 500000, list:get( 0 ).tempo );
-    assert_equal( 0.0, list:get( 0 ).time );
+    assert_equal( 0.0, list:get( 0 ):getTime() );
     assert_equal( 480, list:get( 1 ).clock );
     assert_equal( 525000, list:get( 1 ).tempo );
-    assert_equal( 0.5, list:get( 1 ).time );
+    assert_equal( 0.5, list:get( 1 ):getTime() );
 end
 
 function testIterator()
@@ -34,12 +34,12 @@ function testIterator()
     local item = i:next();
     assert_equal( 0, item.clock );
     assert_equal( 500000, item.tempo );
-    assert_equal( 0.0, item.time );
+    assert_equal( 0.0, item:getTime() );
     assert_true( i:hasNext() );
     item = i:next();
     assert_equal( 480, item.clock );
     assert_equal( 525000, item.tempo );
-    assert_equal( 0.5, item.time );
+    assert_equal( 0.5, item:getTime() );
     assert_false( i:hasNext() );
 end
 
@@ -47,16 +47,16 @@ function testSort()
     local list = luavsq.TempoTable.new();
     list:push( luavsq.TempoTableItem.new( 480, 525000 ) );
     list:push( luavsq.TempoTableItem.new( 0, 500000 ) );
-    list:get( 0 ).time = 0.5;
+    list:get( 0 )._time = 0.5;
 
     list:sort();
 
     assert_equal( 0, list:get( 0 ).clock );
     assert_equal( 500000, list:get( 0 ).tempo );
-    assert_equal( 0.0, list:get( 0 ).time );
+    assert_equal( 0.0, list:get( 0 ):getTime() );
     assert_equal( 480, list:get( 1 ).clock );
     assert_equal( 525000, list:get( 1 ).tempo );
-    assert_equal( 0.5, list:get( 1 ).time );
+    assert_equal( 0.5, list:get( 1 ):getTime() );
 end
 
 function testClockFromSec()
@@ -77,7 +77,7 @@ function testUpdateTempoInfo()
     assert_equal( 1, list:size() );
     assert_equal( 0, list:get( 0 ).clock );
     assert_equal( 500000, list:get( 0 ).tempo );
-    assert_equal( 0.0, list:get( 0 ).time );
+    assert_equal( 0.0, list:get( 0 ):getTime() );
 
     list = luavsq.TempoTable.new();
     list:push( luavsq.TempoTableItem.new( 480, 525000 ) );
@@ -86,10 +86,10 @@ function testUpdateTempoInfo()
     assert_equal( 2, list:size() );
     assert_equal( 0, list:get( 0 ).clock );
     assert_equal( 500000, list:get( 0 ).tempo );
-    assert_equal( 0.0, list:get( 0 ).time );
+    assert_equal( 0.0, list:get( 0 ):getTime() );
     assert_equal( 480, list:get( 1 ).clock );
     assert_equal( 525000, list:get( 1 ).tempo );
-    assert_equal( 0.5, list:get( 1 ).time );
+    assert_equal( 0.5, list:get( 1 ):getTime() );
 end
 
 function testGetSecFromClock()

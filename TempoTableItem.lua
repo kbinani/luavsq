@@ -20,7 +20,6 @@ module( "luavsq" );
 -- @name TempoTableItem
 -- @field clock (integer) Tick 単位の時刻
 -- @field tempo (integer) テンポ値。四分音符の長さをマイクロ秒単位で表した値
--- @field time (double) 秒単位の時刻
 TempoTableItem = {};
 
 --
@@ -31,14 +30,14 @@ function TempoTableItem.new( ... )
     local arguments = { ... };
     this.clock = 0;
     this.tempo = 0;
-    this.time = 0.0;
+    this._time = 0.0;
 
     ---
     -- 文字列に変換する
     -- @return (string) 変換後の文字列
     -- @name toString
     function this:toString()
-        return "{Clock=" .. self.clock .. ", Tempo=" .. self.tempo .. ", Time=" .. self.time .. "}";
+        return "{Clock=" .. self.clock .. ", Tempo=" .. self.tempo .. ", Time=" .. self._time .. "}";
     end
 
     ---
@@ -47,7 +46,7 @@ function TempoTableItem.new( ... )
     -- @name clone
     function this:clone()
         local result = TempoTableItem.new( self.clock, self.tempo );
-        result.time = self.time;
+        result._time = self._time;
         return result;
     end
 
@@ -82,6 +81,14 @@ function TempoTableItem.new( ... )
         else
             return false;
         end
+    end
+
+    ---
+    -- 秒単位の時刻を取得する
+    -- @return (double) 秒単位の時刻
+    -- @name getTime
+    function this:getTime()
+        return self._time;
     end
 
     if( #arguments == 2 )then

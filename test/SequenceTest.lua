@@ -130,7 +130,7 @@ function isEqualToDefaultSequence( sequence )
     assert_equal( 1, sequence.tempoTable:size() );
     assert_equal( 0, sequence.tempoTable:get( 0 ).clock );
     assert_equal( 500000, sequence.tempoTable:get( 0 ).tempo );
-    assert_equal( 0.0, sequence.tempoTable:get( 0 ).time );
+    assert_equal( 0.0, sequence.tempoTable:get( 0 ):getTime() );
 end
 
 function test()
