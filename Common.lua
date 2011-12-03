@@ -20,6 +20,11 @@ module( "luavsq" );
 -- VSQ ファイルのメタテキストの [Common] セクションに記録される内容を格納するクラス
 -- @class table
 -- @name Common
+-- @field version (string) トラックの歌声合成エンジンのバージョンを表す文字列
+-- @field name (string) トラックの名前
+-- @field color (string) (不明)
+-- @field dynamicsMode (DynamicsModeEnum) ダイナミクスモード
+-- @field playMode (PlayModeEnum) 再生モード
 Common = {};
 
 --
@@ -39,7 +44,7 @@ function Common.new( ... )
     this.playMode = PlayModeEnum.PlayWithSynth;
 
     -- PlayModeがOff(-1)にされる直前に，PlayAfterSynthかPlayWithSynthのどちらが指定されていたかを記憶しておく．
-    this.lastPlayMode = PlayModeEnum.PlayWithSynth;
+    this._lastPlayMode = PlayModeEnum.PlayWithSynth;
 
     ---
     -- 初期化を行う
@@ -104,7 +109,7 @@ function Common.new( ... )
         local b = tonumber( spl[3], 10 );
         local res = Common.new( self.name, r, g, b, self.dynamicsMode, self.playMode );
         res.version = self.version;
-        res.lastPlayMode = self.lastPlayMode;
+        res._lastPlayMode = self._lastPlayMode;
         return res;
     end
 
