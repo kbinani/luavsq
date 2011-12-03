@@ -38,66 +38,66 @@ module( "SequenceTest", package.seeall, lunit.testcase );
 ---
 -- 指定されたシーケンスがデフォルトのシーケンスと等しいかどうかを検査する
 function isEqualToDefaultSequence( sequence )
-    assert_equal( 1 * 480 * 4 / 4 * 4, sequence.totalClocks );
+    assert_equal( 1 * 480 * 4 / 4 * 4, sequence:getTotalClocks() );
 
     -- track
     assert_equal( 2, sequence.track:size() );
     -- 第1トラック, master track
     local track0 = sequence.track[0];
     assert_nil( track0.common );
-    assert_nil( track0.pit );
-    assert_nil( track0.pbs );
-    assert_nil( track0.dyn );
-    assert_nil( track0.bre );
-    assert_nil( track0.bri );
-    assert_nil( track0.cle );
-    assert_nil( track0.reso1FreqBPList );
-    assert_nil( track0.reso2FreqBPList );
-    assert_nil( track0.reso3FreqBPList );
-    assert_nil( track0.reso4FreqBPList );
-    assert_nil( track0.reso1BWBPList );
-    assert_nil( track0.reso2BWBPList );
-    assert_nil( track0.reso3BWBPList );
-    assert_nil( track0.reso4BWBPList );
-    assert_nil( track0.reso1AmpBPList );
-    assert_nil( track0.reso2AmpBPList );
-    assert_nil( track0.reso3AmpBPList );
-    assert_nil( track0.reso4AmpBPList );
-    assert_nil( track0.harmonics );
-    assert_nil( track0.fx2depth );
-    assert_nil( track0.gen );
-    assert_nil( track0.por );
-    assert_nil( track0.ope );
-    assert_nil( track0.pitch );
+    assert_nil( track0._pit );
+    assert_nil( track0._pbs );
+    assert_nil( track0._dyn );
+    assert_nil( track0._bre );
+    assert_nil( track0._bri );
+    assert_nil( track0._cle );
+    assert_nil( track0._reso1FreqBPList );
+    assert_nil( track0._reso2FreqBPList );
+    assert_nil( track0._reso3FreqBPList );
+    assert_nil( track0._reso4FreqBPList );
+    assert_nil( track0._reso1BWBPList );
+    assert_nil( track0._reso2BWBPList );
+    assert_nil( track0._reso3BWBPList );
+    assert_nil( track0._reso4BWBPList );
+    assert_nil( track0._reso1AmpBPList );
+    assert_nil( track0._reso2AmpBPList );
+    assert_nil( track0._reso3AmpBPList );
+    assert_nil( track0._reso4AmpBPList );
+    assert_nil( track0._harmonics );
+    assert_nil( track0._fx2depth );
+    assert_nil( track0._gen );
+    assert_nil( track0._por );
+    assert_nil( track0._ope );
+    assert_nil( track0._pitch );
     assert_nil( track0.events );
     assert_equal( "", track0.tag );
     -- 第2トラック, 普通のトラック
     local track1 = sequence.track[1];
     assert_not_nil( track1.common );
-    assert_not_nil( track1.pit );
-    assert_not_nil( track1.pbs );
-    assert_not_nil( track1.dyn );
-    assert_not_nil( track1.bre );
-    assert_not_nil( track1.bri );
-    assert_not_nil( track1.cle );
-    assert_not_nil( track1.reso1FreqBPList );
-    assert_not_nil( track1.reso2FreqBPList );
-    assert_not_nil( track1.reso3FreqBPList );
-    assert_not_nil( track1.reso4FreqBPList );
-    assert_not_nil( track1.reso1BWBPList );
-    assert_not_nil( track1.reso2BWBPList );
-    assert_not_nil( track1.reso3BWBPList );
-    assert_not_nil( track1.reso4BWBPList );
-    assert_not_nil( track1.reso1AmpBPList );
-    assert_not_nil( track1.reso2AmpBPList );
-    assert_not_nil( track1.reso3AmpBPList );
-    assert_not_nil( track1.reso4AmpBPList );
-    assert_not_nil( track1.harmonics );
-    assert_not_nil( track1.fx2depth );
-    assert_not_nil( track1.gen );
-    assert_not_nil( track1.por );
-    assert_not_nil( track1.ope );
-    assert_not_nil( track1.pitch );
+    assert_not_nil( track1._pit );
+    assert_not_nil( track1._pbs );
+    assert_not_nil( track1._dyn );
+    assert_not_nil( track1._bre );
+    assert_not_nil( track1._bri );
+    assert_not_nil( track1._cle );
+    assert_not_nil( track1._reso1FreqBPList );
+    assert_not_nil( track1._reso2FreqBPList );
+    assert_not_nil( track1._reso3FreqBPList );
+    assert_not_nil( track1._reso4FreqBPList );
+    assert_not_nil( track1._reso1BWBPList );
+    assert_not_nil( track1._reso2BWBPList );
+    assert_not_nil( track1._reso3BWBPList );
+    assert_not_nil( track1._reso4BWBPList );
+    assert_not_nil( track1._reso1AmpBPList );
+    assert_not_nil( track1._reso2AmpBPList );
+    assert_not_nil( track1._reso3AmpBPList );
+    assert_not_nil( track1._reso4AmpBPList );
+    assert_not_nil( track1._harmonics );
+    assert_not_nil( track1._fx2depth );
+    assert_not_nil( track1._gen );
+    assert_not_nil( track1._por );
+    assert_not_nil( track1._ope );
+    assert_not_nil( track1._pitch );
     assert_not_nil( track1.events );
     assert_equal( "", track1.tag );
     assert_equal( 1, track1.events:size() );
@@ -181,13 +181,13 @@ end
 
 function testUpdateTotalClocks()
     local sequence = luavsq.Sequence.new( "Miku", 1, 4, 4, 500000 );
-    assert_equal( 1 * 480 * 4 / 4 * 4, sequence.totalClocks );
+    assert_equal( 1 * 480 * 4 / 4 * 4, sequence:getTotalClocks() );
     local note = luavsq.Event.new( 1920, luavsq.EventTypeEnum.Anote );
     note:setLength( 480 );
     note.note = 60;
     sequence.track[1].events:add( note );
     sequence:updateTotalClocks();
-    assert_equal( 2400, sequence.totalClocks );
+    assert_equal( 2400, sequence:getTotalClocks() );
 end
 
 function testGenerateMetaTextEventWithoutPitch()

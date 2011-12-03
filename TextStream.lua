@@ -29,16 +29,16 @@ TextStream = {};
 -- @name <i>new</i>
 function TextStream.new()
     local this = {};
-    this.array = {};
-    this.length = 0;
-    this.position = -1;
+    this._array = {};
+    this._length = 0;
+    this._position = -1;
 
     ---
     -- 現在の読み書き位置を取得する
     -- @return (integer) 現在の読み書き位置
     -- @name getPointer
     function this:getPointer()
-        return self.position;
+        return self._position;
     end
 
     ---
@@ -46,7 +46,7 @@ function TextStream.new()
     -- @param value (integer) 設定する読み書き位置
     -- @name setPointer
     function this:setPointer( value )
-        self.position = value;
+        self._position = value;
     end
 
     ---
@@ -54,8 +54,8 @@ function TextStream.new()
     -- @return (string) 読み込んだ文字
     -- @name get
     function this:get()
-        self.position = self.position + 1;
-        return self.array[self.position + 1];
+        self._position = self._position + 1;
+        return self._array[self._position + 1];
     end
 
     ---
@@ -65,9 +65,9 @@ function TextStream.new()
     function this:readLine()
         local sb = "";
         -- '\n'が来るまで読み込み
-        while( self.position + 1 < self.length )do
-            self.position = self.position + 1;
-            local c = self.array[self.position + 1];
+        while( self._position + 1 < self._length )do
+            self._position = self._position + 1;
+            local c = self._array[self._position + 1];
             if( c == "\n" )then
                 break;
             end
@@ -81,7 +81,7 @@ function TextStream.new()
     -- @return (boolean) 読み込み可能であれば true を、そうでなければ false を返す
     -- @name ready
     function this:ready()
-        if( 0 <= self.position + 1 and self.position + 1 < self.length )then
+        if( 0 <= self._position + 1 and self._position + 1 < self._length )then
             return true;
         else
             return false;
@@ -93,10 +93,10 @@ function TextStream.new()
     -- @access private
     -- @param length (integer) 確保したいバッファー容量
     function this:_ensureCapacity( _length )
-        if( _length > #self.array )then
-            local add = _length - #self.array;
+        if( _length > #self._array )then
+            local add = _length - #self._array;
             for i = 1, add, 1 do
-                table.insert( self.array, " " );
+                table.insert( self._array, " " );
             end
         end
     end
@@ -107,14 +107,14 @@ function TextStream.new()
     -- @name write
     function this:write( str )
         local len = str:len();
-        local newSize = self.position + 1 + len;
-        local offset = self.position + 1;
+        local newSize = self._position + 1 + len;
+        local offset = self._position + 1;
         self:_ensureCapacity( newSize );
         for i = 1, len, 1 do
-            self.array[offset + i] = str:sub( i, i );
+            self._array[offset + i] = str:sub( i, i );
         end
-        self.position = self.position + len;
-        self.length = math.max( self.length, newSize );
+        self._position = self._position + len;
+        self._length = math.max( self._length, newSize );
     end
 
     ---
@@ -123,23 +123,23 @@ function TextStream.new()
     -- @name writeLine
     function this:writeLine( str )
         local len = str:len();
-        local offset = self.position + 1;
+        local offset = self._position + 1;
         local newSize = offset + len + 1;
         self:_ensureCapacity( newSize );
         for i = 1, len, 1 do
-            self.array[offset + i] = str:sub( i, i );
+            self._array[offset + i] = str:sub( i, i );
         end
-        self.array[offset + len + 1] = "\n";
-        self.position = self.position + len + 1;
-        self.length = math.max( self.length, newSize );
+        self._array[offset + len + 1] = "\n";
+        self._position = self._position + len + 1;
+        self._length = math.max( self._length, newSize );
     end
 
     ---
     -- ストリームを閉じる
     -- @name close
     function this:close()
-        self.array = nil;
-        self.length = 0;
+        self._array = nil;
+        self._length = 0;
     end
 
     ---
@@ -148,8 +148,8 @@ function TextStream.new()
     -- @name toString
     function this:toString()
         local ret = "";
-        for i = 1, self.length, 1 do
-            ret = ret .. self.array[i];
+        for i = 1, self._length, 1 do
+            ret = ret .. self._array[i];
         end
         return ret;
     end

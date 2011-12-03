@@ -24,6 +24,12 @@ module( "luavsq" );
 -- VSQ ファイルのシーケンスを保持するクラス
 -- @class table
 -- @name Sequence
+-- @field track (List) トラックのリスト。最初のトラックは MasterTrack であり、通常の音符が格納されるトラックはインデックス 1 以降となる
+-- @field tempoTable (TempoTable) テンポ情報を保持したテーブル
+-- @field timesigTable (TimesigTable) 拍子情報を保持したテーブル
+-- @field master (Master) プリメジャーを保持する
+-- @field mixer (Mixer) ミキサー情報
+-- @field tag (?) シーケンスに付属するタグ情報
 Sequence = {};
 
 Sequence.baseTempo = 500000;
@@ -54,7 +60,7 @@ function Sequence.new( ... )
     this.timesigTable = nil;
     ---
     -- 曲の長さを取得します。(クロック(4分音符は480クロック))
-    this.totalClocks = 0;
+    this._totalClocks = 0;
     ---
     -- [VsqMaster]
     this.master = nil;  -- VsqMaster, VsqMixerは通常，最初の非Master Trackに記述されるが，可搬性のため，
@@ -73,7 +79,7 @@ function Sequence.new( ... )
     -- @return (Sequence)
     -- @name <i>new</i>
     function this:_init_5( singer, preMeasure, numerator, denominator, tempo )
-        self.totalClocks = preMeasure * 480 * 4 / denominator * numerator;
+        self._totalClocks = preMeasure * 480 * 4 / denominator * numerator;
 
         self.track = List.new();--Array.new();
         self.track:push( Track.new() );
@@ -108,7 +114,7 @@ function Sequence.new( ... )
         for i = 0, self.timesigTable:size() - 1, 1 do
             ret.timesigTable:push( self.timesigTable:get( i ):clone() );
         end
-        ret.totalClocks = self.totalClocks;
+        ret._totalClocks = self._totalClocks;
         ret.master = self.master:clone();
         ret.mixer = self.mixer:clone();
         return ret;
@@ -120,6 +126,15 @@ function Sequence.new( ... )
     -- @name getBaseTempo
     function this:getBaseTempo()
         return Sequence.baseTempo;
+    end
+
+    ---
+    -- Tick 単位の曲の長さを取得する
+    -- シーケンスに変更を加えた場合、updateTotalClocks を読んでからこのメソッドを呼ぶこと
+    -- @return (integer) Tick 単位の曲の長さ
+    -- @name getTotalClocks
+    function this:getTotalClocks()
+        return self._totalClocks;
     end
 
     ---
@@ -196,7 +211,7 @@ function Sequence.new( ... )
                 end
             end
         end
-        self.totalClocks = max;
+        self._totalClocks = max;
     end
 
     --
@@ -246,7 +261,7 @@ function Sequence.new( ... )
         local _NL = string.char( 0x0a );
         local ret = {};
         local sr = TextStream.new();
-        self.track:get( track ):printMetaText( sr, self.totalClocks + 120, startClock, printPitch );
+        self.track:get( track ):printMetaText( sr, self._totalClocks + 120, startClock, printPitch );
         sr:setPointer( -1 );
         local line_count = -1;
         local tmp = "";
@@ -895,7 +910,7 @@ function Sequence._generateNRPN_3( sequence, track, msPreSend )
         note_start = i;
     end
     for i = target.events:size() - 1, 0, -1 do
-        if( target.events:get( i ).clock <= sequence.totalClocks )then
+        if( target.events:get( i ).clock <= sequence._totalClocks )then
             note_end = i;
             break;
         end

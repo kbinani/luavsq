@@ -20,6 +20,11 @@ module( "luavsq" );
 -- トラックを表すクラス
 -- @class table
 -- @name Track
+-- @field tag (string) トラックに付属するタグ情報
+-- @field common (Common) トラック名などの情報
+-- @field master (Master) マスター情報。Master Track のみが保持する
+-- @field mixer (Mixer) ミキサー情報。Master Track のみが保持する
+-- @field events (EventList) イベントの一覧
 Track = {};
 
 --
@@ -48,64 +53,64 @@ function Track.new( ... )
 
     ---
     --  PIT。ピッチベンド(pitchBendBPList)。default=0
-    this.pit = nil;
+    this._pit = nil;
 
     ---
     --  PBS。ピッチベンドセンシティビティ(pitchBendSensBPList)。dfault=2
-    this.pbs = nil;
+    this._pbs = nil;
 
     ---
     --  DYN。ダイナミクス(dynamicsBPList)。default=64
-    this.dyn = nil;
+    this._dyn = nil;
 
     ---
     --  BRE。ブレシネス(epRResidualBPList)。default=0
-    this.bre = nil;
+    this._bre = nil;
 
     ---
     --  BRI。ブライトネス(epRESlopeBPList)。default=64
-    this.bri = nil;
+    this._bri = nil;
 
     ---
     --  CLE。クリアネス(epRESlopeDepthBPList)。default=0
-    this.cle = nil;
+    this._cle = nil;
 
-    this.reso1FreqBPList = nil;
-    this.reso2FreqBPList = nil;
-    this.reso3FreqBPList = nil;
-    this.reso4FreqBPList = nil;
-    this.reso1BWBPList = nil;
-    this.reso2BWBPList = nil;
-    this.reso3BWBPList = nil;
-    this.reso4BWBPList = nil;
-    this.reso1AmpBPList = nil;
-    this.reso2AmpBPList = nil;
-    this.reso3AmpBPList = nil;
-    this.reso4AmpBPList = nil;
+    this._reso1FreqBPList = nil;
+    this._reso2FreqBPList = nil;
+    this._reso3FreqBPList = nil;
+    this._reso4FreqBPList = nil;
+    this._reso1BWBPList = nil;
+    this._reso2BWBPList = nil;
+    this._reso3BWBPList = nil;
+    this._reso4BWBPList = nil;
+    this._reso1AmpBPList = nil;
+    this._reso2AmpBPList = nil;
+    this._reso3AmpBPList = nil;
+    this._reso4AmpBPList = nil;
 
     ---
     --  Harmonics。(EpRSineBPList)default = 64
-    this.harmonics = nil;
+    this._harmonics = nil;
 
     ---
     --  Effect2 Depth。
-    this.fx2depth = nil;
+    this._fx2depth = nil;
 
     ---
     --  GEN。ジェンダーファクター(genderFactorBPList)。default=64
-    this.gen = nil;
+    this._gen = nil;
 
     ---
     -- POR。ポルタメントタイミング(portamentoTimingBPList)。default=64
-    this.por = nil;
+    this._por = nil;
 
     ---
     --  OPE。オープニング(openingBPList)。default=127
-    this.ope = nil;
+    this._ope = nil;
 
     ---
     -- cent単位のピッチベンド。vsqに保存するときは、VsqFile#reflectPitchによってPIT, PBSに落とし込む。それらの範囲をオーバーしてたら知らん(cutoff)
-    this.pitch = nil;
+    this._pitch = nil;
 
     ---
     -- Master Trackを構築
@@ -215,30 +220,30 @@ function Track.new( ... )
     -- @param singer [string]
     function this:_initCor( name, singer )
         self.common = Common.new( name, 179, 181, 123, 1, 1 );
-        self.pit = BPList.new( "pit", 0, -8192, 8191 );
-        self.pbs = BPList.new( "pbs", 2, 0, 24 );
-        self.dyn = BPList.new( "dyn", 64, 0, 127 );
-        self.bre = BPList.new( "bre", 0, 0, 127 );
-        self.bri = BPList.new( "bri", 64, 0, 127 );
-        self.cle = BPList.new( "cle", 0, 0, 127 );
-        self.reso1FreqBPList = BPList.new( "reso1freq", 64, 0, 127 );
-        self.reso2FreqBPList = BPList.new( "reso2freq", 64, 0, 127 );
-        self.reso3FreqBPList = BPList.new( "reso3freq", 64, 0, 127 );
-        self.reso4FreqBPList = BPList.new( "reso4freq", 64, 0, 127 );
-        self.reso1BWBPList = BPList.new( "reso1bw", 64, 0, 127 );
-        self.reso2BWBPList = BPList.new( "reso2bw", 64, 0, 127 );
-        self.reso3BWBPList = BPList.new( "reso3bw", 64, 0, 127 );
-        self.reso4BWBPList = BPList.new( "reso4bw", 64, 0, 127 );
-        self.reso1AmpBPList = BPList.new( "reso1amp", 64, 0, 127 );
-        self.reso2AmpBPList = BPList.new( "reso2amp", 64, 0, 127 );
-        self.reso3AmpBPList = BPList.new( "reso3amp", 64, 0, 127 );
-        self.reso4AmpBPList = BPList.new( "reso4amp", 64, 0, 127 );
-        self.harmonics = BPList.new( "harmonics", 64, 0, 127 );
-        self.fx2depth = BPList.new( "fx2depth", 64, 0, 127 );
-        self.gen = BPList.new( "gen", 64, 0, 127 );
-        self.por = BPList.new( "por", 64, 0, 127 );
-        self.ope = BPList.new( "ope", 127, 0, 127 );
-        self.pitch = BPList.new( "pitch", 0, -15000, 15000 );
+        self._pit = BPList.new( "pit", 0, -8192, 8191 );
+        self._pbs = BPList.new( "pbs", 2, 0, 24 );
+        self._dyn = BPList.new( "dyn", 64, 0, 127 );
+        self._bre = BPList.new( "bre", 0, 0, 127 );
+        self._bri = BPList.new( "bri", 64, 0, 127 );
+        self._cle = BPList.new( "cle", 0, 0, 127 );
+        self._reso1FreqBPList = BPList.new( "reso1freq", 64, 0, 127 );
+        self._reso2FreqBPList = BPList.new( "reso2freq", 64, 0, 127 );
+        self._reso3FreqBPList = BPList.new( "reso3freq", 64, 0, 127 );
+        self._reso4FreqBPList = BPList.new( "reso4freq", 64, 0, 127 );
+        self._reso1BWBPList = BPList.new( "reso1bw", 64, 0, 127 );
+        self._reso2BWBPList = BPList.new( "reso2bw", 64, 0, 127 );
+        self._reso3BWBPList = BPList.new( "reso3bw", 64, 0, 127 );
+        self._reso4BWBPList = BPList.new( "reso4bw", 64, 0, 127 );
+        self._reso1AmpBPList = BPList.new( "reso1amp", 64, 0, 127 );
+        self._reso2AmpBPList = BPList.new( "reso2amp", 64, 0, 127 );
+        self._reso3AmpBPList = BPList.new( "reso3amp", 64, 0, 127 );
+        self._reso4AmpBPList = BPList.new( "reso4amp", 64, 0, 127 );
+        self._harmonics = BPList.new( "harmonics", 64, 0, 127 );
+        self._fx2depth = BPList.new( "fx2depth", 64, 0, 127 );
+        self._gen = BPList.new( "gen", 64, 0, 127 );
+        self._por = BPList.new( "por", 64, 0, 127 );
+        self._ope = BPList.new( "ope", 127, 0, 127 );
+        self._pitch = BPList.new( "pitch", 0, -15000, 15000 );
         --[[if ( is_first_track ) {
                 self.master = Master.new( pre_measure );
             } else {
@@ -561,81 +566,81 @@ function Track.new( ... )
             handle[i]:write( stream );
         end
         local version = self.common.version;
-        if( self.pit:size() > 0 )then
-            self.pit:print( stream, start, "[PitchBendBPList]" );
+        if( self._pit:size() > 0 )then
+            self._pit:print( stream, start, "[PitchBendBPList]" );
         end
-        if( self.pbs:size() > 0 )then
-            self.pbs:print( stream, start, "[PitchBendSensBPList]" );
+        if( self._pbs:size() > 0 )then
+            self._pbs:print( stream, start, "[PitchBendSensBPList]" );
         end
-        if( self.dyn:size() > 0 )then
-            self.dyn:print( stream, start, "[DynamicsBPList]" );
+        if( self._dyn:size() > 0 )then
+            self._dyn:print( stream, start, "[DynamicsBPList]" );
         end
-        if( self.bre:size() > 0 )then
-            self.bre:print( stream, start, "[EpRResidualBPList]" );
+        if( self._bre:size() > 0 )then
+            self._bre:print( stream, start, "[EpRResidualBPList]" );
         end
-        if( self.bri:size() > 0 )then
-            self.bri:print( stream, start, "[EpRESlopeBPList]" );
+        if( self._bri:size() > 0 )then
+            self._bri:print( stream, start, "[EpRESlopeBPList]" );
         end
-        if( self.cle:size() > 0 )then
-            self.cle:print( stream, start, "[EpRESlopeDepthBPList]" );
+        if( self._cle:size() > 0 )then
+            self._cle:print( stream, start, "[EpRESlopeDepthBPList]" );
         end
         if( version:sub( 1, 4 ) == "DSB2" )then
-            if( self.harmonics:size() > 0 )then
-                self.harmonics:print( stream, start, "[EpRSineBPList]" );
+            if( self._harmonics:size() > 0 )then
+                self._harmonics:print( stream, start, "[EpRSineBPList]" );
             end
-            if( self.fx2depth:size() > 0 )then
-                self.fx2depth:print( stream, start, "[VibTremDepthBPList]" );
-            end
-
-            if( self.reso1FreqBPList:size() > 0 )then
-                self.reso1FreqBPList:print( stream, start, "[Reso1FreqBPList]" );
-            end
-            if( self.reso2FreqBPList:size() > 0 )then
-                self.reso2FreqBPList:print( stream, start, "[Reso2FreqBPList]" );
-            end
-            if( self.reso3FreqBPList:size() > 0 )then
-                self.reso3FreqBPList:print( stream, start, "[Reso3FreqBPList]" );
-            end
-            if( self.reso4FreqBPList:size() > 0 )then
-                self.reso4FreqBPList:print( stream, start, "[Reso4FreqBPList]" );
+            if( self._fx2depth:size() > 0 )then
+                self._fx2depth:print( stream, start, "[VibTremDepthBPList]" );
             end
 
-            if( self.reso1BWBPList:size() > 0 )then
-                self.reso1BWBPList:print( stream, start, "[Reso1BWBPList]" );
+            if( self._reso1FreqBPList:size() > 0 )then
+                self._reso1FreqBPList:print( stream, start, "[Reso1FreqBPList]" );
             end
-            if( self.reso2BWBPList:size() > 0 )then
-                self.reso2BWBPList:print( stream, start, "[Reso2BWBPList]" );
+            if( self._reso2FreqBPList:size() > 0 )then
+                self._reso2FreqBPList:print( stream, start, "[Reso2FreqBPList]" );
             end
-            if( self.reso3BWBPList:size() > 0 )then
-                self.reso3BWBPList:print( stream, start, "[Reso3BWBPList]" );
+            if( self._reso3FreqBPList:size() > 0 )then
+                self._reso3FreqBPList:print( stream, start, "[Reso3FreqBPList]" );
             end
-            if( self.reso4BWBPList:size() > 0 )then
-                self.reso4BWBPList:print( stream, start, "[Reso4BWBPList]" );
+            if( self._reso4FreqBPList:size() > 0 )then
+                self._reso4FreqBPList:print( stream, start, "[Reso4FreqBPList]" );
             end
 
-            if( self.reso1AmpBPList:size() > 0 )then
-                self.reso1AmpBPList:print( stream, start, "[Reso1AmpBPList]" );
+            if( self._reso1BWBPList:size() > 0 )then
+                self._reso1BWBPList:print( stream, start, "[Reso1BWBPList]" );
             end
-            if( self.reso2AmpBPList:size() > 0 )then
-                self.reso2AmpBPList:print( stream, start, "[Reso2AmpBPList]" );
+            if( self._reso2BWBPList:size() > 0 )then
+                self._reso2BWBPList:print( stream, start, "[Reso2BWBPList]" );
             end
-            if( self.reso3AmpBPList:size() > 0 )then
-                self.reso3AmpBPList:print( stream, start, "[Reso3AmpBPList]" );
+            if( self._reso3BWBPList:size() > 0 )then
+                self._reso3BWBPList:print( stream, start, "[Reso3BWBPList]" );
             end
-            if( self.reso4AmpBPList:size() > 0 )then
-                self.reso4AmpBPList:print( stream, start, "[Reso4AmpBPList]" );
+            if( self._reso4BWBPList:size() > 0 )then
+                self._reso4BWBPList:print( stream, start, "[Reso4BWBPList]" );
+            end
+
+            if( self._reso1AmpBPList:size() > 0 )then
+                self._reso1AmpBPList:print( stream, start, "[Reso1AmpBPList]" );
+            end
+            if( self._reso2AmpBPList:size() > 0 )then
+                self._reso2AmpBPList:print( stream, start, "[Reso2AmpBPList]" );
+            end
+            if( self._reso3AmpBPList:size() > 0 )then
+                self._reso3AmpBPList:print( stream, start, "[Reso3AmpBPList]" );
+            end
+            if( self._reso4AmpBPList:size() > 0 )then
+                self._reso4AmpBPList:print( stream, start, "[Reso4AmpBPList]" );
             end
         end
 
-        if( self.gen:size() > 0 )then
-            self.gen:print( stream, start, "[GenderFactorBPList]" );
+        if( self._gen:size() > 0 )then
+            self._gen:print( stream, start, "[GenderFactorBPList]" );
         end
-        if( self.por:size() > 0 )then
-            self.por:print( stream, start, "[PortamentoTimingBPList]" );
+        if( self._por:size() > 0 )then
+            self._por:print( stream, start, "[PortamentoTimingBPList]" );
         end
         if( version:sub( 1, 4 ) == "DSB3" )then
-            if( self.ope:size() > 0 )then
-                self.ope:print( stream, start, "[OpeningBPList]" );
+            if( self._ope:size() > 0 )then
+                self._ope:print( stream, start, "[OpeningBPList]" );
             end
         end
     end
@@ -697,53 +702,53 @@ function Track.new( ... )
     function this:getCurve( curve )
         local search = curve:lower();
         if( search == "bre" )then
-            return self.bre;
+            return self._bre;
         elseif( search == "bri" )then
-            return self.bri;
+            return self._bri;
         elseif( search == "cle" )then
-            return self.cle;
+            return self._cle;
         elseif( search == "dyn" )then
-            return self.dyn;
+            return self._dyn;
         elseif( search == "gen" )then
-            return self.gen;
+            return self._gen;
         elseif( search == "ope" )then
-            return self.ope;
+            return self._ope;
         elseif( search == "pbs" )then
-            return self.pbs;
+            return self._pbs;
         elseif( search == "pit" )then
-            return self.pit;
+            return self._pit;
         elseif( search == "por" )then
-            return self.por;
+            return self._por;
         elseif( search == "harmonics" )then
-            return self.harmonics;
+            return self._harmonics;
         elseif( search == "fx2depth" )then
-            return self.fx2depth;
+            return self._fx2depth;
         elseif( search == "reso1amp" )then
-            return self.reso1AmpBPList;
+            return self._reso1AmpBPList;
         elseif( search == "reso1bw" )then
-            return self.reso1BWBPList;
+            return self._reso1BWBPList;
         elseif( search == "reso1freq" )then
-            return self.reso1FreqBPList;
+            return self._reso1FreqBPList;
         elseif( search == "reso2amp" )then
-            return self.reso2AmpBPList;
+            return self._reso2AmpBPList;
         elseif( search == "reso2bw" )then
-            return self.reso2BWBPList;
+            return self._reso2BWBPList;
         elseif( search == "reso2freq" )then
-            return self.reso2FreqBPList;
+            return self._reso2FreqBPList;
         elseif( search == "reso3amp" )then
-            return self.reso3AmpBPList;
+            return self._reso3AmpBPList;
         elseif( search == "reso3bw" )then
-            return self.reso3BWBPList;
+            return self._reso3BWBPList;
         elseif( search == "reso3freq" )then
-            return self.reso3FreqBPList;
+            return self._reso3FreqBPList;
         elseif( search == "reso4amp" )then
-            return self.reso4AmpBPList;
+            return self._reso4AmpBPList;
         elseif( search == "reso4bw" )then
-            return self.reso4BWBPList;
+            return self._reso4BWBPList;
         elseif( search == "reso4freq" )then
-            return self.reso4FreqBPList;
+            return self._reso4FreqBPList;
         elseif( search == "pitch" )then
-            return self.pitch;
+            return self._pitch;
         else
             return nil;
         end
@@ -757,53 +762,53 @@ function Track.new( ... )
     function this:setCurve( curve, value )
         local search = curve:lower();
         if( search == "bre" )then
-            self.bre = value;
+            self._bre = value;
         elseif( search == "bri" )then
-            self.bri = value;
+            self._bri = value;
         elseif( search == "cle" )then
-            self.cle = value;
+            self._cle = value;
         elseif( search == "dyn" )then
-            self.dyn = value;
+            self._dyn = value;
         elseif( search == "gen" )then
-            self.gen = value;
+            self._gen = value;
         elseif( search == "ope" )then
-            self.ope = value;
+            self._ope = value;
         elseif( search == "pbs" )then
-            self.pbs = value;
+            self._pbs = value;
         elseif( search == "pit" )then
-            self.pit = value;
+            self._pit = value;
         elseif( search == "por" )then
-            self.por = value;
+            self._por = value;
         elseif( search == "harmonics" )then
-            self.harmonics = value;
+            self._harmonics = value;
         elseif( search == "fx2depth" )then
-            self.fx2depth = value;
+            self._fx2depth = value;
         elseif( search == "reso1amp" )then
-            self.reso1AmpBPList = value;
+            self._reso1AmpBPList = value;
         elseif( search == "reso1bw" )then
-            self.reso1BWBPList = value;
+            self._reso1BWBPList = value;
         elseif( search == "reso1freq" )then
-            self.reso1FreqBPList = value;
+            self._reso1FreqBPList = value;
         elseif( search == "reso2amp" )then
-            self.reso2AmpBPList = value;
+            self._reso2AmpBPList = value;
         elseif( search == "reso2bw" )then
-            self.reso2BWBPList = value;
+            self._reso2BWBPList = value;
         elseif( search == "reso2freq" )then
-            self.reso2FreqBPList = value;
+            self._reso2FreqBPList = value;
         elseif( search == "reso3amp" )then
-            self.reso3AmpBPList = value;
+            self._reso3AmpBPList = value;
         elseif( search == "reso3bw" )then
-            self.reso3BWBPList = value;
+            self._reso3BWBPList = value;
         elseif( search == "reso3freq" )then
-            self.reso3FreqBPList = value;
+            self._reso3FreqBPList = value;
         elseif( search == "reso4amp" )then
-            self.reso4AmpBPList = value;
+            self._reso4AmpBPList = value;
         elseif( search == "reso4bw" )then
-            self.reso4BWBPList = value;
+            self._reso4BWBPList = value;
         elseif( search == "reso4freq" )then
-            self.reso4FreqBPList = value;
+            self._reso4FreqBPList = value;
         elseif( search == "pitch" )then
-            self.pitch = value;
+            self._pitch = value;
         end
     end
 
@@ -832,77 +837,77 @@ function Track.new( ... )
                 res.events:add( item:clone(), item.internalID );
             end
         end
-        if( self.pit ~= nil )then
-            res.pit = self.pit:clone();
+        if( self._pit ~= nil )then
+            res._pit = self._pit:clone();
         end
-        if( self.pbs ~= nil )then
-            res.pbs = self.pbs:clone();
+        if( self._pbs ~= nil )then
+            res._pbs = self._pbs:clone();
         end
-        if( self.dyn ~= nil )then
-            res.dyn = self.dyn:clone();
+        if( self._dyn ~= nil )then
+            res._dyn = self._dyn:clone();
         end
-        if( self.bre ~= nil )then
-            res.bre = self.bre:clone();
+        if( self._bre ~= nil )then
+            res._bre = self._bre:clone();
         end
-        if( self.bri ~= nil )then
-            res.bri = self.bri:clone();
+        if( self._bri ~= nil )then
+            res._bri = self._bri:clone();
         end
-        if( self.cle ~= nil )then
-            res.cle = self.cle:clone();
+        if( self._cle ~= nil )then
+            res._cle = self._cle:clone();
         end
-        if( self.reso1FreqBPList ~= nil )then
-            res.reso1FreqBPList = self.reso1FreqBPList:clone();
+        if( self._reso1FreqBPList ~= nil )then
+            res._reso1FreqBPList = self._reso1FreqBPList:clone();
         end
-        if( self.reso2FreqBPList ~= nil )then
-            res.reso2FreqBPList = self.reso2FreqBPList:clone();
+        if( self._reso2FreqBPList ~= nil )then
+            res._reso2FreqBPList = self._reso2FreqBPList:clone();
         end
-        if( self.reso3FreqBPList ~= nil )then
-            res.reso3FreqBPList = self.reso3FreqBPList:clone();
+        if( self._reso3FreqBPList ~= nil )then
+            res._reso3FreqBPList = self._reso3FreqBPList:clone();
         end
-        if( self.reso4FreqBPList ~= nil )then
-            res.reso4FreqBPList = self.reso4FreqBPList:clone();
+        if( self._reso4FreqBPList ~= nil )then
+            res._reso4FreqBPList = self._reso4FreqBPList:clone();
         end
-        if( self.reso1BWBPList ~= nil )then
-            res.reso1BWBPList = self.reso1BWBPList:clone();
+        if( self._reso1BWBPList ~= nil )then
+            res._reso1BWBPList = self._reso1BWBPList:clone();
         end
-        if( self.reso2BWBPList ~= nil )then
-            res.reso2BWBPList = self.reso2BWBPList:clone();
+        if( self._reso2BWBPList ~= nil )then
+            res._reso2BWBPList = self._reso2BWBPList:clone();
         end
-        if( self.reso3BWBPList ~= nil )then
-            res.reso3BWBPList = self.reso3BWBPList:clone();
+        if( self._reso3BWBPList ~= nil )then
+            res._reso3BWBPList = self._reso3BWBPList:clone();
         end
-        if( self.reso4BWBPList ~= nil )then
-            res.reso4BWBPList = self.reso4BWBPList:clone();
+        if( self._reso4BWBPList ~= nil )then
+            res._reso4BWBPList = self._reso4BWBPList:clone();
         end
-        if( self.reso1AmpBPList ~= nil )then
-            res.reso1AmpBPList = self.reso1AmpBPList:clone();
+        if( self._reso1AmpBPList ~= nil )then
+            res._reso1AmpBPList = self._reso1AmpBPList:clone();
         end
-        if( self.reso2AmpBPList ~= nil )then
-            res.reso2AmpBPList = self.reso2AmpBPList:clone();
+        if( self._reso2AmpBPList ~= nil )then
+            res._reso2AmpBPList = self._reso2AmpBPList:clone();
         end
-        if( self.reso3AmpBPList ~= nil )then
-            res.reso3AmpBPList = self.reso3AmpBPList:clone();
+        if( self._reso3AmpBPList ~= nil )then
+            res._reso3AmpBPList = self._reso3AmpBPList:clone();
         end
-        if( self.reso4AmpBPList ~= nil )then
-            res.reso4AmpBPList = self.reso4AmpBPList:clone();
+        if( self._reso4AmpBPList ~= nil )then
+            res._reso4AmpBPList = self._reso4AmpBPList:clone();
         end
-        if( self.harmonics ~= nil )then
-            res.harmonics = self.harmonics:clone();
+        if( self._harmonics ~= nil )then
+            res._harmonics = self._harmonics:clone();
         end
-        if( self.fx2depth ~= nil )then
-            res.fx2depth = self.fx2depth:clone();
+        if( self._fx2depth ~= nil )then
+            res._fx2depth = self._fx2depth:clone();
         end
-        if( self.gen ~= nil )then
-            res.gen = self.gen:clone();
+        if( self._gen ~= nil )then
+            res._gen = self._gen:clone();
         end
-        if( self.por ~= nil )then
-            res.por = self.por:clone();
+        if( self._por ~= nil )then
+            res._por = self._por:clone();
         end
-        if( self.ope ~= nil )then
-            res.ope = self.ope:clone();
+        if( self._ope ~= nil )then
+            res._ope = self._ope:clone();
         end
-        if( self.pitch ~= nil )then
-            res.pitch = self.pitch:clone();
+        if( self._pitch ~= nil )then
+            res._pitch = self._pitch:clone();
         end
         res.tag = self.tag;
         return res;

@@ -20,6 +20,10 @@ module( "luavsq" );
 -- VSQ ファイルのメタテキストの [Mixer] セクションに記録される内容を取り扱うクラス
 -- @class table
 -- @name Mixer
+-- @field masterFeder (integer) MasterFader 値
+-- @field masterPanpot (integer) MasterPanpot 値
+-- @field masterMute (integer) MasterMute 値
+-- @field outputMode (integer) OutputMode 値
 Mixer = {};
 
 --

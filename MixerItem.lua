@@ -18,6 +18,10 @@ module( "luavsq" );
 -- Mixer の slave 要素に格納されるアイテムを表すクラス
 -- @class table
 -- @name MixerItem
+-- @field feder (integer) Feder値
+-- @field panpot (integer) Panpot値
+-- @field mute (integer) Mute値
+-- @field solo (integer) Solo値
 MixerItem = {};
 
 ---

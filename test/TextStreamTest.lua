@@ -11,8 +11,8 @@ end
 
 function testReadLine()
     local stream = luavsq.TextStream.new();
-    stream.array = { "h", "e", "l", "\n", "l", "o" };
-    stream.length = 6;
+    stream:write( "hel\nlo" );
+    stream:setPointer( -1 );
     assert_true( stream:ready() );
     assert_equal( "hel", stream:readLine() );
     assert_true( stream:ready() );

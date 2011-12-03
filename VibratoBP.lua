@@ -18,6 +18,8 @@ module( "luavsq" );
 -- ビブラートのデータポイント
 -- @class table
 -- @name VibratoBP
+-- @field x (double) データ点の X 値
+-- @field y (integer) データ点の Y 値
 VibratoBP = {};
 
 --

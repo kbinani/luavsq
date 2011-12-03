@@ -18,6 +18,9 @@ module( "luavsq" );
 -- テンポ情報テーブル内の要素を表現するクラス
 -- @class table
 -- @name TempoTableItem
+-- @field clock (integer) Tick 単位の時刻
+-- @field tempo (integer) テンポ値。四分音符の長さをマイクロ秒単位で表した値
+-- @field time (double) 秒単位の時刻
 TempoTableItem = {};
 
 --

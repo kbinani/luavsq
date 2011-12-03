@@ -21,6 +21,12 @@ module( "luavsq" );
 -- NRPN イベントを表すクラス
 -- @class table
 -- @name NrpnEvent
+-- @field clock (integer) Tick 単位の時刻
+-- @field nrpn (integer) NRPN の値
+-- @field dataMSB (integer) DATA MSB
+-- @field dataLSB (integer) DATA LSB
+-- @field hasLSB (integer) DATA LSB 値を持っているかどうか
+-- @field isMSBOmittingRequired (boolean) MSB の出力を省略するかどうか
 NrpnEvent = {};
 
 --
@@ -35,7 +41,6 @@ function NrpnEvent.new( ... )
     this.dataLSB = 0;
     this.hasLSB = false;
     this.isMSBOmittingRequired = false;
-    --private Vector<NrpnEvent>
     this._list = nil;
 
     ---

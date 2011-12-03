@@ -18,6 +18,10 @@ module( "luavsq" );
 -- 拍子変更情報テーブル内の要素を表現するためのクラス
 -- @class table
 -- @name TimesigTableItem
+-- @field clock (integer) Tick 単位の時刻
+-- @field numerator (integer) 拍子の分子
+-- @field denominator (integer) 拍子の分母
+-- @field barCount (integer) 何小節目か
 TimesigTableItem = {};
 
 --

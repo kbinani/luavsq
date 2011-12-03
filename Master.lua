@@ -20,6 +20,7 @@ module( "luavsq" );
 -- VSQ ファイルのメタテキストの [Master] に記録される内容を取り扱うクラス
 -- @class table
 -- @name Master
+-- @field preMeasure (intger) プリメジャーの長さ(小節数)
 Master = {};
 
 --

@@ -21,6 +21,10 @@ module( "luavsq" );
 -- メタイベントは、メタイベントのデータ長をData[1]に格納せず、生のデータをDataに格納するので、注意が必要
 -- @class table
 -- @name MidiEvent
+-- @field clock (integer) Tick 単位の時刻
+-- @field firstByte (integer) MIDI イベントの先頭バイト
+-- @field data (table) MIDI イベントのデータ。
+-- メタイベントについては長さ値を保持せず、出力時に data フィールドの長さに応じた値を自動的に出力する
 MidiEvent = {};
 
 ---
