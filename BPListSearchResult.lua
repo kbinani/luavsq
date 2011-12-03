@@ -18,6 +18,9 @@ module( "luavsq" );
 -- コントロールパラメータのデータ点検索結果を格納するクラス
 -- @class table
 -- @name BPListSearchResult
+-- @field clock (integer) データ点の Tick 単位の時刻
+-- @field index (integer) データ点のインデックス。最初のインデックスは 0
+-- @field point (BP) データ点のオブジェクト
 BPListSearchResult = {};
 
 ---
