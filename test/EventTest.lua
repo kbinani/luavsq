@@ -23,19 +23,19 @@ function getNoteEvent()
     noteEvent.preUtterance = 9;
     noteEvent.voiceOverlap = 10;
     noteEvent.lyricHandle = nil;
-    noteEvent.lyricHandleIndex = 11;
+    noteEvent._lyricHandleIndex = 11;
     noteEvent.vibratoHandle = nil;
-    noteEvent.vibratoHandleIndex = 12;
+    noteEvent._vibratoHandleIndex = 12;
     noteEvent.vibratoDelay = 13;
     noteEvent.noteHeadHandle = nil;
-    noteEvent.noteHeadHandleIndex = 14;
+    noteEvent._noteHeadHandleIndex = 14;
     return noteEvent;
 end
 
 function getSingerEvent()
     local singerEvent = luavsq.Event.new( 0, luavsq.EventTypeEnum.Singer );
     singerEvent.singerHandle = nil;
-    singerEvent.singerHandleIndex = 16;
+    singerEvent._singerHandleIndex = 16;
     singerEvent.index = 15;
     return singerEvent;
 end
@@ -43,7 +43,7 @@ end
 function getIconEvent()
     local iconEvent = luavsq.Event.new( 0, luavsq.EventTypeEnum.Aicon );
     iconEvent.singerHandle = nil;
-    iconEvent.singerHandleIndex = 18;
+    iconEvent._singerHandleIndex = 18;
     iconEvent.note = 19;
     iconEvent.index = 17;
     return iconEvent;

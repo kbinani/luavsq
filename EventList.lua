@@ -283,7 +283,7 @@ function EventList.new()
                 current_handle = current_handle + 1;
                 item.singerHandle.index = current_handle;
                 table.insert( handle, item.singerHandle );
-                item.singerHandleIndex = current_handle;
+                item._singerHandleIndex = current_handle;
                 local lang = VoiceLanguageEnum.valueFromSingerName( item.singerHandle.ids );
                 add_quotation_mark = lang == VoiceLanguageEnum.Japanese;
             end
@@ -293,21 +293,21 @@ function EventList.new()
                 item.lyricHandle.index = current_handle;
                 item.lyricHandle.addQuotationMark = add_quotation_mark;
                 table.insert( handle, item.lyricHandle );
-                item.lyricHandleIndex = current_handle;
+                item._lyricHandleIndex = current_handle;
             end
             -- VibratoHandle
             if( item.vibratoHandle ~= nil )then
                 current_handle = current_handle + 1;
                 item.vibratoHandle.index = current_handle;
                 table.insert( handle, item.vibratoHandle );
-                item.vibratoHandleIndex = current_handle;
+                item._vibratoHandleIndex = current_handle;
             end
             -- NoteHeadHandle
             if( item.noteHeadHandle ~= nil )then
                 current_handle = current_handle + 1;
                 item.noteHeadHandle.index = current_handle;
                 table.insert( handle, item.noteHeadHandle );
-                item.noteHeadHandleIndex = current_handle;
+                item._noteHeadHandleIndex = current_handle;
             end
             -- IconDynamicsHandle
             if( item.iconDynamicsHandle ~= nil )then
@@ -315,7 +315,9 @@ function EventList.new()
                 item.iconDynamicsHandle.index = current_handle;
                 item.iconDynamicsHandle:setLength( item:getLength() );
                 table.insert( handle, item.iconDynamicsHandle );
-                item.singerHandleIndex = current_handle;
+                -- IconDynamicsHandleは、歌手ハンドルと同じ扱いなので
+                -- _singerHandleIndexでよい
+                item._singerHandleIndex = current_handle;
             end
         end
         return handle;

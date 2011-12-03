@@ -244,14 +244,14 @@ function Sequence.new( ... )
     -- @name generateMetaTextEvent<sup>3</sup>
     function this:_generateMetaTextEvent_4( track, encoding, startClock, printPitch )
         local _NL = string.char( 0x0a );
-        local ret = {};--new Vector<MidiEvent>();
+        local ret = {};
         local sr = TextStream.new();
         self.track:get( track ):printMetaText( sr, self.totalClocks + 120, startClock, printPitch );
         sr:setPointer( -1 );
         local line_count = -1;
         local tmp = "";
         if( sr:ready() )then
-            local buffer = {};--new Vector<Byte>();
+            local buffer = {};
             local first = true;
             while( sr:ready() )do
                 if( first )then
@@ -260,7 +260,7 @@ function Sequence.new( ... )
                 else
                     tmp = _NL .. sr:readLine();
                 end
-                local line = CP932Converter.convertFromUTF8( tmp );--PortUtil.convertByteArray( PortUtil.getEncodedByte( encoding, tmp ) );
+                local line = CP932Converter.convertFromUTF8( tmp );
                 local linebytes = Util.stringToArray( line );
                 Sequence._array_add_all( buffer, linebytes );
                 local prefix = Sequence.getLinePrefixBytes( line_count + 1 );
@@ -566,10 +566,6 @@ function Sequence.printTrack( sequence, track, stream, msPreSend, encoding, prin
     local data = Sequence.generateNRPN( sequence, track, msPreSend );
     -- @var nrpns (table<MidiEvent>)
     local nrpns = NrpnEvent.convert( data );
-do
-    Log.println( "Sequence.printTrack; #data=" .. #data );
-    Log.println( "Sequence.printTrack; #nrpns=" .. #nrpns );
-end
     for i = 1, #nrpns, 1 do
         local item = nrpns[i];
         MidiEvent.writeDeltaClock( stream, item.clock - last );

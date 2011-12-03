@@ -23,6 +23,28 @@ module( "luavsq" );
 -- VSQ ファイルのメタテキスト内に記述されるイベントを表すクラス
 -- @class table
 -- @name Event
+-- @field tag (string) イベントに付けるタグ文字列
+-- @field id (integer) 内部で使用するオブジェクト固有の ID
+-- @field clock (integer) Tick 単位の時刻
+-- @field index (integer) VSQ メタテキストに出力されるこのオブジェクトの ID
+-- @field type (EventTypeEnum) イベントの種類
+-- @field singerHandle (Handle) 歌手ハンドル
+-- @field note (integer) ノート番号
+-- @field dynamics (integer) ベロシティ
+-- @field pmBendDepth (integer) ベンド深さ
+-- @field pmBendLength (integer) ベンド長さ
+-- @field pmbPortamentoUse (integer) ポルタメント
+-- @field demDecGainRate (integer) ディケイ
+-- @field demAccent (integer) アクセント
+-- @field lyricHandle (Handle) 歌詞ハンドル
+-- @field vibratoHandle (Handle) ビブラートハンドル
+-- @field vibratoDelay (integer) イベント先頭から測った、ビブラートの開始位置(Tick 単位)
+-- @field noteHeadHandle (Handle) アタックハンドル
+-- @field pMeanOnsetFirstNote (integer)
+-- @field vMeanNoteTransition (integer)
+-- @field d4mean (integer)
+-- @field pMeanEndingNote (integer)
+-- @field iconDynamicsHandle (Handle) 強弱記号ハンドル
 Event = {};
 
 --
@@ -41,10 +63,10 @@ function Event.new( ... )
     this.clock = 0;
 
     this.index = -1;
-    this.singerHandleIndex = 0;
-    this.lyricHandleIndex = 0;
-    this.vibratoHandleIndex = 0;
-    this.noteHeadHandleIndex = 0;
+    this._singerHandleIndex = 0;
+    this._lyricHandleIndex = 0;
+    this._vibratoHandleIndex = 0;
+    this._noteHeadHandleIndex = 0;
     this.type = EventTypeEnum.Note;
 
     ---
@@ -383,19 +405,19 @@ function Event.new( ... )
                 stream:writeLine( "VoiceOverlap=" .. self.ustEvent.voiceOverlap );
             end
             if( self.lyricHandle ~= nil )then
-                stream:writeLine( "LyricHandle=h#" .. string.format( "%04d", self.lyricHandleIndex ) );
+                stream:writeLine( "LyricHandle=h#" .. string.format( "%04d", self._lyricHandleIndex ) );
             end
             if( self.vibratoHandle ~= nil )then
-                stream:writeLine( "VibratoHandle=h#" .. string.format( "%04d", self.vibratoHandleIndex ) );
+                stream:writeLine( "VibratoHandle=h#" .. string.format( "%04d", self._vibratoHandleIndex ) );
                 stream:writeLine( "VibratoDelay=" .. self.vibratoDelay );
             end
             if( self.noteHeadHandle ~= nil )then
-                stream:writeLine( "NoteHeadHandle=h#" .. string.format( "%04d", self.noteHeadHandleIndex ) );
+                stream:writeLine( "NoteHeadHandle=h#" .. string.format( "%04d", self._noteHeadHandleIndex ) );
             end
         elseif( self.type == EventTypeEnum.Singer )then
-            stream:writeLine( "IconHandle=h#" .. string.format( "%04d", self.singerHandleIndex ) );
+            stream:writeLine( "IconHandle=h#" .. string.format( "%04d", self._singerHandleIndex ) );
         elseif( self.type == EventTypeEnum.Aicon )then
-            stream:writeLine( "IconHandle=h#" .. string.format( "%04d", self.singerHandleIndex ) );
+            stream:writeLine( "IconHandle=h#" .. string.format( "%04d", self._singerHandleIndex ) );
             stream:writeLine( "Note#=" .. self.note );
         end
     end
@@ -456,10 +478,10 @@ function Event.new( ... )
             local spl;
             self.index = value;
             self.type = EventTypeEnum.Unknown;
-            self.singerHandleIndex = -2;
-            self.lyricHandleIndex = -1;
-            self.vibratoHandleIndex = -1;
-            self.noteHeadHandleIndex = -1;
+            self._singerHandleIndex = -2;
+            self._lyricHandleIndex = -1;
+            self._vibratoHandleIndex = -1;
+            self._noteHeadHandleIndex = -1;
             self:setLength( 0 );
             self.note = 0;
             self.dynamics = 64;
@@ -498,17 +520,17 @@ function Event.new( ... )
                 elseif( search ==  "DEMaccent" )then
                     self.demAccent = tonumber( spl[2], 10 );
                 elseif( search == "LyricHandle" )then
-                    self.lyricHandleIndex = Handle.getHandleIndexFromString( spl[2] );
+                    self._lyricHandleIndex = Handle.getHandleIndexFromString( spl[2] );
                 elseif( search == "IconHandle" )then
-                    self.singerHandleIndex = Handle.getHandleIndexFromString( spl[2] );
+                    self._singerHandleIndex = Handle.getHandleIndexFromString( spl[2] );
                 elseif( search == "VibratoHandle" )then
-                    self.vibratoHandleIndex = Handle.getHandleIndexFromString( spl[2] );
+                    self._vibratoHandleIndex = Handle.getHandleIndexFromString( spl[2] );
                 elseif( search == "VibratoDelay" )then
                     self.vibratoDelay = tonumber( spl[2], 10 );
                 elseif( search == "PMbPortamentoUse" )then
                     self.pmbPortamentoUse = tonumber( spl[2], 10 );
                 elseif( search == "NoteHeadHandle" )then
-                    self.noteHeadHandleIndex = Handle.getHandleIndexFromString( spl[2] );
+                    self._noteHeadHandleIndex = Handle.getHandleIndexFromString( spl[2] );
                 end
                 if( not sr:ready() )then
                     break;
