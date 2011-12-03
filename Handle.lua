@@ -514,8 +514,8 @@ function Handle.new( ... )
     ---
     -- 歌詞の個数を返す
     -- @return (integer) 歌詞の個数
-    -- @name size
-    function this:size()
+    -- @name getLyricCount
+    function this:getLyricCount()
         return #self._lyrics;
     end
 

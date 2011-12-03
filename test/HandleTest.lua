@@ -189,7 +189,7 @@ function testConstructLyricFromTextStreamStopWithEOF()
     local handle = luavsq.Handle.new( stream, index, lastLine );
     assert_equal( luavsq.HandleTypeEnum.Lyric, handle:getHandleType() );
     assert_equal( index, handle.index );
-    assert_equal( 2, handle:size() );
+    assert_equal( 2, handle:getLyricCount() );
 
     local lyric1 = handle:getLyricAt( 0 );
     assert_equal( "あ", lyric1.phrase );
@@ -221,7 +221,7 @@ function testConstructLyricFromTextStreamStopWithNextHandle()
     local handle = luavsq.Handle.new( stream, index, lastLine );
     assert_equal( luavsq.HandleTypeEnum.Lyric, handle:getHandleType() );
     assert_equal( index, handle.index );
-    assert_equal( 1, handle:size() );
+    assert_equal( 1, handle:getLyricCount() );
 
     assert_not_nil( handle:getRateBP() );
     assert_equal( 0, handle:getRateBP():size() );
@@ -542,7 +542,7 @@ function testGetterAndSetterLyric()
     handle:setLyricAt( 0, luavsq.Lyric.new( "は", "h a" ) );
     local lyric = luavsq.Lyric.new( "ら", "4 a" );
     handle:setLyricAt( 1, lyric );
-    assert_equal( 2, handle:size() );
+    assert_equal( 2, handle:getLyricCount() );
     assert_true( handle:getLyricAt( 1 ):equals( lyric ) );
 end
 
