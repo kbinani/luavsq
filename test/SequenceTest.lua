@@ -33,6 +33,7 @@ dofile( "../PhoneticSymbol.lua" );
 dofile( "../BP.lua" );
 dofile( "../VibratoBPList.lua" );
 dofile( "../VibratoBP.lua" );
+dofile( "../Log.lua" );
 module( "SequenceTest", package.seeall, lunit.testcase );
 
 ---
@@ -45,59 +46,59 @@ function isEqualToDefaultSequence( sequence )
     -- 第1トラック, master track
     local track0 = sequence.track[0];
     assert_nil( track0.common );
-    assert_nil( track0._pit );
-    assert_nil( track0._pbs );
-    assert_nil( track0._dyn );
-    assert_nil( track0._bre );
-    assert_nil( track0._bri );
-    assert_nil( track0._cle );
-    assert_nil( track0._reso1FreqBPList );
-    assert_nil( track0._reso2FreqBPList );
-    assert_nil( track0._reso3FreqBPList );
-    assert_nil( track0._reso4FreqBPList );
-    assert_nil( track0._reso1BWBPList );
-    assert_nil( track0._reso2BWBPList );
-    assert_nil( track0._reso3BWBPList );
-    assert_nil( track0._reso4BWBPList );
-    assert_nil( track0._reso1AmpBPList );
-    assert_nil( track0._reso2AmpBPList );
-    assert_nil( track0._reso3AmpBPList );
-    assert_nil( track0._reso4AmpBPList );
-    assert_nil( track0._harmonics );
-    assert_nil( track0._fx2depth );
-    assert_nil( track0._gen );
-    assert_nil( track0._por );
-    assert_nil( track0._ope );
-    assert_nil( track0._pitch );
+    assert_nil( track0:getCurve( "pit" ) );
+    assert_nil( track0:getCurve( "pbs" ) );
+    assert_nil( track0:getCurve( "dyn" ) );
+    assert_nil( track0:getCurve( "bre" ) );
+    assert_nil( track0:getCurve( "bri" ) );
+    assert_nil( track0:getCurve( "cle" ) );
+    assert_nil( track0:getCurve( "reso1Freq" ) );
+    assert_nil( track0:getCurve( "reso2Freq" ) );
+    assert_nil( track0:getCurve( "reso3Freq" ) );
+    assert_nil( track0:getCurve( "reso4Freq" ) );
+    assert_nil( track0:getCurve( "reso1BW" ) );
+    assert_nil( track0:getCurve( "reso2BW" ) );
+    assert_nil( track0:getCurve( "reso3BW" ) );
+    assert_nil( track0:getCurve( "reso4BW" ) );
+    assert_nil( track0:getCurve( "reso1Amp" ) );
+    assert_nil( track0:getCurve( "reso2Amp" ) );
+    assert_nil( track0:getCurve( "reso3Amp" ) );
+    assert_nil( track0:getCurve( "reso4Amp" ) );
+    assert_nil( track0:getCurve( "harmonics" ) );
+    assert_nil( track0:getCurve( "fx2depth" ) );
+    assert_nil( track0:getCurve( "gen" ) );
+    assert_nil( track0:getCurve( "por" ) );
+    assert_nil( track0:getCurve( "ope" ) );
+    assert_nil( track0:getCurve( "pitch" ) );
     assert_nil( track0.events );
     assert_equal( "", track0.tag );
     -- 第2トラック, 普通のトラック
     local track1 = sequence.track[1];
     assert_not_nil( track1.common );
-    assert_not_nil( track1._pit );
-    assert_not_nil( track1._pbs );
-    assert_not_nil( track1._dyn );
-    assert_not_nil( track1._bre );
-    assert_not_nil( track1._bri );
-    assert_not_nil( track1._cle );
-    assert_not_nil( track1._reso1FreqBPList );
-    assert_not_nil( track1._reso2FreqBPList );
-    assert_not_nil( track1._reso3FreqBPList );
-    assert_not_nil( track1._reso4FreqBPList );
-    assert_not_nil( track1._reso1BWBPList );
-    assert_not_nil( track1._reso2BWBPList );
-    assert_not_nil( track1._reso3BWBPList );
-    assert_not_nil( track1._reso4BWBPList );
-    assert_not_nil( track1._reso1AmpBPList );
-    assert_not_nil( track1._reso2AmpBPList );
-    assert_not_nil( track1._reso3AmpBPList );
-    assert_not_nil( track1._reso4AmpBPList );
-    assert_not_nil( track1._harmonics );
-    assert_not_nil( track1._fx2depth );
-    assert_not_nil( track1._gen );
-    assert_not_nil( track1._por );
-    assert_not_nil( track1._ope );
-    assert_not_nil( track1._pitch );
+    assert_not_nil( track1:getCurve( "pit" ) );
+    assert_not_nil( track1:getCurve( "pbs" ) );
+    assert_not_nil( track1:getCurve( "dyn" ) );
+    assert_not_nil( track1:getCurve( "bre" ) );
+    assert_not_nil( track1:getCurve( "bri" ) );
+    assert_not_nil( track1:getCurve( "cle" ) );
+    assert_not_nil( track1:getCurve( "reso1Freq" ) );
+    assert_not_nil( track1:getCurve( "reso2Freq" ) );
+    assert_not_nil( track1:getCurve( "reso3Freq" ) );
+    assert_not_nil( track1:getCurve( "reso4Freq" ) );
+    assert_not_nil( track1:getCurve( "reso1BW" ) );
+    assert_not_nil( track1:getCurve( "reso2BW" ) );
+    assert_not_nil( track1:getCurve( "reso3BW" ) );
+    assert_not_nil( track1:getCurve( "reso4BW" ) );
+    assert_not_nil( track1:getCurve( "reso1Amp" ) );
+    assert_not_nil( track1:getCurve( "reso2Amp" ) );
+    assert_not_nil( track1:getCurve( "reso3Amp" ) );
+    assert_not_nil( track1:getCurve( "reso4Amp" ) );
+    assert_not_nil( track1:getCurve( "harmonics" ) );
+    assert_not_nil( track1:getCurve( "fx2depth" ) );
+    assert_not_nil( track1:getCurve( "gen" ) );
+    assert_not_nil( track1:getCurve( "por" ) );
+    assert_not_nil( track1:getCurve( "ope" ) );
+    assert_not_nil( track1:getCurve( "pitch" ) );
     assert_not_nil( track1.events );
     assert_equal( "", track1.tag );
     assert_equal( 1, track1.events:size() );
@@ -190,93 +191,41 @@ function testUpdateTotalClocks()
     assert_equal( 2400, sequence:getTotalClocks() );
 end
 
-function testGenerateMetaTextEventWithoutPitch()
+function test_generateMetaTextEventWithoutPitch()
     fail();
 end
 
-function testGenerateMetaTextEventWithPitch()
+function test_generateMetaTextEventWithPitch()
 --    fail();
 end
 
-function testGetActualClockAndDelay()
+function test_getActualClockAndDelay()
     local sequence = luavsq.Sequence.new( "Miku", 1, 4, 4, 500000 );
     local actualClock, delay;
 
-    actualClock, delay = sequence:getActualClockAndDelay( 1920, 500 );
+    actualClock, delay = sequence:_getActualClockAndDelay( 1920, 500 );
     assert_equal( 1440, actualClock );
     assert_equal( 500, delay );
 
-    actualClock, delay = sequence:getActualClockAndDelay( 1920, 499 );
+    actualClock, delay = sequence:_getActualClockAndDelay( 1920, 499 );
     assert_equal( 1440, actualClock );
     assert_equal( 500, delay );
 
-    actualClock, delay = sequence:getActualClockAndDelay( 1920, 498 );
+    actualClock, delay = sequence:_getActualClockAndDelay( 1920, 498 );
     assert_equal( 1441, actualClock );
     assert_equal( 498, delay );
+
+    actualClock, delay = sequence:_getActualClockAndDelay( 0, 500 );
+    assert_equal( 0, actualClock );
+    assert_equal( 0, delay );
+
+    actualClock, delay = sequence:_getActualClockAndDelay( 0, 0 );
+    assert_equal( 0, actualClock );
+    assert_equal( 0, delay );
 end
 
 function testGetMaximumNoteLengthAt()
 --    fail();
-end
-
-function testGenerateTimeSig()
-    local sequence = luavsq.Sequence.new( "Miku", 1, 4, 4, 500000 );
-    sequence.timesigTable = luavsq.TimesigTable.new();
-    sequence.timesigTable:push( luavsq.TimesigTableItem.new( 4, 4, 0 ) );
-    sequence.timesigTable:push( luavsq.TimesigTableItem.new( 6, 8, 1 ) );
-    sequence.timesigTable:updateTimesigInfo();
-
-    local actual = sequence:generateTimeSig();
-
-    assert_equal( 2, #actual );
-    local item = actual[1];
-    assert_equal( 0, item.clock );
-    assert_equal( 0xff, item.firstByte );
-    assert_equal( 5, #item.data );
-    assert_equal( 0x58, item.data[1] );
-    assert_equal( 4, item.data[2] );
-    assert_equal( 2, item.data[3] );
-    assert_equal( 0x18, item.data[4] );
-    assert_equal( 0x08, item.data[5] );
-
-    item = actual[2];
-    assert_equal( 1920, item.clock );
-    assert_equal( 0xff, item.firstByte );
-    assert_equal( 5, #item.data );
-    assert_equal( 0x58, item.data[1] );
-    assert_equal( 6, item.data[2] );
-    assert_equal( 3, item.data[3] );
-    assert_equal( 0x18, item.data[4] );
-    assert_equal( 0x08, item.data[5] );
-end
-
-function testGenerateTempoChange()
-    local sequence = luavsq.Sequence.new( "Miku", 1, 4, 4, 500000 );
-    sequence.tempoTable = luavsq.TempoTable.new();
-    sequence.tempoTable:push( luavsq.TempoTableItem.new( 0, 500000 ) );
-    sequence.tempoTable:push( luavsq.TempoTableItem.new( 1920, 600000 ) );
-    sequence.tempoTable:updateTempoInfo();
-
-    local actual = sequence:generateTempoChange();
-
-    assert_equal( 2, #actual );
-    local item = actual[1];
-    assert_equal( 0, item.clock );
-    assert_equal( 0xff, item.firstByte );
-    assert_equal( 4, #item.data );
-    assert_equal( 0x51, item.data[1] );
-    assert_equal( 0x07, item.data[2] );
-    assert_equal( 0xA1, item.data[3] );
-    assert_equal( 0x20, item.data[4] );
-
-    item = actual[2];
-    assert_equal( 1920, item.clock );
-    assert_equal( 0xff, item.firstByte );
-    assert_equal( 4, #item.data );
-    assert_equal( 0x51, item.data[1] );
-    assert_equal( 0x09, item.data[2] );
-    assert_equal( 0x27, item.data[3] );
-    assert_equal( 0xc0, item.data[4] );
 end
 
 function testWriteWithoutPitch()
@@ -287,17 +236,17 @@ function testWriteWithPitch()
 --    fail();
 end
 
-function testPrintTrack()
+function test_printTrack()
     fail();
 end
 
-function testGenerateExpressionNRPN()
+function test_generateExpressionNRPN()
     local sequence = luavsq.Sequence.new( "Miku", 1, 4, 4, 500000 );
     local dynamics = sequence.track:get( 1 ):getCurve( "DYN" );
     dynamics:add( 480, 127 );
     dynamics:add( 1920, 0 );
 
-    local actual = luavsq.Sequence.generateExpressionNRPN( sequence, 1, 500 );
+    local actual = luavsq.Sequence._generateExpressionNRPN( sequence, 1, 500 );
     assert_equal( 3, #actual );
 
     assert_equal( 0, actual[1].clock );
@@ -324,8 +273,8 @@ function testGenerateFx2DepthNRPN()
 --    fail();
 end
 
-function testGenerateHeaderNRPN()
-    local actual = luavsq.Sequence.generateHeaderNRPN():expand();
+function test_generateHeaderNRPN()
+    local actual = luavsq.Sequence._generateHeaderNRPN():expand();
     assert_equal( 3, #actual );
 
     assert_equal( 0, actual[1].clock );
@@ -349,12 +298,12 @@ function testGenerateHeaderNRPN()
     assert_false( actual[3].isMSBOmittingRequired );
 end
 
-function testGenerateSingerNRPN()
+function test_generateSingerNRPN()
     local sequence = luavsq.Sequence.new( "Miku", 1, 4, 4, 500000 );
     local singerEvent = luavsq.Event.new( 1920, luavsq.EventTypeEnum.Singer );
     singerEvent.singerHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Singer );
     sequence.track:get( 1 ).events:add( singerEvent );
-    local actual = luavsq.Sequence.generateSingerNRPN( sequence, singerEvent, 500 );
+    local actual = luavsq.Sequence._generateSingerNRPN( sequence, singerEvent, 500 );
 
     assert_equal( 1, #actual );
     local actualExpanded = actual[1]:expand();
@@ -391,7 +340,7 @@ function testGenerateSingerNRPN()
     assert_false( item.isMSBOmittingRequired );
 end
 
-function testGenerateNoteNRPN()
+function test_generateNoteNRPN()
     local sequence = luavsq.Sequence.new( "Miku", 1, 4, 4, 500000 );
     local noteEvent = luavsq.Event.new( 1920, luavsq.EventTypeEnum.Anote );
     noteEvent:setLength( 480 );
@@ -419,7 +368,7 @@ function testGenerateNoteNRPN()
     local noteLocation = 1;
     local msPreSend = 500;
     local track = 1;
-    local actual, delay = luavsq.Sequence.generateNoteNRPN( sequence, track, noteEvent, msPreSend, noteLocation, lastDelay );
+    local actual, delay = luavsq.Sequence._generateNoteNRPN( sequence, track, noteEvent, msPreSend, noteLocation, lastDelay );
     local actualExpanded = actual:expand();
     assert_equal( 24, #actualExpanded );
     assert_equal( 500, delay );
@@ -576,14 +525,14 @@ function testGenerateNoteNRPN()
 
     --lastDelay が nil でないために、CVM_NM_VERSION_AND_DEVICE が出力されないパターン
     lastDelay = 0;
-    actual, delay = luavsq.Sequence.generateNoteNRPN( sequence, track, noteEvent, msPreSend, noteLocation, lastDelay );
+    actual, delay = luavsq.Sequence._generateNoteNRPN( sequence, track, noteEvent, msPreSend, noteLocation, lastDelay );
     actualExpanded = actual:expand();
     assert_equal( 23, #actualExpanded );
     assert_equal( 500, delay );
 
     -- lastDelay が、該当音符についての delay と同じであるために、CVM_NM_DELAY が出力されないパターン
     lastDelay = 500;
-    actual, delay = luavsq.Sequence.generateNoteNRPN( sequence, track, noteEvent, msPreSend, noteLocation, lastDelay );
+    actual, delay = luavsq.Sequence._generateNoteNRPN( sequence, track, noteEvent, msPreSend, noteLocation, lastDelay );
     actualExpanded = actual:expand();
     assert_equal( 22, #actualExpanded );
     assert_equal( 500, delay );
@@ -592,7 +541,7 @@ function testGenerateNoteNRPN()
     -- が出力されないパターン
     lastDelay = 500;
     noteEvent.vibratoHandle = nil;
-    actual, delay = luavsq.Sequence.generateNoteNRPN( sequence, track, noteEvent, msPreSend, noteLocation, lastDelay );
+    actual, delay = luavsq.Sequence._generateNoteNRPN( sequence, track, noteEvent, msPreSend, noteLocation, lastDelay );
     actualExpanded = actual:expand();
     assert_equal( 19, #actualExpanded );
     assert_equal( 500, delay );
@@ -601,7 +550,7 @@ function testGenerateNoteNRPN()
     -- VOCALOID1 であるために、0x5011が出力され、CVM_NM_PHONETIC_SYMBOL_CONTINUATIONとVOCALOID2用のNRPNが出力されない
     lastDelay = 500;
     noteEvent.vibratoHandle = nil;
-    actual, delay = luavsq.Sequence.generateNoteNRPN( sequence, track, noteEvent, msPreSend, noteLocation, lastDelay );
+    actual, delay = luavsq.Sequence._generateNoteNRPN( sequence, track, noteEvent, msPreSend, noteLocation, lastDelay );
     actualExpanded = actual:expand();
     assert_equal( 8, #actualExpanded );
     item = actualExpanded[5];
@@ -620,13 +569,13 @@ function testGenerateNRPNPartial()
 --    fail();
 end
 
-function testGeneratePitchBendNRPN()
+function test_generatePitchBendNRPN()
     local sequence = luavsq.Sequence.new( "Miku", 1, 4, 4, 500000 );
     local pit = sequence.track:get( 1 ):getCurve( "PIT" );
     pit:add( 480, 8191 );
     pit:add( 1920, -8192 );
 
-    local actual = luavsq.Sequence.generatePitchBendNRPN( sequence, 1, 500 );
+    local actual = luavsq.Sequence._generatePitchBendNRPN( sequence, 1, 500 );
     assert_equal( 3, #actual );
 
     assert_equal( 0, actual[1].clock );
@@ -664,13 +613,13 @@ function test_array_add_all()
     assert_equal( 5, a[5] );
 end
 
-function testGeneratePitchBendSensitivityNRPN()
+function test_generatePitchBendSensitivityNRPN()
     local sequence = luavsq.Sequence.new( "Miku", 1, 4, 4, 500000 );
     local pbs = sequence.track:get( 1 ):getCurve( "PBS" );
     pbs:add( 480, 0 );
     pbs:add( 1920, 24 );
 
-    local actual = luavsq.Sequence.generatePitchBendSensitivityNRPN( sequence, 1, 500 );
+    local actual = luavsq.Sequence._generatePitchBendSensitivityNRPN( sequence, 1, 500 );
     assert_equal( 3, #actual );
 
     assert_equal( 0, actual[1].clock );
@@ -695,13 +644,13 @@ function testGeneratePitchBendSensitivityNRPN()
     assert_false( actual[3].isMSBOmittingRequired );
 end
 
-function testGenerateVibratoNRPN()
+function test_generateVibratoNRPN()
     local sequence = luavsq.Sequence.new( "Miku", 1, 4, 4, 500000 );
     local noteEvent = luavsq.Event.new( 480, luavsq.EventTypeEnum.Anote );
     noteEvent.vibratoHandle = nil;
 
     -- ビブラートがないため、NRPN が生成されない場合
-    local actual = luavsq.Sequence.generateVibratoNRPN( sequence, noteEvent, 500 );
+    local actual = luavsq.Sequence._generateVibratoNRPN( sequence, noteEvent, 500 );
     assert_equal( 0, #actual );
 
     -- ビブラートがある場合
@@ -715,11 +664,11 @@ function testGenerateVibratoNRPN()
     local depthCurve = luavsq.VibratoBPList.new( { 0.4, 0.9 }, { 13, 14 } );
     noteEvent.vibratoHandle:setRateBP( rateCurve );
     noteEvent.vibratoHandle:setDepthBP( depthCurve );
-    actual = luavsq.Sequence.generateVibratoNRPN( sequence, noteEvent, 500 );
+    actual = luavsq.Sequence._generateVibratoNRPN( sequence, noteEvent, 500 );
     assert_equal( 5, #actual );
 
     local actualExpanded = actual[1]:expand();
-    assert_equal( 4, #actualExpanded );
+    assert_equal( 6, #actualExpanded );
     local item = actualExpanded[1];
     assert_equal( 240, item.clock );
     assert_equal( luavsq.MidiParameterEnum.CC_VD_VERSION_AND_DEVICE, item.nrpn );
@@ -729,23 +678,37 @@ function testGenerateVibratoNRPN()
     assert_false( item.isMSBOmittingRequired );
     item = actualExpanded[2];
     assert_equal( 240, item.clock );
+    assert_equal( luavsq.MidiParameterEnum.CC_VR_VERSION_AND_DEVICE, item.nrpn );
+    assert_equal( 0x00, item.dataMSB );
+    assert_equal( 0x00, item.dataLSB );
+    assert_true( item.hasLSB );
+    assert_false( item.isMSBOmittingRequired );
+    item = actualExpanded[3];
+    assert_equal( 240, item.clock );
     assert_equal( luavsq.MidiParameterEnum.CC_VD_DELAY, item.nrpn );
     assert_equal( 0x03, item.dataMSB );
     assert_equal( 0x74, item.dataLSB );
     assert_true( item.hasLSB );
-    assert_true( item.isMSBOmittingRequired );
-    item = actualExpanded[3];
+    assert_false( item.isMSBOmittingRequired );
+    item = actualExpanded[4];
+    assert_equal( 240, item.clock );
+    assert_equal( luavsq.MidiParameterEnum.CC_VR_DELAY, item.nrpn );
+    assert_equal( 0x03, item.dataMSB );
+    assert_equal( 0x74, item.dataLSB );
+    assert_true( item.hasLSB );
+    assert_false( item.isMSBOmittingRequired );
+    item = actualExpanded[5];
     assert_equal( 240, item.clock );
     assert_equal( luavsq.MidiParameterEnum.CC_VD_VIBRATO_DEPTH, item.nrpn );
     assert_equal( 71, item.dataMSB );
     assert_false( item.hasLSB );
-    assert_true( item.isMSBOmittingRequired );
-    item = actualExpanded[4];
+    assert_false( item.isMSBOmittingRequired );
+    item = actualExpanded[6];
     assert_equal( 240, item.clock );
     assert_equal( luavsq.MidiParameterEnum.CC_VR_VIBRATO_RATE, item.nrpn );
     assert_equal( 72, item.dataMSB );
     assert_false( item.hasLSB );
-    assert_true( item.isMSBOmittingRequired );
+    assert_false( item.isMSBOmittingRequired );
 
     actualExpanded = actual[2]:expand();
     assert_equal( 2, #actualExpanded );
@@ -799,14 +762,14 @@ function testGenerateVoiceChangeParameterNRPN()
     fail();
 end
 
-function testGetMsbAndLsb()
+function test_getMsbAndLsb()
     local msb, lsb;
-    msb, lsb = luavsq.Sequence.getMsbAndLsb( 264 );
+    msb, lsb = luavsq.Sequence._getMsbAndLsb( 264 );
     assert_equal( 2, msb );
     assert_equal( 8, lsb );
 end
 
-function testGetLinePrefixBytes()
+function test_getLinePrefixBytes()
     -- 4 桁
     local expected = {
         string.byte( "D" ),
@@ -818,7 +781,7 @@ function testGetLinePrefixBytes()
         string.byte( "3" ),
         string.byte( ":" )
     };
-    local actual = luavsq.Sequence.getLinePrefixBytes( 123 );
+    local actual = luavsq.Sequence._getLinePrefixBytes( 123 );
     assert_equal( #expected, #actual );
     local i;
     for i = 1, #expected, 1 do
@@ -836,7 +799,7 @@ function testGetLinePrefixBytes()
         string.byte( "9" ),
         string.byte( ":" )
     };
-    actual = luavsq.Sequence.getLinePrefixBytes( 9999 );
+    actual = luavsq.Sequence._getLinePrefixBytes( 9999 );
     assert_equal( #expected, #actual );
     for i = 1, #expected, 1 do
         assert_equal( expected[i], actual[i] );
@@ -857,7 +820,7 @@ function testGetLinePrefixBytes()
         string.byte( "5" ),
         string.byte( ":" )
     };
-    actual = luavsq.Sequence.getLinePrefixBytes( 12345 );
+    actual = luavsq.Sequence._getLinePrefixBytes( 12345 );
     assert_equal( #expected, #actual );
     for i = 1, #expected, 1 do
         assert_equal( expected[i], actual[i] );
@@ -878,32 +841,32 @@ function testGetLinePrefixBytes()
         string.byte( "7" ),
         string.byte( ":" )
     };
-    actual = luavsq.Sequence.getLinePrefixBytes( 1234567 );
+    actual = luavsq.Sequence._getLinePrefixBytes( 1234567 );
     assert_equal( #expected, #actual );
     for i = 1, #expected, 1 do
         assert_equal( expected[i], actual[i] );
     end
 end
 
-function testGetHowManyDigits()
-    assert_equal( 1, luavsq.Sequence.getHowManyDigits( 0 ) );
-    assert_equal( 1, luavsq.Sequence.getHowManyDigits( 9 ) );
-    assert_equal( 2, luavsq.Sequence.getHowManyDigits( 99 ) );
-    assert_equal( 10, luavsq.Sequence.getHowManyDigits( 1000000000 ) );
-    assert_equal( 2, luavsq.Sequence.getHowManyDigits( -10 ) );
+function test_getHowManyDigits()
+    assert_equal( 1, luavsq.Sequence._getHowManyDigits( 0 ) );
+    assert_equal( 1, luavsq.Sequence._getHowManyDigits( 9 ) );
+    assert_equal( 2, luavsq.Sequence._getHowManyDigits( 99 ) );
+    assert_equal( 10, luavsq.Sequence._getHowManyDigits( 1000000000 ) );
+    assert_equal( 2, luavsq.Sequence._getHowManyDigits( -10 ) );
 end
 
-function testWriteUnsignedShort()
+function test_writeUnsignedShort()
     local stream = luavsq.ByteArrayOutputStream.new();
-    luavsq.Sequence.writeUnsignedShort( stream, 0x8421 );
+    luavsq.Sequence._writeUnsignedShort( stream, 0x8421 );
     local actual = stream:toString();
     local expected = string.char( 0x84 ) .. string.char( 0x21 );
     assert_equal( expected, actual );
 end
 
-function testWriteUnsignedInt()
+function test_writeUnsignedInt()
     local stream = luavsq.ByteArrayOutputStream.new();
-    luavsq.Sequence.writeUnsignedInt( stream, 0x84212184 );
+    luavsq.Sequence._writeUnsignedInt( stream, 0x84212184 );
     local actual = stream:toString();
     local expected = string.char( 0x84 ) .. string.char( 0x21 ) .. string.char( 0x21 ) .. string.char( 0x84 );
     assert_equal( expected, actual );

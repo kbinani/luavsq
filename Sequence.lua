@@ -39,6 +39,11 @@ Sequence._MASTER_TRACK = { 0x4D, 0x61, 0x73, 0x74, 0x65, 0x72, 0x20, 0x54, 0x72,
 Sequence._CURVES = { "VEL", "DYN", "BRE", "BRI", "CLE", "OPE", "GEN", "POR", "PIT", "PBS" };
 
 --
+-- VOCALOID の NRPN を出力するかどうか
+-- @todo NRPN 出力関連の メソッドのテストが書けたらデフォルトで true にする
+Sequence._WRITE_NRPN = false;
+
+--
 -- 初期化を行う
 -- @return (Sequence)
 function Sequence.new( ... )
@@ -217,7 +222,8 @@ function Sequence.new( ... )
     --
     -- メタテキストイベントを作成する
     -- @return (table<MidiEvent>) メタテキストを格納した MidiEvent の配列
-    function this:generateMetaTextEvent( ... )
+    -- @name <i>_generateMetaTextEvent</i>
+    function this:_generateMetaTextEvent( ... )
         local arguments = { ... };
         if( #arguments == 2 )then
             return self:_generateMetaTextEvent_2( arguments[1], arguments[2] );
@@ -228,35 +234,35 @@ function Sequence.new( ... )
         end
     end
 
-    ---
+    --
     -- メタテキストイベントを作成する
     -- @param track (integer) トラック番号
     -- @param encoding (string) マルチバイト文字のテキストエンコーディング(現在は Shift_JIS 固定で、引数は無視される)
     -- @return (table<MidiEvent>) メタテキストを格納した MidiEvent の配列
-    -- @name generateMetaTextEvent<sup>1</sup>
+    -- @name _generateMetaTextEvent_2
     function this:_generateMetaTextEvent_2( track, encoding )
         self:_generateMetaTextEvent_4( track, encoding, self:_calculatePreMeasureInClock(), false );
     end
 
-    ---
+    --
     -- メタテキストイベントを作成する
     -- @param track (integer) トラック番号
     -- @param encoding (string) マルチバイト文字のテキストエンコーディング(現在は Shift_JIS 固定で、引数は無視される)
     -- @param startClock (integer) イベント作成の開始位置
     -- @return (table<MidiEvent>) メタテキストを格納した MidiEvent の配列
-    -- @name generateMetaTextEvent<sup>2</sup>
+    -- @name _generateMetaTextEvent_3
     function this:_generateMetaTextEvent_3( track, encoding, startClock )
         self:_generateMetaTextEvent_4( track, encoding, startClock, false );
     end
 
-    ---
+    --
     -- メタテキストイベントを作成する
     -- @param track (integer) トラック番号
     -- @param encoding (string) マルチバイト文字のテキストエンコーディング(現在は Shift_JIS 固定で、引数は無視される)
     -- @param startClock (integer) イベント作成の開始位置
     -- @param printPitch (boolean) pitch を含めて出力するかどうか(現在は false 固定で、引数は無視される)
     -- @return (table<MidiEvent>) メタテキストを格納した MidiEvent の配列
-    -- @name generateMetaTextEvent<sup>3</sup>
+    -- @name _generateMetaTextEvent_4
     function this:_generateMetaTextEvent_4( track, encoding, startClock, printPitch )
         local _NL = string.char( 0x0a );
         local ret = {};
@@ -278,10 +284,10 @@ function Sequence.new( ... )
                 local line = CP932Converter.convertFromUTF8( tmp );
                 local linebytes = Util.stringToArray( line );
                 Sequence._array_add_all( buffer, linebytes );
-                local prefix = Sequence.getLinePrefixBytes( line_count + 1 );
+                local prefix = Sequence._getLinePrefixBytes( line_count + 1 );
                 while( #prefix + #buffer >= 127 )do
                     line_count = line_count + 1;
-                    local prefix = Sequence.getLinePrefixBytes( line_count );
+                    local prefix = Sequence._getLinePrefixBytes( line_count );
                     local add = MidiEvent.new();
                     add.clock = 0;
                     add.firstByte = 0xff;
@@ -298,14 +304,14 @@ function Sequence.new( ... )
                         table.remove( buffer, 1 );
                     end
                     table.insert( ret, add );
-                    prefix = Sequence.getLinePrefixBytes( line_count + 1 );
+                    prefix = Sequence._getLinePrefixBytes( line_count + 1 );
                 end
             end
             if( #buffer > 0 )then
-                local prefix = Sequence.getLinePrefixBytes( line_count + 1 );
+                local prefix = Sequence._getLinePrefixBytes( line_count + 1 );
                 while( #prefix + #buffer >= 127 )do
                     line_count = line_count + 1;
-                    prefix = Sequence.getLinePrefixBytes( line_count );
+                    prefix = Sequence._getLinePrefixBytes( line_count );
                     local add = MidiEvent.new();
                     add.clock = 0;
                     add.firstByte = 0xff;
@@ -321,11 +327,11 @@ function Sequence.new( ... )
                         table.remove( buffer, 1 );
                     end
                     table.insert( ret, add );
-                    prefix = Sequence.getLinePrefixBytes( line_count + 1 );
+                    prefix = Sequence._getLinePrefixBytes( line_count + 1 );
                 end
                 if( #buffer > 0 )then
                     line_count = line_count + 1;
-                    local prefix = Sequence.getLinePrefixBytes( line_count );
+                    local prefix = Sequence._getLinePrefixBytes( line_count );
                     local add = MidiEvent.new();
                     add.clock = 0;
                     add.firstByte = 0xff;
@@ -348,18 +354,25 @@ function Sequence.new( ... )
         return ret;
     end
 
-    ---
+    --
     -- 指定した時刻における、プリセンド込の時刻と、ディレイを取得する
     -- @param clock (integer) Tick 単位の時刻
     -- @param msPreSend (integer) ミリ秒単位のプリセンド時間
     -- @return (integer) プリセンド分のクロックを引いた Tick 単位の時刻
     -- @return (integer) ミリ秒単位のプリセンド時間
-    -- @name getActualClockAndDelay
-    function this:getActualClockAndDelay( clock, msPreSend )
+    -- @name _getActualClockAndDelay
+    function this:_getActualClockAndDelay( clock, msPreSend )
         local clock_msec = self.tempoTable:getSecFromClock( clock ) * 1000.0;
-        local draft_clock_sec = (clock_msec - msPreSend) / 1000.0;
-        local actualClock = math.floor( self.tempoTable:getClockFromSec( draft_clock_sec ) );
-        return actualClock, math.floor( clock_msec - self.tempoTable:getSecFromClock( actualClock ) * 1000.0 );
+
+        local actualClock;
+        if( clock_msec - msPreSend <= 0 )then
+            actualClock = 0;
+        else
+            local draft_clock_sec = (clock_msec - msPreSend) / 1000.0;
+            actualClock = math.floor( self.tempoTable:getClockFromSec( draft_clock_sec ) );
+        end
+        local delay = math.floor( clock_msec - self.tempoTable:getSecFromClock( actualClock ) * 1000.0 );
+        return actualClock, delay;
     end
 
 --[[
@@ -380,40 +393,6 @@ function Sequence.new( ... )
             return clockAtEnd - clock;
         end
 ]]
-
-    ---
-    -- 拍子情報のテーブルから、拍子変更の MidiEvent を作成する
-    -- @return (table<MidiEvent>) 拍子変更イベントを格納した MidiEvent の配列
-    -- @name generateTimeSig
-    function this:generateTimeSig()
-        local events = {};
-        local itr = self.timesigTable:iterator();
-        while( itr:hasNext() )do
-            local item = itr:next();
-            local event = MidiEvent.generateTimeSigEvent(
-                item:getTick(),
-                item.numerator,
-                item.denominator
-            );
-            table.insert( events, event );
-        end
-        return events;
-    end
-
-    ---
-    -- テンポ情報のテーブルから、テンポ変更の MidiEvent を作成する
-    -- @return (table<MidiEvent>) テンポ変更イベントを格納した MidiEvent の配列
-    -- @name generateTempoChange
-    function this:generateTempoChange()
-        local events = {};--new Vector<MidiEvent>();
-        local itr = self.tempoTable:iterator();
-        while( itr:hasNext() )do
-            local item = itr:next();
-            local event = MidiEvent.generateTempoChangeEvent( item.clock, item.tempo );
-            table.insert( events, event );
-        end
-        return events;
-    end
 
     --
     -- ストリームに出力する
@@ -444,17 +423,7 @@ function Sequence.new( ... )
     -- @param printPitch (boolean) pitch を含めて出力するかどうか(現在は false 固定で、引数は無視される)
     -- @name write<sup>2</sup>
     function this:_write_4( stream, msPreSend, encoding, printPitch )
-        local last_clock = 0;
-        local track_size = self.track:size();
-        local track;
-        for track = 1, track_size - 1, 1 do
-            if( self.track:get( track ).events:size() > 0 )then
-                local index = self.track:get( track ).events:size() - 1;
-                local last = self.track:get( track ).events:get( index );
-                last_clock = math.max( last_clock, last.clock + last:getLength() );
-            end
-        end
-
+        self:updateTotalClocks();
         local first_position;--チャンクの先頭のファイル位置
 
         -- ヘッダ
@@ -469,7 +438,7 @@ function Sequence.new( ... )
         stream:write( 0x00 );
         stream:write( 0x01 );
         --トラック数
-        Sequence.writeUnsignedShort( stream, self.track:size() );
+        Sequence._writeUnsignedShort( stream, self.track:size() );
         --時間単位
         stream:write( 0x01 );
         stream:write( 0xe0 );
@@ -492,13 +461,11 @@ function Sequence.new( ... )
         while( itr:hasNext() )do
             local entry = itr:next();
             table.insert( events, MidiEvent.generateTimeSigEvent( entry:getTick(), entry.numerator, entry.denominator ) );
-            last_clock = math.max( last_clock, entry:getTick() );
         end
         itr = self.tempoTable.iterator();
         while( itr:hasNext() )do
             local entry = itr:next();
             table.insert( events, MidiEvent.generateTempoChangeEvent( entry.clock, entry.tempo ) );
-            last_clock = math.max( last_clock, entry.clock );
         end
         table.sort( events, MidiEvent.compare );
         local last = 0;
@@ -516,18 +483,18 @@ function Sequence.new( ... )
         stream:write( 0x00 );
         local pos = stream:getPointer();
         stream:seek( first_position - 4 );
-        Sequence.writeUnsignedInt( stream, pos - first_position );
+        Sequence._writeUnsignedInt( stream, pos - first_position );
         stream:seek( pos );
 
         -- トラック
         local temp = self:clone();
         temp.track:get( 1 ).master = self.master:clone();
         temp.track:get( 1 ).mixer = self.mixer:clone();
-        Sequence.printTrack( temp, 1, stream, msPreSend, encoding, printPitch );
+        Sequence._printTrack( temp, 1, stream, msPreSend, encoding, printPitch );
         local count = self.track:size();
         local track;
         for track = 2, count - 1, 1 do
-            Sequence.printTrack( self, track, stream, msPreSend, encoding, printPitch );
+            Sequence._printTrack( self, track, stream, msPreSend, encoding, printPitch );
         end
     end
 
@@ -542,7 +509,7 @@ function Sequence.new( ... )
     return this;
 end
 
----
+--
 -- トラックをストリームに出力する
 -- @param sequence (Sequence) 出力するシーケンス
 -- @param track (integer) 出力するトラックの番号
@@ -550,8 +517,8 @@ end
 -- @param msPreSend (integer) ミリ秒単位のプリセンド時間
 -- @param encoding (string) マルチバイト文字のテキストエンコーディング(現在は Shift_JIS 固定で、引数は無視される)
 -- @param printPitch (boolean) pitch を含めて出力するかどうか(現在は false 固定で、引数は無視される)
--- @name <i>printTrack</i>
-function Sequence.printTrack( sequence, track, stream, msPreSend, encoding, printPitch )
+-- @name <i>_printTrack</i>
+function Sequence._printTrack( sequence, track, stream, msPreSend, encoding, printPitch )
     local _NL = string.char( 0x0a );
     --ヘッダ
     stream:write( Sequence._MTRK, 1, 4 );
@@ -567,48 +534,57 @@ function Sequence.printTrack( sequence, track, stream, msPreSend, encoding, prin
     stream:write( seq_name, 1, #seq_name );
 
     --Meta Textを準備
-    local meta = sequence:generateMetaTextEvent( track, encoding, 0, printPitch );
-    local lastclock = 0;
+    local meta = sequence:_generateMetaTextEvent( track, encoding, 0, printPitch );
+    local lastClock = 0;
     local i;
     for i = 1, #meta, 1 do
-        MidiEvent.writeDeltaClock( stream, meta[i].clock - lastclock );
+        MidiEvent.writeDeltaClock( stream, meta[i].clock - lastClock );
         meta[i]:writeData( stream );
-        lastclock = meta[i].clock;
+        lastClock = meta[i].clock;
     end
+    local maxClock = lastClock;
 
-    local last = 0;
-    -- @var data (table<NrpnEvent>)
-    local data = Sequence.generateNRPN( sequence, track, msPreSend );
-    -- @var nrpns (table<MidiEvent>)
-    local nrpns = NrpnEvent.convert( data );
-    for i = 1, #nrpns, 1 do
-        local item = nrpns[i];
-        MidiEvent.writeDeltaClock( stream, item.clock - last );
-        item:writeData( stream );
-        last = item.clock;
+    if( Sequence._WRITE_NRPN )then
+        lastClock = 0;
+        -- @var data (table<NrpnEvent>)
+        local data = Sequence.generateNRPN( sequence, track, msPreSend );
+        -- @var nrpns (table<MidiEvent>)
+        local nrpns = NrpnEvent.convert( data );
+        for i = 1, #nrpns, 1 do
+            local item = nrpns[i];
+            MidiEvent.writeDeltaClock( stream, item.clock - lastClock );
+            item:writeData( stream );
+            lastClock = item.clock;
+        end
+        maxClock = math.max( maxClock, lastClock );
     end
 
     --トラックエンド
+    lastClock = maxClock;
     local last_event = sequence.track:get( track ).events:get( sequence.track:get( track ).events:size() - 1 );
-    local last_clock = last_event.clock + last_event:getLength();
-    MidiEvent.writeDeltaClock( stream, last_clock );
+    maxClock = math.max( maxClock, last_event.clock + last_event:getLength() );
+    local lastDeltaClock = maxClock - lastClock;
+    if( lastDeltaClock < 0 )then
+        lastDeltaClock = 0;
+    end
+    MidiEvent.writeDeltaClock( stream, lastDeltaClock );
     stream:write( 0xff );
     stream:write( 0x2f );
     stream:write( 0x00 );
     local pos = stream:getPointer();
     stream:seek( first_position - 4 );
-    Sequence.writeUnsignedInt( stream, pos - first_position );
+    Sequence._writeUnsignedInt( stream, pos - first_position );
     stream:seek( pos );
 end
 
----
+--
 -- トラックの Expression(DYN) の NRPN リストを作成する
 -- @param sequence (Sequence) 出力するシーケンス
 -- @param track (integer) 出力するトラックの番号
 -- @param msPreSend (integer) ミリ秒単位のプリセンド時間
 -- @return (table<NrpnEvent>) NrpnEvent の配列
--- @name <i>generateExpressionNRPN</i>
-function Sequence.generateExpressionNRPN( sequence, track, msPreSend )
+-- @name <i>_generateExpressionNRPN</i>
+function Sequence._generateExpressionNRPN( sequence, track, msPreSend )
     local ret = {};
     local dyn = sequence.track:get( track ):getCurve( "DYN" );
     local count = dyn:size();
@@ -616,11 +592,11 @@ function Sequence.generateExpressionNRPN( sequence, track, msPreSend )
     local lastDelay = 0;
     for i = 0, count - 1, 1 do
         local clock = dyn:getKeyClock( i );
-        local c, delay = sequence:getActualClockAndDelay( clock, msPreSend );
+        local c, delay = sequence:_getActualClockAndDelay( clock, msPreSend );
         if( c >= 0 )then
             if( lastDelay ~= delay )then
                 local delayMsb, delayLsb;
-                delayMsb, delayLsb = Sequence.getMsbAndLsb( delay );
+                delayMsb, delayLsb = Sequence._getMsbAndLsb( delay );
                 local delayNrpn = NrpnEvent.new( c, MidiParameterEnum.CC_E_DELAY, delayMsb, delayLsb );
                 table.insert( ret, delayNrpn );
             end
@@ -664,18 +640,18 @@ end
     end
 ]]
 
----
+--
 -- トラックの先頭に記録される NRPN のリストを作成する
 -- @return (table<NrpnEvent>) NrpnEvent の配列
--- @name <i>generateHeaderNRPN</i>
-function Sequence.generateHeaderNRPN()
+-- @name <i>_generateHeaderNRPN</i>
+function Sequence._generateHeaderNRPN()
     local ret = NrpnEvent.new( 0, MidiParameterEnum.CC_BS_VERSION_AND_DEVICE, 0x00, 0x00 );
     ret:append( MidiParameterEnum.CC_BS_DELAY, 0x00, 0x00 );
     ret:append( MidiParameterEnum.CC_BS_LANGUAGE_TYPE, 0x00 );
     return ret;
 end
 
----
+--
 -- 歌手変更イベントの NRPN リストを作成する。
 -- トラック先頭の歌手変更イベントについては、このメソッドで作成してはいけない。
 -- トラック先頭のgenerateNRPN メソッドが担当する
@@ -683,8 +659,8 @@ end
 -- @param singerEvent (Event) 出力する歌手変更イベント
 -- @param msPreSend (integer) ミリ秒単位のプリセンド時間
 -- @return (table<NrpnEvent>) NrpnEvent の配列
--- @name <i>generateSingerNRPN</i>
-function Sequence.generateSingerNRPN( sequence, singerEvent, msPreSend )
+-- @name <i>_generateSingerNRPN</i>
+function Sequence._generateSingerNRPN( sequence, singerEvent, msPreSend )
     local clock = singerEvent.clock;
     local singer_handle = nil;
     if( singerEvent.singerHandle ~= nil )then
@@ -699,11 +675,11 @@ function Sequence.generateSingerNRPN( sequence, singerEvent, msPreSend )
     local msEnd = sequence.tempoTable:getSecFromClock( singerEvent.clock + singerEvent:getLength() ) * 1000.0;
     local duration = math.floor( math.ceil( msEnd - clock_msec ) );
 
-    local duration0, duration1 = Sequence.getMsbAndLsb( duration );
+    local duration0, duration1 = Sequence._getMsbAndLsb( duration );
 
     local actualClock, delay;
-    actualClock, delay = sequence:getActualClockAndDelay( clock, msPreSend );
-    local delayMsb, delayLsb = Sequence.getMsbAndLsb( delay );
+    actualClock, delay = sequence:_getActualClockAndDelay( clock, msPreSend );
+    local delayMsb, delayLsb = Sequence._getMsbAndLsb( delay );
     local ret = {};
 
     local add = NrpnEvent.new( actualClock, MidiParameterEnum.CC_BS_VERSION_AND_DEVICE, 0x00, 0x00 );
@@ -715,7 +691,7 @@ function Sequence.generateSingerNRPN( sequence, singerEvent, msPreSend )
     return arr;
 end
 
----
+--
 -- トラックの音符イベントから NRPN のリストを作成する
 -- @param sequence (Sequence) 出力元のシーケンス
 -- @param track (integer) 出力するトラックの番号
@@ -730,13 +706,13 @@ end
 -- @param lastDelay (integer) 直前の音符イベントに指定された、ミリ秒単位のディレイ値。最初の音符イベントの場合は nil を指定する
 -- @return (NrpnEvent) NrpnEvent
 -- @return (integer) この音符に対して設定された、ミリ秒単位のディレイ値
--- @name <i>generateNoteNRPN</i>
-function Sequence.generateNoteNRPN( sequence, track, noteEvent, msPreSend, noteLocation, lastDelay )
+-- @name <i>_generateNoteNRPN</i>
+function Sequence._generateNoteNRPN( sequence, track, noteEvent, msPreSend, noteLocation, lastDelay )
     local clock = noteEvent.clock;
     local add = nil;
 
     local actualClock, delay;
-    actualClock, delay = sequence:getActualClockAndDelay( clock, msPreSend );
+    actualClock, delay = sequence:_getActualClockAndDelay( clock, msPreSend );
 
     if( lastDelay == nil )then
         add = NrpnEvent.new(
@@ -748,7 +724,7 @@ function Sequence.generateNoteNRPN( sequence, track, noteEvent, msPreSend, noteL
     end
 
     if( lastDelay ~= delay )then
-        local delayMsb, delayLsb = Sequence.getMsbAndLsb( delay );
+        local delayMsb, delayLsb = Sequence._getMsbAndLsb( delay );
         if( add == nil )then
             add = NrpnEvent.new( actualClock, MidiParameterEnum.CVM_NM_DELAY, delayMsb, delayLsb );
         else
@@ -769,7 +745,7 @@ function Sequence.generateNoteNRPN( sequence, track, noteEvent, msPreSend, noteL
     local msEnd = sequence.tempoTable:getSecFromClock( clock + noteEvent:getLength() ) * 1000.0;
     local clock_msec = sequence.tempoTable:getSecFromClock( clock ) * 1000.0;
     local duration = math.floor( msEnd - clock_msec );
-    local duration0, duration1 = Sequence.getMsbAndLsb( duration );
+    local duration0, duration1 = Sequence._getMsbAndLsb( duration );
     add:append( MidiParameterEnum.CVM_NM_NOTE_DURATION, duration0, duration1, true );
 
     -- Note Location
@@ -885,15 +861,15 @@ end
     end
 ]]
 
----
+--
 -- 指定したシーケンスの指定したトラックから、NRPN のリストを作成する
 -- @param sequence (Sequence) 出力元のシーケンス
 -- @param track (integer) 出力するトラックの番号
 -- @param msPreSend (integer) ミリ秒単位のプリセンド時間
 -- @return (table<NrpnEvent>) NrpnEvent の配列
--- @name <i>generateNRPN</i>
+-- @name <i>_generateNRPN_3</i>
 function Sequence._generateNRPN_3( sequence, track, msPreSend )
-    local list = {};--Vector<VsqNrpn>();
+    local list = {};
 
     local target = sequence.track:get( track );
     local version = target.common.version;
@@ -925,47 +901,36 @@ function Sequence._generateNRPN_3( sequence, track, msPreSend )
         end
     end
     if( singer_event >= 0 )then --見つかった場合
-        Sequence._array_add_all( list, Sequence.generateSingerNRPN( sequence, target.events:get( singer_event ), 0 ) );
+        Sequence._array_add_all( list, Sequence._generateSingerNRPN( sequence, target.events:get( singer_event ), 0 ) );
     else                   --多分ありえないと思うが、歌手が不明の場合。
         --throw new Exception( "first singer was not specified" );
         table.insert( list, NrpnEvent.new( 0, MidiParameterEnum.CC_BS_LANGUAGE_TYPE, 0x0 ) );
         table.insert( list, NrpnEvent.new( 0, MidiParameterEnum.PC_VOICE_TYPE, 0x0 ) );
     end
 
-    Sequence._array_add_all( list, Sequence.generateVoiceChangeParameterNRPN( sequence, track, msPreSend ) );
+    Sequence._array_add_all( list, Sequence._generateVoiceChangeParameterNRPN( sequence, track, msPreSend ) );
     if( version:sub( 1, 4 ) == "DSB2" )then
         Sequence._array_add_all( list, Sequence.generateFx2DepthNRPN( sequence, track, msPreSend ) );
     end
 
     local ms_presend = msPreSend;
---[[
-        if( version.substring( 0, 4 ) == "UTU0" )then
-            local sec_maxlen = 0.0;
-            for ( local itr = target.getNoteEventIterator(); itr:hasNext(); ) {
-                local ve = itr:next();
-                local len = sequence.getSecFromClock( ve.Clock + ve.ID.getLength() ) - sequence.getSecFromClock( ve.Clock );
-                sec_maxlen = math.max( sec_maxlen, len );
-            end
-            ms_presend += org.kbinani.PortUtil.castToInt( sec_maxlen * 1000.0 );
-        end
-]]
     local dyn = target:getCurve( "dyn" );
     if( dyn:size() > 0 )then
-        local listdyn = Sequence.generateExpressionNRPN( sequence, track, ms_presend );
+        local listdyn = Sequence._generateExpressionNRPN( sequence, track, ms_presend );
         if( #listdyn > 0 )then
             Sequence._array_add_all( list, listdyn );
         end
     end
     local pbs = target:getCurve( "pbs" );
     if( pbs:size() > 0 )then
-        local listpbs = Sequence.generatePitchBendSensitivityNRPN( sequence, track, ms_presend );
+        local listpbs = Sequence._generatePitchBendSensitivityNRPN( sequence, track, ms_presend );
         if( #listpbs > 0 )then
             Sequence._array_add_all( list, listpbs );
         end
     end
     local pit = target:getCurve( "pit" );
     if( pit:size() > 0 )then
-        local listpit = Sequence.generatePitchBendNRPN( sequence, track, ms_presend );
+        local listpit = Sequence._generatePitchBendNRPN( sequence, track, ms_presend );
         if( #listpit > 0 )then
             Sequence._array_add_all( list, listpit );
         end
@@ -997,7 +962,7 @@ function Sequence._generateNRPN_3( sequence, track, msPreSend )
             end
 
             local noteNrpn;
-            noteNrpn, lastDelay = Sequence.generateNoteNRPN(
+            noteNrpn, lastDelay = Sequence._generateNoteNRPN(
                 sequence,
                 track,
                 item,
@@ -1009,36 +974,35 @@ function Sequence._generateNRPN_3( sequence, track, msPreSend )
             table.insert( list, noteNrpn );
             Sequence._array_add_all(
                 list,
-                Sequence.generateVibratoNRPN( sequence, item, msPreSend )
+                Sequence._generateVibratoNRPN( sequence, item, msPreSend )
             );
             last_note_end = item.clock + item:getLength();
         elseif( item.type == EventTypeEnum.Singer )then
             if( i > note_start and i ~= singer_event )then
                 Sequence._array_add_all(
                     list,
-                    Sequence.generateSingerNRPN( sequence, item, msPreSend )
+                    Sequence._generateSingerNRPN( sequence, item, msPreSend )
                 );
             end
         end
     end
 
     table.sort( list, NrpnEvent.compare );
-    local merged = {};--Vector<VsqNrpn>();
+    local merged = {};
     for i = 1, #list, 1 do
         Sequence._array_add_all( merged, list[i]:expand() );
     end
     return merged;
 end
 
----
+--
 -- 指定したシーケンスの指定したトラックから、PitchBend の NRPN リストを作成する
 -- @param sequence (Sequence) 出力元のシーケンス
 -- @param track (integer) 出力するトラックの番号
 -- @param msPreSend (integer) ミリ秒単位のプリセンド時間
 -- @return (table<NrpnEvent>) NrpnEvent の配列
--- @name <i>generatePitchBendNRPN</i>
--- @todo ディレイを設定する必要があるのでは？
-function Sequence.generatePitchBendNRPN( sequence, track, msPreSend )
+-- @name <i>_generatePitchBendNRPN</i>
+function Sequence._generatePitchBendNRPN( sequence, track, msPreSend )
     local ret = {};
     local pit = sequence.track:get( track ):getCurve( "PIT" );
     local count = pit:size();
@@ -1047,11 +1011,11 @@ function Sequence.generatePitchBendNRPN( sequence, track, msPreSend )
         local clock = pit:getKeyClock( i );
 
         local actualClock, delay;
-        actualClock, delay = sequence:getActualClockAndDelay( clock, msPreSend );
+        actualClock, delay = sequence:_getActualClockAndDelay( clock, msPreSend );
         if( actualClock >= 0 )then
             if( lastDelay ~= delay )then
                 local delayMsb, delayLsb;
-                delayMsb, delayLsb = Sequence.getMsbAndLsb( delay );
+                delayMsb, delayLsb = Sequence._getMsbAndLsb( delay );
                 table.insert(
                     ret,
                     NrpnEvent.new( actualClock, MidiParameterEnum.PB_DELAY, delayMsb, delayLsb )
@@ -1060,7 +1024,7 @@ function Sequence.generatePitchBendNRPN( sequence, track, msPreSend )
             lastDelay = delay;
 
             local value = pit:getValue( i ) + 0x2000;
-            local msb, lsb = Sequence.getMsbAndLsb( value );
+            local msb, lsb = Sequence._getMsbAndLsb( value );
             table.insert(
                 ret,
                 NrpnEvent.new( actualClock, MidiParameterEnum.PB_PITCH_BEND, msb, lsb )
@@ -1084,15 +1048,15 @@ function Sequence._array_add_all( src_array, add_array )
     return src_array;
 end
 
----
+--
 -- 指定したシーケンスの指定したトラックから、PitchBendSensitivity の NRPN リストを作成する
 -- @param sequence (Sequence) 出力元のシーケンス
 -- @param track (integer) 出力するトラックの番号
 -- @param msPreSend (integer) ミリ秒単位のプリセンド時間
 -- @return (table<NrpnEvent>) NrpnEvent の配列
--- @name <i>generatePitchBendSensitivityNRPN</i>
+-- @name <i>_generatePitchBendSensitivityNRPN</i>
 -- @todo ディレイを設定する必要があるのでは？
-function Sequence.generatePitchBendSensitivityNRPN( sequence, track, msPreSend )
+function Sequence._generatePitchBendSensitivityNRPN( sequence, track, msPreSend )
     local ret = {};-- Vector<VsqNrpn>();
     local pbs = sequence.track:get( track ):getCurve( "PBS" );
     local count = pbs:size();
@@ -1101,11 +1065,11 @@ function Sequence.generatePitchBendSensitivityNRPN( sequence, track, msPreSend )
     for i = 0, count - 1, 1 do
         local clock = pbs:getKeyClock( i );
         local actualClock, delay;
-        actualClock, delay = sequence:getActualClockAndDelay( clock, msPreSend );
+        actualClock, delay = sequence:_getActualClockAndDelay( clock, msPreSend );
         if( actualClock >= 0 )then
             if( lastDelay ~= delay )then
                 local delayMsb, delayLsb;
-                delayMsb, delayLsb = Sequence.getMsbAndLsb( delay );
+                delayMsb, delayLsb = Sequence._getMsbAndLsb( delay );
                 table.insert(
                     ret,
                     NrpnEvent.new( actualClock, MidiParameterEnum.CC_PBS_DELAY, delayMsb, delayLsb )
@@ -1125,29 +1089,27 @@ function Sequence.generatePitchBendSensitivityNRPN( sequence, track, msPreSend )
     return ret;
 end
 
----
+--
 -- トラックの音符イベントから、ビブラート出力用の NRPN のリストを作成する
 -- @param sequence (Sequence) 出力元のシーケンス
 -- @param noteEvent (Event) 出力する音符イベント
 -- @param msPreSend (integer) ミリ秒単位のプリセンド時間
 -- @return (table<NrpnEvent>) NrpnEvent の配列
--- @name <i>generateVibratoNRPN</i>
-function Sequence.generateVibratoNRPN( sequence, noteEvent, msPreSend )
+-- @name <i>_generateVibratoNRPN</i>
+function Sequence._generateVibratoNRPN( sequence, noteEvent, msPreSend )
     local ret = {};
     if( noteEvent.vibratoHandle ~= nil )then
         local vclock = noteEvent.clock + noteEvent.vibratoDelay;
         local actualClock, delay;
-        actualClock, delay = sequence:getActualClockAndDelay( vclock, msPreSend );
-        local delayMsb, delayLsb = Sequence.getMsbAndLsb( delay );
-        local add2 = NrpnEvent.new(
-            actualClock,
-            MidiParameterEnum.CC_VD_VERSION_AND_DEVICE,
-            0x00,
-            0x00
-        );
-        add2:append( MidiParameterEnum.CC_VD_DELAY, delayMsb, delayLsb, true );
-        add2:append( MidiParameterEnum.CC_VD_VIBRATO_DEPTH, noteEvent.vibratoHandle:getStartDepth(), true );
-        add2:append( MidiParameterEnum.CC_VR_VIBRATO_RATE, noteEvent.vibratoHandle:getStartRate(), true );
+        actualClock, delay = sequence:_getActualClockAndDelay( vclock, msPreSend );
+        local delayMsb, delayLsb = Sequence._getMsbAndLsb( delay );
+        local add2 = NrpnEvent.new( actualClock, MidiParameterEnum.CC_VD_VERSION_AND_DEVICE, 0x00, 0x00 );
+        add2:append( MidiParameterEnum.CC_VR_VERSION_AND_DEVICE, 0x00, 0x00 );
+        add2:append( MidiParameterEnum.CC_VD_DELAY, delayMsb, delayLsb );
+        add2:append( MidiParameterEnum.CC_VR_DELAY, delayMsb, delayLsb );
+        -- CC_VD_VIBRATO_DEPTH, CC_VR_VIBRATO_RATE では、NRPN の MSB を省略してはいけない
+        add2:append( MidiParameterEnum.CC_VD_VIBRATO_DEPTH, noteEvent.vibratoHandle:getStartDepth() );
+        add2:append( MidiParameterEnum.CC_VR_VIBRATO_RATE, noteEvent.vibratoHandle:getStartRate() );
         table.insert( ret, add2 );
         local vlength = noteEvent:getLength() - noteEvent.vibratoDelay;
 
@@ -1160,10 +1122,10 @@ function Sequence.generateVibratoNRPN( sequence, noteEvent, msPreSend )
                 local itemi = depthBP:get( i );
                 local percent = itemi.x;
                 local cl = vclock + math.floor( percent * vlength );
-                actualClock, delay = sequence:getActualClockAndDelay( cl, msPreSend );
+                actualClock, delay = sequence:_getActualClockAndDelay( cl, msPreSend );
                 local nrpnEvent = nil;
                 if( lastDelay ~= delay )then
-                    delayMsb, delayLsb = Sequence.getMsbAndLsb( delay );
+                    delayMsb, delayLsb = Sequence._getMsbAndLsb( delay );
                     nrpnEvent = NrpnEvent.new( actualClock, MidiParameterEnum.CC_VD_DELAY, delayMsb, delayLsb );
                     nrpnEvent:append( MidiParameterEnum.CC_VD_VIBRATO_DEPTH, itemi.y );
                 else
@@ -1183,10 +1145,10 @@ function Sequence.generateVibratoNRPN( sequence, noteEvent, msPreSend )
                 local itemi = rateBP:get( i );
                 local percent = itemi.x;
                 local cl = vclock + math.floor( percent * vlength );
-                actualClock, delay = sequence:getActualClockAndDelay( cl, msPreSend );
+                actualClock, delay = sequence:_getActualClockAndDelay( cl, msPreSend );
                 local nrpnEvent = nil;
                 if( lastDelay ~= delay )then
-                    delayMsb, delayLsb = Sequence.getMsbAndLsb( delay );
+                    delayMsb, delayLsb = Sequence._getMsbAndLsb( delay );
                     nrpnEvent = NrpnEvent.new( actualClock, MidiParameterEnum.CC_VR_DELAY, delayMsb, delayLsb );
                     nrpnEvent:append( MidiParameterEnum.CC_VR_VIBRATO_RATE, itemi.y );
                 else
@@ -1201,19 +1163,18 @@ function Sequence.generateVibratoNRPN( sequence, noteEvent, msPreSend )
     return ret;
 end
 
----
+--
 -- 指定したシーケンスの指定したトラックから、VoiceChangeParameter の NRPN リストを作成する
 -- @param sequence (Sequence) 出力元のシーケンス
 -- @param track (integer) 出力するトラックの番号
 -- @param msPreSend (integer) ミリ秒単位のプリセンド時間
 -- @return (table<NrpnEvent>) NrpnEvent の配列
--- @name <i>generateVoiceChangeParameterNRPN</i>
-function Sequence.generateVoiceChangeParameterNRPN( sequence, track, msPreSend )
+-- @name <i>_generateVoiceChangeParameterNRPN</i>
+function Sequence._generateVoiceChangeParameterNRPN( sequence, track, msPreSend )
     local premeasure_clock = sequence:getPreMeasureClocks();
     local renderer = sequence.track:get( track ).common.version;
-    local res = {};--Vector<VsqNrpn>();
+    local res = {};
 
-    --String[]
     local curves;
     if( renderer:sub( 1, 4 ) == "DSB3" )then
         curves = { "BRE", "BRI", "CLE", "POR", "OPE", "GEN" };
@@ -1230,47 +1191,60 @@ function Sequence.generateVoiceChangeParameterNRPN( sequence, track, msPreSend )
     local i, lastDelay;
     lastDelay = 0;
     for i = 1, #curves, 1 do
-        local vbpl = sequence.track:get( track ):getCurve( curves[i] );
-        if( vbpl:size() > 0 )then
-            local lsb = MidiParameterEnum.getVoiceChangeParameterId( curves[i] );
-            local count = vbpl:size();
-            local j;
-            for j = 0, count - 1, 1 do
-                local clock = vbpl:getKeyClock( j );
-                local actualClock, delay;
-                actualClock, delay = sequence:getActualClockAndDelay( clock, msPreSend );
-
-                if( actualClock >= 0 )then
-                    local add = nil;
-                    if( lastDelay ~= delay )then
-                        local delayMsb, delayLsb;
-                        delayMsb, delayLsb = Sequence.getMsbAndLsb( delay );
-                        add = NrpnEvent.new( actualClock, MidiParameterEnum.VCP_DELAY, delayMsb, delayLsb );
-                    end
-                    lastDelay = delay;
-
-                    if( add == nil )then
-                        add = NrpnEvent.new( actualClock, MidiParameterEnum.VCP_VOICE_CHANGE_PARAMETER_ID, lsb );
-                    else
-                        add:append( MidiParameterEnum.VCP_VOICE_CHANGE_PARAMETER_ID, lsb );
-                    end
-                    add:append( MidiParameterEnum.VCP_VOICE_CHANGE_PARAMETER, vbpl:getValue( j ), true );
-                    table.insert( res, add );
-                end
-            end
+        local list = sequence.track:get( track ):getCurve( curves[i] );
+        if( list:size() > 0 )then
+            Sequence._addVoiceChangeParameters( res, list, sequence, msPreSend );
         end
     end
-    table.sort( res, NrpnEvent.compare );--Collections.sort( res );
+    table.sort( res, NrpnEvent.compare );
     return res;
 end
 
----
+--
+-- Voice Change Parameter の NRPN を追加する
+-- @access private
+-- @param dest (table) 追加先のテーブル
+-- @param list (BPList) Voice Change Parameter のデータ点が格納された BPList
+-- @param sequence (Sequence) シーケンス
+-- @param msPreSend (integer) ミリ秒単位のプリセンド時間
+-- @name <i>_addVoiceChangeParameters</i>
+function Sequence._addVoiceChangeParameters( dest, list, sequence, msPreSend )
+    local id = MidiParameterEnum.getVoiceChangeParameterId( list:getName() );
+    local count = list:size();
+    local j;
+    for j = 0, count - 1, 1 do
+        local clock = list:getKeyClock( j );
+        local value = list:getValue( j );
+        local actualClock, delay;
+        actualClock, delay = sequence:_getActualClockAndDelay( clock, msPreSend );
+
+        if( actualClock >= 0 )then
+            local add = nil;
+            if( lastDelay ~= delay )then
+                local delayMsb, delayLsb;
+                delayMsb, delayLsb = Sequence._getMsbAndLsb( delay );
+                add = NrpnEvent.new( actualClock, MidiParameterEnum.VCP_DELAY, delayMsb, delayLsb );
+            end
+            lastDelay = delay;
+
+            if( add == nil )then
+                add = NrpnEvent.new( actualClock, MidiParameterEnum.VCP_VOICE_CHANGE_PARAMETER_ID, id );
+            else
+                add:append( MidiParameterEnum.VCP_VOICE_CHANGE_PARAMETER_ID, id );
+            end
+            add:append( MidiParameterEnum.VCP_VOICE_CHANGE_PARAMETER, value, true );
+            table.insert( dest, add );
+        end
+    end
+end
+
+--
 -- DATA の値を MSB と LSB に分解する
 -- @param value (integer) 分解する値
 -- @return (integer) MSB の値
 -- @return (integer) LSB の値
--- @name <i>getMsbAndLsb</i>
-function Sequence.getMsbAndLsb( value )
+-- @name <i>_getMsbAndLsb</i>
+function Sequence._getMsbAndLsb( value )
     if( 0x3fff < value )then
         return 0x7f, 0x7f;
     else
@@ -1279,13 +1253,13 @@ function Sequence.getMsbAndLsb( value )
     end
 end
 
----
+--
 -- "DM:0001:"といった、VSQメタテキストの行の先頭につくヘッダー文字列のバイト列表現を取得する
 -- @param count (integer) ヘッダーの番号
 -- @return (table<integer>) バイト列
--- @name <i>getLinePrefixBytes</i>
-function Sequence.getLinePrefixBytes( count )
-    local digits = Sequence.getHowManyDigits( count );
+-- @name <i>_getLinePrefixBytes</i>
+function Sequence._getLinePrefixBytes( count )
+    local digits = Sequence._getHowManyDigits( count );
     local c = math.floor( (digits - 1) / 4 ) + 1;
     local format = "";
     local i;
@@ -1301,12 +1275,12 @@ function Sequence.getLinePrefixBytes( count )
     return result;
 end
 
----
+--
 -- 数値の 10 進数での桁数を取得する
 -- @param number (integer) 検査対象の数値
 -- @return (integer) 数値の 10 進数での桁数
--- @name <i>getHowManyDigits</i>
-function Sequence.getHowManyDigits( number )
+-- @name <i>_getHowManyDigits</i>
+function Sequence._getHowManyDigits( number )
     number = math.abs( number );
     if( number == 0 )then
         return 1;
@@ -1315,22 +1289,22 @@ function Sequence.getHowManyDigits( number )
     end
 end
 
----
+--
 -- 16 ビットの unsigned int 値をビッグエンディアンでストリームに書きこむ
 -- @param stream (? extends OutputStream) 出力先のストリーム
 -- @param data (integer) 出力する値
--- @name <i>writeUnsignedShort</i>
-function Sequence.writeUnsignedShort( stream, data )
+-- @name <i>_writeUnsignedShort</i>
+function Sequence._writeUnsignedShort( stream, data )
     local dat = Util.getBytesUInt16BE( data );
     stream:write( dat, 1, #dat );
 end
 
----
+--
 -- 32 ビットの unsigned int 値をビッグエンディアンでストリームに書きこむ
 -- @param stream (? extends OutputStram) 出力先のストリーム
 -- @param data (integer) 出力する値
--- @name <i>writeUnsignedInt</i>
-function Sequence.writeUnsignedInt( stream, data )
+-- @name <i>_writeUnsignedInt</i>
+function Sequence._writeUnsignedInt( stream, data )
     local dat = Util.getBytesUInt32BE( data );
     stream:write( dat, 1, #dat );
 end
