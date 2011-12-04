@@ -191,12 +191,34 @@ function testUpdateTotalClocks()
     assert_equal( 2400, sequence:getTotalClocks() );
 end
 
-function test_generateMetaTextEventWithoutPitch()
-    fail();
-end
+function test_getMidiEventsFromMetaText()
+    local stream = luavsq.TextStream.new();
+    -- 「あ」が Shift_JIS になった時分割される「あ」を Shift_JIS にすると「0x82 0xA0」
+    stream:write( string.rep( "a", 118 ) .. "あ" );
+    stream:write( string.rep( "b", 63 ) );
+    local events = luavsq.Sequence._getMidiEventsFromMetaText( stream, "Shift_JIS" );
+    assert_equal( 2, #events );
 
-function test_generateMetaTextEventWithPitch()
---    fail();
+    assert_equal( 0, events[1].clock );
+    assert_equal( 0xFF, events[1].firstByte );
+    assert_equal( 128, #events[1].data );
+    assert_equal( 0x01, events[1].data[1] );
+    local actual = "";
+    local i;
+    for i = 2, #events[1].data, 1 do
+        actual = actual .. string.char( events[1].data[i] );
+    end
+    assert_equal( "DM:0000:" .. string.rep( "a", 118 ) .. string.char( 0x82 ), actual );
+
+    assert_equal( 0, events[2].clock );
+    assert_equal( 0xFF, events[2].firstByte );
+    assert_equal( 73, #events[2].data );
+    assert_equal( 0x01, events[2].data[1] );
+    actual = "";
+    for i = 2, #events[2].data, 1 do
+        actual = actual .. string.char( events[2].data[i] );
+    end
+    assert_equal( "DM:0001:" .. string.char( 0xA0 ) .. string.rep( "b", 63 ), actual );
 end
 
 function test_getActualClockAndDelay()

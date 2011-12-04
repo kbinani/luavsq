@@ -220,141 +220,6 @@ function Sequence.new( ... )
     end
 
     --
-    -- メタテキストイベントを作成する
-    -- @return (table&lt;<a href="../files/MidiEvent.html">MidiEvent</a>&gt;) メタテキストを格納した MidiEvent の配列
-    -- @name <i>_generateMetaTextEvent</i>
-    function this:_generateMetaTextEvent( ... )
-        local arguments = { ... };
-        if( #arguments == 2 )then
-            return self:_generateMetaTextEvent_2( arguments[1], arguments[2] );
-        elseif( #arguments == 3 )then
-            return self:_generateMetaTextEvent_3( arguments[1], arguments[2], arguments[3] );
-        elseif( #arguments == 4 )then
-            return self:_generateMetaTextEvent_4( arguments[1], arguments[2], arguments[3], arguments[4] );
-        end
-    end
-
-    --
-    -- メタテキストイベントを作成する
-    -- @param track (integer) トラック番号
-    -- @param encoding (string) マルチバイト文字のテキストエンコーディング(現在は Shift_JIS 固定で、引数は無視される)
-    -- @return (table&lt;<a href="../files/MidiEvent.html">MidiEvent</a>&gt;) メタテキストを格納した <a href="../files/MidiEvent.html">MidiEvent</a> の配列
-    -- @name _generateMetaTextEvent_2
-    function this:_generateMetaTextEvent_2( track, encoding )
-        self:_generateMetaTextEvent_4( track, encoding, self:_calculatePreMeasureInClock(), false );
-    end
-
-    --
-    -- メタテキストイベントを作成する
-    -- @param track (integer) トラック番号
-    -- @param encoding (string) マルチバイト文字のテキストエンコーディング(現在は Shift_JIS 固定で、引数は無視される)
-    -- @param startClock (integer) イベント作成の開始位置
-    -- @return (table&lt;<a href="../files/MidiEvent.html">MidiEvent</a>&gt;) メタテキストを格納した <a href="../files/MidiEvent.html">MidiEvent</a> の配列
-    -- @name _generateMetaTextEvent_3
-    function this:_generateMetaTextEvent_3( track, encoding, startClock )
-        self:_generateMetaTextEvent_4( track, encoding, startClock, false );
-    end
-
-    --
-    -- メタテキストイベントを作成する
-    -- @param track (integer) トラック番号
-    -- @param encoding (string) マルチバイト文字のテキストエンコーディング(現在は Shift_JIS 固定で、引数は無視される)
-    -- @param startClock (integer) イベント作成の開始位置
-    -- @param printPitch (boolean) pitch を含めて出力するかどうか(現在は false 固定で、引数は無視される)
-    -- @return (table&lt;<a href="../files/MidiEvent.html">MidiEvent</a>&gt;) メタテキストを格納した MidiEvent の配列
-    -- @name _generateMetaTextEvent_4
-    function this:_generateMetaTextEvent_4( track, encoding, startClock, printPitch )
-        local _NL = string.char( 0x0a );
-        local ret = {};
-        local sr = TextStream.new();
-        self.track:get( track ):printMetaText( sr, self._totalClocks + 120, startClock, printPitch );
-        sr:setPointer( -1 );
-        local line_count = -1;
-        local tmp = "";
-        if( sr:ready() )then
-            local buffer = {};
-            local first = true;
-            while( sr:ready() )do
-                if( first )then
-                    tmp = sr:readLine();
-                    first = false;
-                else
-                    tmp = _NL .. sr:readLine();
-                end
-                local line = CP932Converter.convertFromUTF8( tmp );
-                local linebytes = Util.stringToArray( line );
-                Sequence._array_add_all( buffer, linebytes );
-                local prefix = Sequence._getLinePrefixBytes( line_count + 1 );
-                while( #prefix + #buffer >= 127 )do
-                    line_count = line_count + 1;
-                    local prefix = Sequence._getLinePrefixBytes( line_count );
-                    local add = MidiEvent.new();
-                    add.clock = 0;
-                    add.firstByte = 0xff;
-                    add.data = {};--new int[128];
-                    add.data[1] = 0x01;
-                    local remain = 127;
-                    local i;
-                    for i = 1, #prefix, 1 do
-                        add.data[i + 1] = prefix[i];
-                    end
-                    for i = #prefix + 1, remain, 1 do
-                        local d = buffer[1];
-                        add.data[i + 1] = d;
-                        table.remove( buffer, 1 );
-                    end
-                    table.insert( ret, add );
-                    prefix = Sequence._getLinePrefixBytes( line_count + 1 );
-                end
-            end
-            if( #buffer > 0 )then
-                local prefix = Sequence._getLinePrefixBytes( line_count + 1 );
-                while( #prefix + #buffer >= 127 )do
-                    line_count = line_count + 1;
-                    prefix = Sequence._getLinePrefixBytes( line_count );
-                    local add = MidiEvent.new();
-                    add.clock = 0;
-                    add.firstByte = 0xff;
-                    add.data = {};--new int[128];
-                    add.data[1] = 0x01;
-                    local remain = 127;
-                    local i;
-                    for i = 1, #prefix, 1 do
-                        add.data[i + 1] = prefix[i];
-                    end
-                    for i = #prefix + 1, remain, 1 do
-                        add.data[i + 1] = buffer[1];
-                        table.remove( buffer, 1 );
-                    end
-                    table.insert( ret, add );
-                    prefix = Sequence._getLinePrefixBytes( line_count + 1 );
-                end
-                if( #buffer > 0 )then
-                    line_count = line_count + 1;
-                    local prefix = Sequence._getLinePrefixBytes( line_count );
-                    local add = MidiEvent.new();
-                    add.clock = 0;
-                    add.firstByte = 0xff;
-                    local remain = #prefix + #buffer;
-                    add.data = {};--new int[remain + 1];
-                    add.data[1] = 0x01;
-                    local i;
-                    for i = 1, #prefix, 1 do
-                        add.data[i + 1] = prefix[i];
-                    end
-                    for i = #prefix + 1, remain, 1 do
-                        add.data[i + 1] = buffer[1];
-                        table.remove( buffer, 1 );
-                    end
-                    table.insert( ret, add );
-                end
-            end
-        end
-
-        return ret;
-    end
-
-    --
     -- 指定した時刻における、プリセンド込の時刻と、ディレイを取得する
     -- @param clock (integer) Tick 単位の時刻
     -- @param msPreSend (integer) ミリ秒単位のプリセンド時間
@@ -510,6 +375,100 @@ function Sequence.new( ... )
 end
 
 --
+-- 文字列を MIDI メタイベントにしたものを取得する
+-- @access private
+-- @param sr (TextStream) MIDI イベント生成元の文字列が出力されたストリーム
+-- @param encoding (string) マルチバイト文字のテキストエンコーディング(現在は Shift_JIS 固定で、引数は無視される)
+function Sequence._getMidiEventsFromMetaText( sr, encoding )
+    local _NL = string.char( 0x0a );
+    local ret = {};
+    sr:setPointer( -1 );
+    local line_count = -1;
+    local tmp = "";
+    if( sr:ready() )then
+        local buffer = {};
+        local first = true;
+        while( sr:ready() )do
+            if( first )then
+                tmp = sr:readLine();
+                first = false;
+            else
+                tmp = _NL .. sr:readLine();
+            end
+            local line = CP932Converter.convertFromUTF8( tmp );
+            local linebytes = Util.stringToArray( line );
+            Sequence._array_add_all( buffer, linebytes );
+            local prefix = Sequence._getLinePrefixBytes( line_count + 1 );
+            while( #prefix + #buffer >= 127 )do
+                line_count = line_count + 1;
+                local prefix = Sequence._getLinePrefixBytes( line_count );
+                local add = MidiEvent.new();
+                add.clock = 0;
+                add.firstByte = 0xff;
+                add.data = {};--new int[128];
+                add.data[1] = 0x01;
+                local remain = 127;
+                local i;
+                for i = 1, #prefix, 1 do
+                    add.data[i + 1] = prefix[i];
+                end
+                for i = #prefix + 1, remain, 1 do
+                    local d = buffer[1];
+                    add.data[i + 1] = d;
+                    table.remove( buffer, 1 );
+                end
+                table.insert( ret, add );
+                prefix = Sequence._getLinePrefixBytes( line_count + 1 );
+            end
+        end
+        if( #buffer > 0 )then
+            local prefix = Sequence._getLinePrefixBytes( line_count + 1 );
+            while( #prefix + #buffer >= 127 )do
+                line_count = line_count + 1;
+                prefix = Sequence._getLinePrefixBytes( line_count );
+                local add = MidiEvent.new();
+                add.clock = 0;
+                add.firstByte = 0xff;
+                add.data = {};--new int[128];
+                add.data[1] = 0x01;
+                local remain = 127;
+                local i;
+                for i = 1, #prefix, 1 do
+                    add.data[i + 1] = prefix[i];
+                end
+                for i = #prefix + 1, remain, 1 do
+                    add.data[i + 1] = buffer[1];
+                    table.remove( buffer, 1 );
+                end
+                table.insert( ret, add );
+                prefix = Sequence._getLinePrefixBytes( line_count + 1 );
+            end
+            if( #buffer > 0 )then
+                line_count = line_count + 1;
+                local prefix = Sequence._getLinePrefixBytes( line_count );
+                local add = MidiEvent.new();
+                add.clock = 0;
+                add.firstByte = 0xff;
+                local remain = #prefix + #buffer;
+                add.data = {};--new int[remain + 1];
+                add.data[1] = 0x01;
+                local i;
+                for i = 1, #prefix, 1 do
+                    add.data[i + 1] = prefix[i];
+                end
+                for i = #prefix + 1, remain, 1 do
+                    add.data[i + 1] = buffer[1];
+                    table.remove( buffer, 1 );
+                end
+                table.insert( ret, add );
+            end
+        end
+    end
+
+    return ret;
+end
+
+--
 -- トラックをストリームに出力する
 -- @param sequence (<a href="../files/Sequence.html">Sequence</a>) 出力するシーケンス
 -- @param track (integer) 出力するトラックの番号
@@ -534,7 +493,9 @@ function Sequence._printTrack( sequence, track, stream, msPreSend, encoding, pri
     stream:write( seq_name, 1, #seq_name );
 
     --Meta Textを準備
-    local meta = sequence:_generateMetaTextEvent( track, encoding, 0, printPitch );
+    local textStream = TextStream.new();
+    self.track:get( track ):printMetaText( textStream, self._totalClocks + 120, 0, printPitch );
+    local meta = Sequence._getMidiEventsFromMetaText( track, encoding, 0, printPitch );
     local lastClock = 0;
     local i;
     for i = 1, #meta, 1 do
