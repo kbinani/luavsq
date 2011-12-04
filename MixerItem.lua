@@ -15,7 +15,7 @@
 module( "luavsq" );
 
 ---
--- Mixer の slave 要素に格納されるアイテムを表すクラス
+-- <a href="../files/Mixer.html">Mixer</a> の slave 要素に格納されるアイテムを表すクラス
 -- @class table
 -- @name MixerItem
 -- @field feder (integer) Feder値
@@ -30,7 +30,7 @@ MixerItem = {};
 -- @param panpot (integer) Panpot値
 -- @param mute (integer) Mute値
 -- @param solo (integer) Solo値
--- @return (MixerItem)
+-- @return (<a href="../files/MixerItem.html">MixerItem</a>)
 -- @name <i>new</i>
 function MixerItem.new( feder, panpot, mute, solo )
     local this = {};
@@ -48,7 +48,7 @@ function MixerItem.new( feder, panpot, mute, solo )
 
     ---
     -- コピーを作成する
-    -- @return (MixerItem) このオブジェクトのコピー
+    -- @return (<a href="../files/MixerItem.html">MixerItem</a>) このオブジェクトのコピー
     -- @name clone
     function this:clone()
         return MixerItem.new( self.feder, self.panpot, self.mute, self.solo );

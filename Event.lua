@@ -27,8 +27,8 @@ module( "luavsq" );
 -- @field id (integer) 内部で使用するオブジェクト固有の ID
 -- @field clock (integer) Tick 単位の時刻
 -- @field index (integer) VSQ メタテキストに出力されるこのオブジェクトの ID
--- @field type (EventTypeEnum) イベントの種類
--- @field singerHandle (Handle) 歌手ハンドル
+-- @field type (<a href="../files/EventTypeEnum.html">EventTypeEnum</a>) イベントの種類
+-- @field singerHandle (<a href="../files/Handle.html">Handle</a>) 歌手ハンドル
 -- @field note (integer) ノート番号
 -- @field dynamics (integer) ベロシティ
 -- @field pmBendDepth (integer) ベンド深さ
@@ -36,20 +36,20 @@ module( "luavsq" );
 -- @field pmbPortamentoUse (integer) ポルタメント
 -- @field demDecGainRate (integer) ディケイ
 -- @field demAccent (integer) アクセント
--- @field lyricHandle (Handle) 歌詞ハンドル
--- @field vibratoHandle (Handle) ビブラートハンドル
+-- @field lyricHandle (<a href="../files/Handle.html">Handle</a>) 歌詞ハンドル
+-- @field vibratoHandle (<a href="../files/Handle.html">Handle</a>) ビブラートハンドル
 -- @field vibratoDelay (integer) イベント先頭から測った、ビブラートの開始位置(Tick 単位)
--- @field noteHeadHandle (Handle) アタックハンドル
+-- @field noteHeadHandle (<a href="../files/Handle.html">Handle</a>) アタックハンドル
 -- @field pMeanOnsetFirstNote (integer)
 -- @field vMeanNoteTransition (integer)
 -- @field d4mean (integer)
 -- @field pMeanEndingNote (integer)
--- @field iconDynamicsHandle (Handle) 強弱記号ハンドル
+-- @field iconDynamicsHandle (<a href="../files/Handle.html">Handle</a>) 強弱記号ハンドル
 Event = {};
 
 --
 -- 初期化を行う
--- @return (Event)
+-- @return (<a href="../files/Event.html">Event</a>)
 function Event.new( ... )
     local arguments = { ... };
     local this = {};
@@ -105,14 +105,14 @@ function Event.new( ... )
     this.iconDynamicsHandle = nil;
 
     ---
-    -- @var (UstEvent)
+    -- @var (<a href="../files/UstEvent.html">UstEvent</a>)
     this.ustEvent = nil;
 
     ---
     -- 初期化を行う
     -- @param line (string) VSQ メタテキスト中の [EventList] セクション内のイベント宣言文字列(ex."480=ID#0001")
     -- @name <i>new</i><sup>2</sup>
-    -- @return (Event)
+    -- @return (<a href="../files/Event.html">Event</a>)
     function this:_init_1( line )
         local spl = Util.split( line, '=' );
         self.clock = tonumber( spl[1], 10 );
@@ -124,7 +124,7 @@ function Event.new( ... )
     ---
     -- 初期化を行う。この初期化メソッドは末尾のイベントリストを表すインスタンスを初期化する
     -- @name <i>new</i><sup>1</sup>
-    -- @return (Event)
+    -- @return (<a href="../files/Event.html">Event</a>)
     function this:_init_0()
         self.clock = 0;
         self.index = -1;
@@ -134,9 +134,9 @@ function Event.new( ... )
     ---
     -- 初期化を行う
     -- @param clock (integer) Tick 単位の時刻
-    -- @param eventType (EventTypeEnum) イベントの種類
+    -- @param eventType (<a href="../files/EventTypeEnum.html">EventTypeEnum</a>) イベントの種類
     -- @name <i>new</i><sup>3</sup>
-    -- @return (Event)
+    -- @return (<a href="../files/Event.html">Event</a>)
     function this:_init_2( clock, eventType )
         self.clock = clock;
         self.type = eventType;
@@ -351,7 +351,7 @@ function Event.new( ... )
 
     ---
     -- テキストストリームに書き出す
-    -- @param stream (TextStream) 出力先
+    -- @param stream (<a href="../files/TextStream.html">TextStream</a>) 出力先
     -- @name write<sup>1</sup>
     function this:_write_1( stream )
         local def = { "Length",
@@ -367,7 +367,7 @@ function Event.new( ... )
 
     ---
     -- テキストストリームに書き出す
-    -- @param stream (TextStream) 出力先
+    -- @param stream (<a href="../files/TextStream.html">TextStream</a>) 出力先
     -- @param printTargets (table) 出力するアイテムのリスト
     -- @name write<sup>2</sup>
     function this:_write_2( stream, printTargets )
@@ -424,7 +424,7 @@ function Event.new( ... )
 
     ---
     -- コピーを作成する
-    -- @return (Event) このインスタンスのコピー
+    -- @return (<a href="../files/Event.html">Event</a>) このインスタンスのコピー
     -- @name clone
     function this:clone()
         local result = Event.new( self.clock, self.type );
@@ -473,7 +473,7 @@ function Event.new( ... )
         -- @param sr [TextStream] 読み込み対象
         -- @param value [int]
         -- @param last_line [ByRef<string>] 読み込んだ最後の行が返されます
-        -- @return (Id)
+        -- @return (<a href="../files/Id.html">Id</a>)
         function this:_init_3( sr, value, last_line )
             local spl;
             self.index = value;
@@ -553,7 +553,7 @@ function Event.new( ... )
 
     ---
     -- 順序を比較する
-    -- @param item (Event) 比較対象のアイテム
+    -- @param item (<a href="../files/Event.html">Event</a>) 比較対象のアイテム
     -- @return (integer) このインスタンスが比較対象よりも小さい場合は負の整数、等しい場合は 0、大きい場合は正の整数を返す
     -- @name compareTo
     function this:compareTo( item )
@@ -578,8 +578,8 @@ end
 
 ---
 -- 2 つの Event を比較する
--- @param a (Event) 比較対象のオブジェクト
--- @param b (Event) 比較対象のオブジェクト
+-- @param a (<a href="../files/Event.html">Event</a>) 比較対象のオブジェクト
+-- @param b (<a href="../files/Event.html">Event</a>) 比較対象のオブジェクト
 -- @return (boolean) a が b よりも小さい場合は true、そうでない場合は false を返す
 -- @name <i>compare</i>
 function Event.compare( a, b )
@@ -588,7 +588,8 @@ end
 
 ---
 -- イベントリストの末尾の要素を表すオブジェクトを取得する
--- @return (Id) 末尾の要素を表す Id
+-- @return (<a href="../files/Event.html">Event</a>) 末尾の要素を表す <a href="../files/Event.html">Event</a> オブジェクト
+-- @name <i>getEOS</i>
 function Event.getEOS()
     return Event.new();
 end

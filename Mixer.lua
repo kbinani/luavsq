@@ -28,7 +28,7 @@ Mixer = {};
 
 --
 -- 初期化を行う
--- @return (Mixer)
+-- @return (<a href="../files/Mixer.html">Mixer</a>)
 function Mixer.new( ... )
     local this = {};
     local arguments = { ... };
@@ -47,7 +47,7 @@ function Mixer.new( ... )
     -- @param masterPanpot (integer) MasterPanpot 値
     -- @param masterMute (integer) MasterMute 値
     -- @param outputMode (integer) OutputMode 値
-    -- @return (Mixer)
+    -- @return (<a href="../files/Mixer.html">Mixer</a>)
     -- @name <i>new</i><sup>2</sup>
     function this:_init_4( masterFeder, masterPanpot, masterMute, outputMode )
         self.masterFeder = masterFeder;
@@ -62,9 +62,9 @@ function Mixer.new( ... )
 
     ---
     -- テキストストリームから読み込みを行い、初期化を行う
-    -- @param stream (TextStream) 読み込むテキストストリーム
+    -- @param stream (<a href="../files/TextStream.html">TextStream</a>) 読み込むテキストストリーム
     -- @param lastLine (table, { value = ? }) 読み込んだ最後の行。テーブルの ["value"] に文字列が格納される
-    -- @return (Mixer)
+    -- @return (<a href="../files/Mixer.html">Mixer</a>)
     -- @name <i>new</i><sup>1</sup>
     function this:_init_2( stream, lastLine )
         self.masterFeder = 0;
@@ -134,7 +134,7 @@ function Mixer.new( ... )
 
     ---
     -- コピーを作成する
-    -- @return (Mixer) このオブジェクトのコピー
+    -- @return (<a href="../files/Mixer.html">Mixer</a>) このオブジェクトのコピー
     -- @name clone
     function this:clone()
         local res = Mixer.new( self.masterFeder, self.masterPanpot, self.masterMute, self.outputMode );
@@ -149,7 +149,7 @@ function Mixer.new( ... )
 
     ---
     -- テキストストリームに出力する
-    -- @param stream (TextStream) 出力先のストリーム
+    -- @param stream (<a href="../files/TextStream.html">TextStream</a>) 出力先のストリーム
     -- @name write
     function this:write( stream )
         stream:writeLine( "[Mixer]" );

@@ -24,11 +24,11 @@ module( "luavsq" );
 -- VSQ ファイルのシーケンスを保持するクラス
 -- @class table
 -- @name Sequence
--- @field track (List) トラックのリスト。最初のトラックは MasterTrack であり、通常の音符が格納されるトラックはインデックス 1 以降となる
--- @field tempoTable (TempoTable) テンポ情報を保持したテーブル
--- @field timesigTable (TimesigTable) 拍子情報を保持したテーブル
--- @field master (Master) プリメジャーを保持する
--- @field mixer (Mixer) ミキサー情報
+-- @field track (<a href="../files/List.html">List</a>&lt;<a href="../files/Track.html">Track</a>&gt;) トラックのリスト。最初のトラックは MasterTrack であり、通常の音符が格納されるトラックはインデックス 1 以降となる
+-- @field tempoTable (<a href="../files/TempoTable.html">TempoTable</a>) テンポ情報を保持したテーブル
+-- @field timesigTable (<a href="../files/TimesigTable.html">TimesigTable</a>) 拍子情報を保持したテーブル
+-- @field master (<a href="../files/Master.html">Master</a>) プリメジャーを保持する
+-- @field mixer (<a href="../files/Mixer.html">Mixer</a>) ミキサー情報
 -- @field tag (?) シーケンスに付属するタグ情報
 Sequence = {};
 
@@ -45,7 +45,7 @@ Sequence._WRITE_NRPN = false;
 
 --
 -- 初期化を行う
--- @return (Sequence)
+-- @return (<a href="../files/Sequence.html">Sequence</a>)
 function Sequence.new( ... )
     local this = {};
     local arguments = { ... };
@@ -81,7 +81,7 @@ function Sequence.new( ... )
     -- @param numerator (integer) 拍子の分子の値
     -- @param denominator (integer) 拍子の分母の値
     -- @param tempo (integer) テンポ値。四分音符の長さのマイクロ秒単位の長さ
-    -- @return (Sequence)
+    -- @return (<a href="../files/Sequence.html">Sequence</a>)
     -- @name <i>new</i>
     function this:_init_5( singer, preMeasure, numerator, denominator, tempo )
         self._totalClocks = preMeasure * 480 * 4 / denominator * numerator;
@@ -100,7 +100,7 @@ function Sequence.new( ... )
 
     ---
     -- コピーを作成する
-    -- @return (Sequence) オブジェクトのコピー
+    -- @return (<a href="../files/Sequence.html">Sequence</a>) オブジェクトのコピー
     -- @name clone
     function this:clone()
         local ret = Sequence.new();
@@ -221,7 +221,7 @@ function Sequence.new( ... )
 
     --
     -- メタテキストイベントを作成する
-    -- @return (table<MidiEvent>) メタテキストを格納した MidiEvent の配列
+    -- @return (table&lt;<a href="../files/MidiEvent.html">MidiEvent</a>&gt;) メタテキストを格納した MidiEvent の配列
     -- @name <i>_generateMetaTextEvent</i>
     function this:_generateMetaTextEvent( ... )
         local arguments = { ... };
@@ -238,7 +238,7 @@ function Sequence.new( ... )
     -- メタテキストイベントを作成する
     -- @param track (integer) トラック番号
     -- @param encoding (string) マルチバイト文字のテキストエンコーディング(現在は Shift_JIS 固定で、引数は無視される)
-    -- @return (table<MidiEvent>) メタテキストを格納した MidiEvent の配列
+    -- @return (table&lt;<a href="../files/MidiEvent.html">MidiEvent</a>&gt;) メタテキストを格納した <a href="../files/MidiEvent.html">MidiEvent</a> の配列
     -- @name _generateMetaTextEvent_2
     function this:_generateMetaTextEvent_2( track, encoding )
         self:_generateMetaTextEvent_4( track, encoding, self:_calculatePreMeasureInClock(), false );
@@ -249,7 +249,7 @@ function Sequence.new( ... )
     -- @param track (integer) トラック番号
     -- @param encoding (string) マルチバイト文字のテキストエンコーディング(現在は Shift_JIS 固定で、引数は無視される)
     -- @param startClock (integer) イベント作成の開始位置
-    -- @return (table<MidiEvent>) メタテキストを格納した MidiEvent の配列
+    -- @return (table&lt;<a href="../files/MidiEvent.html">MidiEvent</a>&gt;) メタテキストを格納した <a href="../files/MidiEvent.html">MidiEvent</a> の配列
     -- @name _generateMetaTextEvent_3
     function this:_generateMetaTextEvent_3( track, encoding, startClock )
         self:_generateMetaTextEvent_4( track, encoding, startClock, false );
@@ -261,7 +261,7 @@ function Sequence.new( ... )
     -- @param encoding (string) マルチバイト文字のテキストエンコーディング(現在は Shift_JIS 固定で、引数は無視される)
     -- @param startClock (integer) イベント作成の開始位置
     -- @param printPitch (boolean) pitch を含めて出力するかどうか(現在は false 固定で、引数は無視される)
-    -- @return (table<MidiEvent>) メタテキストを格納した MidiEvent の配列
+    -- @return (table&lt;<a href="../files/MidiEvent.html">MidiEvent</a>&gt;) メタテキストを格納した MidiEvent の配列
     -- @name _generateMetaTextEvent_4
     function this:_generateMetaTextEvent_4( track, encoding, startClock, printPitch )
         local _NL = string.char( 0x0a );
@@ -456,7 +456,7 @@ function Sequence.new( ... )
         stream:write( #Sequence._MASTER_TRACK );--トラック名の文字数。これは固定
         stream:write( Sequence._MASTER_TRACK, 1, #Sequence._MASTER_TRACK );
 
-        local events = {};--Vector<MidiEvent>();
+        local events = {};
         local itr = self.timesigTable:iterator();
         while( itr:hasNext() )do
             local entry = itr:next();
@@ -511,7 +511,7 @@ end
 
 --
 -- トラックをストリームに出力する
--- @param sequence (Sequence) 出力するシーケンス
+-- @param sequence (<a href="../files/Sequence.html">Sequence</a>) 出力するシーケンス
 -- @param track (integer) 出力するトラックの番号
 -- @param stream (? extends OutputStream) 出力先のストリーム
 -- @param msPreSend (integer) ミリ秒単位のプリセンド時間
@@ -579,10 +579,10 @@ end
 
 --
 -- トラックの Expression(DYN) の NRPN リストを作成する
--- @param sequence (Sequence) 出力するシーケンス
+-- @param sequence (<a href="../files/Sequence.html">Sequence</a>) 出力するシーケンス
 -- @param track (integer) 出力するトラックの番号
 -- @param msPreSend (integer) ミリ秒単位のプリセンド時間
--- @return (table<NrpnEvent>) NrpnEvent の配列
+-- @return (table&lt;<a href="../files/NrpnEvent.html">NrpnEvent</a>&gt;) NrpnEvent の配列
 -- @name <i>_generateExpressionNRPN</i>
 function Sequence._generateExpressionNRPN( sequence, track, msPreSend )
     local ret = {};
@@ -642,7 +642,7 @@ end
 
 --
 -- トラックの先頭に記録される NRPN のリストを作成する
--- @return (table<NrpnEvent>) NrpnEvent の配列
+-- @return (table&lt;<a href="../files/NrpnEvent.html">NrpnEvent</a>&gt;) NrpnEvent の配列
 -- @name <i>_generateHeaderNRPN</i>
 function Sequence._generateHeaderNRPN()
     local ret = NrpnEvent.new( 0, MidiParameterEnum.CC_BS_VERSION_AND_DEVICE, 0x00, 0x00 );
@@ -655,10 +655,10 @@ end
 -- 歌手変更イベントの NRPN リストを作成する。
 -- トラック先頭の歌手変更イベントについては、このメソッドで作成してはいけない。
 -- トラック先頭のgenerateNRPN メソッドが担当する
--- @param sequence (Sequence) 出力元のシーケンス
--- @param singerEvent (Event) 出力する歌手変更イベント
+-- @param sequence (<a href="../files/Sequence.html">Sequence</a>) 出力元のシーケンス
+-- @param singerEvent (<a href="../files/Event.html">Event</a>) 出力する歌手変更イベント
 -- @param msPreSend (integer) ミリ秒単位のプリセンド時間
--- @return (table<NrpnEvent>) NrpnEvent の配列
+-- @return (table&lt;<a href="../files/NrpnEvent.html">NrpnEvent</a>&gt;) NrpnEvent の配列
 -- @name <i>_generateSingerNRPN</i>
 function Sequence._generateSingerNRPN( sequence, singerEvent, msPreSend )
     local clock = singerEvent.clock;
@@ -693,9 +693,9 @@ end
 
 --
 -- トラックの音符イベントから NRPN のリストを作成する
--- @param sequence (Sequence) 出力元のシーケンス
+-- @param sequence (<a href="../files/Sequence.html">Sequence</a>) 出力元のシーケンス
 -- @param track (integer) 出力するトラックの番号
--- @param noteEvent (Event) 出力する音符イベント
+-- @param noteEvent (<a href="../files/Event.html">Event</a>) 出力する音符イベント
 -- @param msPreSend (integer) ミリ秒単位のプリセンド時間
 -- @param noteLocation (integer) <ul>
 --                               <li>00:前後共に連続した音符がある
@@ -704,7 +704,7 @@ end
 --                               <li>03:前後どちらにも連続した音符が無い
 --                           </ul>
 -- @param lastDelay (integer) 直前の音符イベントに指定された、ミリ秒単位のディレイ値。最初の音符イベントの場合は nil を指定する
--- @return (NrpnEvent) NrpnEvent
+-- @return (<a href="../files/NrpnEvent.html">NrpnEvent</a>) NrpnEvent
 -- @return (integer) この音符に対して設定された、ミリ秒単位のディレイ値
 -- @name <i>_generateNoteNRPN</i>
 function Sequence._generateNoteNRPN( sequence, track, noteEvent, msPreSend, noteLocation, lastDelay )
@@ -863,10 +863,10 @@ end
 
 --
 -- 指定したシーケンスの指定したトラックから、NRPN のリストを作成する
--- @param sequence (Sequence) 出力元のシーケンス
+-- @param sequence (<a href="../files/Sequence.html">Sequence</a>) 出力元のシーケンス
 -- @param track (integer) 出力するトラックの番号
 -- @param msPreSend (integer) ミリ秒単位のプリセンド時間
--- @return (table<NrpnEvent>) NrpnEvent の配列
+-- @return (table&lt;<a href="../files/NrpnEvent.html">NrpnEvent</a>&gt;) NrpnEvent の配列
 -- @name <i>_generateNRPN_3</i>
 function Sequence._generateNRPN_3( sequence, track, msPreSend )
     local list = {};
@@ -997,10 +997,10 @@ end
 
 --
 -- 指定したシーケンスの指定したトラックから、PitchBend の NRPN リストを作成する
--- @param sequence (Sequence) 出力元のシーケンス
+-- @param sequence (<a href="../files/Sequence.html">Sequence</a>) 出力元のシーケンス
 -- @param track (integer) 出力するトラックの番号
 -- @param msPreSend (integer) ミリ秒単位のプリセンド時間
--- @return (table<NrpnEvent>) NrpnEvent の配列
+-- @return (table&lt;<a href="../files/NrpnEvent.html">NrpnEvent</a>&gt;) NrpnEvent の配列
 -- @name <i>_generatePitchBendNRPN</i>
 function Sequence._generatePitchBendNRPN( sequence, track, msPreSend )
     local ret = {};
@@ -1050,14 +1050,14 @@ end
 
 --
 -- 指定したシーケンスの指定したトラックから、PitchBendSensitivity の NRPN リストを作成する
--- @param sequence (Sequence) 出力元のシーケンス
+-- @param sequence (<a href="../files/Sequence.html">Sequence</a>) 出力元のシーケンス
 -- @param track (integer) 出力するトラックの番号
 -- @param msPreSend (integer) ミリ秒単位のプリセンド時間
--- @return (table<NrpnEvent>) NrpnEvent の配列
+-- @return (table&lt;<a href="../files/NrpnEvent.html">NrpnEvent</a>&gt;) NrpnEvent の配列
 -- @name <i>_generatePitchBendSensitivityNRPN</i>
 -- @todo ディレイを設定する必要があるのでは？
 function Sequence._generatePitchBendSensitivityNRPN( sequence, track, msPreSend )
-    local ret = {};-- Vector<VsqNrpn>();
+    local ret = {};
     local pbs = sequence.track:get( track ):getCurve( "PBS" );
     local count = pbs:size();
     local i;
@@ -1091,10 +1091,10 @@ end
 
 --
 -- トラックの音符イベントから、ビブラート出力用の NRPN のリストを作成する
--- @param sequence (Sequence) 出力元のシーケンス
--- @param noteEvent (Event) 出力する音符イベント
+-- @param sequence (<a href="../files/Sequence.html">Sequence</a>) 出力元のシーケンス
+-- @param noteEvent (<a href="../files/Event.html">Event</a>) 出力する音符イベント
 -- @param msPreSend (integer) ミリ秒単位のプリセンド時間
--- @return (table<NrpnEvent>) NrpnEvent の配列
+-- @return (table&lt;<a href="../files/NrpnEvent.html">NrpnEvent</a>&gt;) NrpnEvent の配列
 -- @name <i>_generateVibratoNRPN</i>
 function Sequence._generateVibratoNRPN( sequence, noteEvent, msPreSend )
     local ret = {};
@@ -1165,10 +1165,10 @@ end
 
 --
 -- 指定したシーケンスの指定したトラックから、VoiceChangeParameter の NRPN リストを作成する
--- @param sequence (Sequence) 出力元のシーケンス
+-- @param sequence (<a href="../files/Sequence.html">Sequence</a>) 出力元のシーケンス
 -- @param track (integer) 出力するトラックの番号
 -- @param msPreSend (integer) ミリ秒単位のプリセンド時間
--- @return (table<NrpnEvent>) NrpnEvent の配列
+-- @return (table&lt;<a href="../files/NrpnEvent.html">NrpnEvent</a>&gt;) NrpnEvent の配列
 -- @name <i>_generateVoiceChangeParameterNRPN</i>
 function Sequence._generateVoiceChangeParameterNRPN( sequence, track, msPreSend )
     local premeasure_clock = sequence:getPreMeasureClocks();
@@ -1204,8 +1204,8 @@ end
 -- Voice Change Parameter の NRPN を追加する
 -- @access private
 -- @param dest (table) 追加先のテーブル
--- @param list (BPList) Voice Change Parameter のデータ点が格納された BPList
--- @param sequence (Sequence) シーケンス
+-- @param list (<a href="../files/BPList.html">BPList</a>) Voice Change Parameter のデータ点が格納された BPList
+-- @param sequence (<a href="../files/Sequence.html">Sequence</a>) シーケンス
 -- @param msPreSend (integer) ミリ秒単位のプリセンド時間
 -- @name <i>_addVoiceChangeParameters</i>
 function Sequence._addVoiceChangeParameters( dest, list, sequence, msPreSend )

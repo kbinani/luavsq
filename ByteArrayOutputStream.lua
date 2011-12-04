@@ -25,7 +25,7 @@ ByteArrayOutputStream = {};
 
 ---
 -- 初期化を行う
--- @return (ByteArrayOutputStream)
+-- @return (<a href="../files/ByteArrayOutputStream.html">ByteArrayOutputStream</a>)
 -- @name <i>new</i>
 function ByteArrayOutputStream.new()
     local this = {};

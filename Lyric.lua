@@ -27,7 +27,7 @@ Lyric = {};
 
 --
 -- 初期化を行う
--- @return (Lyric)
+-- @return (<a href="../files/Lyric.html">Lyric</a>)
 function Lyric.new( ... )
     local arguments = { ... }
     local this = {};
@@ -40,7 +40,7 @@ function Lyric.new( ... )
     ---
     -- 文字列を元に初期化を行う
     -- @param line (string) 「"あ","a",0.0000,0.0」などのような文字列
-    -- @return (Lyric)
+    -- @return (<a href="../files/Lyric.html">Lyric</a>)
     -- @name <i>new</i><sup>1</sup>
     function this:_init_1( line )
         if( line == nil or (line ~= nil and line:len() == 0) )then
@@ -131,7 +131,7 @@ function Lyric.new( ... )
     -- 歌詞、発音記号を指定して初期化を行う
     -- @param phrase (string) 歌詞
     -- @param phoneticSymbol (string) 発音記号
-    -- @return (Lyric)
+    -- @return (<a href="../files/Lyric.html">Lyric</a>)
     -- @name <i>new</i><sup>2</sup>
     function this:_init_2( phrase, phoneticSymbol )
         self.phrase = phrase;
@@ -145,7 +145,7 @@ function Lyric.new( ... )
     -- このオブジェクトと、指定されたオブジェクトが同じかどうかを調べる。
     -- 音声合成したときに影響のある範囲のフィールドしか比較されない。
     -- たとえば、isProtectedがthisとitemで違っていても、他が同一であればtrueが返る。
-    -- @param item (Lyric) 比較対象のオブジェクト
+    -- @param item (<a href="../files/Lyric.html">Lyric</a>) 比較対象のオブジェクト
     -- @return (boolean) 比較対象と同じであれば true を、そうでなければ false を返す
     -- @name equalsForSynth
     function this:equalsForSynth( item )
@@ -160,7 +160,7 @@ function Lyric.new( ... )
 
     ---
     -- このオブジェクトのインスタンスと、指定されたオブジェクトが同じかどうかを調べる
-    -- @param item (Lyric) 比較対象のオブジェクト
+    -- @param item (<a href="../files/Lyric.html">Lyric</a>) 比較対象のオブジェクト
     -- @return (boolean) 比較対象と同じであれば true を、そうでなければ false を返す
     -- @name equals
     function this:equals( item )
@@ -248,7 +248,7 @@ function Lyric.new( ... )
 
     ---
     -- コピーを作成する
-    -- @return (Lyric) このインスタンスのコピー
+    -- @return (<a href="../files/Lyric.html">Lyric</a>) このインスタンスのコピー
     -- @name clone
     function this:clone()
         local result = Lyric.new();

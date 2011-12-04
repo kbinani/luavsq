@@ -20,12 +20,12 @@ module( "luavsq" );
 -- @name BPListSearchResult
 -- @field clock (integer) データ点の Tick 単位の時刻
 -- @field index (integer) データ点のインデックス。最初のインデックスは 0
--- @field point (BP) データ点のオブジェクト
+-- @field point (<a href="../files/BP.html">BP</a>) データ点のオブジェクト
 BPListSearchResult = {};
 
 ---
 -- 初期化を行う
--- @return (BPListSearchResult)
+-- @return (<a href="../files/BPListSearchResult.html">BPListSearchResult</a>)
 -- @name <i>new</i>
 function BPListSearchResult.new()
     local this = {};

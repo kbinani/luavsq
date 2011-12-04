@@ -23,7 +23,7 @@ FileOutputStream = {};
 ---
 -- 初期化を行う
 -- @param path (string) ファイルのパス
--- @return (FileOutputStream)
+-- @return (<a href="../files/FileOutputStream.html">FileOutputStream</a>)
 -- @name <i>new</i>
 function FileOutputStream.new( path )
     local this = {};

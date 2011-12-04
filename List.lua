@@ -22,16 +22,16 @@ module( "luavsq" );
 -- インデックスは0から始まる
 -- 例えば、長さ 3 のリストに順次アクセする場合次のようにすれば良い。
 -- 配列の値として nil を入れることも出来る
--- for i = 0, list:size() - 1, 1 do
---     print( list[i] );
--- end
+--<pre>for i = 0, list:size() - 1, 1 do<br>
+--    print( list[i] );<br>
+--end</pre>
 -- @class table
 -- @name List
 List = {};
 
 --
 -- 初期化を行う
--- @return (List)
+-- @return (<a href="../files/List.html">List</a>)
 function List.new( ... )
     local this = {};
     local arguments = { ... };
@@ -70,7 +70,7 @@ function List.new( ... )
 
     ---
     -- リスト内のデータを順番に返すイテレータを取得する
-    -- @return (List.Iterator) イテレータ
+    -- @return (<a href="../files/List.html#Iterator.&lt;i&gt;new&lt;/i&gt;">List.Iterator</a>) イテレータ
     -- @name iterator
     function this:iterator()
         return List.Iterator.new( self );
@@ -160,7 +160,7 @@ end
 ---
 -- lua の table から、List のインスタンスを作成する
 -- @param array (table) 作成元の table
--- @return (List) List のインスタンス
+-- @return (<a href="../files/List.html">List</a>) List のインスタンス
 -- @name <i>fromTable</i>
 function List.fromTable( array )
     local list = List.new();
@@ -177,8 +177,8 @@ List.Iterator = {};
 
 ---
 -- 初期化を行う
--- @param list (List) 反復子の元になるリスト
--- @return (List.Iterator) イテレータのオブジェクト
+-- @param list (<a href="../files/List.html">List</a>) 反復子の元になるリスト
+-- @return (<a href="../files/List.html#Iterator.&lt;i&gt;new&lt;/i&gt;">List.Iterator</a>) イテレータのオブジェクト
 -- @name Iterator.<i>new</i>
 function List.Iterator.new( list )
     local this = {};

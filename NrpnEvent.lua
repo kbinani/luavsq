@@ -31,7 +31,7 @@ NrpnEvent = {};
 
 --
 -- 初期化を行う
--- @return (NrpnEvent)
+-- @return (<a href="../files/NrpnEvent.html">NrpnEvent</a>)
 function NrpnEvent.new( ... )
     local this = {};
     local arguments = { ... };
@@ -48,7 +48,7 @@ function NrpnEvent.new( ... )
     -- @param clock (integer) Tick 単位の時刻
     -- @param nrpn (integer) NRPN
     -- @param dataMsb (integer) DATA MSB
-    -- @return (NrpnEvent)
+    -- @return (<a href="../files/NrpnEvent.html">NrpnEvent</a>)
     -- @name <i>new</i><sup>1</sup>
     function this:_init_3( clock, nrpn, dataMsb )
         self.clock = clock;
@@ -66,7 +66,7 @@ function NrpnEvent.new( ... )
     -- @param nrpn (integer) NRPN
     -- @param dataMsb (integer) DATA MSB
     -- @param dataLsb (integer) DATA LSB
-    -- @return (NrpnEvent)
+    -- @return (<a href="../files/NrpnEvent.html">NrpnEvent</a>)
     -- @name <i>new</i><sup>2</sup>
     function this:_init_4( clock, nrpn, dataMsb, dataLsb )
         self.clock = clock;
@@ -108,7 +108,7 @@ function NrpnEvent.new( ... )
 
     ---
     -- 順序を比較する
-    -- @param item (NrpnEvent) 比較対象のアイテム
+    -- @param item (<a href="../files/NrpnEvent.html">NrpnEvent</a>) 比較対象のアイテム
     -- @return (integer) このインスタンスが比較対象よりも小さい場合は負の整数、等しい場合は 0、大きい場合は正の整数を返す
     -- @name compareTo
     function this:compareTo( item )
@@ -193,9 +193,9 @@ function NrpnEvent.new( ... )
 end
 
 ---
--- 2 つの NrpnEvent を比較する
--- @param a (NrpnEvent) 比較対象のオブジェクト
--- @param b (NrpnEvent) 比較対象のオブジェクト
+-- 2 つの <a href="../files/NrpnEvent.html">NrpnEvent</a> を比較する
+-- @param a (<a href="../files/NrpnEvent.html">NrpnEvent</a>) 比較対象のオブジェクト
+-- @param b (<a href="../files/NrpnEvent.html">NrpnEvent</a>) 比較対象のオブジェクト
 -- @return (boolean) a が b よりも小さい場合は true、そうでない場合は false を返す
 -- @name <i>compare</i>
 function NrpnEvent.compare( a, b )
@@ -225,9 +225,9 @@ end
 ]]
 
 ---
--- NRPN イベントの配列を、MidiEvent の配列に変換する
--- @param source (table<NrpnEvent>) NRPN イベントの配列
--- @return (table<MidiEvent>) 変換後の MidiEvent の配列
+-- NRPN イベントの配列を、<a href="../files/MidiEvent.html">MidiEvent</a> の配列に変換する
+-- @param source (table&lt;<a href="../files/NrpnEvent.html">NrpnEvent</a>&gt;) NRPN イベントの配列
+-- @return (table&lt;<a href="../files/MidiEvent.html">MidiEvent</a>&gt;) 変換後の <a href="../files/MidiEvent.html">MidiEvent</a> の配列
 -- @name <i>convert</i>
 function NrpnEvent.convert( source )
     local nrpn = source[1].nrpn;

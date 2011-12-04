@@ -25,7 +25,7 @@ TextStream = {};
 
 ---
 -- 初期化を行う
--- @return (TextStream)
+-- @return (<a href="../files/TextStream.html">TextStream</a>)
 -- @name <i>new</i>
 function TextStream.new()
     local this = {};

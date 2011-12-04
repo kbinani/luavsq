@@ -21,12 +21,12 @@ module( "luavsq" );
 ---
 -- ビブラートデータポイントのリストを表すクラス
 -- @class table
--- @name luvasq.VibratoBPList
+-- @name VibratoBPList
 VibratoBPList = {};
 
 --
 -- 初期化を行う
--- @return (VibratoBPList)
+-- @return (<a href="../files/VibratoBPList.html">VibratoBPList</a>)
 function VibratoBPList.new( ... )
     local arguments = { ... };
     local this = {};
@@ -37,7 +37,7 @@ function VibratoBPList.new( ... )
     -- @param textNum (string) データ点の個数の文字列表現
     -- @param textBPX (string) x 軸のデータ点の値をカンマ区切りで繋げた文字列
     -- @param textBPY (string) y 軸のデータ点の値をカンマ区切りで繋げた文字列
-    -- @return (VibratoBPList)
+    -- @return (<a href="../files/VibratoBPList.html">VibratoBPList</a>)
     -- @name <i>new</i><sup>1</sup>
     function this:_init_3( textNum, textBPX, textBPY )
         local num = tonumber( textNum );
@@ -67,7 +67,7 @@ function VibratoBPList.new( ... )
     -- 初期化を行う
     -- @param x (table<double>) x 軸の値のリスト
     -- @param y (table<integer>) y 軸の値のリスト
-    -- @return (VibratoBPList)
+    -- @return (<a href="../files/VibratoBPList.html">VibratoBPList</a>)
     -- @name <i>new</i><sup>2</sup>
     function this:_init_2( x, y )
         local len = math.min( #x, #y );
@@ -110,7 +110,7 @@ function VibratoBPList.new( ... )
 
     ---
     -- コピーを作成する
-    -- @return (VibratoBPList) このオブジェクトのコピー
+    -- @return (<a href="../files/VibratoBPList.html">VibratoBPList</a>) このオブジェクトのコピー
     -- @name clone
     function this:clone()
         local ret = VibratoBPList.new();
@@ -131,7 +131,7 @@ function VibratoBPList.new( ... )
     ---
     -- 指定したインデックスのデータ点を取得する
     -- @param index (integer) 0から始まるインデックス
-    -- @return (VibratoBP) データ点
+    -- @return (<a href="../files/VibratoBP.html">VibratoBP</a>) データ点
     -- @name get
     function this:get( index )
         return self._list[index + 1];
@@ -140,7 +140,7 @@ function VibratoBPList.new( ... )
     ---
     -- 指定したインデックスのデータ点を設定する
     -- @param index (integer) インデックス(最初のインデックスは0)
-    -- @param value (VibratoBP) 設定するデータ点
+    -- @param value (<a href="../files/VibratoBP.html">VibratoBP</a>) 設定するデータ点
     -- @name set
     function this:set( index, value )
         self._list[index + 1] = value;

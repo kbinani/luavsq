@@ -23,7 +23,7 @@ BPList.KeyClockIterator = {};
 --
 -- コンストラクタ
 -- @see _init_1
--- @return (BPList.KeyClockIterator)
+-- @return (<a href="../files/BPList.KeyClockIterator.html">BPList.KeyClockIterator</a>)
 function BPList.KeyClockIterator.new( ... )
     local this = {};
     local arguments = { ... };
@@ -32,8 +32,8 @@ function BPList.KeyClockIterator.new( ... )
 
     ---
     -- 初期化を行う
-    -- @param list (BPList) 反復子の元になるリスト
-    -- @return (BPList.KeyClockIterator)
+    -- @param list (<a href="../files/BPList.html">BPList</a>) 反復子の元になるリスト
+    -- @return (<a href="../files/BPList.KeyClockIterator.html">BPList.KeyClockIterator</a>)
     -- @name <i>new</i>
     function this:_init_1( list )
         self._list = list;

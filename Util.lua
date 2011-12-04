@@ -300,10 +300,24 @@ end
 ---
 -- 変数の中身をダンプする
 -- @param value (?) ダンプする変数
+-- @param option (table) ダンプ時の設定値
+-- <ul>
+--   <li>hex: 数値を 16 進数表記にする場合 true を設定する
+--   <li>func: 関数をダンプする場合 true を設定する
+-- </ul>
 -- @return (string) 変数のダンプ
 -- @name <i>dump</i>
-function Util.dump( value )
-    return Util._dump( value, 0, {} );
+function Util.dump( value, option )
+    if( option == nil )then
+        option = {};
+    end
+    if( type( option.hex ) == "nil" )then
+        option.hex = false;
+    end
+    if( type( option.func ) == "nil" )then
+        option.func = false;
+    end
+    return Util._dump( value, 0, {}, option );
 end
 
 --
@@ -311,7 +325,17 @@ end
 -- @param value (?) ダンプする変数
 -- @param depth (integer) ダンプのネスト深さ
 -- @param state (table) ダンプ済みオブジェクトのテーブル
-function Util._dump( value, depth, state )
+-- @param option (table) ダンプ時の設定値
+function Util._dump( value, depth, state, option )
+    local hex = option.hex;
+    if( hex == nil )then
+        hex = false;
+    end
+    local func = option.func
+    if( func == nil )then
+        func = true;
+    end
+
     local indent = string.rep( " ", 4 * depth );
     if( value == nil )then
         return indent .. "nil,";
@@ -327,6 +351,12 @@ function Util._dump( value, depth, state )
         return indent .. "function,";
     elseif( type( value ) == "userdata" )then
         return indent .. "userdata,";
+    elseif( type( value ) == "number" )then
+        if( hex == false or value < 0 or value ~= math.floor( value ) )then
+            return indent .. value .. ",";
+        else
+            return indent .. string.format( "0x%X", value ) .. ",";
+        end
     elseif( type( value ) ~= "table" )then
         return indent .. value .. ",";
     else
@@ -346,22 +376,28 @@ function Util._dump( value, depth, state )
             local str = "";
             local count = 0;
             for k, v in pairs( value ) do
-                local dumped = Util._dump( v, nextDepth, state );
-                while( dumped:len() > 0 and dumped:sub( 1, 1 ) == " " )do
-                    dumped = dumped:sub( 2 );
+                if( (func and type( v ) == "function") or type( v ) ~= "function" )then
+                    local dumped = Util._dump( v, nextDepth, state, option );
+                    while( dumped:len() > 0 and dumped:sub( 1, 1 ) == " " )do
+                        dumped = dumped:sub( 2 );
+                    end
+                    local key;
+                    if( type( k ) == "string" )then
+                        key = "'" .. k .. "'";
+                    else
+                        key = "" .. k;
+                    end
+                    str = str .. indent .. "    " .. key .. " => " .. dumped .. "\n";
+                    count = count + 1;
                 end
-                local key;
-                if( type( k ) == "string" )then
-                    key = "'" .. k .. "'";
-                else
-                    key = "" .. k;
-                end
-                str = str .. indent .. "    " .. key .. " => " .. dumped .. "\n";
-                count = count + 1;
             end
-            local result = indent .. "table(" .. count .. "){\n";
-            result = result .. str;
-            return result .. indent .. "},";
+            if( count > 0 )then
+                local result = indent .. "table(" .. count .. "){\n";
+                result = result .. str;
+                return result .. indent .. "},";
+            else
+                return indent .. "table(0){},";
+            end
         end
     end
 end

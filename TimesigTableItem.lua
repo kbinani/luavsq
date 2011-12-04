@@ -26,7 +26,7 @@ TimesigTableItem = {};
 
 --
 -- 初期化を行う
--- @return (TimesigTableItem)
+-- @return (<a href="../files/TimesigTableItem.html">TimesigTableItem</a>)
 function TimesigTableItem.new( ... )
     local this = {};
     local arguments = { ... };
@@ -52,7 +52,7 @@ function TimesigTableItem.new( ... )
     -- @param numerator (integer) 拍子の分子の値
     -- @param denominator (integer) 拍子の分母値
     -- @param barCount (integer) 小節数
-    -- @return (TimesigTableItem)
+    -- @return (<a href="../files/TimesigTableItem.html">TimesigTableItem</a>)
     -- @name <i>new</i>
     function this:_init_3( numerator, denominator, barCount )
         self.numerator = numerator;
@@ -78,7 +78,7 @@ function TimesigTableItem.new( ... )
 
     ---
     -- コピーを作成する
-    -- @return (TimesigTableItem) このオブジェクトのコピー
+    -- @return (<a href="../files/TimesigTableItem.html">TimesigTableItem</a>) このオブジェクトのコピー
     -- @name clone
     function this:clone()
         local result = TimesigTableItem.new( self.numerator, self.denominator, self.barCount );
@@ -88,7 +88,7 @@ function TimesigTableItem.new( ... )
 
     ---
     -- 順序を比較する
-    -- @param item (TimesigTableItem) 比較対象のアイテム
+    -- @param item (<a href="../files/TimesigTableItem.html">TimesigTableItem</a>) 比較対象のアイテム
     -- @return (integer) このインスタンスが比較対象よりも小さい場合は負の整数、等しい場合は 0、大きい場合は正の整数を返す
     -- @name compareTo
     function this:compareTo( item )
@@ -103,9 +103,9 @@ function TimesigTableItem.new( ... )
 end
 
 ---
--- 2 つの TimesigTableItem を比較する
--- @param a (TimesigTableItem) 比較対象のオブジェクト
--- @param b (TimesigTableItem) 比較対象のオブジェクト
+-- 2 つの <a href="../files/TimesigTableItem.html">TimesigTableItem</a> を比較する
+-- @param a (<a href="../files/TimesigTableItem.html">TimesigTableItem</a>) 比較対象のオブジェクト
+-- @param b (<a href="../files/TimesigTableItem.html">TimesigTableItem</a>) 比較対象のオブジェクト
 -- @return (boolean) a が b よりも小さい場合は true、そうでない場合は false を返す
 -- @name <i>compare</i>
 function TimesigTableItem.compare( a, b )

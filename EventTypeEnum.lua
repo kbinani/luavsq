@@ -33,7 +33,9 @@ EventTypeEnum = {
 
 ---
 -- 文字列に変換する
--- @param value (EventTypeEnum) 指定された列挙子の文字列表現
+-- @param value (<a href="../files/EventTypeEnum.html">EventTypeEnum</a>) 指定された列挙子の文字列表現
+-- @return (string) 変換後の文字列
+-- @name <i>toString</i>
 function EventTypeEnum.toString( value )
     if( value == EventTypeEnum.Singer )then
         return "Singer";

@@ -25,7 +25,7 @@ BPList = {};
 
 --
 -- コンストラクタ
--- @return (BPList)
+-- @return (<a href="../files/BPList.html">BPList</a>)
 function BPList.new( ... )
     local this = {};
     local arguments = { ... };
@@ -45,7 +45,7 @@ function BPList.new( ... )
     -- @param minimum (integer) コントロールカーブの最小値
     -- @param maximum (integer) コントロールカーブの最大値
     -- @name <i>new</i>
-    -- @return (BPList)
+    -- @return (<a href="../files/BPList.html">BPList</a>)
     function this:_init_4( name, defaultValue, minimum, maximum )
         self._name = name;
         self._defaultValue = defaultValue;
@@ -184,7 +184,7 @@ function BPList.new( ... )
 
     ---
     -- コピーを作成する
-    -- @return (BPList) このオブジェクトのコピー
+    -- @return (<a href="../files/BPList.html">BPList</a>) このオブジェクトのコピー
     -- @name clone
     function this:clone()
         local res = BPList.new( self._name, self._defaultValue, self._minValue, self._maxValue );
@@ -330,7 +330,7 @@ function BPList.new( ... )
     ---
     -- データ点を取得する
     -- @param index (integer) 取得するデータ点のインデックス(最初のインデックスは0)
-    -- @return (BP) データ点のインスタンス
+    -- @return (<a href="../files/BP.html">BP</a>) データ点のインスタンス
     -- @name get
     function this:get( index )
         return self._items[index + 1]:clone();
@@ -364,7 +364,7 @@ function BPList.new( ... )
     ---
     -- ID を基にデータ点を検索し、検索結果を取得する
     -- @param id (integer) データ点の ID
-    -- @return (BPListSearchResult) 検索結果を格納したオブジェクト
+    -- @return (<a href="../files/BPListSearchResult.html">BPListSearchResult</a>) 検索結果を格納したオブジェクト
     -- @name findElement
     function this:findElement( id )
         local context = BPListSearchResult.new();
@@ -401,7 +401,7 @@ function BPList.new( ... )
 
     ---
     -- コントロールカーブをテキストストリームに出力する
-    -- @param stream (TextStream) 出力先のストリーム
+    -- @param stream (<a href="../files/TextStream.html">TextStream</a>) 出力先のストリーム
     -- @param startClock (integer) Tick 単位の出力開始時刻
     -- @param header (string) 最初に出力するヘッダー文字列
     -- @name print
@@ -512,7 +512,7 @@ function BPList.new( ... )
 
     ---
     -- データ点の Tick 単位の時刻を昇順に返す反復子を取得する
-    -- @return (BPList.KeyClockIterator) 反復子のインスタンス
+    -- @return (<a href="../files/BPList.KeyClockIterator.html">BPList.KeyClockIterator</a>) 反復子のインスタンス
     -- @name keyClockIterator
     function this:keyClockIterator()
         return BPList.KeyClockIterator.new( self );

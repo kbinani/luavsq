@@ -32,7 +32,7 @@ function VibratoBP.new( ... )
 
     ---
     -- 初期化を行う
-    -- @return (VibratoBP)
+    -- @return (<a href="../files/VibratoBP.html">VibratoBP</a>)
     -- @name <i>new</i><sup>1</sup>
     function this:_init_0()
     end
@@ -41,7 +41,7 @@ function VibratoBP.new( ... )
     -- 初期化を行う
     -- @param x (double) x 軸の値
     -- @param y (integer) y 軸の値
-    -- @return (VibratoBP)
+    -- @return (<a href="../files/VibratoBP.html">VibratoBP</a>)
     -- @name <i>new</i><sup>2</sup>
     function this:_init_2( x, y )
         self.x = x;
@@ -50,7 +50,7 @@ function VibratoBP.new( ... )
 
     ---
     -- 順序を比較する
-    -- @param item (VibratoBP) 比較対象のアイテム
+    -- @param item (<a href="../files/VibratoBP.html">VibratoBP</a>) 比較対象のアイテム
     -- @return (integer) このインスタンスが比較対象よりも小さい場合は負の整数、等しい場合は 0、大きい場合は正の整数を返す
     -- @name compareTo
     function this:compareTo( item )
@@ -73,9 +73,9 @@ function VibratoBP.new( ... )
 end
 
 ---
--- 2 つの Event を比較する
--- @param a (VibratoBP) 比較対象のオブジェクト
--- @param b (VibratoBP) 比較対象のオブジェクト
+-- 2 つの <a href="../files/VibratoBP.html">VibratoBP</a> を比較する
+-- @param a (<a href="../files/VibratoBP.html">VibratoBP</a>) 比較対象のオブジェクト
+-- @param b (<a href="../files/VibratoBP.html">VibratoBP</a>) 比較対象のオブジェクト
 -- @return (boolean) a が b よりも小さい場合は true、そうでない場合は false を返す
 -- @name <i>compare</i>
 function VibratoBP.compare( a, b )

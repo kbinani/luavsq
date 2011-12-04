@@ -25,7 +25,7 @@ Master = {};
 
 --
 -- 初期化を行う
--- @return (Master)
+-- @return (<a href="../files/Master.html">Master</a>)
 function Master.new( ... )
     local this = {};
     local arguments = { ... };
@@ -35,7 +35,7 @@ function Master.new( ... )
     ---
     -- プリメジャーを指定し、初期化を行う
     -- @param preMeasure (integer) プリメジャーの長さ(小節数)
-    -- @return (Master)
+    -- @return (<a href="../files/Master.html">Master</a>)
     -- @name <i>new</i><sup>1</sup>
     function this:_init_1( preMeasure )
         self.preMeasure = preMeasure;
@@ -43,9 +43,9 @@ function Master.new( ... )
 
     ---
     -- テキストストリームから読み込むことで初期化を行う
-    -- @param stream (TextStream) 読み込むテキストストリーム
+    -- @param stream (<a href="../files/TextStream.html">TextStream</a>) 読み込むテキストストリーム
     -- @param lastLine (table, { value = ? }) 読み込んだ最後の行。テーブルの ["value"] に文字列が格納される
-    -- @return (Master)
+    -- @return (<a href="../files/Master.html">Master</a>)
     -- @name <i>new</i><sup>2</sup>
     function this:_init_2( stream, lastLine )
         self.preMeasure = 0;
@@ -65,7 +65,7 @@ function Master.new( ... )
 
     ---
     -- コピーを作成する
-    -- @return (Master) このオブジェクトのコピー
+    -- @return (<a href="../files/Master.html">Master</a>) このオブジェクトのコピー
     -- @name clone
     function this:clone()
         return Master.new( self.preMeasure );
@@ -73,7 +73,7 @@ function Master.new( ... )
 
     ---
     -- テキストストリームに出力する
-    -- @param stream (TextStream) 出力先
+    -- @param stream (<a href="../files/TextStream.html">TextStream</a>) 出力先
     -- @name write
     function this:write( stream )
         stream:writeLine( "[Master]" );

@@ -23,13 +23,13 @@ module( "luavsq" );
 -- @field version (string) トラックの歌声合成エンジンのバージョンを表す文字列
 -- @field name (string) トラックの名前
 -- @field color (string) (不明)
--- @field dynamicsMode (DynamicsModeEnum) ダイナミクスモード
--- @field playMode (PlayModeEnum) 再生モード
+-- @field dynamicsMode (<a href="../files/DynamicsModeEnum.html">DynamicsModeEnum</a>) ダイナミクスモード
+-- @field playMode (<a href="../files/PlayModeEnum.html">PlayModeEnum</a>) 再生モード
 Common = {};
 
 --
 -- 初期化を行う
--- @return (Common)
+-- @return (<a href="../files/Common.html">Common</a>)
 function Common.new( ... )
     local this = {};
     local arguments = { ... };
@@ -48,9 +48,9 @@ function Common.new( ... )
 
     ---
     -- 初期化を行う
-    -- @param stream (TextStream) 読み込み元のテキストストリーム
+    -- @param stream (<a href="../files/TextStream.html">TextStream</a>) 読み込み元のテキストストリーム
     -- @param lastLine (table, { value = ? }) 読み込んだ最後の行。テーブルの ["value"] に文字列が格納される
-    -- @return (Common)
+    -- @return (<a href="../files/Common.html">Common</a>)
     -- @name <i>new</i><sup>1</sup>
     function this:_init_2( stream, lastLine )
         self.version = "";
@@ -86,9 +86,9 @@ function Common.new( ... )
     -- @param red (integer) 赤(意味は不明)
     -- @param green (integer) 緑(意味は不明)
     -- @param blue (integer) 青(意味は不明)
-    -- @param dynamicsMode (DynamicsModeEnum) シーケンスの Dynamics モード
-    -- @param playMode (PlayModeEnum) シーケンスの Play モード
-    -- @return (Common)
+    -- @param dynamicsMode (<a href="../files/DynamicsModeEnum.html">DynamicsModeEnum</a>) シーケンスの Dynamics モード
+    -- @param playMode (<a href="../files/PlayModeEnum.html">PlayModeEnum</a>) シーケンスの Play モード
+    -- @return (<a href="../files/Common.html">Common</a>)
     -- @name <i>new</i><sup>2</sup>
     function this:_init_6( name, r, g, b, dynamicsMode, playMode )
         self.version = "DSB301";
@@ -100,7 +100,7 @@ function Common.new( ... )
 
     ---
     -- コピーを作成する
-    -- @return (Common) このインスタンスのコピー
+    -- @return (<a href="../files/Common.html">Common</a>) このインスタンスのコピー
     -- @name clone
     function this:clone()
         local spl = Util.split( self.color, "," );
@@ -115,7 +115,7 @@ function Common.new( ... )
 
     ---
     -- テキストストリームに出力する
-    -- @param stream (TextStream) 出力先のストリーム
+    -- @param stream (<a href="../files/TextStream.html">TextStream</a>) 出力先のストリーム
     -- @name write
     function this:write( stream )
         stream:writeLine( "[Common]" );

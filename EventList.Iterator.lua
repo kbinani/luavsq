@@ -24,8 +24,8 @@ EventList.Iterator = {};
 
 ---
 -- 初期化を行う
--- @param list (EventList) 反復子の元になるリスト
--- @return (EventList.Iterator)
+-- @param list (<a href="../files/EventList.html">EventList</a>) 反復子の元になるリスト
+-- @return (<a href="../files/EventList.Iterator.html">EventList.Iterator</a>)
 -- @name <i>new</i>
 function EventList.Iterator.new( list )
     local this = {};
@@ -45,7 +45,7 @@ function EventList.Iterator.new( list )
 
     ---
     -- 反復子の次の要素を返す
-    -- @return (Event) 次の要素
+    -- @return (<a href="../files/Event.html">Event</a>) 次の要素
     -- @name next
     function this:next()
         self._pos = self._pos + 1;

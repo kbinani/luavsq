@@ -29,7 +29,7 @@ MidiEvent = {};
 
 ---
 -- 初期化を行う
--- @return (MidiEvent)
+-- @return (<a href="../files/MidiEvent.html">MidiEvent</a>)
 -- @name <i>new</i>
 function MidiEvent.new()
     local this = {};
@@ -54,7 +54,7 @@ function MidiEvent.new()
 
     ---
     -- 順序を比較する
-    -- @param item (MidiEvent) 比較対象のアイテム
+    -- @param item (<a href="../files/MidiEvent.html">MidiEvent</a>) 比較対象のアイテム
     -- @return (integer) このインスタンスが比較対象よりも小さい場合は負の整数、等しい場合は 0、大きい場合は正の整数を返す
     -- @name compareTo
     function this:compareTo( item )
@@ -105,7 +105,7 @@ end
 -- @param clock (integer) Tick 単位の時刻
 -- @param numerator (integer) 拍子の分子の値
 -- @param denominator (integer) 表紙の分母の値
--- @return (MidiEvent) 拍子イベント
+-- @return (<a href="../files/MidiEvent.html">MidiEvent</a>) 拍子イベント
 -- @name <i>generateTimeSigEvent</i>
 function MidiEvent.generateTimeSigEvent( clock, numerator, denominator )
     local ret = MidiEvent.new();
@@ -120,7 +120,7 @@ end
 -- テンポイベントを作成する
 -- @param clock (integer) Tick 単位の時刻
 -- @param tempo (integer) 四分音符のマイクロ秒単位の長さ
--- @return (MidiEvent) テンポイベント
+-- @return (<a href="../files/MidiEvent.html">MidiEvent</a>) テンポイベント
 -- @name <i>generateTempoChangeEvent</i>
 function MidiEvent.generateTempoChangeEvent( clock, tempo )
     local ret = MidiEvent.new();
@@ -321,8 +321,8 @@ end
 
 ---
 -- 2 つの MidiEvent を比較する
--- @param a (MidiEvent) 比較対象のオブジェクト
--- @param b (MidiEvent) 比較対象のオブジェクト
+-- @param a (<a href="../files/MidiEvent.html">MidiEvent</a>) 比較対象のオブジェクト
+-- @param b (<a href="../files/MidiEvent.html">MidiEvent</a>) 比較対象のオブジェクト
 -- @return (boolean) a が b よりも小さい場合は true、そうでない場合は false を返す
 -- @name <i>compare</i>
 function MidiEvent.compare( a, b )

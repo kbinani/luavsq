@@ -45,7 +45,7 @@ Handle.ICONID_HEAD_DECRESCEND = "$0503";
 
 --
 -- 初期化を行う
--- @return (Handle)
+-- @return (<a href="../files/Handle.html">Handle</a>)
 function Handle.new( ... )
     local arguments = { ... };
     local this = {};
@@ -76,9 +76,9 @@ function Handle.new( ... )
     this.addQuotationMark = true;
 
     ---
-    -- @param type (HandleTypeEnum) ハンドルの種類
+    -- @param type (<a href="../files/HandleTypeEnum.html">HandleTypeEnum</a>) ハンドルの種類
     -- @name <i>new</i><sup>1</sup>
-    -- @return (Handle)
+    -- @return (<a href="../files/Handle.html">Handle</a>)
     function this:_init_1( type )
         self._type = type;
         if( type == HandleTypeEnum.Dynamics )then
@@ -94,11 +94,11 @@ function Handle.new( ... )
 
     ---
     -- テキストストリームからハンドルの内容を読み込み初期化する
-    -- @param stream (TextStream) 読み込み元のテキストストリーム
+    -- @param stream (<a href="../files/TextStream.html">TextStream</a>) 読み込み元のテキストストリーム
     -- @param index (integer) index フィールドの値
     -- @param lastLine (table, { value = ? }) 読み込んだ最後の行。テーブルの ["value"] に文字列が格納される
     -- @name <i>new</i><sup>2</sup>
-    -- @return (Handle)
+    -- @return (<a href="../files/Handle.html">Handle</a>)
     function this:_init_3( stream, index, lastLine )
         self.index = index;
         local spl;
@@ -268,7 +268,7 @@ function Handle.new( ... )
 
     ---
     -- articulation の種類を取得する
-    -- @return (ArticulationTypeEnum) articulation の種類
+    -- @return (<a href="../files/ArticulationTypeEnum.html">ArticulationTypeEnum</a>) articulation の種類
     -- @name getArticulation
     function this:getArticulation()
         return self._articulation;
@@ -376,7 +376,7 @@ function Handle.new( ... )
 
     ---
     -- DYN カーブを取得する
-    -- @return (VibratoBPList) DYN カーブ
+    -- @return (<a href="../files/VibratoBPList.html">VibratoBPList</a>) DYN カーブ
     -- @name getDynBP
     function this:getDynBP()
         return self._dynBP;
@@ -384,7 +384,7 @@ function Handle.new( ... )
 
     ---
     -- DYN カーブを設定する
-    -- @param value (VibratoBPList) DYN カーブ
+    -- @param value (<a href="../files/VibratoBPList.html">VibratoBPList</a>) DYN カーブ
     -- @name setDynBP
     function this:setDynBP( value )
         self._dynBP = value;
@@ -424,7 +424,7 @@ function Handle.new( ... )
 
     ---
     -- Rate のビブラートカーブを取得する
-    -- @return (VibratoBPList) Rate のビブラートカーブ
+    -- @return (<a href="../files/VibratoBPList.html">VibratoBPList</a>) Rate のビブラートカーブ
     -- @name getRateBP
     function this:getRateBP()
         return self._rateBP;
@@ -432,7 +432,7 @@ function Handle.new( ... )
 
     ---
     -- Rate のビブラートカーブを設定する
-    -- @param value (VibratoBPList) 設定するビブラートカーブ
+    -- @param value (<a href="../files/VibratoBPList.html">VibratoBPList</a>) 設定するビブラートカーブ
     -- @name setRateBP
     function this:setRateBP( value )
         self._rateBP = value;
@@ -440,7 +440,7 @@ function Handle.new( ... )
 
     ---
     -- Depth のビブラートカーブを取得する
-    -- @return (VibratoBPList) Depth のビビラートカーブ
+    -- @return (<a href="../files/VibratoBPList.html">VibratoBPList</a>) Depth のビビラートカーブ
     -- @name getDepthBP
     function this:getDepthBP()
         return self._depthBP;
@@ -448,7 +448,7 @@ function Handle.new( ... )
 
     ---
     -- Depth のビブラートカーブを設定する
-    -- @param value (VibratoBPList) 設定するビブラートカーブ
+    -- @param value (<a href="../files/VibratoBPList.html">VibratoBPList</a>) 設定するビブラートカーブ
     -- @name setDepthBP
     function this:setDepthBP( value )
         self._depthBP = value;
@@ -489,7 +489,7 @@ function Handle.new( ... )
     ---
     -- 指定した位置にある歌詞を取得する
     -- @param index (integer) 取得する要素のインデックス(最初のインデックスは0)
-    -- @return (Lyric) 歌詞
+    -- @return (<a href="../files/Lyric.html">Lyric</a>) 歌詞
     -- @name getLyricAt
     function this:getLyricAt( index )
         return self._lyrics[index + 1];
@@ -498,7 +498,7 @@ function Handle.new( ... )
     ---
     -- 指定した位置にある歌詞を指定した要素で置き換える
     -- @param index (integer) 置き換える要素のインデックス(最初のインデックスは0)
-    -- @param value (Lyric) 置き換える要素
+    -- @param value (<a href="../files/Lyric.html">Lyric</a>) 置き換える要素
     -- @name setLyricAt
     function this:setLyricAt( index, value )
         if( index + 1 >= #self._lyrics )then
@@ -529,7 +529,7 @@ function Handle.new( ... )
 
     ---
     -- ハンドルのタイプを取得する
-    -- @return (HandleTypeEnum) ハンドルのタイプ
+    -- @return (<a href="../files/HandleTypeEnum.html">HandleTypeEnum</a>) ハンドルのタイプ
     -- @name getHandleType
     function this:getHandleType()
         return self._type;
@@ -537,7 +537,7 @@ function Handle.new( ... )
 
     ---
     -- ストリームに書き込む
-    -- @param stream (TextStream) 書き込み先のストリーム
+    -- @param stream (<a href="../files/TextStream.html">TextStream</a>) 書き込み先のストリーム
     -- @name write
     function this:write( stream )
         stream:writeLine( self:toString() );
@@ -633,7 +633,7 @@ function Handle.new( ... )
 
     ---
     -- コピーを作成する
-    -- @return (Handle) このオブジェクトのコピー
+    -- @return (<a href="../files/Handle.html">Handle</a>) このオブジェクトのコピー
     -- @name clone
     function this:clone()
         if( self._type == HandleTypeEnum.Dynamics )then
