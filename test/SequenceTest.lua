@@ -134,20 +134,6 @@ function isEqualToDefaultSequence( sequence )
     assert_equal( 0.0, sequence.tempoTable:get( 0 ):getTime() );
 end
 
-function test()
-    local sequence = luavsq.Sequence.new( "Miku", 1, 4, 4, 500000 );
-    local note = luavsq.Event.new( 1920, luavsq.EventTypeEnum.Anote );
-    note.note = 60;
-    note:setLength( 480 );
-    note.lyricHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Lyric );
-    note.lyricHandle:setLyricAt( 0, luavsq.Lyric.new( "あ", "a" ) );
-    sequence.track:get( 1 ).events:add( note );
-    local fileHandle = io.open( "foo.vsq", "wb" );
-    fileHandle:write( sequence:write( 500, "Shift_JIS" ) );
-    fileHandle:close();
-    fail();
-end
-
 function testConstruct()
     local sequence = luavsq.Sequence.new( "Miku", 1, 4, 4, 500000 );
     isEqualToDefaultSequence( sequence );
@@ -781,7 +767,85 @@ function test_generateVibratoNRPN()
 end
 
 function testGenerateVoiceChangeParameterNRPN()
-    fail();
+    local sequence = luavsq.Sequence.new( "Foo", 1, 4, 4, 500000 );
+
+    -- 全種類のカーブに、データ点を1個ずつ入れる
+    local curveNames = { "BRE", "BRI", "CLE", "POR", "GEN", "harmonics", "OPE",
+                   "reso1amp", "reso1bw", "reso1freq",
+                   "reso2amp", "reso2bw", "reso2freq",
+                   "reso3amp", "reso3bw", "reso3freq",
+                   "reso4amp", "reso4bw", "reso4freq" };
+    for i, curveName in pairs( curveNames ) do
+        local list = luavsq.BPList.new( curveName, 0, 0, 127 );
+        list:add( 480, 64 );
+        sequence.track:get( 1 ):setCurve( curveName, list );
+    end
+
+    -- VOCALOID1 の場合
+    sequence.track:get( 1 ).common.version = "DSB2";
+    local events = luavsq.Sequence._generateVoiceChangeParameterNRPN( sequence, 1, 500 );
+    -- 中身は見ない。各カーブに MIDI イベントが1つずつできることだけをチェック
+    -- 各イベントの子にあたるイベントのテストは、test_addVoiceChangeParameters で行う
+    -- vocaloid1 で出力されるのは 18 種類
+    assert_equal( 18, #events );
+
+    -- VOCALOID2 の場合
+    -- 6 種類
+    sequence.track:get( 1 ).common.version = "DSB3";
+    local events = luavsq.Sequence._generateVoiceChangeParameterNRPN( sequence, 1, 500 );
+    assert_equal( 6, #events );
+
+    -- UNKNOWN の場合
+    -- 5 種類
+    sequence.track:get( 1 ).common.version = "";
+    local events = luavsq.Sequence._generateVoiceChangeParameterNRPN( sequence, 1, 500 );
+    assert_equal( 5, #events );
+end
+
+function test_addVoiceChangeParameters()
+    local list = luavsq.BPList.new( "BRE", 0, 0, 127 );
+    list:add( 480, 0 );
+    list:add( 1920, 127 );
+
+    local sequence = luavsq.Sequence.new( "Foo", 1, 4, 4, 500000 );
+    sequence.track:get( 1 ):setCurve( "BRE", list );
+    local dest = {};
+    local preSend = 500;
+    local delay = luavsq.Sequence._addVoiceChangeParameters( dest, list, sequence, preSend, 0 );
+
+    assert_equal( 2, #dest );
+    assert_equal( 500, delay );
+
+    local actual = dest[1]:expand();
+    assert_equal( 3, #actual );
+    assert_equal( 0, actual[1].clock );
+    assert_equal( luavsq.MidiParameterEnum.VCP_DELAY, actual[1].nrpn );
+    assert_equal( 0x03, actual[1].dataMSB );
+    assert_equal( 0x74, actual[1].dataLSB );
+    assert_true( actual[1].hasLSB );
+    assert_false( actual[1].isMSBOmittingRequired );
+    assert_equal( 0, actual[2].clock );
+    assert_equal( luavsq.MidiParameterEnum.VCP_VOICE_CHANGE_PARAMETER_ID, actual[2].nrpn );
+    assert_equal( 0x31, actual[2].dataMSB );
+    assert_false( actual[2].hasLSB );
+    assert_false( actual[2].isMSBOmittingRequired );
+    assert_equal( 0, actual[3].clock );
+    assert_equal( luavsq.MidiParameterEnum.VCP_VOICE_CHANGE_PARAMETER, actual[3].nrpn );
+    assert_equal( 0, actual[3].dataMSB );
+    assert_false( actual[3].hasLSB );
+    assert_true( actual[3].isMSBOmittingRequired );
+
+    actual = dest[2]:expand();
+    assert_equal( 1440, actual[1].clock );
+    assert_equal( luavsq.MidiParameterEnum.VCP_VOICE_CHANGE_PARAMETER_ID, actual[1].nrpn );
+    assert_equal( 0x31, actual[1].dataMSB );
+    assert_false( actual[1].hasLSB );
+    assert_false( actual[1].isMSBOmittingRequired );
+    assert_equal( 1440, actual[2].clock );
+    assert_equal( luavsq.MidiParameterEnum.VCP_VOICE_CHANGE_PARAMETER, actual[2].nrpn );
+    assert_equal( 127, actual[2].dataMSB );
+    assert_false( actual[2].hasLSB );
+    assert_true( actual[2].isMSBOmittingRequired );
 end
 
 function test_getMsbAndLsb()

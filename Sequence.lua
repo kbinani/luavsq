@@ -1154,7 +1154,7 @@ function Sequence._generateVoiceChangeParameterNRPN( sequence, track, msPreSend 
     for i = 1, #curves, 1 do
         local list = sequence.track:get( track ):getCurve( curves[i] );
         if( list:size() > 0 )then
-            Sequence._addVoiceChangeParameters( res, list, sequence, msPreSend );
+            lastDelay = Sequence._addVoiceChangeParameters( res, list, sequence, msPreSend, lastDelay );
         end
     end
     table.sort( res, NrpnEvent.compare );
@@ -1168,8 +1168,10 @@ end
 -- @param list (<a href="../files/BPList.html">BPList</a>) Voice Change Parameter のデータ点が格納された BPList
 -- @param sequence (<a href="../files/Sequence.html">Sequence</a>) シーケンス
 -- @param msPreSend (integer) ミリ秒単位のプリセンド時間
+-- @param lastDelay (integer) 直前の delay 値(ミリ秒単位)
+-- @return (integer) delay 値(ミリ秒単位)
 -- @name <i>_addVoiceChangeParameters</i>
-function Sequence._addVoiceChangeParameters( dest, list, sequence, msPreSend )
+function Sequence._addVoiceChangeParameters( dest, list, sequence, msPreSend, lastDelay )
     local id = MidiParameterEnum.getVoiceChangeParameterId( list:getName() );
     local count = list:size();
     local j;
@@ -1197,6 +1199,7 @@ function Sequence._addVoiceChangeParameters( dest, list, sequence, msPreSend )
             table.insert( dest, add );
         end
     end
+    return lastDelay;
 end
 
 --
