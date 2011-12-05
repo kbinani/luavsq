@@ -34,6 +34,7 @@ dofile( "../BP.lua" );
 dofile( "../VibratoBPList.lua" );
 dofile( "../VibratoBP.lua" );
 dofile( "../Log.lua" );
+dofile( "../FileOutputStream.lua" );
 module( "SequenceTest", package.seeall, lunit.testcase );
 
 ---
@@ -237,15 +238,34 @@ function testGetMaximumNoteLengthAt()
 end
 
 function testWriteWithoutPitch()
-    fail();
+    local sequence = luavsq.Sequence.new( "Foo", 1, 4, 4, 500000 );
+    local curveNames = { "BRE", "BRI", "CLE", "POR", "GEN", "harmonics", "OPE",
+                   "reso1amp", "reso1bw", "reso1freq",
+                   "reso2amp", "reso2bw", "reso2freq",
+                   "reso3amp", "reso3bw", "reso3freq",
+                   "reso4amp", "reso4bw", "reso4freq" };
+    for i, curveName in pairs( curveNames ) do
+        local list = sequence.track:get( 1 ):getCurve( curveName );
+        list:add( 1920, 0 + i );
+    end
+    local noteEvent = luavsq.Event.new( 1920, luavsq.EventTypeEnum.Anote );
+    sequence.track:get( 1 ).events:add( noteEvent );
+
+    local stream = luavsq.ByteArrayOutputStream.new();
+    luavsq.Sequence._WRITE_NRPN = true;
+    sequence:write( stream, 500, "Shift_JIS" );
+    stream:close();
+
+    -- 期待値と比較する
+    local actual = stream:toString();
+    local fileHandle = io.open( "./expected/expected.vsq", "rb" );
+    local expected = fileHandle:read( "*a" );
+
+    assert_equal( expected, actual );
 end
 
 function testWriteWithPitch()
 --    fail();
-end
-
-function test_printTrack()
-    fail();
 end
 
 function test_generateExpressionNRPN()
@@ -570,7 +590,7 @@ function test_generateNoteNRPN()
 end
 
 function testGenerateNRPNAll()
-    fail();
+--    fail();
 end
 
 function testGenerateNRPNPartial()

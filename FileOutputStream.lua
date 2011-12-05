@@ -12,6 +12,9 @@
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 ]]
 
+local io = io;
+local string = string;
+
 module( "luavsq" );
 
 ---

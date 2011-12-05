@@ -8,6 +8,7 @@ dofile( "../EventList.IndexIteratorKindEnum.lua" );
 dofile( "../Util.lua" );
 dofile( "../Handle.lua" );
 dofile( "../HandleTypeEnum.lua" );
+dofile( "../Lyric.lua" );
 module( "EventList.IndexIteratorTest", package.seeall, lunit.testcase );
 
 function test()

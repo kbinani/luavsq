@@ -3,6 +3,10 @@ dofile( "../EventList.lua" );
 dofile( "../EventList.Iterator.lua" );
 dofile( "../Event.lua" );
 dofile( "../EventTypeEnum.lua" );
+dofile( "../Handle.lua" );
+dofile( "../HandleTypeEnum.lua" );
+dofile( "../Lyric.lua" );
+dofile( "../Util.lua" );
 module( "EventList.IteratorTest", package.seeall, lunit.testcase );
 
 function test()

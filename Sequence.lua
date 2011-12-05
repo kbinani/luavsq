@@ -488,14 +488,14 @@ function Sequence._printTrack( sequence, track, stream, msPreSend, encoding, pri
     MidiEvent.writeDeltaClock( stream, 0x00 );--デルタタイム
     stream:write( 0xff );--ステータスタイプ
     stream:write( 0x03 );--イベントタイプSequence/Track Name
-    local seq_name = CP932Converter.convertFromUTF8( sequence.track:get( track ):getName() );--PortUtil.getEncodedByte( encoding, sequence.Track.get( track ).getName() );
+    local seq_name = CP932Converter.convertFromUTF8( sequence.track:get( track ):getName() );
     MidiEvent.writeDeltaClock( stream, #seq_name );--seq_nameの文字数
     stream:write( seq_name, 1, #seq_name );
 
     --Meta Textを準備
     local textStream = TextStream.new();
-    self.track:get( track ):printMetaText( textStream, self._totalClocks + 120, 0, printPitch );
-    local meta = Sequence._getMidiEventsFromMetaText( track, encoding, 0, printPitch );
+    sequence.track:get( track ):printMetaText( textStream, sequence:getTotalClocks() + 120, 0, printPitch );
+    local meta = Sequence._getMidiEventsFromMetaText( textStream, encoding );
     local lastClock = 0;
     local i;
     for i = 1, #meta, 1 do

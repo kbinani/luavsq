@@ -230,7 +230,7 @@ function testClone()
     id.d4mean = 16;
     id.pMeanEndingNote = 17;
     assert_nil( id.singerHandle );
-    assert_nil( id.lyricHandle );
+    assert_not_nil( id.lyricHandle );
     assert_nil( id.vibratoHandle );
     assert_nil( id.noteHeadHandle );
     assert_nil( id.iconDynamicsHandle );

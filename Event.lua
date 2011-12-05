@@ -140,6 +140,12 @@ function Event.new( ... )
     function this:_init_2( clock, eventType )
         self.clock = clock;
         self.type = eventType;
+        if( eventType == EventTypeEnum.Singer )then
+            self.singerHandle = Handle.new( HandleTypeEnum.Singer );
+        elseif( eventType == EventTypeEnum.Anote )then
+            self.lyricHandle = Handle.new( HandleTypeEnum.Lyric );
+            self.lyricHandle:setLyricAt( 0, Lyric.new( "a", "a" ) );
+        end
         self.id = 0;
     end
 
