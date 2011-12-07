@@ -6,6 +6,7 @@ local util = require "luadoc.util"
 local tags = require "luadoc.taglet.custom.tags"
 local string = require "string"
 local table = require "table"
+local print = print;
 
 module 'luadoc.taglet.custom'
 
@@ -403,6 +404,13 @@ function parse_file (filepath, doc)
     for t in class_iterator(blocks, "table")() do
         table.insert(doc.files[filepath].tables, t.name)
         doc.files[filepath].tables[t.name] = t
+    end
+
+    -- make vars table
+    doc.files[filepath].vars = {};
+    for t in class_iterator( blocks, "var" )() do
+        table.insert( doc.files[filepath].vars, t.name )
+        doc.files[filepath].vars[t.name] = t
     end
 
     return doc

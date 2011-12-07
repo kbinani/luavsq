@@ -9,23 +9,17 @@ local io = io;
 module "luadoc.doclet.java";
 
 function start( doc )
---print( dump( doc ) );
---print( "options=" .. dump( options ) );
     printStylesheet();
     printIndex();
-    printOverview();
     printAllClasses( doc );
     for i, fileName in ipairs( doc.files ) do
         printClassDoc( fileName, doc );
---print( dump( doc.files[fileName].doc ) );
     end
---    print( dump( doc.files ) );
 end
 
 function printClassDocFieldSummary( f, fileDoc )
     local fields = getFields( fileDoc );
     if( #fields > 0 )then
-print( "printClassDocFieldSummary; fields=" .. dump( fields ) );
         f:write( "  <table border=\"1\" width=\"100%\" cellpadding=\"3\" cellspacing=\"0\">\n" );
         f:write( "    <tr bgcolor=\"#ccccff\" class=\"TableHeadingColor\">\n" );
         f:write( "      <th align=\"left\" colspan=\"2\">\n" );
@@ -57,8 +51,8 @@ print( "printClassDocFieldSummary; fields=" .. dump( fields ) );
     return fields;
 end
 
-function printClassDocConstructorSummary( f, doc )
-    local ctors = getConstructors( doc.doc );
+function printClassDocConstructorSummary( f, fileDoc )
+    local ctors = getConstructors( fileDoc );
     if( #ctors > 0 )then
         f:write( "  <table border=\"1\" width=\"100%\" cellpadding=\"3\" cellspacing=\"0\">\n" );
         f:write( "    <tr bgcolor=\"#ccccff\" class=\"TableHeadingColor\">\n" );
@@ -141,7 +135,7 @@ function printClassDocFieldDetail( f, fields )
 
         local i, info;
         for i, info in pairs( fields ) do
-            f:write( "  <a name=\"" .. info.name .. "\"<!-- --></a><h3>" .. info.name .. "</h3>\n" );
+            f:write( "  <a name=\"" .. info.name .. "\"><!-- --></a><h3>" .. info.name .. "</h3>\n" );
             f:write( "  <pre>\n" );
             local access = getAccess( info.access, true );
             f:write( access .. " " .. info.var .. " <b>" .. info.name .. "</b></pre>\n" );
@@ -157,8 +151,67 @@ function printClassDocFieldDetail( f, fields )
     end
 end
 
+function printClassDocMethodDetail( f, ctors, methodKind )
+    if( #ctors == 0 )then
+        return;
+    end
+    f:write( "  <table border=\"1\" width=\"100%\" cellpadding=\"3\" cellspacing=\"0\">\n" );
+    f:write( "    <tr bgcolor=\"#ccccff\" class=\"TableHeadingColor\">\n" );
+    f:write( "      <th align=\"left\" colspan=\"1\">\n" );
+    f:write( "        <font size=\"+2\"><b>" .. methodKind .. "の詳細</b></font>\n" );
+    f:write( "      </th>\n" );
+    f:write( "    </tr>\n" );
+    f:write( "  </table>\n" );
+
+    local i, ctor;
+    for i, ctor in pairs( ctors ) do
+        f:write( "  <a name=\"" .. ctor.name .. "\"><!-- --></a>\n" );
+        f:write( "  <h3>" .. ctor.name .. "</h3>\n" );
+        f:write( "  <pre>\n" );
+        local access = getAccess( ctor.access, true );
+        f:write( access .. " <b>" .. ctor.name .. "</b>(" );
+        local paramIndex, paramName;
+        for paramIndex, paramName in ipairs( ctor.param ) do
+            local param = ctor.param[paramName];
+            local t, c = getType( param );
+            if( paramIndex > 1 )then
+                f:write( "," );
+            end
+            f:write( t .. "&nbsp;" .. paramName );
+        end
+        f:write( ")</pre>\n" );
+        f:write( "  <p>\n" );
+        f:write( "  <dl>\n" );
+        f:write( "    <dd>" .. ctor.description .. "\n" );
+        f:write( "    <p>\n" );
+        f:write( "  </dl>\n" );
+        if( #ctor.param > 0 )then
+            f:write( "  <dd>\n" );
+            f:write( "    <dl>\n" );
+            f:write( "      <dt><b>パラメータ:</b>\n" );
+            for paramIndex, paramName in ipairs( ctor.param ) do
+                local param = ctor.param[paramName];
+                local t, c = getType( param );
+                f:write( "        <dd><code>" .. paramName .. "</code> - " .. c .. "\n" );
+            end
+            f:write( "    </dl>\n" );
+            f:write( "  </dd>\n" );
+        end
+        if( ctor.ret ~= nil )then
+            local t, c = getType( ctor.ret );
+            f:write( "  <dd>\n" );
+            f:write( "    <dl>\n" );
+            f:write( "      <dt><b>戻り値:</b>\n" );
+            f:write( "        <dd>" .. c .. "" );
+            f:write( "    </dl>\n" );
+            f:write( "  </dd>\n" );
+        end
+        f:write( "  <hr>\n" );
+        f:write( "\n" );
+    end
+end
+
 function printClassDoc( fileName, docinfo )
-print( "* " .. fileName .. " ************************************************" );
     local htmlName = fileName:gsub( ".lua", ".html" );
     local doc = docinfo.files[fileName];
     local f = io.open( options.output_dir .. "/" .. htmlName, "w" );
@@ -184,6 +237,8 @@ print( "* " .. fileName .. " ************************************************" )
     local methods = printClassDocMethodSummary( f, doc );
 
     printClassDocFieldDetail( f, fields );
+    printClassDocMethodDetail( f, ctors, "コンストラクタ" );
+    printClassDocMethodDetail( f, methods, "メソッド" );
 
     f:write( "</body>\n" );
     f:write( "</html>\n" );
@@ -228,29 +283,6 @@ function printAllClasses( doc )
     f:close();
 end
 
-function printOverview()
-    local f = io.open( options.output_dir .. "/overview-frame.html", "w" );
-    f:write(
-[[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF8">
-  <link rel="stylesheet" type="text/css" href="stylesheet.css">
-</head>
-<body>
-  <table border="0" width="100%">
-    <tr>
-      <td nowrap>
-        <font class="frameItemFont"><a href="allclasses-frame.html" target="packageFrame">すべてのクラス</a></font>
-        <br>
-      </td>
-    </tr>
-  </table>
-</body>
-</html>]] );
-    f:close();
-end
-
 function printIndex()
     local f = io.open( options.output_dir .. "/index.html", "w" );
     f:write(
@@ -260,10 +292,7 @@ function printIndex()
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 </head>
 <frameset cols="20%,80%" title="">
-  <frameset rows="30%,70%" title="">
-    <frame src="overview-frame.html" name="packageListFrame">
-    <frame src="allclasses-frame.html" name="packageFrame">
-  </frameset>
+  <frame src="allclasses-frame.html" name="packageFrame">
   <frame src="overview-summary.html" name="classFrame" scrolling="yes">
 </frameset>
 </html>]] );
@@ -329,10 +358,9 @@ end
 ---
 -- ファイルの doc 情報から、フィールドについての doc 情報を取り出す
 function getFields( fileDoc )
-print( "getFields; fileDoc=" .. dump( fileDoc ) );
     local result = {};
-    for i, info in pairs( fileDoc.doc ) do
-        if( type( info.var ) ~= "nil" )then
+    for i, info in pairs( fileDoc.vars ) do
+        if( type( info ) == "table" )then
             if( not (isPrivate( info.access ) and options.noprivate == 1) )then
                 table.insert( result, info );
             end
@@ -359,11 +387,10 @@ end
 
 ---
 -- コンストラクタの情報を取り出す
-function getConstructors( docinfo )
+function getConstructors( fileDoc )
     local result = {};
-    for i, info in pairs( docinfo ) do
-        local clazz = info.class;
-        if( clazz == "function" )then
+    for i, info in pairs( fileDoc.functions ) do
+        if( type( info ) == "table" )then
             if( info.name == "new" and isStatic( info.access ) )then
                 table.insert( result, info );
             end
@@ -375,7 +402,13 @@ end
 ---
 -- "(integer) 説明"のような文字列を、"integer", "説明"に分解する
 function getType( comment )
-    local startIndex = comment:find( "(", 1, true );
+    if( comment == nil )then
+        return "", "";
+    end
+    if( type( comment ) == "table" )then
+        return "", "";
+    end
+    local startIndex = string.find( comment, "(", 1, true );
     if( startIndex == nil )then
         return "", comment;
     end
