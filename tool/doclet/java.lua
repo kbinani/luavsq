@@ -9,153 +9,23 @@ local io = io;
 module "luadoc.doclet.java";
 
 function start( doc )
-print( "options=" .. dump( options ) );
+--print( dump( doc ) );
+--print( "options=" .. dump( options ) );
     printStylesheet();
     printIndex();
     printOverview();
     printAllClasses( doc );
     for i, fileName in ipairs( doc.files ) do
         printClassDoc( fileName, doc );
-print( dump( doc.files[fileName].doc ) );
+--print( dump( doc.files[fileName].doc ) );
     end
 --    print( dump( doc.files ) );
 end
 
----
--- ファイルの doc 情報から、フィールドについての doc 情報を取り出す
-function getFields( docinfo )
-    local result = {};
-    for i, info in pairs( docinfo ) do
-        if( type( info.var ) ~= "nil" )then
-            if( not (isPrivate( info.access ) and options.noprivate == 1) )then
-                table.insert( result, info );
-            end
-        end
-    end
-    return result;
-end
-
----
--- ファイルの doc 情報から、function についての doc 情報を取り出す
-function getMethods( docinfo )
-    local result = {};
-    for i, info in pairs( docinfo ) do
-        local clazz = info.class;
-        if( clazz == "function" )then
-            if( not (isPrivate( info.access ) and options.noprivate == 1) )then
-                if( not (info.name == "new" and isStatic( info.access )) )then
-                    table.insert( result, info );
-                end
-            end
-        end
-    end
-    return result;
-end
-
----
--- コンストラクタの情報を取り出す
-function getConstructors( docinfo )
-    local result = {};
-    for i, info in pairs( docinfo ) do
-        local clazz = info.class;
-        if( clazz == "function" )then
-            if( info.name == "new" and isStatic( info.access ) )then
-                table.insert( result, info );
-            end
-        end
-    end
-    return result;
-end
-
----
--- "(integer) 説明"のような文字列を、"integer", "説明"に分解する
-function getType( comment )
-    local startIndex = comment:find( "(", 1, true );
-    if( startIndex == nil )then
-        return "", comment;
-    end
-    local endIndex = comment:find( ")", startIndex, true );
-    if( endIndex == nil )then
-        return "", comment;
-    end
-    local t = comment:sub( startIndex + 1, endIndex - 1 );
-    local c = comment:sub( endIndex + 1 );
-    while( c:sub( 1, 1 ) == " " )do
-        c = c:sub( 2 );
-    end
-    return t, c;
-end
-
-function isPrivate( access )
-    if( access == nil )then
-        return false;
-    else
-        return (access:find( "private" ) ~= nil);
-    end
-end
-
-function isStatic( access )
-    if( access == nil )then
-        return false;
-    else
-        return (access:find( "static" ) ~= nil);
-    end
-end
-
-function getAccess( access, long )
-    if( long == nil )then
-        long = false;
-    end
-    local result = "";
-    if( options.noprivate == 1 and (not long) )then
-        if( access == nil )then
-            result = "";
-        else
-            if( access:find( "static" ) ~= nil )then
-                result = "static";
-            else
-                result = "";
-            end
-        end
-    else
-        if( access == nil )then
-            result = "public";
-        else
-            if( access:find( "private" ) ~= nil )then
-                result = "private";
-            else
-                result = "public";
-            end
-            if( access:find( "static" ) ~= nil )then
-                result = result .. " static";
-            end
-        end
-    end
-    return result;
-end
-
-function getSummary( summary )
-    local c = "。";
-    local i = summary:find( c );
-    local result = summary;
-    if( i ~= nil )then
-        result = summary:sub( 1, i + c:len() - 1 );
-    else
-        c = "．";
-        i = summary:find( c );
-        if( i ~= nil )then
-            result = summary:sub( 1, i + c:len() - 1 );
-        end
-    end
-    while( result:sub( 1, 1 ) == " " )do
-        result = result:sub( 2 );
-    end
-    return result;
-end
-
-function printClassDocFieldSummary( f, doc )
-    local fields = getFields( doc.doc );
+function printClassDocFieldSummary( f, fileDoc )
+    local fields = getFields( fileDoc );
     if( #fields > 0 )then
+print( "printClassDocFieldSummary; fields=" .. dump( fields ) );
         f:write( "  <table border=\"1\" width=\"100%\" cellpadding=\"3\" cellspacing=\"0\">\n" );
         f:write( "    <tr bgcolor=\"#ccccff\" class=\"TableHeadingColor\">\n" );
         f:write( "      <th align=\"left\" colspan=\"2\">\n" );
@@ -221,7 +91,7 @@ function printClassDocConstructorSummary( f, doc )
 end
 
 function printClassDocMethodSummary( f, doc )
-    local methods = getMethods( doc.doc );
+    local methods = getMethods( doc );
     if( #methods > 0 )then
         f:write( "  <table border=\"1\" width=\"100%\" cellpadding=\"3\" cellspacing=\"0\">\n" );
         f:write( "    <tr bgcolor=\"#ccccff\" class=\"TableHeadingColor\">\n" );
@@ -229,7 +99,7 @@ function printClassDocMethodSummary( f, doc )
         f:write( "        <font size=\"+2\"><b>メソッドの概要</b></font>\n" );
         f:write( "      </th>\n" );
         f:write( "    </tr>\n" );
-        for i, info in ipairs( methods ) do
+        for i, info in pairs( methods ) do
             local returnType = "void";
             if( info.ret ~= nil )then
                 returnType = getType( info.ret );
@@ -288,6 +158,7 @@ function printClassDocFieldDetail( f, fields )
 end
 
 function printClassDoc( fileName, docinfo )
+print( "* " .. fileName .. " ************************************************" );
     local htmlName = fileName:gsub( ".lua", ".html" );
     local doc = docinfo.files[fileName];
     local f = io.open( options.output_dir .. "/" .. htmlName, "w" );
@@ -453,6 +324,138 @@ h1{
 .NavBarCell3    { font-family: Arial, Helvetica, sans-serif; background-color:#FFFFFF; color:#000000}
 ]] );
     f:close();
+end
+
+---
+-- ファイルの doc 情報から、フィールドについての doc 情報を取り出す
+function getFields( fileDoc )
+print( "getFields; fileDoc=" .. dump( fileDoc ) );
+    local result = {};
+    for i, info in pairs( fileDoc.doc ) do
+        if( type( info.var ) ~= "nil" )then
+            if( not (isPrivate( info.access ) and options.noprivate == 1) )then
+                table.insert( result, info );
+            end
+        end
+    end
+    return result;
+end
+
+---
+-- ファイルの doc 情報から、function についての doc 情報を取り出す
+function getMethods( fileDoc )
+    local result = {};
+    for i, info in pairs( fileDoc.functions ) do
+        if( type( info ) == "table" )then
+            if( (not (isPrivate( info.access ) and options.noprivate == 1))
+                or
+                (not (info.name == "new" and isStatic( info.access ))) )then
+                table.insert( result, info );
+            end
+        end
+    end
+    return result;
+end
+
+---
+-- コンストラクタの情報を取り出す
+function getConstructors( docinfo )
+    local result = {};
+    for i, info in pairs( docinfo ) do
+        local clazz = info.class;
+        if( clazz == "function" )then
+            if( info.name == "new" and isStatic( info.access ) )then
+                table.insert( result, info );
+            end
+        end
+    end
+    return result;
+end
+
+---
+-- "(integer) 説明"のような文字列を、"integer", "説明"に分解する
+function getType( comment )
+    local startIndex = comment:find( "(", 1, true );
+    if( startIndex == nil )then
+        return "", comment;
+    end
+    local endIndex = comment:find( ")", startIndex, true );
+    if( endIndex == nil )then
+        return "", comment;
+    end
+    local t = comment:sub( startIndex + 1, endIndex - 1 );
+    local c = comment:sub( endIndex + 1 );
+    while( c:sub( 1, 1 ) == " " )do
+        c = c:sub( 2 );
+    end
+    return t, c;
+end
+
+function isPrivate( access )
+    if( access == nil )then
+        return false;
+    else
+        return (access:find( "private" ) ~= nil);
+    end
+end
+
+function isStatic( access )
+    if( access == nil )then
+        return false;
+    else
+        return (access:find( "static" ) ~= nil);
+    end
+end
+
+function getAccess( access, long )
+    if( long == nil )then
+        long = false;
+    end
+    local result = "";
+    if( options.noprivate == 1 and (not long) )then
+        if( access == nil )then
+            result = "";
+        else
+            if( access:find( "static" ) ~= nil )then
+                result = "static";
+            else
+                result = "";
+            end
+        end
+    else
+        if( access == nil )then
+            result = "public";
+        else
+            if( access:find( "private" ) ~= nil )then
+                result = "private";
+            else
+                result = "public";
+            end
+            if( access:find( "static" ) ~= nil )then
+                result = result .. " static";
+            end
+        end
+    end
+    return result;
+end
+
+function getSummary( summary )
+    local c = "。";
+    local i = summary:find( c );
+    local result = summary;
+    if( i ~= nil )then
+        result = summary:sub( 1, i + c:len() - 1 );
+    else
+        c = "．";
+        i = summary:find( c );
+        if( i ~= nil )then
+            result = summary:sub( 1, i + c:len() - 1 );
+        end
+    end
+    while( result:sub( 1, 1 ) == " " )do
+        result = result:sub( 2 );
+    end
+    return result;
 end
 
 ---

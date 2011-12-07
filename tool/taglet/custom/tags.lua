@@ -10,12 +10,12 @@ module "luadoc.taglet.custom.tags"
 -------------------------------------------------------------------------------
 
 local function author (tag, block, text)
-	block[tag] = block[tag] or {}
-	if not text then
-		luadoc.logger:warn("author `name' not defined [["..text.."]]: skipping")
-		return
-	end
-	table.insert (block[tag], text)
+    block[tag] = block[tag] or {}
+    if not text then
+        luadoc.logger:warn("author `name' not defined [["..text.."]]: skipping")
+        return
+    end
+    table.insert (block[tag], text)
 end
 
 -------------------------------------------------------------------------------
@@ -23,19 +23,19 @@ end
 -- "table". The first two classes are automatic, extracted from the source code
 
 local function class (tag, block, text)
-	block[tag] = text
+    block[tag] = text
 end
 
 -------------------------------------------------------------------------------
 
 local function copyright (tag, block, text)
-	block[tag] = text
+    block[tag] = text
 end
 
 -------------------------------------------------------------------------------
 
 local function description (tag, block, text)
-	block[tag] = text
+    block[tag] = text
 end
 
 local function access( tag, block, text )
@@ -46,19 +46,23 @@ local function var( tag, block, text )
     block[tag] = text;
 end
 
+
+local function ctor( tag, block, text )
+    block[tag] = text;
+end
 -------------------------------------------------------------------------------
 
 local function field (tag, block, text)
-	if block["class"] ~= "table" then
-		luadoc.logger:warn("documenting `field' for block that is not a `table'")
-	end
-	block[tag] = block[tag] or {}
+    if block["class"] ~= "table" then
+        luadoc.logger:warn("documenting `field' for block that is not a `table'")
+    end
+    block[tag] = block[tag] or {}
 
-	local _, _, name, desc = string.find(text, "^([_%w%.]+)%s+(.*)")
-	assert(name, "field name not defined")
+    local _, _, name, desc = string.find(text, "^([_%w%.]+)%s+(.*)")
+    assert(name, "field name not defined")
 
-	table.insert(block[tag], name)
-	block[tag][name] = desc
+    table.insert(block[tag], name)
+    block[tag][name] = desc
 end
 
 -------------------------------------------------------------------------------
@@ -66,11 +70,11 @@ end
 -- an error and do not change the previous value
 
 local function name (tag, block, text)
-	if block[tag] and block[tag] ~= text then
-		luadoc.logger:error(string.format("block name conflict: `%s' -> `%s'", block[tag], text))
-	end
+    if block[tag] and block[tag] ~= text then
+        luadoc.logger:error(string.format("block name conflict: `%s' -> `%s'", block[tag], text))
+    end
 
-	block[tag] = text
+    block[tag] = text
 end
 
 -------------------------------------------------------------------------------
@@ -80,72 +84,72 @@ end
 -- @param text String with the current line beeing processed.
 
 local function param (tag, block, text)
-	block[tag] = block[tag] or {}
-	-- TODO: make this pattern more flexible, accepting empty descriptions
-	local _, _, name, desc = string.find(text, "^([_%w%.]+)%s+(.*)")
-	if not name then
-		luadoc.logger:warn("parameter `name' not defined [["..text.."]]: skipping")
-		return
-	end
-	local i = table.foreachi(block[tag], function (i, v)
-		if v == name then
-			return i
-		end
-	end)
-	if i == nil then
-		luadoc.logger:warn(string.format("documenting undefined parameter `%s'", name))
-		table.insert(block[tag], name)
-	end
-	block[tag][name] = desc
+    block[tag] = block[tag] or {}
+    -- TODO: make this pattern more flexible, accepting empty descriptions
+    local _, _, name, desc = string.find(text, "^([_%w%.]+)%s+(.*)")
+    if not name then
+        luadoc.logger:warn("parameter `name' not defined [["..text.."]]: skipping")
+        return
+    end
+    local i = table.foreachi(block[tag], function (i, v)
+        if v == name then
+            return i
+        end
+    end)
+    if i == nil then
+        luadoc.logger:warn(string.format("documenting undefined parameter `%s'", name))
+        table.insert(block[tag], name)
+    end
+    block[tag][name] = desc
 end
 
 -------------------------------------------------------------------------------
 
 local function release (tag, block, text)
-	block[tag] = text
+    block[tag] = text
 end
 
 -------------------------------------------------------------------------------
 
 local function ret (tag, block, text)
-	tag = "ret"
-	if type(block[tag]) == "string" then
-		block[tag] = { block[tag], text }
-	elseif type(block[tag]) == "table" then
-		table.insert(block[tag], text)
-	else
-		block[tag] = text
-	end
+    tag = "ret"
+    if type(block[tag]) == "string" then
+        block[tag] = { block[tag], text }
+    elseif type(block[tag]) == "table" then
+        table.insert(block[tag], text)
+    else
+        block[tag] = text
+    end
 end
 
 -------------------------------------------------------------------------------
 -- @see ret
 
 local function see (tag, block, text)
-	-- see is always an array
-	block[tag] = block[tag] or {}
+    -- see is always an array
+    block[tag] = block[tag] or {}
 
-	-- remove trailing "."
-	text = string.gsub(text, "(.*)%.$", "%1")
+    -- remove trailing "."
+    text = string.gsub(text, "(.*)%.$", "%1")
 
-	local s = util.split("%s*,%s*", text)
+    local s = util.split("%s*,%s*", text)
 
-	table.foreachi(s, function (_, v)
-		table.insert(block[tag], v)
-	end)
+    table.foreachi(s, function (_, v)
+        table.insert(block[tag], v)
+    end)
 end
 
 -------------------------------------------------------------------------------
 -- @see ret
 
 local function usage (tag, block, text)
-	if type(block[tag]) == "string" then
-		block[tag] = { block[tag], text }
-	elseif type(block[tag]) == "table" then
-		table.insert(block[tag], text)
-	else
-		block[tag] = text
-	end
+    if type(block[tag]) == "string" then
+        block[tag] = { block[tag], text }
+    elseif type(block[tag]) == "table" then
+        table.insert(block[tag], text)
+    else
+        block[tag] = text
+    end
 end
 
 -------------------------------------------------------------------------------
@@ -168,10 +172,10 @@ handlers["var"] = access;
 -------------------------------------------------------------------------------
 
 function handle (tag, block, text)
-	if not handlers[tag] then
-		luadoc.logger:error(string.format("undefined handler for tag `%s'", tag))
-		return
-	end
---	assert(handlers[tag], string.format("undefined handler for tag `%s'", tag))
-	return handlers[tag](tag, block, text)
+    if not handlers[tag] then
+        luadoc.logger:error(string.format("undefined handler for tag `%s'", tag))
+        return
+    end
+--    assert(handlers[tag], string.format("undefined handler for tag `%s'", tag))
+    return handlers[tag](tag, block, text)
 end
