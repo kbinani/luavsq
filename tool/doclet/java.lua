@@ -13,6 +13,7 @@ local allClasses = {};
 function start( doc )
     printStylesheet();
     printIndex();
+    printOverviewSummary( doc );
     for i, fileName in ipairs( doc.files ) do
         local className = fileName:gsub( ".lua", "" );
         table.insert( allClasses, className );
@@ -34,8 +35,15 @@ function printClassDoc( fileName, docinfo )
     f:write( "<head>\n" );
     f:write( "  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF8\">\n" );
     f:write( "  <link rel=\"stylesheet\" type=\"text/css\" href=\"stylesheet.css\">\n" );
+    f:write( "  <title>" .. className .. "</title>\n" );
+    f:write( "  <script type=\"text/javascript\">\n" );
+    f:write( "      function windowTitle()\n" );
+    f:write( "      {\n" );
+    f:write( "          parent.document.title = \"" .. className .. "\";\n" );
+    f:write( "      }\n" );
+    f:write( "  </script>\n" );
     f:write( "</head>\n" );
-    f:write( "<body>\n" );
+    f:write( "<body onload=\"windowTitle();\">\n" );
     f:write( "  <h2>\n" );
     f:write( "    クラス " .. className .. "\n" );
     f:write( "  </h2>\n" );
@@ -111,7 +119,7 @@ function printClassDocMethodSummary( f, methods, methodKind )
             f:write( "    <tr bgcolor=\"white\" class=\"TableRowColor\">\n" );
             f:write( "      <td align=\"right\" valign=\"top\" width=\"1%\">\n" );
             local access = getAccess( info.access );
-            f:write( "        <font size=\"-1\"><code>" .. access .. " &nbsp;" .. returnType .. "</code></font>\n" );
+            f:write( "        <font size=\"-1\"><code>" .. access .. " &nbsp;" .. getLinkedTypeName( htmlspecialchars( returnType ) ) .. "</code></font>\n" );
             f:write( "      <td>\n" );
             f:write( "       <code><b><a href=\"#" .. getMethodId( info ) .. "\">" .. info.name .. "</a></b>(" );
             for paramIndex, paramName in ipairs( info.param ) do
@@ -119,7 +127,7 @@ function printClassDocMethodSummary( f, methods, methodKind )
                 if( paramIndex > 1 )then
                     f:write( "," );
                 end
-                f:write( argType .. "&nbsp;" .. paramName );
+                f:write( getLinkedTypeName( htmlspecialchars( argType ) ) .. "&nbsp;" .. paramName );
             end
             f:write( ")</code>\n" );
             f:write( "       <br>\n" );
@@ -148,7 +156,7 @@ function printClassDocFieldDetail( f, fields )
             f:write( "  <a name=\"" .. info.name .. "\"><!-- --></a><h3>" .. info.name .. "</h3>\n" );
             f:write( "  <pre>\n" );
             local access = getAccess( info.access, true );
-            f:write( access .. " " .. info.var .. " <b>" .. info.name .. "</b></pre>\n" );
+            f:write( access .. " " .. getLinkedTypeName( htmlspecialchars( info.var ) ) .. " <b>" .. info.name .. "</b></pre>\n" );
             f:write( "  <dl>\n" );
             f:write( "    <dd>" .. info.description .. "\n" );
             f:write( "    <p>\n" );
@@ -183,8 +191,8 @@ function printClassDocMethodDetail( f, ctors, methodKind )
         f:write( "  <pre>\n" );
         local access = getAccess( ctor.access, true );
         local retType = getType( ctor.ret );
-        f:write( access .. " " .. retType .. " <b>" .. name .. "</b>(" );
-        local paramPrefixSpaces = string.rep( " ", access:len() + name:len() + 1 );
+        f:write( access .. " " .. getLinkedTypeName( htmlspecialchars( retType ) ) .. " <b>" .. name .. "</b>(" );
+        local paramPrefixSpaces = string.rep( " ", access:len() + retType:len() + name:len() + 3 );
         local paramIndex, paramName;
         for paramIndex, paramName in ipairs( ctor.param ) do
             local param = ctor.param[paramName];
@@ -192,7 +200,7 @@ function printClassDocMethodDetail( f, ctors, methodKind )
             if( paramIndex > 1 )then
                 f:write( ",\n" .. paramPrefixSpaces );
             end
-            f:write( t .. "&nbsp;" .. paramName );
+            f:write( getLinkedTypeName( htmlspecialchars( t ) ) .. "&nbsp;" .. paramName );
         end
         f:write( ")</pre>\n" );
         f:write( "  <p>\n" );
@@ -279,6 +287,62 @@ function printIndex()
   <frame src="overview-summary.html" name="classFrame" scrolling="yes">
 </frameset>
 </html>]] );
+    f:close();
+end
+
+function printOverviewSummary( doc )
+    local moduleName = "";
+    local description = "";
+    local i, name;
+    for i, name in ipairs( doc.modules ) do
+        moduleName = name;
+        description = doc.modules[moduleName].description;
+        break;
+    end
+
+    local f = io.open( options.output_dir .. "/overview-summary.html", "w" );
+    f:write( "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">\n" );
+    f:write( "<html>\n" );
+    f:write( "<head>\n" );
+    f:write( "  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF8\">\n" );
+    f:write( "  <link rel=\"stylesheet\" type=\"text/css\" href=\"stylesheet.css\">\n" );
+    f:write( "  <title>" .. moduleName .. "</title>\n" );
+    f:write( "  <script type=\"text/javascript\">\n" );
+    f:write( "      function windowTitle()\n" );
+    f:write( "      {\n" );
+    f:write( "          parent.document.title = \"" .. moduleName .. "\";\n" );
+    f:write( "      }\n" );
+    f:write( "  </script>\n" );
+    f:write( "</head>\n" );
+    f:write( "<body onload=\"windowTitle();\">\n" );
+    f:write( "  <h2>モジュール " .. moduleName .. "</h2>\n" );
+    f:write( "  <p>" .. description .. "</p>\n" );
+
+    f:write( "  <table border=\"1\" width=\"100%\" cellpadding=\"3\" cellspacing=\"0\">\n" );
+    f:write( "    <tr bgcolor=\"#ccccff\" class=\"TableHeadingColor\">\n" );
+    f:write( "      <th align=\"left\" colspan=\"2\">\n" );
+    f:write( "        <font size=\"+2\"><b>クラスの概要</b></font>\n" );
+    f:write( "      </th>\n" );
+    f:write( "    </tr>\n" );
+
+    local i, file;
+    for i, file in ipairs( doc.files ) do
+        local className = doc.files[file].tables[1];
+        local description = doc.files[file].tables[className].description;
+        f:write( "    <tr bgcolor=\"white\" class=\"TableRowColor\">\n" );
+        f:write( "      <td width=\"15%\">\n" );
+        f:write( "        <b><a href=\"" .. className .. ".html\">" .. className .. "</a></b>\n" );
+        f:write( "      </td>\n" );
+        f:write( "      <td>\n" );
+        f:write( "        " .. description .. "\n" );
+        f:write( "      </td>\n" );
+        f:write( "    </tr>\n" );
+    end
+
+    f:write( "  </table>\n" );
+
+    f:write( "</body>\n" );
+    f:write( "</html>\n" );
     f:close();
 end
 
@@ -423,11 +487,35 @@ end
 -- 型名に、HTMLドキュメントへのリンクを付加した文字列を取得する
 -- @param typeName (string)
 -- @return (string)
-function getLinkedTypeName( typeName )
-    local i, className;
-    for i, className in ipairs( allClasses ) do
-        if( typeName == className )then
-            typeName = "<a href=\"" .. typeName .. ".html\">" .. typeName .. "</a>";
+function getLinkedTypeName( typeName, classes )
+    if( classes == nil )then
+        classes = allClasses;
+    end
+    local startIndex = 1;
+    local endIndex;
+    while( startIndex <= typeName:len() )do
+        startIndex, endIndex = typeName:find( "[a-zA-Z0-9_.]*", startIndex );
+        if( startIndex == nil )then
+            break;
+        end
+        if( endIndex < startIndex )then
+            startIndex = startIndex + 1;
+        else
+            local extractedTypeName = typeName:sub( startIndex, endIndex );
+            local i, className;
+            local found = false;
+            for i, className in ipairs( classes ) do
+                if( extractedTypeName == className )then
+                    local linkedClassName = "<a href=\"" .. className .. ".html\">" .. className .. "</a>";
+                    typeName = typeName:sub( 1, startIndex - 1 ) .. linkedClassName .. typeName:sub( endIndex + 1 );
+                    startIndex = endIndex + (linkedClassName:len() - className:len());
+                    found = true;
+                    break;
+                end
+            end
+            if( not found )then
+                startIndex = endIndex + 1;
+            end
         end
     end
     return typeName;
@@ -460,10 +548,14 @@ function getType( comment )
         t = "void";
     end
 
-    -- doc で生成されるクラス名が型名だった場合、リンクを張る
-    t = getLinkedTypeName( t );
-
     return t, c;
+end
+
+function htmlspecialchars( text )
+    text = text:gsub( "&", "&amp;" );
+    text = text:gsub( "<", "&lt;" );
+    text = text:gsub( ">", "&gt;" );
+    return text;
 end
 
 function isPrivate( access )
