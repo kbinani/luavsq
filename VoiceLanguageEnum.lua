@@ -18,23 +18,24 @@ module( "luavsq" );
 -- 歌手の歌唱言語を表す列挙子
 -- @class table
 -- @name VoiceLanguageEnum
--- @field Japanese Japanese
--- @field English English
 VoiceLanguageEnum = {
     ---
     -- Japanese
+    -- @var integer
     Japanese = 0,
 
     ---
     -- English
+    -- @var integer
     English = 1,
 };
 
 ---
 -- 歌手の名前から、その歌手の歌唱言語を取得する
 -- @param name (string) 歌手の名前
--- @return (<a href="../files/VoiceLanguageEnum.html">VoiceLanguageEnum</a>) 歌唱言語
--- @name <i>valueFromSingerName</i>
+-- @return (VoiceLanguageEnum) 歌唱言語
+-- @name valueFromSingerName
+-- @access static
 function VoiceLanguageEnum.valueFromSingerName( name )
     local search = name:lower();
     if( search == "meiko" or

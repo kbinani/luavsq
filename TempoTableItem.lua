@@ -18,18 +18,25 @@ module( "luavsq" );
 -- テンポ情報テーブル内の要素を表現するクラス
 -- @class table
 -- @name TempoTableItem
--- @field clock (integer) Tick 単位の時刻
--- @field tempo (integer) テンポ値。四分音符の長さをマイクロ秒単位で表した値
 TempoTableItem = {};
 
 --
 -- 初期化を行う
--- @return (<a href="../files/TempoTableItem.html">TempoTableItem</a>)
+-- @return (TempoTableItem)
 function TempoTableItem.new( ... )
     local this = {};
     local arguments = { ... };
+
+    ---
+    -- Tick 単位の時刻
+    -- @var integer
     this.clock = 0;
+
+    ---
+    -- テンポ値。四分音符の長さをマイクロ秒単位で表した値
+    -- @var integer
     this.tempo = 0;
+
     this._time = 0.0;
 
     ---
@@ -42,7 +49,7 @@ function TempoTableItem.new( ... )
 
     ---
     -- コピーを作成する
-    -- @return (<a href="../files/TempoTableItem.html">TempoTableItem</a>) このオブジェクトのコピー
+    -- @return (TempoTableItem) このオブジェクトのコピー
     -- @name clone
     function this:clone()
         local result = TempoTableItem.new( self.clock, self.tempo );
@@ -54,8 +61,9 @@ function TempoTableItem.new( ... )
     -- 初期化を行う
     -- @param clock (integer) Tick 単位の時刻
     -- @param tempo (integer) テンポ値。四分音符の長さをマイクロ秒単位で表した値
-    -- @return (<a href="../files/TempoTableItem.html">TempoTableItem</a>)
-    -- @name <i>new</i>
+    -- @return (TempoTableItem)
+    -- @name new
+    -- @access static ctor
     function this:_init_2( clock, tempo )
         self.clock = clock;
         self.tempo = tempo;
@@ -63,7 +71,7 @@ function TempoTableItem.new( ... )
 
     ---
     -- 順序を比較する
-    -- @param item (<a href="../files/TempoTableItem.html">TempoTableItem</a>) 比較対象のアイテム
+    -- @param item (TempoTableItem) 比較対象のアイテム
     -- @return (integer) このインスタンスが比較対象よりも小さい場合は負の整数、等しい場合は 0、大きい場合は正の整数を返す
     -- @name compareTo
     function this:compareTo( entry )
@@ -72,7 +80,7 @@ function TempoTableItem.new( ... )
 
     ---
     -- このオブジェクトのインスタンスと、指定されたオブジェクトが同じかどうかを調べる
-    -- @param item (<a href="../files/TempoTableItem.html">TempoTableItem</a>) 比較対象のオブジェクト
+    -- @param item (TempoTableItem) 比較対象のオブジェクト
     -- @return (boolean) 比較対象と同じであれば true を、そうでなければ false を返す
     -- @name equals
     function this:equals( entry )
@@ -99,11 +107,12 @@ function TempoTableItem.new( ... )
 end
 
 ---
--- 2 つの <a href="../files/TempoTableItem.html">TempoTableItem</a> を比較する
--- @param a (<a href="../files/TempoTableItem.html">TempoTableItem</a>) 比較対象のオブジェクト
--- @param b (<a href="../files/TempoTableItem.html">TempoTableItem</a>) 比較対象のオブジェクト
+-- 2 つの TempoTableItem を比較する
+-- @param a (TempoTableItem) 比較対象のオブジェクト
+-- @param b (TempoTableItem) 比較対象のオブジェクト
 -- @return (boolean) a が b よりも小さい場合は true、そうでない場合は false を返す
--- @name <i>compare</i>
+-- @name compare
+-- @access static
 function TempoTableItem.compare( a, b )
     if( a:compareTo( b ) < 0 )then
         return true;

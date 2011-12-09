@@ -23,96 +23,139 @@ module( "luavsq" );
 -- VSQ ファイルのメタテキスト内に記述されるイベントを表すクラス
 -- @class table
 -- @name Event
--- @field tag (string) イベントに付けるタグ文字列
--- @field id (integer) 内部で使用するオブジェクト固有の ID
--- @field clock (integer) Tick 単位の時刻
--- @field index (integer) VSQ メタテキストに出力されるこのオブジェクトの ID
--- @field type (<a href="../files/EventTypeEnum.html">EventTypeEnum</a>) イベントの種類
--- @field singerHandle (<a href="../files/Handle.html">Handle</a>) 歌手ハンドル
--- @field note (integer) ノート番号
--- @field dynamics (integer) ベロシティ
--- @field pmBendDepth (integer) ベンド深さ
--- @field pmBendLength (integer) ベンド長さ
--- @field pmbPortamentoUse (integer) ポルタメント
--- @field demDecGainRate (integer) ディケイ
--- @field demAccent (integer) アクセント
--- @field lyricHandle (<a href="../files/Handle.html">Handle</a>) 歌詞ハンドル
--- @field vibratoHandle (<a href="../files/Handle.html">Handle</a>) ビブラートハンドル
--- @field vibratoDelay (integer) イベント先頭から測った、ビブラートの開始位置(Tick 単位)
--- @field noteHeadHandle (<a href="../files/Handle.html">Handle</a>) アタックハンドル
--- @field pMeanOnsetFirstNote (integer)
--- @field vMeanNoteTransition (integer)
--- @field d4mean (integer)
--- @field pMeanEndingNote (integer)
--- @field iconDynamicsHandle (<a href="../files/Handle.html">Handle</a>) 強弱記号ハンドル
 Event = {};
 
 --
 -- 初期化を行う
--- @return (<a href="../files/Event.html">Event</a>)
+-- @return (Event)
 function Event.new( ... )
     local arguments = { ... };
     local this = {};
+
+    ---
+    -- イベントに付けるタグ文字列
+    -- @var string
     this.tag = "";
 
     ---
-    -- 内部で使用するインスタンス固有のID
-    -- @var (integer)
+    -- 内部で使用するオブジェクト固有の ID
+    -- @var integer
     this.id = -1;
 
+    ---
+    -- Tick 単位の時刻
+    -- @var integer
     this.clock = 0;
 
+    ---
+    -- VSQ メタテキストに出力されるこのオブジェクトの ID
+    -- @var integer
     this.index = -1;
+
     this._singerHandleIndex = 0;
     this._lyricHandleIndex = 0;
     this._vibratoHandleIndex = 0;
     this._noteHeadHandleIndex = 0;
+
+    ---
+    -- イベントの種類
+    -- @var EventTypeEnum
     this.type = EventTypeEnum.Note;
 
     ---
-    -- [SingerHandle]
+    -- 歌手ハンドル
+    -- @var Handle
     this.singerHandle = nil;
+
     this._length = 0;
+
+    ---
+    -- ノート番号
+    -- @var integer
     this.note = 0;
+
+    ---
+    -- ベロシティ
+    -- @var integer
     this.dynamics = 0;
+
+    ---
+    -- ベンド深さ
+    -- @var integer
     this.pmBendDepth = 0;
+
+    ---
+    -- ベンド長さ
+    -- @var integer
     this.pmBendLength = 0;
+
+    ---
+    -- ポルタメント
+    -- @var integer
     this.pmbPortamentoUse = 0;
+
+    ---
+    -- ディケイ
+    -- @var integer
     this.demDecGainRate = 0;
+
+    ---
+    -- アクセント
+    -- @var integer
     this.demAccent = 0;
 
     ---
-    -- [LyricHandle]
+    -- 歌詞ハンドル
+    -- @var Handle
     this.lyricHandle = nil;
 
     ---
-    -- [VibratoHandle]
+    -- ビブラートハンドル
+    -- @var Handle
     this.vibratoHandle = nil;
 
+    ---
+    -- イベント先頭から測った、ビブラートの開始位置(Tick 単位)
+    -- @var integer
     this.vibratoDelay = 0;
 
     ---
-    -- [NoteHeadHandle]
+    -- アタックハンドル
+    -- @var Handle
     this.noteHeadHandle = nil;
 
+    ---
+    -- @var integer
     this.pMeanOnsetFirstNote = 10;
+
+    ---
+    -- @var integer
     this.vMeanNoteTransition = 12;
+
+    ---
+    -- @var integer
     this.d4mean = 24;
+
+    ---
+    -- @var integer
     this.pMeanEndingNote = 12;
 
     ---
-    -- [IconDynamicsHandle]
+    -- 強弱記号ハンドル
+    -- @var Handle
     this.iconDynamicsHandle = nil;
 
     ---
-    -- @var (<a href="../files/UstEvent.html">UstEvent</a>)
+    -- @var UstEvent
+    -- @access private
     this.ustEvent = nil;
 
     ---
     -- 初期化を行う
     -- @param line (string) VSQ メタテキスト中の [EventList] セクション内のイベント宣言文字列(ex."480=ID#0001")
-    -- @name <i>new</i><sup>2</sup>
-    -- @return (<a href="../files/Event.html">Event</a>)
+    -- @return (Event)
+    -- @name new<!--2-->
+    -- @access static ctor
     function this:_init_1( line )
         local spl = Util.split( line, '=' );
         self.clock = tonumber( spl[1], 10 );
@@ -123,8 +166,9 @@ function Event.new( ... )
 
     ---
     -- 初期化を行う。この初期化メソッドは末尾のイベントリストを表すインスタンスを初期化する
-    -- @name <i>new</i><sup>1</sup>
-    -- @return (<a href="../files/Event.html">Event</a>)
+    -- @return (Event)
+    -- @name new<!--1-->
+    -- @access static ctor
     function this:_init_0()
         self.clock = 0;
         self.index = -1;
@@ -134,9 +178,10 @@ function Event.new( ... )
     ---
     -- 初期化を行う
     -- @param clock (integer) Tick 単位の時刻
-    -- @param eventType (<a href="../files/EventTypeEnum.html">EventTypeEnum</a>) イベントの種類
-    -- @name <i>new</i><sup>3</sup>
-    -- @return (<a href="../files/Event.html">Event</a>)
+    -- @param eventType (EventTypeEnum) イベントの種類
+    -- @return (Event)
+    -- @name new<!--3-->
+    -- @access static ctor
     function this:_init_2( clock, eventType )
         self.clock = clock;
         self.type = eventType;
@@ -357,8 +402,8 @@ function Event.new( ... )
 
     ---
     -- テキストストリームに書き出す
-    -- @param stream (<a href="../files/TextStream.html">TextStream</a>) 出力先
-    -- @name write<sup>1</sup>
+    -- @param stream (TextStream) 出力先
+    -- @name write<!--1-->
     function this:_write_1( stream )
         local def = { "Length",
                     "Note#",
@@ -373,9 +418,9 @@ function Event.new( ... )
 
     ---
     -- テキストストリームに書き出す
-    -- @param stream (<a href="../files/TextStream.html">TextStream</a>) 出力先
+    -- @param stream (TextStream) 出力先
     -- @param printTargets (table) 出力するアイテムのリスト
-    -- @name write<sup>2</sup>
+    -- @name write<!--2-->
     function this:_write_2( stream, printTargets )
         stream:writeLine( "[ID#" .. string.format( "%04d", self.index ) .. "]" );
         stream:writeLine( "Type=" .. EventTypeEnum.toString( self.type ) );
@@ -430,7 +475,7 @@ function Event.new( ... )
 
     ---
     -- コピーを作成する
-    -- @return (<a href="../files/Event.html">Event</a>) このインスタンスのコピー
+    -- @return (Event) このインスタンスのコピー
     -- @name clone
     function this:clone()
         local result = Event.new( self.clock, self.type );
@@ -479,7 +524,7 @@ function Event.new( ... )
         -- @param sr [TextStream] 読み込み対象
         -- @param value [int]
         -- @param last_line [ByRef<string>] 読み込んだ最後の行が返されます
-        -- @return (<a href="../files/Id.html">Id</a>)
+        -- @return (Id)
         function this:_init_3( sr, value, last_line )
             local spl;
             self.index = value;
@@ -559,7 +604,7 @@ function Event.new( ... )
 
     ---
     -- 順序を比較する
-    -- @param item (<a href="../files/Event.html">Event</a>) 比較対象のアイテム
+    -- @param item (Event) 比較対象のアイテム
     -- @return (integer) このインスタンスが比較対象よりも小さい場合は負の整数、等しい場合は 0、大きい場合は正の整数を返す
     -- @name compareTo
     function this:compareTo( item )
@@ -584,22 +629,25 @@ end
 
 ---
 -- 2 つの Event を比較する
--- @param a (<a href="../files/Event.html">Event</a>) 比較対象のオブジェクト
--- @param b (<a href="../files/Event.html">Event</a>) 比較対象のオブジェクト
+-- @param a (Event) 比較対象のオブジェクト
+-- @param b (Event) 比較対象のオブジェクト
 -- @return (boolean) a が b よりも小さい場合は true、そうでない場合は false を返す
--- @name <i>compare</i>
+-- @name compare
+-- @access static
 function Event.compare( a, b )
     return (a:compareTo( b ) < 0);
 end
 
 ---
 -- イベントリストの末尾の要素を表すオブジェクトを取得する
--- @return (<a href="../files/Event.html">Event</a>) 末尾の要素を表す <a href="../files/Event.html">Event</a> オブジェクト
--- @name <i>getEOS</i>
+-- @return (Event オブジェクト
+-- @name getEOS
+-- @access static
 function Event.getEOS()
     return Event.new();
 end
 
 ---
 -- ミリ秒で表した、音符の最大長さ
+-- @access static
 Event.MAX_NOTE_MILLISEC_LENGTH = 16383;

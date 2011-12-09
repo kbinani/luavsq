@@ -18,19 +18,29 @@ module( "luavsq" );
 -- コントロールパラメータのデータ点検索結果を格納するクラス
 -- @class table
 -- @name BPListSearchResult
--- @field clock (integer) データ点の Tick 単位の時刻
--- @field index (integer) データ点のインデックス。最初のインデックスは 0
--- @field point (<a href="../files/BP.html">BP</a>) データ点のオブジェクト
 BPListSearchResult = {};
 
 ---
 -- 初期化を行う
--- @return (<a href="../files/BPListSearchResult.html">BPListSearchResult</a>)
--- @name <i>new</i>
+-- @return (BPListSearchResult)
+-- @name new
+-- @access static ctor
 function BPListSearchResult.new()
     local this = {};
+
+    ---
+    -- データ点の Tick 単位の時刻
+    -- @var integer
     this.clock = 0;
+
+    ---
+    -- データ点のインデックス。最初のインデックスは 0
+    -- @var integer
     this.index = 0;
+
+    ---
+    -- データ点のオブジェクト
+    -- @var BP
     this.point = BP.new();
     return this;
 end

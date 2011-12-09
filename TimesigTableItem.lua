@@ -18,33 +18,34 @@ module( "luavsq" );
 -- 拍子変更情報テーブル内の要素を表現するためのクラス
 -- @class table
 -- @name TimesigTableItem
--- @field clock (integer) Tick 単位の時刻
--- @field numerator (integer) 拍子の分子
--- @field denominator (integer) 拍子の分母
--- @field barCount (integer) 何小節目か
 TimesigTableItem = {};
 
 --
 -- 初期化を行う
--- @return (<a href="../files/TimesigTableItem.html">TimesigTableItem</a>)
+-- @return (TimesigTableItem)
 function TimesigTableItem.new( ... )
     local this = {};
     local arguments = { ... };
 
     ---
-    -- クロック数
+    -- Tick 単位の時刻
+    -- @var integer
+    -- @access private
     this._clock = 0;
 
     ---
     -- 拍子の分子
+    -- @var integer
     this.numerator = 4;
 
     ---
     -- 拍子の分母
+    -- @var integer
     this.denominator = 4;
 
     ---
     -- 何小節目か
+    -- @var integer
     this.barCount = 0;
 
     ---
@@ -52,8 +53,9 @@ function TimesigTableItem.new( ... )
     -- @param numerator (integer) 拍子の分子の値
     -- @param denominator (integer) 拍子の分母値
     -- @param barCount (integer) 小節数
-    -- @return (<a href="../files/TimesigTableItem.html">TimesigTableItem</a>)
-    -- @name <i>new</i>
+    -- @return (TimesigTableItem)
+    -- @name new
+    -- @access static ctor
     function this:_init_3( numerator, denominator, barCount )
         self.numerator = numerator;
         self.denominator = denominator;
@@ -78,7 +80,7 @@ function TimesigTableItem.new( ... )
 
     ---
     -- コピーを作成する
-    -- @return (<a href="../files/TimesigTableItem.html">TimesigTableItem</a>) このオブジェクトのコピー
+    -- @return (TimesigTableItem) このオブジェクトのコピー
     -- @name clone
     function this:clone()
         local result = TimesigTableItem.new( self.numerator, self.denominator, self.barCount );
@@ -88,7 +90,7 @@ function TimesigTableItem.new( ... )
 
     ---
     -- 順序を比較する
-    -- @param item (<a href="../files/TimesigTableItem.html">TimesigTableItem</a>) 比較対象のアイテム
+    -- @param item (TimesigTableItem) 比較対象のアイテム
     -- @return (integer) このインスタンスが比較対象よりも小さい場合は負の整数、等しい場合は 0、大きい場合は正の整数を返す
     -- @name compareTo
     function this:compareTo( item )
@@ -103,11 +105,12 @@ function TimesigTableItem.new( ... )
 end
 
 ---
--- 2 つの <a href="../files/TimesigTableItem.html">TimesigTableItem</a> を比較する
--- @param a (<a href="../files/TimesigTableItem.html">TimesigTableItem</a>) 比較対象のオブジェクト
--- @param b (<a href="../files/TimesigTableItem.html">TimesigTableItem</a>) 比較対象のオブジェクト
+-- 2 つの TimesigTableItem を比較する
+-- @param a (TimesigTableItem) 比較対象のオブジェクト
+-- @param b (TimesigTableItem) 比較対象のオブジェクト
 -- @return (boolean) a が b よりも小さい場合は true、そうでない場合は false を返す
--- @name <i>compare</i>
+-- @name compare
+-- @access static
 function TimesigTableItem.compare( a, b )
     return (a:compareTo( b ) < 0);
 end

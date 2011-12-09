@@ -31,7 +31,8 @@ Util = {};
 -- @param value (string) 区切られる文字列
 -- @param splitter (string) 区切り文字
 -- @return (table) 区切られた文字列のテーブル
--- @name <i>split</i>
+-- @name split
+-- @access static
 function Util.split( value, splitter )
     local init = 1;
     local result = {};
@@ -54,7 +55,8 @@ end
 -- 指定された個数の false 要素を含む配列を取得する
 -- @param count (integer) 要素の個数
 -- @return (table) 作成した配列
--- @name <i>array</i>
+-- @name array
+-- @access static
 function Util.array( count )
     local result = {};
     local i;
@@ -69,7 +71,8 @@ end
 -- @param array (table) 検索対象の配列
 -- @param value (object) 検索するオブジェクト
 -- @return (integer) 要素が見つかったインデックス。見つからなかった場合負の値を返す
--- @name <i>searchArray</i>
+-- @name searchArray
+-- @access static
 function Util.searchArray( array, value )
     if( nil == array )then
         return -1;
@@ -87,7 +90,8 @@ end
 -- バイト配列を、16 ビットの unsigned int 値を Big Endian とみなして数値に変換する
 -- @param bytes (table<integer>) 変換元のバイト列
 -- @return (integer) 変換後の数値
--- @name <i>makeUInt16BE</i>
+-- @name makeUInt16BE
+-- @access static
 function Util.makeUInt16BE( bytes )
     return bytes[1] * 0x100 + bytes[2];
 end
@@ -96,7 +100,8 @@ end
 -- バイト配列を、32 ビットの unsigned int 値を Big Endian とみなして数値に変換する
 -- @param bytes (table<integer>) 変換元のバイト列
 -- @return (integer) 変換後の数値
--- @name <i>makeUInt32BE</i>
+-- @name makeUInt32BE
+-- @access static
 function Util.makeUInt32BE( bytes )
     return bytes[1] * 0x1000000 + bytes[2] * 0x10000 + bytes[3] * 0x100 + bytes[4];
 end
@@ -105,7 +110,8 @@ end
 -- 16bit の unsigned int 値を Big Endian のバイト列に変換する
 -- @param value (integer) 変換元の数値
 -- @return (table<integer>) 変換後のバイト列
--- @name <i>getBytesUInt16BE</i>
+-- @name getBytesUInt16BE
+-- @access static
 function Util.getBytesUInt16BE( value )
     local result = {};
     result[2] = Util.band( value, 0xff );
@@ -118,7 +124,8 @@ end
 -- 32bit の unsigned int 値を Big Endian のバイト列に変換する
 -- @param value (integer) 変換元の数値
 -- @return (table<integer>) 変換後のバイト列
--- @name <i>getBytesUInt32BE</i>
+-- @name getBytesUInt32BE
+-- @access static
 function Util.getBytesUInt32BE( data )
     local dat = {};
     data = Util.band( 0xffffffff, data );
@@ -137,7 +144,8 @@ end
 -- @param array (table) 並び替えるテーブル
 -- @param startIndex (number) 並び替える範囲の開始位置(先頭が0)
 -- @param length (number) 並び替える範囲の長さ
--- @name <i>sort</i>
+-- @name sort
+-- @access static
 function Util.sort( array, startIndex, length )
     local spliced = {};
     local i;
@@ -155,7 +163,8 @@ end
 -- ビット演算 AND
 -- @param 可変長引数。AND 演算を行う数値を指定する
 -- @return (number) AND 演算の結果
--- @name <i>band</i>
+-- @name band
+-- @access static
 function Util.band( ... )
     local arguments = { ... };
     if( #arguments == 0 )then
@@ -204,7 +213,8 @@ end
 -- ビット演算 OR
 -- @param 可変長引数。OR 演算を行う数値を指定する
 -- @return (number) OR 演算の結果
--- @name <i>bor</i>
+-- @name bor
+-- @access static
 function Util.bor( ... )
     local arguments = { ... };
     if( #arguments == 0 )then
@@ -254,7 +264,8 @@ end
 -- @param n (integer) 演算対象の数値
 -- @param shift (integer) シフトするビット数
 -- @return (integer) 演算結果
--- @name <i>lshift</i>
+-- @name lshift
+-- @access static
 function Util.lshift( n, shift )
     n = math.floor( n );
     local i;
@@ -272,7 +283,8 @@ end
 -- @param n (integer) 演算対象の数値
 -- @param shift (integer) シフトするビット数
 -- @return (integer) 演算結果
--- @name <i>rshift</i>
+-- @name rshift
+-- @access static
 function Util.rshift( n, shift )
     n = math.floor( n );
     local i;
@@ -286,7 +298,8 @@ end
 -- 文字列のバイトを取り出して配列にしたものを返す
 -- @param s (string) 変換元の文字列
 -- @return (table<integer>) 変換後のバイト列
--- @name <i>stringToArray</i>
+-- @name stringToArray
+-- @access static
 function Util.stringToArray( s )
     local count = s:len();
     local result = {};
@@ -306,7 +319,8 @@ end
 --   <li>func: 関数をダンプする場合 true を設定する
 -- </ul>
 -- @return (string) 変数のダンプ
--- @name <i>dump</i>
+-- @name dump
+-- @access static
 function Util.dump( value, option )
     if( option == nil )then
         option = {};
@@ -320,12 +334,12 @@ function Util.dump( value, option )
     return Util._dump( value, 0, {}, option );
 end
 
---
--- @access private
+---
 -- @param value (?) ダンプする変数
 -- @param depth (integer) ダンプのネスト深さ
 -- @param state (table) ダンプ済みオブジェクトのテーブル
 -- @param option (table) ダンプ時の設定値
+-- @access static private
 function Util._dump( value, depth, state, option )
     local hex = option.hex;
     if( hex == nil )then
@@ -407,7 +421,8 @@ end
 -- @param utf8 (string) UTF8 の文字列
 -- @return (table) 1 要素に 1 文字分の文字コードが入った配列
 --                 例えば、utf8 = "0あ" の場合、戻り値は { { 0x30 }, { 0xE3, 0x81, 0x82 } }となる
--- @name <i>explodeUTF8String</i>
+-- @name explodeUTF8String
+-- @access static
 function Util.explodeUTF8String( utf8 )
     if( nil == utf8 )then
         return {};

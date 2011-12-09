@@ -21,25 +21,43 @@ module( "luavsq" );
 -- NRPN イベントを表すクラス
 -- @class table
 -- @name NrpnEvent
--- @field clock (integer) Tick 単位の時刻
--- @field nrpn (integer) NRPN の値
--- @field dataMSB (integer) DATA MSB
--- @field dataLSB (integer) DATA LSB
--- @field hasLSB (integer) DATA LSB 値を持っているかどうか
--- @field isMSBOmittingRequired (boolean) MSB の出力を省略するかどうか
 NrpnEvent = {};
 
 --
 -- 初期化を行う
--- @return (<a href="../files/NrpnEvent.html">NrpnEvent</a>)
+-- @return (NrpnEvent)
 function NrpnEvent.new( ... )
     local this = {};
     local arguments = { ... };
+
+    ---
+    -- Tick 単位の時刻
+    -- @var integer
     this.clock = 0;
+
+    ---
+    -- NRPN の値
+    -- @var integer
     this.nrpn = 0;
+
+    ---
+    -- DATA MSB
+    -- @var integer
     this.dataMSB = 0;
+
+    ---
+    -- DATA LSB
+    -- @var integer
     this.dataLSB = 0;
+
+    ---
+    -- DATA LSB 値を持っているかどうか
+    -- @var boolean
     this.hasLSB = false;
+
+    ---
+    -- MSB の出力を省略するかどうか
+    -- @var boolean
     this.isMSBOmittingRequired = false;
     this._list = nil;
 
@@ -48,8 +66,9 @@ function NrpnEvent.new( ... )
     -- @param clock (integer) Tick 単位の時刻
     -- @param nrpn (integer) NRPN
     -- @param dataMsb (integer) DATA MSB
-    -- @return (<a href="../files/NrpnEvent.html">NrpnEvent</a>)
-    -- @name <i>new</i><sup>1</sup>
+    -- @return (NrpnEvent)
+    -- @name new<!--1-->
+    -- @access static ctor
     function this:_init_3( clock, nrpn, dataMsb )
         self.clock = clock;
         self.nrpn = nrpn;
@@ -66,8 +85,9 @@ function NrpnEvent.new( ... )
     -- @param nrpn (integer) NRPN
     -- @param dataMsb (integer) DATA MSB
     -- @param dataLsb (integer) DATA LSB
-    -- @return (<a href="../files/NrpnEvent.html">NrpnEvent</a>)
-    -- @name <i>new</i><sup>2</sup>
+    -- @return (NrpnEvent)
+    -- @name new<!--2-->
+    -- @access static ctor
     function this:_init_4( clock, nrpn, dataMsb, dataLsb )
         self.clock = clock;
         self.nrpn = nrpn;
@@ -108,7 +128,7 @@ function NrpnEvent.new( ... )
 
     ---
     -- 順序を比較する
-    -- @param item (<a href="../files/NrpnEvent.html">NrpnEvent</a>) 比較対象のアイテム
+    -- @param item (NrpnEvent) 比較対象のアイテム
     -- @return (integer) このインスタンスが比較対象よりも小さい場合は負の整数、等しい場合は 0、大きい場合は正の整数を返す
     -- @name compareTo
     function this:compareTo( item )
@@ -143,7 +163,7 @@ function NrpnEvent.new( ... )
     -- NRPN、DATA MSB を指定し、イベントを追加する
     -- @param nrpn (integer) NRPN
     -- @param dataMsb (integer) DATA MSB
-    -- @name append<sup>1</sup>
+    -- @name append<!--1-->
     function this:_append_2( nrpn, dataMsb )
         table.insert( self._list, NrpnEvent.new( self.clock, nrpn, dataMsb ) );
     end
@@ -153,7 +173,7 @@ function NrpnEvent.new( ... )
     -- @param nrpn (integer) NRPN
     -- @param dataMsb (integer) DATA MSB
     -- @param dataLsb (integer) DATA LSB
-    -- @name append<sup>2</sup>
+    -- @name append<!--2-->
     function this:_append_3_int_byte_byte( nrpn, dataMsb, dataLsb )
         table.insert( self._list, NrpnEvent.new( self.clock, nrpn, dataMsb, dataLsb ) );
     end
@@ -163,7 +183,7 @@ function NrpnEvent.new( ... )
     -- @param nrpn (integer) NRPN
     -- @param dataMsb (integer) DATA MSB
     -- @param isMsbOmittingRequired (boolean) NRPN MSB を省略する場合は true を、そうでない場合は false を指定する
-    -- @name append<sup>3</sup>
+    -- @name append<!--3-->
     function this:_append_3_int_byte_bool( nrpn, dataMsb, isMsbOmittingRequired )
         local v = NrpnEvent.new( self.clock, nrpn, dataMsb );
         v.isMSBOmittingRequired = isMsbOmittingRequired;
@@ -176,7 +196,7 @@ function NrpnEvent.new( ... )
     -- @param dataMsb (integer) DATA MSB
     -- @param dataLsb (integer) DATA LSB
     -- @param isMsbOmittingRequired (boolean) NRPN MSB を省略する場合は true を、そうでない場合は false を指定する
-    -- @name append<sup>4</sup>
+    -- @name append<!--4-->
     function this:_append_4( nrpn, dataMsb, dataLsb, isMsbOmittingRequired )
         local v = NrpnEvent.new( self.clock, nrpn, dataMsb, dataLsb );
         v.isMSBOmittingRequired = isMsbOmittingRequired;
@@ -193,11 +213,12 @@ function NrpnEvent.new( ... )
 end
 
 ---
--- 2 つの <a href="../files/NrpnEvent.html">NrpnEvent</a> を比較する
--- @param a (<a href="../files/NrpnEvent.html">NrpnEvent</a>) 比較対象のオブジェクト
--- @param b (<a href="../files/NrpnEvent.html">NrpnEvent</a>) 比較対象のオブジェクト
+-- 2 つの NrpnEvent を比較する
+-- @param a (NrpnEvent) 比較対象のオブジェクト
+-- @param b (NrpnEvent) 比較対象のオブジェクト
 -- @return (boolean) a が b よりも小さい場合は true、そうでない場合は false を返す
--- @name <i>compare</i>
+-- @name compare
+-- @access static
 function NrpnEvent.compare( a, b )
     if( a:compareTo( b ) < 0 )then
         return true;
@@ -225,10 +246,11 @@ end
 ]]
 
 ---
--- NRPN イベントの配列を、<a href="../files/MidiEvent.html">MidiEvent</a> の配列に変換する
--- @param source (table&lt;<a href="../files/NrpnEvent.html">NrpnEvent</a>&gt;) NRPN イベントの配列
--- @return (table&lt;<a href="../files/MidiEvent.html">MidiEvent</a>&gt;) 変換後の <a href="../files/MidiEvent.html">MidiEvent</a> の配列
--- @name <i>convert</i>
+-- NRPN イベントの配列を、MidiEvent の配列に変換する
+-- @param source (table&lt;NrpnEvent&gt;) NRPN イベントの配列
+-- @return (table&lt;MidiEvent の配列
+-- @name convert
+-- @access static
 function NrpnEvent.convert( source )
     local nrpn = source[1].nrpn;
     local msb = Util.rshift( nrpn, 8 );

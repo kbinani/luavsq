@@ -31,7 +31,7 @@ List = {};
 
 --
 -- 初期化を行う
--- @return (<a href="../files/List.html">List</a>)
+-- @return (List)
 function List.new( ... )
     local this = {};
     local arguments = { ... };
@@ -39,14 +39,16 @@ function List.new( ... )
 
     ---
     -- 初期化を行う
-    -- @name <i>new</i><sup>1</sup>
+    -- @name new<!--1-->
+    -- @access static ctor
     function this:_init_0()
     end
 
     ---
     -- 初期化を行う
     -- @param count (integer) 初期のリスト要素数
-    -- @name <i>new</i><sup>2</sup>
+    -- @name new<!--2-->
+    -- @access static ctor
     function this:_init_1( count )
     end
 
@@ -70,7 +72,7 @@ function List.new( ... )
 
     ---
     -- リスト内のデータを順番に返すイテレータを取得する
-    -- @return (<a href="../files/List.html#Iterator.&lt;i&gt;new&lt;/i&gt;">List.Iterator</a>) イテレータ
+    -- @return (List.Iterator) イテレータ
     -- @name iterator
     function this:iterator()
         return List.Iterator.new( self );
@@ -79,7 +81,7 @@ function List.new( ... )
     ---
     -- リスト内のデータを並べ替える
     -- @param comparator (function) データの比較に使う比較関数
-    -- @name sort<sup>2</sup>
+    -- @name sort<!--2-->
     function this:_sort_1( comparator )
         local wrappedComparator = function( a, b )
             local actualA = a["value"];
@@ -91,7 +93,7 @@ function List.new( ... )
 
     ---
     -- リスト内のデータを並べ替える
-    -- @name sort<sup>1</sup>
+    -- @name sort<!--1-->
     function this:_sort_0()
         local wrappedComparator = function( a, b )
             local actualA = a["value"];
@@ -127,9 +129,10 @@ function List.new( ... )
         return #self._array;
     end
 
-    --
+    ---
     -- メタテーブルをセットアップする
     -- @access private
+    -- @name _setupMetaTable
     function this:_setupMetaTable()
         local metaTable = {};
 
@@ -160,8 +163,9 @@ end
 ---
 -- lua の table から、List のインスタンスを作成する
 -- @param array (table) 作成元の table
--- @return (<a href="../files/List.html">List</a>) List のインスタンス
--- @name <i>fromTable</i>
+-- @return (List) List のインスタンス
+-- @name fromTable
+-- @access static
 function List.fromTable( array )
     local list = List.new();
     local i;
@@ -177,9 +181,10 @@ List.Iterator = {};
 
 ---
 -- 初期化を行う
--- @param list (<a href="../files/List.html">List</a>) 反復子の元になるリスト
--- @return (<a href="../files/List.html#Iterator.&lt;i&gt;new&lt;/i&gt;">List.Iterator</a>) イテレータのオブジェクト
--- @name Iterator.<i>new</i>
+-- @param list (List) 反復子の元になるリスト
+-- @return (List.Iterator) イテレータのオブジェクト
+-- @name Iterator.new
+-- @access static ctor
 function List.Iterator.new( list )
     local this = {};
     this._list = list;

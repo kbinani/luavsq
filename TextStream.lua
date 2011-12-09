@@ -25,8 +25,9 @@ TextStream = {};
 
 ---
 -- 初期化を行う
--- @return (<a href="../files/TextStream.html">TextStream</a>)
--- @name <i>new</i>
+-- @return (TextStream)
+-- @name new
+-- @access static ctor
 function TextStream.new()
     local this = {};
     this._array = {};
@@ -88,10 +89,11 @@ function TextStream.new()
         end
     end
 
-    --
+    ---
     -- 内部のバッファー容量を確保する
-    -- @access private
     -- @param length (integer) 確保したいバッファー容量
+    -- @access private
+    -- @name _ensureCapacity
     function this:_ensureCapacity( _length )
         if( _length > #self._array )then
             local add = _length - #self._array;

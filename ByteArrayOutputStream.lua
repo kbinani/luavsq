@@ -25,8 +25,9 @@ ByteArrayOutputStream = {};
 
 ---
 -- 初期化を行う
--- @return (<a href="../files/ByteArrayOutputStream.html">ByteArrayOutputStream</a>)
--- @name <i>new</i>
+-- @return (ByteArrayOutputStream)
+-- @name new
+-- @access static ctor
 function ByteArrayOutputStream.new()
     local this = {};
     this._pointer = -1;
@@ -45,8 +46,8 @@ function ByteArrayOutputStream.new()
 
     ---
     -- 指定されたバイト値をストリームに書きこむ
-    -- @param (integer) 書きこむバイト値
-    -- @name write<sup>1</sup>
+    -- @param byte (integer) 書きこむバイト値
+    -- @name write<!--1-->
     function this:_write_1( byte )
         if( byte == nil )then
             byte = 0;
@@ -65,10 +66,10 @@ function ByteArrayOutputStream.new()
 
     ---
     -- 指定された配列の、指定した範囲のバイト値をストリームに書きこむ
-    -- @param (table) array 書きこむバイト列が格納された配列
-    -- @param (integer) startIndex 書き込み開始位置
-    -- @param (integer) length 書き込むバイト値の個数
-    -- @name write<sup>2</sup>
+    -- @param array (table) 書きこむバイト列が格納された配列
+    -- @param startIndex (integer) 書き込み開始位置
+    -- @param length (integer) 書き込むバイト値の個数
+    -- @name write<!--2-->
     function this:_write_3( array, startIndex, length )
         local i;
         for i = 1, length, 1 do

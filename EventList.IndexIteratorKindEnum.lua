@@ -22,17 +22,34 @@ end
 -- IndexIterator の反復子の種類を表す列挙子
 -- @class table
 -- @name EventList.IndexIteratorKindEnum
--- @field ALL 全てのイベント
--- @field SINGER 歌手イベント
--- @field NOTE 音符イベント
--- @field CRESCEND クレッシェンドイベント
--- @field DECRESCEND デクレッシェンドイベント
--- @field DYNAFF 強弱記号イベント
 EventList.IndexIteratorKindEnum = {
+    ---
+    -- 全てのイベント
+    -- @var integer
     ALL = 0xffff,
+
+    ---
+    -- 歌手イベント
+    -- @var integer
     SINGER = 1,
+
+    ---
+    -- 音符イベント
+    -- @var integer
     NOTE = 2,
+
+    ---
+    -- クレッシェンドイベント
+    -- @var integer
     CRESCEND = 4,
+
+    ---
+    -- デクレッシェンドイベント
+    -- @var integer
     DECRESCEND = 8,
+
+    ---
+    -- 強弱記号イベント
+    -- @var integer
     DYNAFF = 16,
 }

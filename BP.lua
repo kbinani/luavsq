@@ -18,24 +18,31 @@ module( "luavsq" );
 -- コントロールカーブのデータ点を表現するクラス
 -- @class table
 -- @name BP
--- @field value (integer) データ点の値
--- @field id (integer) データ点のユニーク ID
 BP = {};
 
 ---
 -- コンストラクタ
 -- @param value (integer) データ点の値
 -- @param id (integer) データ点のユニーク ID
--- @return (<a href="../files/BP.html">BP</a>) データ点のオブジェクト
--- @name <i>new</i>
+-- @return (BP) データ点のオブジェクト
+-- @name new
+-- @access static ctor
 function BP.new( value, id )
     local this = {};
+
+    ---
+    -- データ点の値
+    -- @var integer
     this.value = value;
+
+    ---
+    -- データ点のユニーク ID
+    -- @var integer
     this.id = id;
 
     ---
     -- コピーを作成する
-    -- @return (<a href="../files/BP.html">BP</a>) このインスタンスのコピー
+    -- @return (BP) このインスタンスのコピー
     -- @name clone
     function this:clone()
         return BP.new( self.value, self.id );

@@ -20,21 +20,33 @@ module( "luavsq" );
 -- VSQ ファイルのメタテキストの [Mixer] セクションに記録される内容を取り扱うクラス
 -- @class table
 -- @name Mixer
--- @field masterFeder (integer) MasterFader 値
--- @field masterPanpot (integer) MasterPanpot 値
--- @field masterMute (integer) MasterMute 値
--- @field outputMode (integer) OutputMode 値
 Mixer = {};
 
 --
 -- 初期化を行う
--- @return (<a href="../files/Mixer.html">Mixer</a>)
+-- @return (Mixer)
 function Mixer.new( ... )
     local this = {};
     local arguments = { ... };
+
+    ---
+    -- MasterFader 値
+    -- @var integer
     this.masterFeder = 0;
+
+    ---
+    -- MasterMute 値
+    -- @var integer
     this.masterMute = 0;
+
+    ---
+    -- MasterPanpot 値
+    -- @var integer
     this.masterPanpot = 0;
+
+    ---
+    -- OutputMode 値
+    -- @var integer
     this.outputMode = 0;
 
     ---
@@ -47,8 +59,9 @@ function Mixer.new( ... )
     -- @param masterPanpot (integer) MasterPanpot 値
     -- @param masterMute (integer) MasterMute 値
     -- @param outputMode (integer) OutputMode 値
-    -- @return (<a href="../files/Mixer.html">Mixer</a>)
-    -- @name <i>new</i><sup>2</sup>
+    -- @return (Mixer)
+    -- @name new<!--2-->
+    -- @access static ctor
     function this:_init_4( masterFeder, masterPanpot, masterMute, outputMode )
         self.masterFeder = masterFeder;
         self.masterMute = masterMute;
@@ -62,10 +75,11 @@ function Mixer.new( ... )
 
     ---
     -- テキストストリームから読み込みを行い、初期化を行う
-    -- @param stream (<a href="../files/TextStream.html">TextStream</a>) 読み込むテキストストリーム
+    -- @param stream (TextStream) 読み込むテキストストリーム
     -- @param lastLine (table, { value = ? }) 読み込んだ最後の行。テーブルの ["value"] に文字列が格納される
-    -- @return (<a href="../files/Mixer.html">Mixer</a>)
-    -- @name <i>new</i><sup>1</sup>
+    -- @return (Mixer)
+    -- @name new<!--1-->
+    -- @access static ctor
     function this:_init_2( stream, lastLine )
         self.masterFeder = 0;
         self.masterPanpot = 0;
@@ -134,7 +148,7 @@ function Mixer.new( ... )
 
     ---
     -- コピーを作成する
-    -- @return (<a href="../files/Mixer.html">Mixer</a>) このオブジェクトのコピー
+    -- @return (Mixer) このオブジェクトのコピー
     -- @name clone
     function this:clone()
         local res = Mixer.new( self.masterFeder, self.masterPanpot, self.masterMute, self.outputMode );
@@ -149,7 +163,7 @@ function Mixer.new( ... )
 
     ---
     -- テキストストリームに出力する
-    -- @param stream (<a href="../files/TextStream.html">TextStream</a>) 出力先のストリーム
+    -- @param stream (TextStream) 出力先のストリーム
     -- @name write
     function this:write( stream )
         stream:writeLine( "[Mixer]" );

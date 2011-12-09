@@ -23,9 +23,21 @@ module( "luavsq" );
 -- @name BPList
 BPList = {};
 
---
+---
+-- 初期化を行う
+-- @param name (string) コントロールカーブの名前
+-- @param defaultValue (integer) コントロールカーブのデフォルト値
+-- @param minimum (integer) コントロールカーブの最小値
+-- @param maximum (integer) コントロールカーブの最大値
+-- @return (BPList)
+-- @name new
+-- @access static ctor
+-- @class function
+
+---
 -- コンストラクタ
--- @return (<a href="../files/BPList.html">BPList</a>)
+-- @return (BPList)
+-- @access static private
 function BPList.new( ... )
     local this = {};
     local arguments = { ... };
@@ -44,8 +56,9 @@ function BPList.new( ... )
     -- @param defaultValue (integer) コントロールカーブのデフォルト値
     -- @param minimum (integer) コントロールカーブの最小値
     -- @param maximum (integer) コントロールカーブの最大値
-    -- @name <i>new</i>
-    -- @return (<a href="../files/BPList.html">BPList</a>)
+    -- @return (BPList)
+    -- @name _init_4
+    -- @access private
     function this:_init_4( name, defaultValue, minimum, maximum )
         self._name = name;
         self._defaultValue = defaultValue;
@@ -54,7 +67,7 @@ function BPList.new( ... )
         self._maxId = 0;
     end
 
-    --
+    ---
     -- データ点を格納するバッファを確保する
     -- @access private
     -- @param length (integer) 確保するバッファの最小長さ
@@ -184,7 +197,7 @@ function BPList.new( ... )
 
     ---
     -- コピーを作成する
-    -- @return (<a href="../files/BPList.html">BPList</a>) このオブジェクトのコピー
+    -- @return (BPList) このオブジェクトのコピー
     -- @name clone
     function this:clone()
         local res = BPList.new( self._name, self._defaultValue, self._minValue, self._maxValue );
@@ -330,7 +343,7 @@ function BPList.new( ... )
     ---
     -- データ点を取得する
     -- @param index (integer) 取得するデータ点のインデックス(最初のインデックスは0)
-    -- @return (<a href="../files/BP.html">BP</a>) データ点のインスタンス
+    -- @return (BP) データ点のインスタンス
     -- @name get
     function this:get( index )
         return self._items[index + 1]:clone();
@@ -364,7 +377,7 @@ function BPList.new( ... )
     ---
     -- ID を基にデータ点を検索し、検索結果を取得する
     -- @param id (integer) データ点の ID
-    -- @return (<a href="../files/BPListSearchResult.html">BPListSearchResult</a>) 検索結果を格納したオブジェクト
+    -- @return (BPListSearchResult) 検索結果を格納したオブジェクト
     -- @name findElement
     function this:findElement( id )
         local context = BPListSearchResult.new();
@@ -401,7 +414,7 @@ function BPList.new( ... )
 
     ---
     -- コントロールカーブをテキストストリームに出力する
-    -- @param stream (<a href="../files/TextStream.html">TextStream</a>) 出力先のストリーム
+    -- @param stream (TextStream) 出力先のストリーム
     -- @param startClock (integer) Tick 単位の出力開始時刻
     -- @param header (string) 最初に出力するヘッダー文字列
     -- @name print
@@ -512,17 +525,18 @@ function BPList.new( ... )
 
     ---
     -- データ点の Tick 単位の時刻を昇順に返す反復子を取得する
-    -- @return (<a href="../files/BPList.KeyClockIterator.html">BPList.KeyClockIterator</a>) 反復子のインスタンス
+    -- @return (BPList.KeyClockIterator) 反復子のインスタンス
     -- @name keyClockIterator
     function this:keyClockIterator()
         return BPList.KeyClockIterator.new( self );
     end
 
-    --
+    ---
     -- 指定された時刻値を持つデータ点のインデックスを検索する
-    -- @access private
     -- @param value (integer) Tick 単位の時刻
     -- @return (integer) データ点のインデックス(最初のインデックスは0)。データ点が見つからなかった場合は負の値を返す
+    -- @access private
+    -- @name _find
     function this:_find( value )
         local i;
         for i = 1, self._length, 1 do
@@ -642,7 +656,7 @@ function BPList.new( ... )
     -- 指定された Tick 単位の時刻における，コントロールパラメータの値を取得する．
     -- @param clock (integer) 値を取得する Tick 単位の時刻
     -- @return (integer) コントロールパラメータの値
-    -- @name getValueAt<sup>1</sup>
+    -- @name getValueAt<!--1-->
     function this:_getValueAt_1( clock )
         self:_ensureBufferLength( self._length );
         local index = self:_find( clock );
@@ -675,7 +689,7 @@ function BPList.new( ... )
     -- @param clock (integer) 値を取得する Tick 単位の時刻
     -- @param index (table,{ value = ? }) 値の取得に使用したインデックス(最初のインデックスは0)
     -- @return (integer) コントロールパラメータの値
-    -- @name getValueAt<sup>2</sup>
+    -- @name getValueAt<!--2-->
     function this:_getValueAt_2( clock, index )
         if( self._length == 0 )then
             return self._defaultValue;

@@ -22,15 +22,16 @@ TempoTable = {};
 
 ---
 -- 初期化を行う
--- @return (<a href="../files/TempoTable.html">TempoTable</a>)
--- @name <i>new</i>
+-- @return (TempoTable)
+-- @name new
+-- @access static ctor
 function TempoTable.new()
     local this = {};
     this._array = List.new();
 
     ---
     -- リスト内のテンポ変更イベントを順に返す反復子を取得する
-    -- @return (<a href="../files/List.html#Iterator.&lt;i&gt;new&lt;/i&gt;">List.Iterator</a>&lt;<a href="../files/TempoTableItem.html">TempoTableItem</a>&gt;) 反復子
+    -- @return (List.Iterator&lt;TempoTableItem&gt;) 反復子
     -- @name iterator
     function this:iterator()
         return this._array:iterator();
@@ -45,7 +46,7 @@ function TempoTable.new()
 
     ---
     -- データ点を追加する
-    -- @param value (<a href="../files/TempoTableItem.html">TempoTableItem</a>) 追加するテンポ変更情報
+    -- @param value (TempoTableItem) 追加するテンポ変更情報
     -- @name push
     function this:push( value )
         self._array:push( value );
@@ -62,7 +63,7 @@ function TempoTable.new()
     ---
     -- 指定したインデックスのテンポ変更情報を取得する
     -- @param index (integer) インデックス(最初のインデックスは0)
-    -- @return (<a href="../files/TempoTableItem.html">TempoTableItem</a>) テンポ変更情報
+    -- @return (TempoTableItem) テンポ変更情報
     -- @name get
     function this:get( index )
         return self._array[index];
@@ -71,7 +72,7 @@ function TempoTable.new()
     ---
     -- 指定したインデックスのテンポ変更情報を設定する
     -- @param index (integer) インデックス(最初のインデックスは0)
-    -- @param value (<a href="../files/TempoTableItem.html">TempoTableItem</a>) 設定するイベント
+    -- @param value (TempoTableItem) 設定するイベント
     -- @name set
     function this:set( index, value )
         self._array[index] = value;

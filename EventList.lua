@@ -26,17 +26,20 @@ EventList = {};
 
 ---
 -- 初期化を行う
--- @return (<a href="../files/EventList.html">EventList</a>)
--- @name <i>new</i>
+-- @return (EventList)
+-- @name new
+-- @access static ctor
 function EventList.new()
     local this = {};
 
     ---
-    -- @var (table<Event>)
+    -- @var table<Event>
+    -- @access private
     this._events = {};
 
     ---
-    -- @var (table<integer>)
+    -- @var table<integer>
+    -- @access private
     this._ids = {};
 
     ---
@@ -59,7 +62,7 @@ function EventList.new()
     ---
     -- イベント ID を基にイベントを検索し、そのオブジェクトを返す
     -- @param internalId (integer) 検索するイベント ID
-    -- @return (<a href="../files/Event.html">Event</a>) 検索結果のイベント。イベントが見つからなければ nil を返す
+    -- @return (Event) 検索結果のイベント。イベントが見つからなければ nil を返す
     -- @name findFromId
     function this:findFromId( internalId )
         local index = self:findIndexFromId( internalId );
@@ -73,7 +76,7 @@ function EventList.new()
     ---
     -- 指定されたイベント ID をもつイベントのオブジェクトを置き換える。イベントが見つからなければ何もしない
     -- @param internalId (integer) 検索するイベント ID
-    -- @param value (<a href="../files/Event.html">Event</a>) 置換するオブジェクト
+    -- @param value (Event) 置換するオブジェクト
     -- @name setForId
     function this:setForId( internalId, value )
         local c = #self._events;
@@ -105,7 +108,7 @@ function EventList.new()
 
     ---
     -- リスト内のイベントを順に返す反復子を取得する
-    -- @return (<a href="../files/EventList.Iterator.html">EventList.Iterator</a>) 反復子
+    -- @return (EventList.Iterator) 反復子
     -- @name iterator
     function this:iterator()
         self:updateIdList();
@@ -126,9 +129,9 @@ function EventList.new()
 
     ---
     -- イベントを追加する
-    -- @param item (<a href="../files/Event.html">Event</a>) 追加するオブジェクト
+    -- @param item (Event) 追加するオブジェクト
     -- @return (integer) 追加したオブジェクトに割り振られたイベント ID
-    -- @name add<sup>1</sup>
+    -- @name add<!--1-->
     function this:_add_1( item )
         local id = self:_getNextId( 0 );
         self:_addCor( item, id );
@@ -143,21 +146,22 @@ function EventList.new()
 
     ---
     -- イベントを追加する
-    -- @param item (<a href="../files/Event.html">Event</a>) 追加するオブジェクト
+    -- @param item (Event) 追加するオブジェクト
     -- @param internalId (integer) 追加するオブジェクトに割り振るイベント ID
     -- @return (integer) オブジェクトに割り振られたイベント ID
-    -- @name add<sup>2</sup>
+    -- @name add<!--2-->
     function this:_add_2( item, internalId )
         self:_addCor( item, internalId );
         table.sort( self._events, Event.compare );
         return internalId;
     end
 
-    --
+    ---
     -- イベントを追加する
-    -- @access private
-    -- @param item (<a href="../files/Event.html">Event</a>) 追加するオブジェクト
+    -- @param item (Event) 追加するオブジェクト
     -- @param internal_id (integer) 追加するオブジェクトに割り振るイベント ID
+    -- @access private
+    -- @name _addCor
     function this:_addCor( item, internalId )
         self:updateIdList();
         item.id = internalId;
@@ -175,11 +179,12 @@ function EventList.new()
         table.remove( self._ids, index + 1 );
     end
 
-    --
+    ---
     -- イベントに割り振る ID を取得する
-    -- @access private
     -- @param next (integer)
-    -- @return [int]
+    -- @return (integer)
+    -- @access private
+    -- @name _getNextId
     function this:_getNextId( next )
         self:updateIdList();
         local max = -1;
@@ -201,7 +206,7 @@ function EventList.new()
     ---
     -- 指定したインデックスのイベントを取得する
     -- @param index (integer) インデックス(最初のインデックスは0)
-    -- @return (<a href="../files/Event.html">Event</a>) イベント
+    -- @return (Event) イベント
     -- @name get
     function this:get( index )
         return self._events[index + 1];
@@ -210,7 +215,7 @@ function EventList.new()
     ---
     -- 指定したインデックスのイベントを設定する
     -- @param index (integer) インデックス(最初のインデックスは0)
-    -- @param value (<a href="../files/Event.html">Event</a>) 設定するイベント
+    -- @param value (Event) 設定するイベント
     -- @name set
     function this:set( index, value )
         value.id = self._events[index + 1].id;
@@ -233,7 +238,7 @@ function EventList.new()
 
     ---
     -- イベントリストをテキストストリームに出力する
-    -- @param stream (<a href="../files/TexStream.html">TexStream</a>) 出力先のストリーム
+    -- @param stream (TexStream) 出力先のストリーム
     -- @param eos (integer) EOS として出力する Tick 単位の時刻
     -- @return (table<Handle>) リスト中のイベントに含まれるハンドルの一覧
     -- @name write
@@ -264,10 +269,11 @@ function EventList.new()
         return handles;
     end
 
-    --
+    ---
     -- リスト内のイベントから、ハンドルの一覧を作成する。同時に、各イベント、ハンドルの番号を設定する
-    -- @access private
     -- @return (table<Handle>) ハンドルの一覧
+    -- @access private
+    -- @name _buildHandleList
     function this:_buildHandleList()
         local handle = {};
         local current_id = -1;

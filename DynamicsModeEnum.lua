@@ -18,14 +18,14 @@ module( "luavsq" );
 -- VOCALOID1における、ダイナミクスモードを表す定数を格納するための列挙子
 -- @class table
 -- @name DynamicsModeEnum
--- @field Standard DYNカーブが非表示になるモード(デフォルト)
--- @field Expert DYNカーブが表示されるモード(エキスパートモード)
 DynamicsModeEnum = {
     ---
     -- DYNカーブが非表示になるモード(デフォルト)
+    -- @var integer
     Standard = 0,
 
     ---
     -- DYNカーブが表示されるモード(エキスパートモード)
+    -- @var integer
     Expert = 1
 };

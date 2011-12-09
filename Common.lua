@@ -20,27 +20,38 @@ module( "luavsq" );
 -- VSQ ファイルのメタテキストの [Common] セクションに記録される内容を格納するクラス
 -- @class table
 -- @name Common
--- @field version (string) トラックの歌声合成エンジンのバージョンを表す文字列
--- @field name (string) トラックの名前
--- @field color (string) (不明)
--- @field dynamicsMode (<a href="../files/DynamicsModeEnum.html">DynamicsModeEnum</a>) ダイナミクスモード
--- @field playMode (<a href="../files/PlayModeEnum.html">PlayModeEnum</a>) 再生モード
 Common = {};
 
 --
 -- 初期化を行う
--- @return (<a href="../files/Common.html">Common</a>)
+-- @return (Common)
 function Common.new( ... )
     local this = {};
     local arguments = { ... };
+
+    ---
+    -- トラックの歌声合成エンジンのバージョンを表す文字列
+    -- @var string
     this.version = "DSB301";
+
+    ---
+    -- トラックの名前
+    -- @var string
     this.name = "Miku";
+
+    ---
+    -- (不明)
+    -- @var string
     this.color = "179,181,123";
 
-    -- Dynamicsカーブを表示するモード(Expert)なら1、しない(Standard)なら0。
+    ---
+    -- ダイナミクスモード
+    -- @var DynamicsModeEnum
     this.dynamicsMode = DynamicsModeEnum.Expert;
 
-    -- Play With Synthesisなら1、Play After Synthesiなら0、Offなら-1。
+    ---
+    -- 再生モード
+    -- @var PlayModeEnum
     this.playMode = PlayModeEnum.PlayWithSynth;
 
     -- PlayModeがOff(-1)にされる直前に，PlayAfterSynthかPlayWithSynthのどちらが指定されていたかを記憶しておく．
@@ -48,10 +59,11 @@ function Common.new( ... )
 
     ---
     -- 初期化を行う
-    -- @param stream (<a href="../files/TextStream.html">TextStream</a>) 読み込み元のテキストストリーム
+    -- @param stream (TextStream) 読み込み元のテキストストリーム
     -- @param lastLine (table, { value = ? }) 読み込んだ最後の行。テーブルの ["value"] に文字列が格納される
-    -- @return (<a href="../files/Common.html">Common</a>)
-    -- @name <i>new</i><sup>1</sup>
+    -- @return (Common)
+    -- @name new<!--1-->
+    -- @access static ctor
     function this:_init_2( stream, lastLine )
         self.version = "";
         self.name = "";
@@ -83,13 +95,14 @@ function Common.new( ... )
     ---
     -- 初期化を行う
     -- @param name (string) トラック名
-    -- @param red (integer) 赤(意味は不明)
-    -- @param green (integer) 緑(意味は不明)
-    -- @param blue (integer) 青(意味は不明)
-    -- @param dynamicsMode (<a href="../files/DynamicsModeEnum.html">DynamicsModeEnum</a>) シーケンスの Dynamics モード
-    -- @param playMode (<a href="../files/PlayModeEnum.html">PlayModeEnum</a>) シーケンスの Play モード
-    -- @return (<a href="../files/Common.html">Common</a>)
-    -- @name <i>new</i><sup>2</sup>
+    -- @param r (integer) 赤(意味は不明)
+    -- @param g (integer) 緑(意味は不明)
+    -- @param b (integer) 青(意味は不明)
+    -- @param dynamicsMode (DynamicsModeEnum) シーケンスの Dynamics モード
+    -- @param playMode (PlayModeEnum) シーケンスの Play モード
+    -- @return (Common)
+    -- @name new<!--2-->
+    -- @access static ctor
     function this:_init_6( name, r, g, b, dynamicsMode, playMode )
         self.version = "DSB301";
         self.name = name;
@@ -100,7 +113,7 @@ function Common.new( ... )
 
     ---
     -- コピーを作成する
-    -- @return (<a href="../files/Common.html">Common</a>) このインスタンスのコピー
+    -- @return (Common) このインスタンスのコピー
     -- @name clone
     function this:clone()
         local spl = Util.split( self.color, "," );
@@ -115,7 +128,7 @@ function Common.new( ... )
 
     ---
     -- テキストストリームに出力する
-    -- @param stream (<a href="../files/TextStream.html">TextStream</a>) 出力先のストリーム
+    -- @param stream (TextStream) 出力先のストリーム
     -- @name write
     function this:write( stream )
         stream:writeLine( "[Common]" );

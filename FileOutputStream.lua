@@ -26,8 +26,9 @@ FileOutputStream = {};
 ---
 -- 初期化を行う
 -- @param path (string) ファイルのパス
--- @return (<a href="../files/FileOutputStream.html">FileOutputStream</a>)
--- @name <i>new</i>
+-- @return (FileOutputStream)
+-- @name new
+-- @access static ctor
 function FileOutputStream.new( path )
     local this = {};
     this._fileHandle = io.open( path, "wb" );
@@ -48,7 +49,7 @@ function FileOutputStream.new( path )
     -- @param (table<integer>) array 書きこむバイト列が格納された配列
     -- @param (integer) startIndex 書き込み開始位置
     -- @param (integer) length 書き込むバイト値の個数
-    -- @name write<sup>2</sup>
+    -- @name write<!--2-->
     function this:_write_3( array, startIndex, length )
         local i;
         for i = 1, length, 1 do
@@ -59,7 +60,7 @@ function FileOutputStream.new( path )
     ---
     -- 指定されたバイト値をストリームに書きこむ
     -- @param (integer) 書きこむバイト値
-    -- @name write<sup>1</sup>
+    -- @name write<!--1-->
     function this:_write_1( byte )
         if( nil == byte )then
             byte = 0;

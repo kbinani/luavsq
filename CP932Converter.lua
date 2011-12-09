@@ -581,7 +581,8 @@ CP932Converter._unicode_to_cp932 = {
 -- UTF8 の文字列を CP932 の文字列に変換する
 -- @param (string) utf8 変換前の文字列
 -- @return (string) 変換後の文字列
--- @name <i>convertFromUTF8</i>
+-- @name convertFromUTF8
+-- @access static
 function CP932Converter.convertFromUTF8( utf8 )
     local utf8codes = CP932Converter._getUnicodeBytesFromUTF8String( utf8 );
     local result = "";
@@ -607,11 +608,12 @@ function CP932Converter.convertFromUTF8( utf8 )
     return result;
 end
 
---
+---
 -- UTF8 の文字列を unicode のバイト列に変換する
 -- @access private
 -- @param (string) s 変換前の文字列
 -- @return (table) 変換後の unicode のバイト列
+-- @access static private
 function CP932Converter._getUnicodeBytesFromUTF8String( s )
     local result = {};
     local i = 1;
@@ -652,10 +654,11 @@ function CP932Converter._getUnicodeBytesFromUTF8String( s )
     return result;
 end
 
---
+---
 -- UTF8 のバイト列を Unicode のバイト列に変換する
 -- @param (table) utf8 UTF8のバイト列
 -- @return (table) Unicode のバイト列
+-- @access static private
 function CP932Converter._getUnicodeBytesFromUTF8Bytes( utf8 )
     if( #utf8 == 1 )then
         --0xxx xxxx

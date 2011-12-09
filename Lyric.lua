@@ -20,28 +20,39 @@ module( "luavsq" );
 -- 歌詞ハンドルに格納する歌詞情報を保持するクラス
 -- @class table
 -- @name Lyric
--- @field phrase (string) 歌詞
--- @field lengthRatio (double) 歌詞ハンドル内に複数の歌詞が入る場合の、この歌詞の長さ分率。デフォルトは 1.0
--- @field isProtected (boolean) 発音記号がプロテクトされた状態かどうか
 Lyric = {};
 
 --
 -- 初期化を行う
--- @return (<a href="../files/Lyric.html">Lyric</a>)
+-- @return (Lyric)
 function Lyric.new( ... )
     local arguments = { ... }
     local this = {};
+
+    ---
+    -- 歌詞
+    -- @var string
     this.phrase = "a";
+
+    ---
+    -- 歌詞ハンドル内に複数の歌詞が入る場合の、この歌詞の長さ分率。デフォルトは 1.0
+    -- @var double
     this.lengthRatio = 1.0;
+
+    ---
+    -- 発音記号がプロテクトされた状態かどうか
+    -- @var boolean
     this.isProtected = false;
+
     this._phoneticSymbol = { "a" };
     this._consonantAdjustment = { 0 };
 
     ---
     -- 文字列を元に初期化を行う
     -- @param line (string) 「"あ","a",0.0000,0.0」などのような文字列
-    -- @return (<a href="../files/Lyric.html">Lyric</a>)
-    -- @name <i>new</i><sup>1</sup>
+    -- @return (Lyric)
+    -- @name new<!--1-->
+    -- @access static ctor
     function this:_init_1( line )
         if( line == nil or (line ~= nil and line:len() == 0) )then
             self.phrase = "a";
@@ -131,8 +142,9 @@ function Lyric.new( ... )
     -- 歌詞、発音記号を指定して初期化を行う
     -- @param phrase (string) 歌詞
     -- @param phoneticSymbol (string) 発音記号
-    -- @return (<a href="../files/Lyric.html">Lyric</a>)
-    -- @name <i>new</i><sup>2</sup>
+    -- @return (Lyric)
+    -- @name new<!--2-->
+    -- @access static ctor
     function this:_init_2( phrase, phoneticSymbol )
         self.phrase = phrase;
         self._consonantAdjustment = nil;
@@ -145,7 +157,7 @@ function Lyric.new( ... )
     -- このオブジェクトと、指定されたオブジェクトが同じかどうかを調べる。
     -- 音声合成したときに影響のある範囲のフィールドしか比較されない。
     -- たとえば、isProtectedがthisとitemで違っていても、他が同一であればtrueが返る。
-    -- @param item (<a href="../files/Lyric.html">Lyric</a>) 比較対象のオブジェクト
+    -- @param item (Lyric) 比較対象のオブジェクト
     -- @return (boolean) 比較対象と同じであれば true を、そうでなければ false を返す
     -- @name equalsForSynth
     function this:equalsForSynth( item )
@@ -160,7 +172,7 @@ function Lyric.new( ... )
 
     ---
     -- このオブジェクトのインスタンスと、指定されたオブジェクトが同じかどうかを調べる
-    -- @param item (<a href="../files/Lyric.html">Lyric</a>) 比較対象のオブジェクト
+    -- @param item (Lyric) 比較対象のオブジェクト
     -- @return (boolean) 比較対象と同じであれば true を、そうでなければ false を返す
     -- @name equals
     function this:equals( item )
@@ -248,7 +260,7 @@ function Lyric.new( ... )
 
     ---
     -- コピーを作成する
-    -- @return (<a href="../files/Lyric.html">Lyric</a>) このインスタンスのコピー
+    -- @return (Lyric) このインスタンスのコピー
     -- @name clone
     function this:clone()
         local result = Lyric.new();

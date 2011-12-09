@@ -24,8 +24,9 @@ TimesigTable = {};
 
 ---
 -- 初期化を行う
--- @return (<a href="../files/TimesigTable.html">TimesigTable</a>)
--- @name <i>new</i>
+-- @return (TimesigTable)
+-- @name new
+-- @access static ctor
 function TimesigTable.new()
     local this = {};
     this._list = List.new();
@@ -40,7 +41,7 @@ function TimesigTable.new()
 
     ---
     -- データ点を順に返す反復子を取得する
-    -- @return (<a href="../files/List.html#Iterator.&lt;i&gt;new&lt;/i&gt;">List.Iterator</a>&lt;<a href="../files/TimesigTableItem.html">TimesigTableItem</a>&gt;) 反復子
+    -- @return (List.Iterator&lt;TimesigTableItem&gt;) 反復子
     -- @name iterator
     function this:iterator()
         return self._list:iterator();
@@ -48,7 +49,7 @@ function TimesigTable.new()
 
     ---
     -- データ点を追加する
-    -- @param (<a href="../files/TimesigTableItem.html">TimesigTableItem</a>) 追加する拍子変更情報
+    -- @param (TimesigTableItem) 追加する拍子変更情報
     -- @name push
     function this:push( item )
         self._list:push( item );
@@ -57,7 +58,7 @@ function TimesigTable.new()
     ---
     -- 指定したインデックスの拍子変更情報を取得する
     -- @param (integer) index 取得するデータ点のインデックス(0から始まる)
-    -- @return (<a href="../files/TimesigTableItem.html">TimesigTableItem</a>) 拍子変更情報
+    -- @return (TimesigTableItem) 拍子変更情報
     -- @name get
     function this:get( index )
         return self._list[index];
@@ -66,7 +67,7 @@ function TimesigTable.new()
     ---
     -- 指定したインデックスの拍子変更情報を設定する
     -- @param index (integer) インデックス(最初のインデックスは0)
-    -- @param value (<a href="../files/TempoTableItem.html">TempoTableItem</a>) 設定するイベント
+    -- @param value (TempoTableItem) 設定するイベント
     -- @name set
     function this:set( index, value )
         self._list[index] = value;
@@ -98,7 +99,7 @@ function TimesigTable.new()
     ---
     -- 指定されたゲートタイムにおける拍子情報を取得する
     -- @param clock (number) ゲートタイム
-    -- @return (<a href="../files/Timesig.html">Timesig</a>) 指定されたゲートタイムでの拍子情報
+    -- @return (Timesig) 指定されたゲートタイムでの拍子情報
     -- @name getTimesigAt
     function this:getTimesigAt( clock )
         local ret = TimesigTableItem.new();
@@ -121,7 +122,7 @@ function TimesigTable.new()
     ---
     -- 指定されたゲートタイムにおける拍子情報を取得する
     -- @param clock (number) ゲートタイム
-    -- @return (<a href="../files/TimesigTableItem.html">TimesigTableItem</a>) 指定されたゲートタイムでの拍子情報
+    -- @return (TimesigTableItem) 指定されたゲートタイムでの拍子情報
     -- @name findTimesigAt
     function this:findTimesigAt( clock )
         local index = 0;

@@ -20,10 +20,18 @@ module( "luavsq" );
 -- @name BPList.KeyClockIterator
 BPList.KeyClockIterator = {};
 
+---
+-- 初期化を行う
+-- @param list (BPList) 反復子の元になるリスト
+-- @return (BPList.KeyClockIterator)
+-- @name new
+-- @access static ctor
+-- @class function
+
 --
--- コンストラクタ
--- @see _init_1
--- @return (<a href="../files/BPList.KeyClockIterator.html">BPList.KeyClockIterator</a>)
+-- 初期化を行う
+-- @return (BPList.KeyClockIterator)
+-- @name new
 function BPList.KeyClockIterator.new( ... )
     local this = {};
     local arguments = { ... };
@@ -32,9 +40,10 @@ function BPList.KeyClockIterator.new( ... )
 
     ---
     -- 初期化を行う
-    -- @param list (<a href="../files/BPList.html">BPList</a>) 反復子の元になるリスト
-    -- @return (<a href="../files/BPList.KeyClockIterator.html">BPList.KeyClockIterator</a>)
-    -- @name <i>new</i>
+    -- @param list (BPList) 反復子の元になるリスト
+    -- @return (BPList.KeyClockIterator)
+    -- @name _init_1
+    -- @access private
     function this:_init_1( list )
         self._list = list;
         self._pos = 0;

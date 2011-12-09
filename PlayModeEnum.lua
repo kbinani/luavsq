@@ -18,19 +18,19 @@ module( "luavsq" );
 -- 歌声合成の再生モードを表す列挙子
 -- @class table
 -- @name PlayModeEnum
--- @field Off トラックはミュートされる(-1)
--- @field PlayAfterSynth トラックは合成された後再生される(0)
--- @field PlayWithSynth トラックは合成しながら再生される(1)
 PlayModeEnum = {
     ---
     -- トラックはミュートされる(-1)
+    -- @var integer
     Off = -1,
 
     ---
     -- トラックは合成された後再生される(0)
+    -- @var integer
     PlayAfterSynth = 0,
 
     ---
     -- トラックは合成しながら再生される(1)
+    -- @var integer
     PlayWithSynth = 1,
 };

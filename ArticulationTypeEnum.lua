@@ -18,29 +18,29 @@ module( "luavsq" );
 -- アイコン設定の種類を表します。
 -- @class table
 -- @name ArticulationTypeEnum
--- @field Vibrato ビブラート
--- @field Crescendo クレッシェンド、またはデクレッシェンド
--- @field Dynaff ピアノ、フォルテ等の強弱記号
--- @field NoteAttack アタック
--- @field NoteTransition NoteTransition(詳細不明)
 ArticulationTypeEnum = {
     ---
     -- ビブラート
+    -- @var integer
     Vibrato = 0,
 
     ---
     -- クレッシェンド、またはデクレッシェンド
+    -- @var integer
     Crescendo = 1,
 
     ---
     -- ピアノ、フォルテ等の強弱記号
+    -- @var integer
     Dynaff = 2,
 
     ---
     -- アタック
+    -- @var integer
     NoteAttack = 3,
 
     ---
     -- NoteTransition(詳細不明)
+    -- @var integer
     NoteTransition = 4,
 };

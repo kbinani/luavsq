@@ -21,20 +21,30 @@ module( "luavsq" );
 -- メタイベントは、メタイベントのデータ長をData[1]に格納せず、生のデータをDataに格納するので、注意が必要
 -- @class table
 -- @name MidiEvent
--- @field clock (integer) Tick 単位の時刻
--- @field firstByte (integer) MIDI イベントの先頭バイト
--- @field data (table) MIDI イベントのデータ。
--- メタイベントについては長さ値を保持せず、出力時に data フィールドの長さに応じた値を自動的に出力する
 MidiEvent = {};
 
 ---
 -- 初期化を行う
--- @return (<a href="../files/MidiEvent.html">MidiEvent</a>)
--- @name <i>new</i>
+-- @return (MidiEvent)
+-- @name new
+-- @access static ctor
 function MidiEvent.new()
     local this = {};
+
+    ---
+    -- Tick 単位の時刻
+    -- @var integer
     this.clock = 0;
+
+    ---
+    -- MIDI イベントの先頭バイト
+    -- @var integer
     this.firstByte = 0;
+
+    ---
+    -- MIDI イベントのデータ。
+    -- メタイベントについては長さ値を保持せず、出力時に data フィールドの長さに応じた値を自動的に出力する
+    -- @var table
     this.data = {};
 
     ---
@@ -54,7 +64,7 @@ function MidiEvent.new()
 
     ---
     -- 順序を比較する
-    -- @param item (<a href="../files/MidiEvent.html">MidiEvent</a>) 比較対象のアイテム
+    -- @param item (MidiEvent) 比較対象のアイテム
     -- @return (integer) このインスタンスが比較対象よりも小さい場合は負の整数、等しい場合は 0、大きい場合は正の整数を返す
     -- @name compareTo
     function this:compareTo( item )
@@ -105,8 +115,9 @@ end
 -- @param clock (integer) Tick 単位の時刻
 -- @param numerator (integer) 拍子の分子の値
 -- @param denominator (integer) 表紙の分母の値
--- @return (<a href="../files/MidiEvent.html">MidiEvent</a>) 拍子イベント
--- @name <i>generateTimeSigEvent</i>
+-- @return (MidiEvent) 拍子イベント
+-- @name generateTimeSigEvent
+-- @access static
 function MidiEvent.generateTimeSigEvent( clock, numerator, denominator )
     local ret = MidiEvent.new();
     ret.clock = clock;
@@ -120,8 +131,9 @@ end
 -- テンポイベントを作成する
 -- @param clock (integer) Tick 単位の時刻
 -- @param tempo (integer) 四分音符のマイクロ秒単位の長さ
--- @return (<a href="../files/MidiEvent.html">MidiEvent</a>) テンポイベント
--- @name <i>generateTempoChangeEvent</i>
+-- @return (MidiEvent) テンポイベント
+-- @name generateTempoChangeEvent
+-- @access static
 function MidiEvent.generateTempoChangeEvent( clock, tempo )
     local ret = MidiEvent.new();
     ret.clock = clock;
@@ -145,7 +157,8 @@ end
 -- 可変長のデルタタイムをストリームに出力する
 -- @param stream (? extends OutputStream) 出力先のストリーム
 -- @param number (integer) デルタタイム
--- @name <i>writeDeltaClock</i>
+-- @name writeDeltaClock
+-- @access static
 function MidiEvent.writeDeltaClock( stream, number )
     local bits = {};
     local p = MidiEvent._x[1];
@@ -321,10 +334,11 @@ end
 
 ---
 -- 2 つの MidiEvent を比較する
--- @param a (<a href="../files/MidiEvent.html">MidiEvent</a>) 比較対象のオブジェクト
--- @param b (<a href="../files/MidiEvent.html">MidiEvent</a>) 比較対象のオブジェクト
+-- @param a (MidiEvent) 比較対象のオブジェクト
+-- @param b (MidiEvent) 比較対象のオブジェクト
 -- @return (boolean) a が b よりも小さい場合は true、そうでない場合は false を返す
--- @name <i>compare</i>
+-- @name compare
+-- @access static
 function MidiEvent.compare( a, b )
     return (a:compareTo( b ) < 0);
 end

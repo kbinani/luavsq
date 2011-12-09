@@ -20,34 +20,37 @@ module( "luavsq" );
 -- トラックを表すクラス
 -- @class table
 -- @name Track
--- @field tag (string) トラックに付属するタグ情報
--- @field common (<a href="../files/Common.html">Common</a>) トラック名などの情報
--- @field master (<a href="../files/Master.html">Master</a>) マスター情報。Master Track のみが保持する
--- @field mixer (<a href="../files/Mixer.html">Mixer</a>) ミキサー情報。Master Track のみが保持する
--- @field events (<a href="../files/EventList.html">EventList</a>) イベントの一覧
 Track = {};
 
 --
 -- 初期化を行う
--- @return (<a href="../files/Track.html">Track</a>)
+-- @return (Track)
 function Track.new( ... )
     local this = {};
     local arguments = { ... };
+
+    ---
+    -- トラックに付属するタグ情報
+    -- @var ?
     this.tag = "";
 
     ---
+    -- トラック名などの情報
     -- @var Common
     this.common = nil;
 
     ---
+    -- マスター情報。Master Track のみが保持する
     -- @var Master
     this.master = nil;
 
     ---
+    -- ミキサー情報。Master Track のみが保持する
     -- @var Mixer
     this.mixer = nil;
 
     ---
+    -- イベントの一覧
     -- @var EventList
     this.events = nil;
 
@@ -114,8 +117,9 @@ function Track.new( ... )
 
     ---
     -- Master Trackを構築
-    -- @return (<a href="../files/Track.html">Track</a>)
-    -- @name <i>new</i><sup>1</sup>
+    -- @return (Track)
+    -- @name new<!--1-->
+    -- @access static ctor
     function this:_init_0()
     end
 
@@ -123,8 +127,9 @@ function Track.new( ... )
     -- Master Trackでないトラックを構築
     -- @param name (string) トラック名
     -- @param singer (string) トラックのデフォルトの歌手名
-    -- @return (<a href="../files/Track.html">Track</a>)
-    -- @name <i>new</i><sup>2</sup>
+    -- @return (Track)
+    -- @name new<!--2-->
+    -- @access static ctor
     function this:_init_2a( name, singer )
         self:_initCor( name, singer );
     end
@@ -214,10 +219,12 @@ function Track.new( ... )
             self.setName( track_name );
         end]]
 
-    --
+    ---
     -- 初期化を行う
-    -- @param name [string]
-    -- @param singer [string]
+    -- @param name (string)
+    -- @param singer (string)
+    -- @access private
+    -- @name _initCor
     function this:_initCor( name, singer )
         self.common = Common.new( name, 179, 181, 123, 1, 1 );
         self._pit = BPList.new( "pit", 0, -8192, 8191 );
@@ -266,8 +273,8 @@ function Track.new( ... )
 
     ---
     -- 指定された種類のイベントのインデクスを順に返す反復子を取得する
-    -- @param iteratorKind (<a href="../files/EventList.IndexIteratorKindEnum.html">EventList.IndexIteratorKindEnum</a>) 反復子の種類
-    -- @return (<a href="../files/EventList.IndexIterator.html">EventList.IndexIterator</a>) 反復子
+    -- @param iteratorKind (EventList.IndexIteratorKindEnum) 反復子の種類
+    -- @return (EventList.IndexIterator) 反復子
     -- @name getIndexIterator
     function this:getIndexIterator( iteratorKind )
         return EventList.IndexIterator.new( self.events, iteratorKind );
@@ -530,21 +537,21 @@ function Track.new( ... )
 
     ---
     -- トラックのメタテキストを、テキストストリームに出力する
-    -- @param stream (<a href="../files/TextStream.html">TextStream</a>) 出力先のストリーム
+    -- @param stream (TextStream) 出力先のストリーム
     -- @param eos (integer) イベントリストの末尾を表す番号
     -- @param start (integer) Tick 単位の出力開始時刻
-    -- @name printMetaText<sup>1</sup>
+    -- @name printMetaText<!--1-->
     function this:_printMetaText_3( stream, eos, start )
         self:_printMetaText_4( stream, eos, start, false );
     end
 
     ---
     -- トラックのメタテキストを、テキストストリームに出力する
-    -- @param stream (<a href="../files/TextStream.html">TextStream</a>) 出力先のストリーム
+    -- @param stream (TextStream) 出力先のストリーム
     -- @param eos (integer) イベントリストの末尾を表す番号
     -- @param start (integer) Tick 単位の出力開始時刻
     -- @param printPitch (boolean) pitch を含めて出力するかどうか(現在は false 固定で、引数は無視される)
-    -- @name printMetaText<sup>2</sup>
+    -- @name printMetaText<!--2-->
     function this:_printMetaText_4( stream, eos, start, printPitch )
         if( self.common ~= nil )then
             self.common:write( stream );
@@ -697,7 +704,7 @@ function Track.new( ... )
     ---
     -- 指定された名前のカーブを取得します
     -- @param curve (string) カーブ名
-    -- @return (<a href="../files/BPList.html">BPList</a>) カーブ
+    -- @return (BPList) カーブ
     -- @name getCurve
     function this:getCurve( curve )
         local search = curve:lower();
@@ -757,7 +764,7 @@ function Track.new( ... )
     ---
     -- 指定された名前のカーブを設定する
     -- @param curve (string) カーブ名
-    -- @param value (<a href="../files/BPList.html">BPList</a>) 設定するカーブ
+    -- @param value (BPList) 設定するカーブ
     -- @name setCurve
     function this:setCurve( curve, value )
         local search = curve:lower();
@@ -814,7 +821,7 @@ function Track.new( ... )
 
     ---
     -- コピーを作成する
-    -- @return (<a href="../files/Track.html">Track</a>) このオブジェクトのコピー
+    -- @return (Track) このオブジェクトのコピー
     -- @name clone
     function this:clone()
         local res = Track.new();

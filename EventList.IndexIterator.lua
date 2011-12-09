@@ -26,10 +26,11 @@ EventList.IndexIterator = {};
 
 ---
 -- 初期化を行う
--- @param list (<a href="../files/EventList.html">EventList</a>) 反復子の元になるリスト
--- @param iteratorKind (<a href="../files/EventList.IndexIteratorKindEnum.html">EventList.IndexIteratorKindEnum</a>) 反復子の種類
--- @return (<a href="../files/EventListIndexIterator.html">EventListIndexIterator</a>) 反復子
--- @name <i>new</i>
+-- @param list (EventList) 反復子の元になるリスト
+-- @param iteratorKind (EventList.IndexIteratorKindEnum) 反復子の種類
+-- @return (EventListIndexIterator) 反復子
+-- @name new
+-- @access static ctor
 function EventList.IndexIterator.new( list, iteratorKind )
     local this = {};
     ---
@@ -84,10 +85,11 @@ function EventList.IndexIterator.new( list, iteratorKind )
         return (self:_nextPosition() > 0);
     end
 
-    --
+    ---
     -- 反復子の次の要素を探索する
-    -- @access private
     -- @return (integer) 次のインデックス
+    -- @access private
+    -- @name _nextPosition
     function this:_nextPosition()
         local count = self._list:size();
         local i;
