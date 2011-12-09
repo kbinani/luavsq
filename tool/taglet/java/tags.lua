@@ -5,7 +5,7 @@ local table = require "table"
 local assert, type, tostring = assert, type, tostring
 local print = print;
 
-module "luadoc.taglet.custom.tags"
+module "luadoc.taglet.java.tags"
 
 -------------------------------------------------------------------------------
 

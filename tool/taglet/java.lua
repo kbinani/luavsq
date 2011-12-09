@@ -3,12 +3,12 @@ local io = require "io"
 local lfs = require "lfs"
 local luadoc = require "luadoc"
 local util = require "luadoc.util"
-local tags = require "luadoc.taglet.custom.tags"
+local tags = require "luadoc.taglet.java.tags"
 local string = require "string"
 local table = require "table"
 local print = print;
 
-module 'luadoc.taglet.custom'
+module 'luadoc.taglet.java'
 
 -------------------------------------------------------------------------------
 -- Creates an iterator for an array base on a class type.
