@@ -1,5 +1,6 @@
 require( "lunit" );
 dofile( "../List.lua" );
+dofile( "../List.Iterator.lua" );
 module( "ListTest", package.seeall, lunit.testcase );
 
 function test()

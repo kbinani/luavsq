@@ -35,6 +35,7 @@ dofile( "../VibratoBPList.lua" );
 dofile( "../VibratoBP.lua" );
 dofile( "../Log.lua" );
 dofile( "../FileOutputStream.lua" );
+dofile( "../List.Iterator.lua" );
 module( "SequenceTest", package.seeall, lunit.testcase );
 
 ---

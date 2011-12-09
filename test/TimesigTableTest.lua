@@ -2,6 +2,7 @@ require( "lunit" );
 dofile( "../TimesigTable.lua" );
 dofile( "../List.lua" );
 dofile( "../TimesigTableItem.lua" );
+dofile( "../List.Iterator.lua" );
 module( "TimesigTableTest", package.seeall, lunit.testcase );
 
 function testUpdateTimesigInfo()

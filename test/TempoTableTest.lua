@@ -2,6 +2,7 @@ require( "lunit" );
 dofile( "../TempoTable.lua" );
 dofile( "../List.lua" );
 dofile( "../TempoTableItem.lua" );
+dofile( "../List.Iterator.lua" );
 module( "TempoTableTest", package.seeall, lunit.testcase );
 
 ---
