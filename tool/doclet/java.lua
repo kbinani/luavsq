@@ -8,17 +8,61 @@ local io = io;
 
 module "luadoc.doclet.java";
 
+local allClasses = {};
+
 function start( doc )
     printStylesheet();
     printIndex();
+    for i, fileName in ipairs( doc.files ) do
+        local className = fileName:gsub( ".lua", "" );
+        table.insert( allClasses, className );
+    end
+
     printAllClasses( doc );
     for i, fileName in ipairs( doc.files ) do
         printClassDoc( fileName, doc );
     end
 end
 
-function printClassDocFieldSummary( f, fileDoc )
-    local fields = getFields( fileDoc );
+function printClassDoc( fileName, docinfo )
+    local htmlName = fileName:gsub( ".lua", ".html" );
+    local doc = docinfo.files[fileName];
+    local f = io.open( options.output_dir .. "/" .. htmlName, "w" );
+    local className = doc.tables[1];
+    f:write( "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">\n" );
+    f:write( "<html>\n" );
+    f:write( "<head>\n" );
+    f:write( "  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF8\">\n" );
+    f:write( "  <link rel=\"stylesheet\" type=\"text/css\" href=\"stylesheet.css\">\n" );
+    f:write( "</head>\n" );
+    f:write( "<body>\n" );
+    f:write( "  <h2>\n" );
+    f:write( "    クラス " .. className .. "\n" );
+    f:write( "  </h2>\n" );
+    f:write( "  <p>\n" );
+    f:write( "    " .. getSummary( doc.tables[className].description ) .. "\n" );
+    f:write( "  <p>\n" );
+    f:write( "  <hr>\n" );
+    f:write( "\n" );
+
+    local fields = getFields( doc );
+    local ctors = getConstructors( doc );
+    local methods = getMethods( doc );
+
+    printClassDocFieldSummary( f, fields );
+    printClassDocMethodSummary( f, ctors, "コンストラクタ" );
+    printClassDocMethodSummary( f, methods, "メソッド" );
+
+    printClassDocFieldDetail( f, fields );
+    printClassDocMethodDetail( f, ctors, "コンストラクタ" );
+    printClassDocMethodDetail( f, methods, "メソッド" );
+
+    f:write( "</body>\n" );
+    f:write( "</html>\n" );
+    f:close();
+end
+
+function printClassDocFieldSummary( f, fields )
     if( #fields > 0 )then
         f:write( "  <table border=\"1\" width=\"100%\" cellpadding=\"3\" cellspacing=\"0\">\n" );
         f:write( "    <tr bgcolor=\"#ccccff\" class=\"TableHeadingColor\">\n" );
@@ -34,11 +78,11 @@ function printClassDocFieldSummary( f, fileDoc )
             f:write( "      <td align=\"right\" valign=\"top\" width=\"1%\">\n" );
             f:write( "        <font size=\"-1\">\n" );
             local access = getAccess( field.access );
-            f:write( "          <code>" .. access .. " &nbsp;" .. field.var  .. "</code>\n" );
+            f:write( "          <code>" .. access .. " &nbsp;" .. getLinkedTypeName( field.var )  .. "</code>\n" );
             f:write( "        </font>\n" );
             f:write( "      </td>\n" );
             f:write( "      <td>\n" );
-            f:write( "        <code><b>" .. field.name .. "</b></code>\n" );
+            f:write( "        <code><b><a href=\"#" .. field.name .. "\">" .. field.name .. "</a></b></code>\n" );
             f:write( "        <br>\n" );
             f:write( "        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n" );
             f:write( "        " .. getSummary( field.description ) .. "\n" );
@@ -51,46 +95,12 @@ function printClassDocFieldSummary( f, fileDoc )
     return fields;
 end
 
-function printClassDocConstructorSummary( f, fileDoc )
-    local ctors = getConstructors( fileDoc );
-    if( #ctors > 0 )then
-        f:write( "  <table border=\"1\" width=\"100%\" cellpadding=\"3\" cellspacing=\"0\">\n" );
-        f:write( "    <tr bgcolor=\"#ccccff\" class=\"TableHeadingColor\">\n" );
-        f:write( "      <th align=\"left\" colspan=\"2\">\n" );
-        f:write( "        <font size=\"+2\">\n" );
-        f:write( "          <b>コンストラクタの概要</b>\n" );
-        f:write( "        </font>\n" );
-        f:write( "      </th>\n" );
-        f:write( "    </tr>\n" );
-        for i, info in pairs( ctors ) do
-            local returnType = "void";
-            if( info.ret ~= nil )then
-                returnType = getType( info.ret );
-            end
-            f:write( "    <tr bgcolor=\"white\" class=\"TableRowColor\">\n" );
-            f:write( "      <td align=\"right\" valign=\"top\" width=\"1%\">\n" );
-            local access = getAccess( info.access );
-            f:write( "        <font size=\"-1\"><code>" .. access .. " &nbsp;" .. returnType .. "</code></font>\n" );
-            f:write( "      <td>\n" );
-            f:write( "       <code><b>" .. info.name .. "</b></code>\n" );
-            f:write( "       <br>\n" );
-            f:write( "       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" .. getSummary( info.description ) .. "\n" );
-            f:write( "      </td>\n" );
-            f:write( "    </tr>\n" );
-        end
-        f:write( "  </table>\n" );
-        f:write( "  &nbsp;\n" );
-    end
-    return ctors;
-end
-
-function printClassDocMethodSummary( f, doc )
-    local methods = getMethods( doc );
+function printClassDocMethodSummary( f, methods, methodKind )
     if( #methods > 0 )then
         f:write( "  <table border=\"1\" width=\"100%\" cellpadding=\"3\" cellspacing=\"0\">\n" );
         f:write( "    <tr bgcolor=\"#ccccff\" class=\"TableHeadingColor\">\n" );
         f:write( "      <th align=\"left\" colspan=\"2\">\n" );
-        f:write( "        <font size=\"+2\"><b>メソッドの概要</b></font>\n" );
+        f:write( "        <font size=\"+2\"><b>" .. methodKind .. "の概要</b></font>\n" );
         f:write( "      </th>\n" );
         f:write( "    </tr>\n" );
         for i, info in pairs( methods ) do
@@ -103,7 +113,7 @@ function printClassDocMethodSummary( f, doc )
             local access = getAccess( info.access );
             f:write( "        <font size=\"-1\"><code>" .. access .. " &nbsp;" .. returnType .. "</code></font>\n" );
             f:write( "      <td>\n" );
-            f:write( "       <code><b>" .. info.name .. "</b>(" );
+            f:write( "       <code><b><a href=\"#" .. getMethodId( info ) .. "\">" .. info.name .. "</a></b>(" );
             for paramIndex, paramName in ipairs( info.param ) do
                 argType, summary = getType( info.param[paramName] );
                 if( paramIndex > 1 )then
@@ -145,7 +155,9 @@ function printClassDocFieldDetail( f, fields )
             f:write( "    <dl>\n" );
             f:write( "    </dl>\n" );
             f:write( "  </dl>\n" );
-            f:write( "  <hr>\n" );
+            if( i < #fields )then
+                f:write( "  <hr>\n" );
+            end
             f:write( "\n" );
         end
     end
@@ -165,17 +177,20 @@ function printClassDocMethodDetail( f, ctors, methodKind )
 
     local i, ctor;
     for i, ctor in pairs( ctors ) do
-        f:write( "  <a name=\"" .. ctor.name .. "\"><!-- --></a>\n" );
-        f:write( "  <h3>" .. ctor.name .. "</h3>\n" );
+        f:write( "  <a name=\"" .. getMethodId( ctor ) .. "\"><!-- --></a>\n" );
+        local name = ctor.name:gsub( "<!--.*-->", "" );
+        f:write( "  <h3>" .. name .. "</h3>\n" );
         f:write( "  <pre>\n" );
         local access = getAccess( ctor.access, true );
-        f:write( access .. " <b>" .. ctor.name .. "</b>(" );
+        local retType = getType( ctor.ret );
+        f:write( access .. " " .. retType .. " <b>" .. name .. "</b>(" );
+        local paramPrefixSpaces = string.rep( " ", access:len() + name:len() + 1 );
         local paramIndex, paramName;
         for paramIndex, paramName in ipairs( ctor.param ) do
             local param = ctor.param[paramName];
             local t, c = getType( param );
             if( paramIndex > 1 )then
-                f:write( "," );
+                f:write( ",\n" .. paramPrefixSpaces );
             end
             f:write( t .. "&nbsp;" .. paramName );
         end
@@ -206,43 +221,11 @@ function printClassDocMethodDetail( f, ctors, methodKind )
             f:write( "    </dl>\n" );
             f:write( "  </dd>\n" );
         end
-        f:write( "  <hr>\n" );
+        if( i < #ctors )then
+            f:write( "  <hr>\n" );
+        end
         f:write( "\n" );
     end
-end
-
-function printClassDoc( fileName, docinfo )
-    local htmlName = fileName:gsub( ".lua", ".html" );
-    local doc = docinfo.files[fileName];
-    local f = io.open( options.output_dir .. "/" .. htmlName, "w" );
-    local className = doc.tables[1];
-    f:write( "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">\n" );
-    f:write( "<html>\n" );
-    f:write( "<head>\n" );
-    f:write( "  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF8\">\n" );
-    f:write( "  <link rel=\"stylesheet\" type=\"text/css\" href=\"stylesheet.css\">\n" );
-    f:write( "</head>\n" );
-    f:write( "<body>\n" );
-    f:write( "  <h2>\n" );
-    f:write( "    クラス " .. className .. "\n" );
-    f:write( "  </h2>\n" );
-    f:write( "  <p>\n" );
-    f:write( "    " .. getSummary( doc.tables[className].description ) .. "\n" );
-    f:write( "  <p>\n" );
-    f:write( "  <hr>\n" );
-    f:write( "\n" );
-
-    local fields = printClassDocFieldSummary( f, doc );
-    local ctors = printClassDocConstructorSummary( f, doc );
-    local methods = printClassDocMethodSummary( f, doc );
-
-    printClassDocFieldDetail( f, fields );
-    printClassDocMethodDetail( f, ctors, "コンストラクタ" );
-    printClassDocMethodDetail( f, methods, "メソッド" );
-
-    f:write( "</body>\n" );
-    f:write( "</html>\n" );
-    f:close();
 end
 
 function printAllClasses( doc )
@@ -366,6 +349,9 @@ function getFields( fileDoc )
             end
         end
     end
+
+    sortItems( result );
+
     return result;
 end
 
@@ -374,15 +360,37 @@ end
 function getMethods( fileDoc )
     local result = {};
     for i, info in pairs( fileDoc.functions ) do
-        if( type( info ) == "table" )then
-            if( (not (isPrivate( info.access ) and options.noprivate == 1))
-                or
-                (not (info.name == "new" and isStatic( info.access ))) )then
+        if( type( info ) == "table" and isConstructor( info.access ) == false )then
+            if( not (isPrivate( info.access ) and options.noprivate == 1) )then
                 table.insert( result, info );
             end
         end
     end
+
+    sortItems( result );
+
     return result;
+end
+
+---
+-- テーブルの要素のname属性の昇順に並び替える
+-- @param itmems (table) ソート対象のテーブル
+-- @return (table) ソート後のテーブル
+function sortItems( items )
+    local comparator = function( a, b )
+        local nameA = a.name;
+        local nameB = b.name;
+        return nameA < nameB;
+    end
+
+    table.sort( items, comparator );
+    return items;
+end
+
+---
+-- メソッドのdoc情報から、そのメソッドを特定するID文字列を作成する
+function getMethodId( methodInfo )
+    return methodInfo.name;
 end
 
 ---
@@ -390,37 +398,71 @@ end
 function getConstructors( fileDoc )
     local result = {};
     for i, info in pairs( fileDoc.functions ) do
-        if( type( info ) == "table" )then
-            if( info.name == "new" and isStatic( info.access ) )then
-                table.insert( result, info );
-            end
+        if( type( info ) == "table" and isConstructor( info.access ) )then
+           table.insert( result, info );
         end
     end
+
+    sortItems( result );
+
     return result;
+end
+
+---
+-- access タグの文字列から、コンストラクタかどうかを判定する
+-- コンストラクタの場合、access タグに ctor が入っている
+function isConstructor( access )
+    if( access == nil )then
+        return false;
+    else
+        return access:find( "ctor" ) ~= nil;
+    end
+end
+
+---
+-- 型名に、HTMLドキュメントへのリンクを付加した文字列を取得する
+-- @param typeName (string)
+-- @return (string)
+function getLinkedTypeName( typeName )
+    local i, className;
+    for i, className in ipairs( allClasses ) do
+        if( typeName == className )then
+            typeName = "<a href=\"" .. typeName .. ".html\">" .. typeName .. "</a>";
+        end
+    end
+    return typeName;
 end
 
 ---
 -- "(integer) 説明"のような文字列を、"integer", "説明"に分解する
 function getType( comment )
     if( comment == nil )then
-        return "", "";
+        return "void", "";
     end
     if( type( comment ) == "table" )then
-        return "", "";
+        return "void", "";
     end
     local startIndex = string.find( comment, "(", 1, true );
     if( startIndex == nil )then
-        return "", comment;
+        return "void", comment;
     end
     local endIndex = comment:find( ")", startIndex, true );
     if( endIndex == nil )then
-        return "", comment;
+        return "void", comment;
     end
     local t = comment:sub( startIndex + 1, endIndex - 1 );
     local c = comment:sub( endIndex + 1 );
     while( c:sub( 1, 1 ) == " " )do
         c = c:sub( 2 );
     end
+
+    if( t == "" )then
+        t = "void";
+    end
+
+    -- doc で生成されるクラス名が型名だった場合、リンクを張る
+    t = getLinkedTypeName( t );
+
     return t, c;
 end
 

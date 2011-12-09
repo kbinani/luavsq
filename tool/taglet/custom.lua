@@ -97,10 +97,10 @@ function check_var( comments, code )
     local i, comment;
     for i, comment in pairs( comments ) do
         if( comment:find( "@var", 1, true ) ~= nil )then
-            if( code:find( "[.]%w+" ) ~= nil )then
-                return string.sub( code:match( "[.]%w+" ), 2 );
+            if( code:find( "[.][a-zA-Z0-9_]+" ) ~= nil )then
+                return string.sub( code:match( "[.][a-zA-Z0-9_]+" ), 2 );
             else
-                return code:match( "%w+" );
+                return code:match( "[a-zA-Z0-9_]+" );
             end
         end
     end

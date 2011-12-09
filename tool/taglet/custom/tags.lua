@@ -46,10 +46,6 @@ local function var( tag, block, text )
     block[tag] = text;
 end
 
-
-local function ctor( tag, block, text )
-    block[tag] = text;
-end
 -------------------------------------------------------------------------------
 
 local function field (tag, block, text)
@@ -167,7 +163,7 @@ handlers["return"] = ret
 handlers["see"] = see
 handlers["usage"] = usage
 handlers["access"] = access;
-handlers["var"] = access;
+handlers["var"] = var;
 
 -------------------------------------------------------------------------------
 
