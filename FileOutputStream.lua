@@ -46,9 +46,9 @@ function FileOutputStream.new( path )
 
     ---
     -- 指定された配列の、指定した範囲のバイト値をストリームに書きこむ
-    -- @param (table<integer>) array 書きこむバイト列が格納された配列
-    -- @param (integer) startIndex 書き込み開始位置
-    -- @param (integer) length 書き込むバイト値の個数
+    -- @param array (table<integer>) 書きこむバイト列が格納された配列
+    -- @param startIndex (integer) 書き込み開始位置
+    -- @param length (integer) 書き込むバイト値の個数
     -- @name write<!--2-->
     function this:_write_3( array, startIndex, length )
         local i;
@@ -59,7 +59,7 @@ function FileOutputStream.new( path )
 
     ---
     -- 指定されたバイト値をストリームに書きこむ
-    -- @param (integer) 書きこむバイト値
+    -- @param byte (integer) 書きこむバイト値
     -- @name write<!--1-->
     function this:_write_1( byte )
         if( nil == byte )then

@@ -640,7 +640,7 @@ end
 
 ---
 -- イベントリストの末尾の要素を表すオブジェクトを取得する
--- @return (Event オブジェクト
+-- @return (Event) オブジェクト
 -- @name getEOS
 -- @access static
 function Event.getEOS()

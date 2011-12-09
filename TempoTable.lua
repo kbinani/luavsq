@@ -31,7 +31,7 @@ function TempoTable.new()
 
     ---
     -- リスト内のテンポ変更イベントを順に返す反復子を取得する
-    -- @return (List.Iterator&lt;TempoTableItem&gt;) 反復子
+    -- @return (List.Iterator<TempoTableItem>) 反復子
     -- @name iterator
     function this:iterator()
         return this._array:iterator();

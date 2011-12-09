@@ -48,7 +48,7 @@ function Sequence.new( ... )
 
     ---
     -- トラックのリスト。最初のトラックは MasterTrack であり、通常の音符が格納されるトラックはインデックス 1 以降となる
-    -- @var List&lt;Track&gt;
+    -- @var List<Track>
     this.track = nil;
 
     ---

@@ -41,7 +41,7 @@ function TimesigTable.new()
 
     ---
     -- データ点を順に返す反復子を取得する
-    -- @return (List.Iterator&lt;TimesigTableItem&gt;) 反復子
+    -- @return (List.Iterator<TimesigTableItem>) 反復子
     -- @name iterator
     function this:iterator()
         return self._list:iterator();
@@ -57,7 +57,7 @@ function TimesigTable.new()
 
     ---
     -- 指定したインデックスの拍子変更情報を取得する
-    -- @param (integer) index 取得するデータ点のインデックス(0から始まる)
+    -- @param index (integer) 取得するデータ点のインデックス(0から始まる)
     -- @return (TimesigTableItem) 拍子変更情報
     -- @name get
     function this:get( index )

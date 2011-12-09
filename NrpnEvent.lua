@@ -247,8 +247,8 @@ end
 
 ---
 -- NRPN イベントの配列を、MidiEvent の配列に変換する
--- @param source (table&lt;NrpnEvent&gt;) NRPN イベントの配列
--- @return (table&lt;MidiEvent の配列
+-- @param source (table<NrpnEvent>) NRPN イベントの配列
+-- @return (table) MidiEvent の配列
 -- @name convert
 -- @access static
 function NrpnEvent.convert( source )

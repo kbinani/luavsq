@@ -50,7 +50,8 @@ function Mixer.new( ... )
     this.outputMode = 0;
 
     ---
-    -- vsqファイルの各トラックのfader, panpot, muteおよびoutputmode値を保持します
+    -- 各トラックのミキサー情報
+    -- @var table<MixerItem>
     this.slave = {};
 
     ---
@@ -67,16 +68,13 @@ function Mixer.new( ... )
         self.masterMute = masterMute;
         self.masterPanpot = masterPanpot;
         self.outputMode = outputMode;
-
-        ---
-        -- vsqファイルの各トラックのfader, panpot, muteおよびoutputmode値を保持します
         self.slave = {};
     end
 
     ---
     -- テキストストリームから読み込みを行い、初期化を行う
     -- @param stream (TextStream) 読み込むテキストストリーム
-    -- @param lastLine (table, { value = ? }) 読み込んだ最後の行。テーブルの ["value"] に文字列が格納される
+    -- @param lastLine (table) 読み込んだ最後の行。テーブルの ["value"] に文字列が格納される
     -- @return (Mixer)
     -- @name new<!--1-->
     -- @access static ctor

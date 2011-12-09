@@ -28,7 +28,7 @@ EventList.IndexIterator = {};
 -- 初期化を行う
 -- @param list (EventList) 反復子の元になるリスト
 -- @param iteratorKind (EventList.IndexIteratorKindEnum) 反復子の種類
--- @return (EventListIndexIterator) 反復子
+-- @return (EventList.IndexIterator) 反復子
 -- @name new
 -- @access static ctor
 function EventList.IndexIterator.new( list, iteratorKind )

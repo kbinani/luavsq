@@ -12,10 +12,15 @@
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 ]]
 
+---
+-- VOCALOID で使用されるシーケンスのデータ構造を保持するクラスと、
+-- それらの編集操作やファイルへの書き出し処理を行うユーティリティが含まれる。
+-- @class module
+-- @name luavsq
 module( "luavsq" );
 
 ---
--- アイコン設定の種類を表します。
+-- アイコン設定の種類を表す
 -- @class table
 -- @name ArticulationTypeEnum
 ArticulationTypeEnum = {

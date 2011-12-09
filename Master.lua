@@ -47,7 +47,7 @@ function Master.new( ... )
     ---
     -- テキストストリームから読み込むことで初期化を行う
     -- @param stream (TextStream) 読み込むテキストストリーム
-    -- @param lastLine (table, { value = ? }) 読み込んだ最後の行。テーブルの ["value"] に文字列が格納される
+    -- @param lastLine (table) 読み込んだ最後の行。テーブルの ["value"] に文字列が格納される
     -- @return (Master)
     -- @name new<!--2-->
     -- @access static ctor

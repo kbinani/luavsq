@@ -238,7 +238,7 @@ function EventList.new()
 
     ---
     -- イベントリストをテキストストリームに出力する
-    -- @param stream (TexStream) 出力先のストリーム
+    -- @param stream (TextStream) 出力先のストリーム
     -- @param eos (integer) EOS として出力する Tick 単位の時刻
     -- @return (table<Handle>) リスト中のイベントに含まれるハンドルの一覧
     -- @name write

@@ -100,7 +100,7 @@ function ByteArrayOutputStream.new()
 
     ---
     -- ファイルポインタを指定した位置に変更する
-    -- @param (integer) position 新しいポインタ値
+    -- @param position (integer) 新しいポインタ値
     -- @name seek
     function this:seek( position )
         self._pointer = position;

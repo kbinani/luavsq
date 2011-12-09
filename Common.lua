@@ -60,7 +60,7 @@ function Common.new( ... )
     ---
     -- 初期化を行う
     -- @param stream (TextStream) 読み込み元のテキストストリーム
-    -- @param lastLine (table, { value = ? }) 読み込んだ最後の行。テーブルの ["value"] に文字列が格納される
+    -- @param lastLine (table) 読み込んだ最後の行。テーブルの ["value"] に文字列が格納される
     -- @return (Common)
     -- @name new<!--1-->
     -- @access static ctor

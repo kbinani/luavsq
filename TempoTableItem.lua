@@ -71,7 +71,7 @@ function TempoTableItem.new( ... )
 
     ---
     -- 順序を比較する
-    -- @param item (TempoTableItem) 比較対象のアイテム
+    -- @param entry (TempoTableItem) 比較対象のアイテム
     -- @return (integer) このインスタンスが比較対象よりも小さい場合は負の整数、等しい場合は 0、大きい場合は正の整数を返す
     -- @name compareTo
     function this:compareTo( entry )
@@ -80,7 +80,7 @@ function TempoTableItem.new( ... )
 
     ---
     -- このオブジェクトのインスタンスと、指定されたオブジェクトが同じかどうかを調べる
-    -- @param item (TempoTableItem) 比較対象のオブジェクト
+    -- @param entry (TempoTableItem) 比較対象のオブジェクト
     -- @return (boolean) 比較対象と同じであれば true を、そうでなければ false を返す
     -- @name equals
     function this:equals( entry )

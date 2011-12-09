@@ -687,7 +687,7 @@ function BPList.new( ... )
     ---
     -- 指定された Tick 単位の時刻における、コントロールパラメータの値を取得する
     -- @param clock (integer) 値を取得する Tick 単位の時刻
-    -- @param index (table,{ value = ? }) 値の取得に使用したインデックス(最初のインデックスは0)
+    -- @param index (table) 値の取得に使用したインデックス(最初のインデックスは0)
     -- @return (integer) コントロールパラメータの値
     -- @name getValueAt<!--2-->
     function this:_getValueAt_2( clock, index )
