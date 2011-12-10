@@ -70,7 +70,6 @@ function Master.new( ... )
     ---
     -- コピーを作成する
     -- @return (Master) このオブジェクトのコピー
-    -- @name clone
     function this:clone()
         return Master.new( self.preMeasure );
     end
@@ -78,7 +77,6 @@ function Master.new( ... )
     ---
     -- テキストストリームに出力する
     -- @param stream (TextStream) 出力先
-    -- @name write
     function this:write( stream )
         stream:writeLine( "[Master]" );
         stream:writeLine( "PreMeasure=" .. self.preMeasure );

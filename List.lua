@@ -58,7 +58,6 @@ function List.new( ... )
     -- リスト内の指定した位置にある要素を返す
     -- @param index (integer) インデックス(最初のインデックスは0)
     -- @return (?) 指定された位置にある要素
-    -- @name get
     function this:get( index )
         return self[index];
     end
@@ -67,7 +66,6 @@ function List.new( ... )
     -- 指定された位置にある要素を、指定の要素で置き換える
     -- @param index (integer) インデックス(最初のインデックスは0)
     -- @param value (?) 置き換える要素
-    -- @name set
     function this:set( index, value )
         self[index] = value;
     end
@@ -75,7 +73,6 @@ function List.new( ... )
     ---
     -- リスト内のデータを順番に返すイテレータを取得する
     -- @return (List.Iterator) イテレータ
-    -- @name iterator
     function this:iterator()
         return List.Iterator.new( self );
     end
@@ -118,7 +115,6 @@ function List.new( ... )
     ---
     -- データをリストの末尾に追加する
     -- @param value (?) 追加する要素
-    -- @name push
     function this:push( value )
         table.insert( self._array, { ["value"] = value } );
     end
@@ -126,7 +122,6 @@ function List.new( ... )
     ---
     -- リスト内のデータの個数を取得する
     -- @return (integer) データの個数
-    -- @name size
     function this:size()
         return #self._array;
     end
@@ -134,7 +129,6 @@ function List.new( ... )
     ---
     -- メタテーブルをセットアップする
     -- @access private
-    -- @name _setupMetaTable
     function this:_setupMetaTable()
         local metaTable = {};
 
@@ -166,7 +160,6 @@ end
 -- lua の <code>table</code> から、{@link List} のインスタンスを作成する
 -- @param array (table) 作成元の <code>table</code>
 -- @return (List) {@link List} のインスタンス
--- @name fromTable
 -- @access static
 function List.fromTable( array )
     local list = List.new();

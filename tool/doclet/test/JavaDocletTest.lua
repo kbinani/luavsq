@@ -15,6 +15,12 @@ function testCreateLinks()
     local classes = { "Handle" };
     local text = "foo {@link Handle} bar";
     local actual = luadoc.doclet.java.createLinks( text, classes );
-    local expected = "foo <a href=\"Handle.html\">Handle</a> bar";
+    local expected = "foo <code><a href=\"Handle.html\">Handle</a></code> bar";
     assert_equal( expected, actual );
+end
+
+function testGetShortName()
+    assert_equal( "clone", luadoc.doclet.java.getShortName( "this:clone" ) );
+    assert_equal( "clone", luadoc.doclet.java.getShortName( "moduleName.className.clone" ) );
+    assert_equal( "clone", luadoc.doclet.java.getShortName( "moduleName.className:clone" ) );
 end

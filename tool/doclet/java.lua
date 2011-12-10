@@ -16,13 +16,18 @@ function start( doc )
     printIndex();
     printOverviewSummary( doc );
     for i, fileName in ipairs( doc.files ) do
-        local className = fileName:gsub( ".lua", "" );
-        table.insert( allClasses, className );
+        local className = doc.files[fileName].tables[1];
+        if( not isPrivate( doc.files[fileName].tables[className].access) )then
+            table.insert( allClasses, className );
+        end
     end
 
     printAllClasses( doc );
     for i, fileName in ipairs( doc.files ) do
-        printClassDoc( fileName, doc );
+        local className = doc.files[fileName].tables[1];
+        if( not isPrivate( doc.files[fileName].tables[className].access) )then
+            printClassDoc( fileName, doc );
+        end
     end
 end
 
@@ -122,7 +127,7 @@ function printClassDocMethodSummary( f, methods, methodKind )
             local access = getAccess( info.access );
             f:write( "        <font size=\"-1\"><code>" .. access .. " &nbsp;" .. getLinkedTypeName( htmlspecialchars( returnType ) ) .. "</code></font>\n" );
             f:write( "      <td>\n" );
-            f:write( "       <code><b><a href=\"#" .. getMethodId( info ) .. "\">" .. info.name .. "</a></b>(" );
+            f:write( "       <code><b><a href=\"#" .. getMethodId( info ) .. "\">" .. getShortName( info.name ) .. "</a></b>(" );
             for paramIndex, paramName in ipairs( info.param ) do
                 argType, summary = getType( info.param[paramName] );
                 if( paramIndex > 1 )then
@@ -187,7 +192,7 @@ function printClassDocMethodDetail( f, ctors, methodKind )
     local i, ctor;
     for i, ctor in pairs( ctors ) do
         f:write( "  <a name=\"" .. getMethodId( ctor ) .. "\"><!-- --></a>\n" );
-        local name = ctor.name:gsub( "<!--.*-->", "" );
+        local name = getShortName( ctor.name:gsub( "<!--.*-->", "" ) );
         f:write( "  <h3>" .. name .. "</h3>\n" );
         f:write( "  <pre>\n" );
         local access = getAccess( ctor.access, true );
@@ -255,12 +260,14 @@ function printAllClasses( doc )
     f:write( "      <td nowrap>\n" );
     for i, file in ipairs( doc.files ) do
         local className = doc.files[file].tables[1];
-        f:write( "        <font class=\"FrameItemFont\">\n" );
-        f:write( "          <a href=\"" .. className .. ".html\" target=\"classFrame\">" );
-        f:write( "          " .. className .. "\n" );
-        f:write( "          </a>\n" );
-        f:write( "        </font>\n" );
-        f:write( "        <br>\n" );
+        if( not isPrivate( doc.files[file].tables[className].access ) )then
+            f:write( "        <font class=\"FrameItemFont\">\n" );
+            f:write( "          <a href=\"" .. className .. ".html\" target=\"classFrame\">" );
+            f:write( "          " .. className .. "\n" );
+            f:write( "          </a>\n" );
+            f:write( "        </font>\n" );
+            f:write( "        <br>\n" );
+        end
     end
     f:write( "      </td>\n" );
     f:write( "    </tr>\n" );
@@ -323,15 +330,17 @@ function printOverviewSummary( doc )
     local i, file;
     for i, file in ipairs( doc.files ) do
         local className = doc.files[file].tables[1];
-        local description = doc.files[file].tables[className].description;
-        f:write( "    <tr bgcolor=\"white\" class=\"TableRowColor\">\n" );
-        f:write( "      <td width=\"15%\">\n" );
-        f:write( "        <b><a href=\"" .. className .. ".html\">" .. className .. "</a></b>\n" );
-        f:write( "      </td>\n" );
-        f:write( "      <td>\n" );
-        f:write( "        " .. createLinks( description ) .. "\n" );
-        f:write( "      </td>\n" );
-        f:write( "    </tr>\n" );
+        if( not isPrivate( doc.files[file].tables[className].access ) )then
+            local description = doc.files[file].tables[className].description;
+            f:write( "    <tr bgcolor=\"white\" class=\"TableRowColor\">\n" );
+            f:write( "      <td width=\"15%\">\n" );
+            f:write( "        <b><a href=\"" .. className .. ".html\">" .. className .. "</a></b>\n" );
+            f:write( "      </td>\n" );
+            f:write( "      <td>\n" );
+            f:write( "        " .. createLinks( description ) .. "\n" );
+            f:write( "      </td>\n" );
+            f:write( "    </tr>\n" );
+        end
     end
 
     f:write( "  </table>\n" );
@@ -647,6 +656,36 @@ function createLinks( text, classes )
         end
     end
     return text;
+end
+
+---
+-- 「クラス名.メソッド名」などとなっている文字列から、メソッド名の部分を取り出す
+function getShortName( name )
+    local indexPeriod = name:reverse():find( ".", 1, true );
+    local indexCollon = name:reverse():find( ":", 1, true );
+    if( indexPeriod ~= nil )then
+        indexPeriod = name:len() + 1- indexPeriod;
+    end
+    if( indexCollon ~= nil )then
+        indexCollon = name:len() + 1 - indexCollon;
+    end
+    if( indexPeriod == nil )then
+        if( indexCollon == nil )then
+            return name;
+        else
+            return name:sub( indexCollon + 1 );
+        end
+    else
+        if( indexCollon == nil )then
+            return name:sub( indexPeriod + 1 );
+        else
+            local i = indexCollon;
+            if( indexCollon < indexPeriod )then
+                i = indexPeriod;
+            end
+            return name:sub( i + 1 );
+        end
+    end
 end
 
 ---

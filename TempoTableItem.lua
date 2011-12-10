@@ -42,7 +42,6 @@ function TempoTableItem.new( ... )
     ---
     -- 文字列に変換する
     -- @return (string) 変換後の文字列
-    -- @name toString
     function this:toString()
         return "{Clock=" .. self.clock .. ", Tempo=" .. self.tempo .. ", Time=" .. self._time .. "}";
     end
@@ -50,7 +49,6 @@ function TempoTableItem.new( ... )
     ---
     -- コピーを作成する
     -- @return (TempoTableItem) このオブジェクトのコピー
-    -- @name clone
     function this:clone()
         local result = TempoTableItem.new( self.clock, self.tempo );
         result._time = self._time;
@@ -73,7 +71,6 @@ function TempoTableItem.new( ... )
     -- 順序を比較する
     -- @param entry (TempoTableItem) 比較対象のアイテム
     -- @return (integer) このインスタンスが比較対象よりも小さい場合は負の整数、等しい場合は 0、大きい場合は正の整数を返す
-    -- @name compareTo
     function this:compareTo( entry )
         return self.clock - entry.clock;
     end
@@ -82,7 +79,6 @@ function TempoTableItem.new( ... )
     -- このオブジェクトのインスタンスと、指定されたオブジェクトが同じかどうかを調べる
     -- @param entry (TempoTableItem) 比較対象のオブジェクト
     -- @return (boolean) 比較対象と同じであれば <code>true</code> を、そうでなければ <code>false</code> を返す
-    -- @name equals
     function this:equals( entry )
         if( self.clock == entry.clock )then
             return true;
@@ -94,7 +90,6 @@ function TempoTableItem.new( ... )
     ---
     -- 秒単位の時刻を取得する
     -- @return (double) 秒単位の時刻
-    -- @name getTime
     function this:getTime()
         return self._time;
     end
@@ -111,7 +106,6 @@ end
 -- @param a (TempoTableItem) 比較対象のオブジェクト
 -- @param b (TempoTableItem) 比較対象のオブジェクト
 -- @return (boolean) <code>a</code> が <code>b</code> よりも小さい場合は <code>true</code>、そうでない場合は <code>false</code> を返す
--- @name compare
 -- @access static
 function TempoTableItem.compare( a, b )
     if( a:compareTo( b ) < 0 )then

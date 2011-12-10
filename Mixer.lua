@@ -147,7 +147,6 @@ function Mixer.new( ... )
     ---
     -- コピーを作成する
     -- @return (Mixer) このオブジェクトのコピー
-    -- @name clone
     function this:clone()
         local res = Mixer.new( self.masterFeder, self.masterPanpot, self.masterMute, self.outputMode );
         res.slave = {};
@@ -162,7 +161,6 @@ function Mixer.new( ... )
     ---
     -- テキストストリームに出力する
     -- @param stream (TextStream) 出力先のストリーム
-    -- @name write
     function this:write( stream )
         stream:writeLine( "[Mixer]" );
         stream:writeLine( "MasterFeder=" .. self.masterFeder );

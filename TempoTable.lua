@@ -23,7 +23,6 @@ TempoTable = {};
 ---
 -- 初期化を行う
 -- @return (TempoTable)
--- @name new
 -- @access static ctor
 function TempoTable.new()
     local this = {};
@@ -32,14 +31,12 @@ function TempoTable.new()
     ---
     -- リスト内のテンポ変更イベントを順に返す反復子を取得する
     -- @return (List.Iterator<TempoTableItem>) 反復子
-    -- @name iterator
     function this:iterator()
         return this._array:iterator();
     end
 
     ---
     -- データ点を時刻順に並べ替える
-    -- @name sort
     function this:sort()
         self._array:sort( TempoTableItem.compare );
     end
@@ -47,7 +44,6 @@ function TempoTable.new()
     ---
     -- データ点を追加する
     -- @param value (TempoTableItem) 追加するテンポ変更情報
-    -- @name push
     function this:push( value )
         self._array:push( value );
     end
@@ -55,7 +51,6 @@ function TempoTable.new()
     ---
     -- リスト内のテンポ変更情報の個数を取得する
     -- @return (integer) テンポ変更情報の個数
-    -- @name size
     function this:size()
         return self._array:size();
     end
@@ -64,7 +59,6 @@ function TempoTable.new()
     -- 指定したインデックスのテンポ変更情報を取得する
     -- @param index (integer) インデックス(最初のインデックスは0)
     -- @return (TempoTableItem) テンポ変更情報
-    -- @name get
     function this:get( index )
         return self._array[index];
     end
@@ -73,7 +67,6 @@ function TempoTable.new()
     -- 指定したインデックスのテンポ変更情報を設定する
     -- @param index (integer) インデックス(最初のインデックスは0)
     -- @param value (TempoTableItem) 設定するイベント
-    -- @name set
     function this:set( index, value )
         self._array[index] = value;
     end
@@ -82,7 +75,6 @@ function TempoTable.new()
     -- 時刻の単位を、秒単位から Tick 単位に変換する
     -- @param time (double) 秒単位の時刻
     -- @return (double) Tick 単位の時刻
-    -- @name getClockFromSec
     function this:getClockFromSec( time )
         -- timeにおけるテンポを取得
         local tempo = TempoTable.baseTempo;
@@ -112,7 +104,6 @@ function TempoTable.new()
 
     ---
     -- リスト内のテンポ変更情報の秒単位の時刻部分を更新する
-    -- @name updateTempoInfo
     function this:updateTempoInfo()
         local c = self._array:size();
         if( c == 0 )then
@@ -143,7 +134,6 @@ function TempoTable.new()
     -- 時刻の単位を、Tick 単位から秒単位に変換する
     -- @param clock (double) Tick 単位の時刻
     -- @return (double) 秒単位の時刻
-    -- @name getSecFromClock
     function this:getSecFromClock( clock )
         local c = self._array:size();
         local i;
@@ -165,7 +155,6 @@ function TempoTable.new()
     -- 指定した時刻におけるテンポを取得する
     -- @param clock (integer) Tick 単位の時刻
     -- @return (integer) テンポ値。四分音符の長さをマイクロ秒単位で表した値
-    -- @name getTempoAt
     function this:getTempoAt( clock )
         local index = 0;
         local c = self:size();

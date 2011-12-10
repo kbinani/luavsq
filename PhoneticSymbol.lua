@@ -42,7 +42,6 @@ PhoneticSymbol._SYMBOL_CONSONANT_EN = "\tw\tj\tb\td\tg\tbh\tdh\tgh\tdZ\tv\tD\tz\
 -- 指定した文字列が子音を表す発音記号かどうかを判定する
 -- @param symbol (string) 判定対象の発音記号
 -- @return (boolean) 子音であれば <code>true</code> を、そうでなければ <code>false</code> を返す
--- @name isConsonant
 -- @access static
 function PhoneticSymbol.isConsonant( symbol )
     local search = "\t" .. symbol .. "\t";
@@ -62,7 +61,6 @@ end
 -- 指定した文字列が母音を表す発音記号かどうかを判定する
 -- @param symbol (string) 判定対象の発音記号
 -- @return (boolean) 母音であれば <code>true</code> を、そうでなければ <code>false</code> を返す
--- @name isVowel
 -- @access static
 function PhoneticSymbol.isVowel( symbol )
     local search = "\t" .. symbol .. "\t";
@@ -82,7 +80,6 @@ end
 -- 指定した文字列が発音記号として有効かどうかを判定する
 -- @param symbol (string) 判定対象の発音記号
 -- @return (boolean) 有効であれば <code>true</code> を、そうでなければ <code>false</code> を返す
--- @name isValidSymbol
 -- @access static
 function PhoneticSymbol.isValidSymbol( symbol )
     local isVowel = PhoneticSymbol.isVowel( symbol );

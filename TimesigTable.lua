@@ -25,7 +25,6 @@ TimesigTable = {};
 ---
 -- 初期化を行う
 -- @return (TimesigTable)
--- @name new
 -- @access static ctor
 function TimesigTable.new()
     local this = {};
@@ -34,7 +33,6 @@ function TimesigTable.new()
     ---
     -- データ点の個数を取得する
     -- @return (integer) データ点の個数
-    -- @name size
     function this:size()
         return self._list:size();
     end
@@ -42,7 +40,6 @@ function TimesigTable.new()
     ---
     -- データ点を順に返す反復子を取得する
     -- @return (List.Iterator<TimesigTableItem>) 反復子
-    -- @name iterator
     function this:iterator()
         return self._list:iterator();
     end
@@ -50,7 +47,6 @@ function TimesigTable.new()
     ---
     -- データ点を追加する
     -- @param item (TimesigTableItem) 追加する拍子変更情報
-    -- @name push
     function this:push( item )
         self._list:push( item );
     end
@@ -59,7 +55,6 @@ function TimesigTable.new()
     -- 指定したインデックスの拍子変更情報を取得する
     -- @param index (integer) 取得するデータ点のインデックス(0から始まる)
     -- @return (TimesigTableItem) 拍子変更情報
-    -- @name get
     function this:get( index )
         return self._list[index];
     end
@@ -68,14 +63,12 @@ function TimesigTable.new()
     -- 指定したインデックスの拍子変更情報を設定する
     -- @param index (integer) インデックス(最初のインデックスは0)
     -- @param value (TempoTableItem) 設定するイベント
-    -- @name set
     function this:set( index, value )
         self._list[index] = value;
     end
 
     ---
     -- リスト内の拍子変更情報の clock の部分を更新する
-    -- @name updateTimesigInfo
     function this:updateTimesigInfo()
         if( self:get( 0 )._clock ~= 0 )then
             return;
@@ -100,7 +93,6 @@ function TimesigTable.new()
     -- 指定されたゲートタイムにおける拍子情報を取得する
     -- @param clock (number) ゲートタイム
     -- @return (Timesig) 指定されたゲートタイムでの拍子情報
-    -- @name getTimesigAt
     function this:getTimesigAt( clock )
         local ret = TimesigTableItem.new();
         ret.numerator = 4;
@@ -123,7 +115,6 @@ function TimesigTable.new()
     -- 指定されたゲートタイムにおける拍子情報を取得する
     -- @param clock (number) ゲートタイム
     -- @return (TimesigTableItem) 指定されたゲートタイムでの拍子情報
-    -- @name findTimesigAt
     function this:findTimesigAt( clock )
         local index = 0;
         local c = self._list:size();
@@ -147,7 +138,6 @@ function TimesigTable.new()
     -- ここで使用する小節数は、プリメジャーを考慮しない。即ち、曲頭の小節が 0 となる
     -- @param barCount (integer) 小節数
     -- @return (integer) Tick 単位の時刻
-    -- @name getClockFromBarCount
     function this:getClockFromBarCount( barCount )
         local index = 0;
         local c = self._list:size();
@@ -172,7 +162,6 @@ function TimesigTable.new()
     -- ここで使用する小節数は、プリメジャーを考慮しない。即ち、曲頭の小節が 0 となる
     -- @param clock  (integer) Tick 単位の時刻
     -- @return (integer) 小節数
-    -- @name getBarCountFromClock
     function this:getBarCountFromClock( clock )
         local index = 0;
         local c = self._list:size();

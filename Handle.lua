@@ -259,7 +259,6 @@ function Handle.new( ... )
     ---
     -- ビブラートハンドルとして初期化を行う
     -- @access private
-    -- @name _init_vibrato
     function this:_init_vibrato()
         self._articulation = ArticulationTypeEnum.VIBRATO;
         self.index = 0;
@@ -275,7 +274,6 @@ function Handle.new( ... )
     ---
     -- 強弱記号ハンドルとして初期化を行う
     -- @access private
-    -- @name _init_icon_dynamics
     function this:_init_icon_dynamics()
         self._articulation = ArticulationTypeEnum.DYNAFF;
         self.iconId = "";
@@ -286,7 +284,6 @@ function Handle.new( ... )
     ---
     -- 歌詞ハンドルとして初期化を行う
     -- @access private
-    -- @name _init_lyric
     function this:_init_lyric()
         self.index = 0;
         self._lyrics = {};
@@ -295,7 +292,6 @@ function Handle.new( ... )
     ---
     -- articulation の種類を取得する
     -- @return (ArticulationTypeEnum) articulation の種類
-    -- @name getArticulation
     function this:getArticulation()
         return self._articulation;
     end
@@ -303,7 +299,6 @@ function Handle.new( ... )
     ---
     -- このハンドルが強弱記号を表すものかどうかを表すブール値を取得する
     -- @return (boolean) このオブジェクトが強弱記号を表すものであれば <code>true</code> を、そうでなければ <code>false</code> を返す
-    -- @name isDynaffType
     function this:isDynaffType()
         if( nil ~= self.iconId )then
             return self.iconId:find( Handle.ICONID_HEAD_DYNAFF ) == 1;
@@ -315,7 +310,6 @@ function Handle.new( ... )
     ---
     -- このハンドルがクレッシェンドを表すものかどうかを表すブール値を取得する
     -- @return (boolean) このオブジェクトがクレッシェンドを表すものであれば <code>true</code> を、そうでなければ <code>false</code> を返す
-    -- @name isCrescendType
     function this:isCrescendType()
         if( nil ~= self.iconId )then
             return self.iconId:find( Handle.ICONID_HEAD_CRESCEND ) == 1;
@@ -327,7 +321,6 @@ function Handle.new( ... )
     ---
     -- このハンドルがデクレッシェンドを表すものかどうかを表すブール値を取得する
     -- @return (boolean) このオブジェクトがデクレッシェンドを表すものであれば <code>true</code> を、そうでなければ <code>false</code> を返す
-    -- @name isDecrescendType
     function this:isDecrescendType()
         if( nil ~= self.iconId )then
             return self.iconId:find( Handle.ICONID_HEAD_DECRESCEND ) == 1;
@@ -339,7 +332,6 @@ function Handle.new( ... )
     ---
     -- Tick 単位の長さを取得する
     -- @return (integer)
-    -- @name getLength
     function this:getLength()
         return self._length;
     end
@@ -347,7 +339,6 @@ function Handle.new( ... )
     ---
     -- 長さを設定する
     -- @param value (integer) Tick単位の長さ
-    -- @name setLength
     function this:setLength( value )
         self._length = value;
     end
@@ -355,7 +346,6 @@ function Handle.new( ... )
     ---
     -- キャプションを取得する
     -- @return (string) キャプション
-    -- @name getCaption
     function this:getCaption()
         return self._caption;
     end
@@ -363,7 +353,6 @@ function Handle.new( ... )
     ---
     -- キャプションを設定する
     -- @param value (string) キャプション
-    -- @name setCaption
     function this:setCaption( value )
         self._caption = value;
     end
@@ -371,7 +360,6 @@ function Handle.new( ... )
     ---
     -- DYN の開始値を取得する
     -- @return (integer) DYN の開始値
-    -- @name getStartDyn
     function this:getStartDyn()
         return self._startDyn;
     end
@@ -379,7 +367,6 @@ function Handle.new( ... )
     ---
     -- DYN の開始値を設定する
     -- @param value (integer) DYN の開始値
-    -- @name setStartDyn
     function this:setStartDyn( value )
         self._startDyn = value;
     end
@@ -387,7 +374,6 @@ function Handle.new( ... )
     ---
     -- DYN の終了値を取得する
     -- @return (integer) DYN の終了値
-    -- @name getEndDyn
     function this:getEndDyn()
         return self._endDyn;
     end
@@ -395,7 +381,6 @@ function Handle.new( ... )
     ---
     -- DYN の終了値を設定する
     -- @param value (integer) DYN の終了値
-    -- @name setEndDyn
     function this:setEndDyn( value )
         self._endDyn = value;
     end
@@ -403,7 +388,6 @@ function Handle.new( ... )
     ---
     -- DYN カーブを取得する
     -- @return (VibratoBPList) DYN カーブ
-    -- @name getDynBP
     function this:getDynBP()
         return self._dynBP;
     end
@@ -411,7 +395,6 @@ function Handle.new( ... )
     ---
     -- DYN カーブを設定する
     -- @param value (VibratoBPList) DYN カーブ
-    -- @name setDynBP
     function this:setDynBP( value )
         self._dynBP = value;
     end
@@ -419,7 +402,6 @@ function Handle.new( ... )
     ---
     -- Depth 値を取得する
     -- @return (integer) Depth 値
-    -- @name getDepth
     function this:getDepth()
         return self._depth;
     end
@@ -427,7 +409,6 @@ function Handle.new( ... )
     ---
     -- Depth 値を設定する
     -- @param value (integer) Depth 値
-    -- @name setDepth
     function this:setDepth( value )
         self._depth = value;
     end
@@ -435,7 +416,6 @@ function Handle.new( ... )
     ---
     -- Duration 値を取得する
     -- @return (integer) Duration 値
-    -- @name getDuration
     function this:getDuration()
         return self._duration;
     end
@@ -443,7 +423,6 @@ function Handle.new( ... )
     ---
     -- Duration 値を設定する
     -- @param value (integer) Duration 値
-    -- @name setDuration
     function this:setDuration( value )
         self._duration = value;
     end
@@ -451,7 +430,6 @@ function Handle.new( ... )
     ---
     -- Rate のビブラートカーブを取得する
     -- @return (VibratoBPList) Rate のビブラートカーブ
-    -- @name getRateBP
     function this:getRateBP()
         return self._rateBP;
     end
@@ -459,7 +437,6 @@ function Handle.new( ... )
     ---
     -- Rate のビブラートカーブを設定する
     -- @param value (VibratoBPList) 設定するビブラートカーブ
-    -- @name setRateBP
     function this:setRateBP( value )
         self._rateBP = value;
     end
@@ -467,7 +444,6 @@ function Handle.new( ... )
     ---
     -- Depth のビブラートカーブを取得する
     -- @return (VibratoBPList) Depth のビビラートカーブ
-    -- @name getDepthBP
     function this:getDepthBP()
         return self._depthBP;
     end
@@ -475,7 +451,6 @@ function Handle.new( ... )
     ---
     -- Depth のビブラートカーブを設定する
     -- @param value (VibratoBPList) 設定するビブラートカーブ
-    -- @name setDepthBP
     function this:setDepthBP( value )
         self._depthBP = value;
     end
@@ -483,7 +458,6 @@ function Handle.new( ... )
     ---
     -- Rate の開始値を取得する
     -- @return (integer) Rate の開始値
-    -- @name getStartRate
     function this:getStartRate()
         return self._startRate;
     end
@@ -491,7 +465,6 @@ function Handle.new( ... )
     ---
     -- Rate の開始値を設定する
     -- @param value (integer) Rate の開始値
-    -- @name setStartRate
     function this:setStartRate( value )
         self._startRate = value;
     end
@@ -499,7 +472,6 @@ function Handle.new( ... )
     ---
     -- Depth の開始値を取得する
     -- @return (integer) Depth の開始値
-    -- @name getStartDepth
     function this:getStartDepth()
         return self._startDepth;
     end
@@ -507,7 +479,6 @@ function Handle.new( ... )
     ---
     -- Depth の開始値を設定する
     -- @param value (integer) Depth の開始値
-    -- @name setStartDepth
     function this:setStartDepth( value )
         self._startDepth = value;
     end
@@ -516,7 +487,6 @@ function Handle.new( ... )
     -- 指定した位置にある歌詞を取得する
     -- @param index (integer) 取得する要素のインデックス(最初のインデックスは0)
     -- @return (Lyric) 歌詞
-    -- @name getLyricAt
     function this:getLyricAt( index )
         return self._lyrics[index + 1];
     end
@@ -525,7 +495,6 @@ function Handle.new( ... )
     -- 指定した位置にある歌詞を指定した要素で置き換える
     -- @param index (integer) 置き換える要素のインデックス(最初のインデックスは0)
     -- @param value (Lyric) 置き換える要素
-    -- @name setLyricAt
     function this:setLyricAt( index, value )
         if( index + 1 >= #self._lyrics )then
             local remain = index + 1 - #self._lyrics;
@@ -540,7 +509,6 @@ function Handle.new( ... )
     ---
     -- 歌詞の個数を返す
     -- @return (integer) 歌詞の個数
-    -- @name getLyricCount
     function this:getLyricCount()
         return #self._lyrics;
     end
@@ -548,7 +516,6 @@ function Handle.new( ... )
     ---
     -- Display String 値を取得する
     -- @return (string) Display String 値
-    -- @name getDisplayString
     function this:getDisplayString()
         return self.ids .. self._caption;
     end
@@ -556,7 +523,6 @@ function Handle.new( ... )
     ---
     -- ハンドルのタイプを取得する
     -- @return (HandleTypeEnum) ハンドルのタイプ
-    -- @name getHandleType
     function this:getHandleType()
         return self._type;
     end
@@ -564,7 +530,6 @@ function Handle.new( ... )
     ---
     -- ストリームに書き込む
     -- @param stream (TextStream) 書き込み先のストリーム
-    -- @name write
     function this:write( stream )
         stream:writeLine( self:toString() );
     end
@@ -572,7 +537,6 @@ function Handle.new( ... )
     ---
     -- オブジェクトを文字列に変換する
     -- @return (string) 文字列
-    -- @name toString
     function this:toString()
         local result = "";
         result = result .. "[h#" .. string.format( "%04d", self.index ) .. "]";
@@ -660,7 +624,6 @@ function Handle.new( ... )
     ---
     -- コピーを作成する
     -- @return (Handle) このオブジェクトのコピー
-    -- @name clone
     function this:clone()
         if( self._type == HandleTypeEnum.DYNAMICS )then
             local ret = Handle.new( HandleTypeEnum.DYNAMICS );
@@ -742,8 +705,7 @@ end
 -- ハンドル指定子（例えば"h#0123"という文字列）からハンドル番号を取得する
 -- @param s (string) ハンドル指定子
 -- @return (integer) ハンドル番号
--- @name getHandleIndexFromString
--- @access static
+-- @access static private
 function Handle.getHandleIndexFromString( s )
     local spl = Util.split( s, "#" );
     return tonumber( spl[2], 10 );

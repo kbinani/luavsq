@@ -34,7 +34,6 @@ VoiceLanguageEnum = {
 -- 歌手の名前から、その歌手の歌唱言語を取得する
 -- @param name (string) 歌手の名前
 -- @return (VoiceLanguageEnum) 歌唱言語
--- @name valueFromSingerName
 -- @access static
 function VoiceLanguageEnum.valueFromSingerName( name )
     local search = name:lower();

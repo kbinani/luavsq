@@ -28,7 +28,6 @@ List.Iterator = {};
 -- 初期化を行う
 -- @param list (List) 反復子の元になるリスト
 -- @return (List.Iterator) イテレータのオブジェクト
--- @name new
 -- @access static ctor
 function List.Iterator.new( list )
     local this = {};
@@ -38,7 +37,6 @@ function List.Iterator.new( list )
     ---
     -- 反復子が次の要素を持つ場合に <code>true</code> を返す
     -- @return (boolean) 反復子がさらに要素を持つ場合は <code>true</code> を、そうでなければ <code>false</code> を返す
-    -- @name hasNext
     function this:hasNext()
         return (0 <= self._pos + 1 and self._pos + 1 < self._list:size())
     end
@@ -46,7 +44,6 @@ function List.Iterator.new( list )
     ---
     -- 反復子の次の要素を返す
     -- @return (?) 次の要素
-    -- @name next
     function this:next()
         self._pos = self._pos + 1;
         return self._list[self._pos];

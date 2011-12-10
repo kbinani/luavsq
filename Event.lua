@@ -197,7 +197,6 @@ function Event.new( ... )
     ---
     -- 長さを取得する
     -- @return (integer) 長さ
-    -- @name getLength
     function this:getLength()
         return self._length;
     end
@@ -205,7 +204,6 @@ function Event.new( ... )
     ---
     -- 長さを設定する
     -- @param value (integer) 長さ
-    -- @name setLength
     function this:setLength( value )
         self._length = value;
     end
@@ -476,7 +474,6 @@ function Event.new( ... )
     ---
     -- コピーを作成する
     -- @return (Event) このインスタンスのコピー
-    -- @name clone
     function this:clone()
         local result = Event.new( self.clock, self.type );
 
@@ -593,7 +590,6 @@ function Event.new( ... )
     ---
     -- このオブジェクトがイベントリストの末尾の要素( EOS )かどうかを取得する
     -- @return (boolean) このオブジェクトが EOS 要素であれば <code>true</code> を、そうでなければ <code>false</code> を返す
-    -- @name isEOS
     function this:isEOS()
         if( self.index == -1 )then
             return true;
@@ -606,7 +602,6 @@ function Event.new( ... )
     -- 順序を比較する
     -- @param item (Event) 比較対象のアイテム
     -- @return (integer) このインスタンスが比較対象よりも小さい場合は負の整数、等しい場合は 0、大きい場合は正の整数を返す
-    -- @name compareTo
     function this:compareTo( item )
         local ret = self.clock - item.clock;
         if( ret == 0 )then
@@ -632,7 +627,6 @@ end
 -- @param a (Event) 比較対象のオブジェクト
 -- @param b (Event) 比較対象のオブジェクト
 -- @return (boolean) <code>a</code> が <code>b</code> よりも小さい場合は <code>true</code>、そうでない場合は <code>false</code> を返す
--- @name compare
 -- @access static
 function Event.compare( a, b )
     return (a:compareTo( b ) < 0);
@@ -641,7 +635,6 @@ end
 ---
 -- イベントリストの末尾の要素を表すオブジェクトを取得する
 -- @return (Event) オブジェクト
--- @name getEOS
 -- @access static
 function Event.getEOS()
     return Event.new();

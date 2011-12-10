@@ -27,7 +27,6 @@ FileOutputStream = {};
 -- 初期化を行う
 -- @param path (string) ファイルのパス
 -- @return (FileOutputStream)
--- @name new
 -- @access static ctor
 function FileOutputStream.new( path )
     local this = {};
@@ -71,7 +70,6 @@ function FileOutputStream.new( path )
     ---
     -- 現在のファイルポインタを取得する
     -- @return (integer) 現在のファイルポインタ
-    -- @name getPointer
     function this:getPointer()
         return self._fileHandle:seek();
     end
@@ -79,14 +77,12 @@ function FileOutputStream.new( path )
     ---
     -- ファイルポインタを指定した位置に移動する
     -- @param position (integer) ファイルポインタ
-    -- @name seek
     function this:seek( position )
         self._fileHandle:seek( "set", position );
     end
 
     ---
     -- ストリームを閉じる
-    -- @name close
     function this:close()
         self._fileHandle:flush();
         self._fileHandle:close();

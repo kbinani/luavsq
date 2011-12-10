@@ -114,7 +114,6 @@ function Common.new( ... )
     ---
     -- コピーを作成する
     -- @return (Common) このインスタンスのコピー
-    -- @name clone
     function this:clone()
         local spl = Util.split( self.color, "," );
         local r = tonumber( spl[1], 10 );
@@ -129,7 +128,6 @@ function Common.new( ... )
     ---
     -- テキストストリームに出力する
     -- @param stream (TextStream) 出力先のストリーム
-    -- @name write
     function this:write( stream )
         stream:writeLine( "[Common]" );
         stream:writeLine( "Version=" .. self.version );

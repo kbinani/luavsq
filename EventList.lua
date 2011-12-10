@@ -29,7 +29,6 @@ end
 ---
 -- 初期化を行う
 -- @return (EventList)
--- @name new
 -- @access static ctor
 function EventList.new()
     local this = {};
@@ -48,7 +47,6 @@ function EventList.new()
     -- イベント ID を基にイベントを検索し、そのインデックスを返す
     -- @param internalId (integer) 検索するイベント ID
     -- @return (integer) 検索結果のインデックス(最初のインデックスは0)。イベントが見つからなければ負の値を返す
-    -- @name findIndexFromId
     function this:findIndexFromId( internalId )
         local c = #self._events;
         local i;
@@ -65,7 +63,6 @@ function EventList.new()
     -- イベント ID を基にイベントを検索し、そのオブジェクトを返す
     -- @param internalId (integer) 検索するイベント ID
     -- @return (Event) 検索結果のイベント。イベントが見つからなければ <code>nil</code> を返す
-    -- @name findFromId
     function this:findFromId( internalId )
         local index = self:findIndexFromId( internalId );
         if( 0 <= index and index < #self._events )then
@@ -79,7 +76,6 @@ function EventList.new()
     -- 指定されたイベント ID をもつイベントのオブジェクトを置き換える。イベントが見つからなければ何もしない
     -- @param internalId (integer) 検索するイベント ID
     -- @param value (Event) 置換するオブジェクト
-    -- @name setForId
     function this:setForId( internalId, value )
         local c = #self._events;
         local i;
@@ -94,7 +90,6 @@ function EventList.new()
 
     ---
     -- イベントを並べ替える
-    -- @name sort
     function this:sort()
         table.sort( self._events, Event.compare );
         self:updateIdList();
@@ -102,7 +97,6 @@ function EventList.new()
 
     ---
     -- 全てのイベントを削除する
-    -- @name clear
     function this:clear()
         self._events = {};
         self._ids = {};
@@ -111,7 +105,6 @@ function EventList.new()
     ---
     -- リスト内のイベントを順に返す反復子を取得する
     -- @return (EventList.Iterator) 反復子
-    -- @name iterator
     function this:iterator()
         self:updateIdList();
         return EventList.Iterator.new( self );
@@ -163,7 +156,6 @@ function EventList.new()
     -- @param item (Event) 追加するオブジェクト
     -- @param internal_id (integer) 追加するオブジェクトに割り振るイベント ID
     -- @access private
-    -- @name _addCor
     function this:_addCor( item, internalId )
         self:updateIdList();
         item.id = internalId;
@@ -174,7 +166,6 @@ function EventList.new()
     ---
     -- イベントを削除する
     -- @param index (integer) 削除するイベントのインデックス(最初のインデックスは0)
-    -- @name removeAt
     function this:removeAt( index )
         self:updateIdList();
         table.remove( self._events, index + 1 );
@@ -186,7 +177,6 @@ function EventList.new()
     -- @param next (integer)
     -- @return (integer)
     -- @access private
-    -- @name _getNextId
     function this:_getNextId( next )
         self:updateIdList();
         local max = -1;
@@ -200,7 +190,6 @@ function EventList.new()
     ---
     -- イベントの個数を返す
     -- @return (integer) データ点の個数
-    -- @name size
     function this:size()
         return #self._events;
     end
@@ -209,7 +198,6 @@ function EventList.new()
     -- 指定したインデックスのイベントを取得する
     -- @param index (integer) インデックス(最初のインデックスは0)
     -- @return (Event) イベント
-    -- @name get
     function this:get( index )
         return self._events[index + 1];
     end
@@ -218,7 +206,6 @@ function EventList.new()
     -- 指定したインデックスのイベントを設定する
     -- @param index (integer) インデックス(最初のインデックスは0)
     -- @param value (Event) 設定するイベント
-    -- @name set
     function this:set( index, value )
         value.id = self._events[index + 1].id;
         self._events[index + 1] = value;
@@ -226,7 +213,6 @@ function EventList.new()
 
     ---
     -- リスト内部のイベント ID のデータを更新する
-    -- @name updateIdList
     function this:updateIdList()
         if( #self._ids ~= #self._events )then
             self._ids = {};
@@ -243,7 +229,6 @@ function EventList.new()
     -- @param stream (TextStream) 出力先のストリーム
     -- @param eos (integer) EOS として出力する Tick 単位の時刻
     -- @return (table<Handle>) リスト中のイベントに含まれるハンドルの一覧
-    -- @name write
     function this:write( stream, eos )
         local handles = self:_buildHandleList();
         stream:writeLine( "[EventList]" );
@@ -275,7 +260,6 @@ function EventList.new()
     -- リスト内のイベントから、ハンドルの一覧を作成する。同時に、各イベント、ハンドルの番号を設定する
     -- @return (table<Handle>) ハンドルの一覧
     -- @access private
-    -- @name _buildHandleList
     function this:_buildHandleList()
         local handle = {};
         local current_id = -1;

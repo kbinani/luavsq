@@ -25,7 +25,6 @@ BP = {};
 -- @param value (integer) データ点の値
 -- @param id (integer) データ点のユニーク ID
 -- @return (BP) データ点のオブジェクト
--- @name new
 -- @access static ctor
 function BP.new( value, id )
     local this = {};
@@ -43,7 +42,6 @@ function BP.new( value, id )
     ---
     -- コピーを作成する
     -- @return (BP) このインスタンスのコピー
-    -- @name clone
     function this:clone()
         return BP.new( self.value, self.id );
     end

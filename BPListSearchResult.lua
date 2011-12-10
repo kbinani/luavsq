@@ -23,7 +23,6 @@ BPListSearchResult = {};
 ---
 -- 初期化を行う
 -- @return (BPListSearchResult)
--- @name new
 -- @access static ctor
 function BPListSearchResult.new()
     local this = {};

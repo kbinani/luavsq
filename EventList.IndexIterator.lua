@@ -29,7 +29,6 @@ EventList.IndexIterator = {};
 -- @param list (EventList) 反復子の元になるリスト
 -- @param iteratorKind (EventList.IndexIteratorKindEnum) 反復子の種類
 -- @return (EventList.IndexIterator) 反復子
--- @name new
 -- @access static ctor
 function EventList.IndexIterator.new( list, iteratorKind )
     local this = {};
@@ -66,7 +65,6 @@ function EventList.IndexIterator.new( list, iteratorKind )
     ---
     -- 反復子の次の要素を返す
     -- @return (integer) 次の要素
-    -- @name next
     function this:next()
         local nextPosition = self:_nextPosition();
         if( nextPosition > 0 )then
@@ -80,7 +78,6 @@ function EventList.IndexIterator.new( list, iteratorKind )
     ---
     -- 反復子が次の要素を持つ場合に <code>true</code> を返す
     -- @return (boolean) 反復子がさらに要素を持つ場合は <code>true</code> を、そうでなければ <code>false</code> を返す
-    -- @name hasNext
     function this:hasNext()
         return (self:_nextPosition() > 0);
     end
@@ -89,7 +86,6 @@ function EventList.IndexIterator.new( list, iteratorKind )
     -- 反復子の次の要素を探索する
     -- @return (integer) 次のインデックス
     -- @access private
-    -- @name _nextPosition
     function this:_nextPosition()
         local count = self._list:size();
         local i;
@@ -131,7 +127,6 @@ function EventList.IndexIterator.new( list, iteratorKind )
 
     ---
     -- 反復子によって最後に返された要素を削除する
-    -- @name remove
     function this:remove()
         if( 0 < self._pos and self._pos <= self._list:size() )then
             self._list:removeAt( self._pos - 1 );

@@ -65,7 +65,6 @@ function TimesigTableItem.new( ... )
     ---
     -- Tick 単位の時刻を取得する
     -- @return (integer) 単位の時刻
-    -- @name getTick
     function this:getTick()
         return self._clock;
     end
@@ -73,7 +72,6 @@ function TimesigTableItem.new( ... )
     ---
     -- 文字列に変換する
     -- @return (string) 変換後の文字列
-    -- @name toString
     function this:toString()
         return "{Clock=" .. self._clock .. ", Numerator=" .. self.numerator .. ", Denominator=" .. self.denominator .. ", BarCount=" .. self.barCount .. "}";
     end
@@ -81,7 +79,6 @@ function TimesigTableItem.new( ... )
     ---
     -- コピーを作成する
     -- @return (TimesigTableItem) このオブジェクトのコピー
-    -- @name clone
     function this:clone()
         local result = TimesigTableItem.new( self.numerator, self.denominator, self.barCount );
         result._clock = self._clock;
@@ -92,7 +89,6 @@ function TimesigTableItem.new( ... )
     -- 順序を比較する
     -- @param item (TimesigTableItem) 比較対象のアイテム
     -- @return (integer) このインスタンスが比較対象よりも小さい場合は負の整数、等しい場合は 0、大きい場合は正の整数を返す
-    -- @name compareTo
     function this:compareTo( item )
         return self.barCount - item.barCount;
     end
@@ -109,7 +105,6 @@ end
 -- @param a (TimesigTableItem) 比較対象のオブジェクト
 -- @param b (TimesigTableItem) 比較対象のオブジェクト
 -- @return (boolean) <code>a</code> が <code>b</code> よりも小さい場合は <code>true</code>、そうでない場合は <code>false</code> を返す
--- @name compare
 -- @access static
 function TimesigTableItem.compare( a, b )
     return (a:compareTo( b ) < 0);

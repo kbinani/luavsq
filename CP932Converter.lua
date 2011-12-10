@@ -21,6 +21,7 @@ module( "luavsq" );
 -- UTF8 から CP932 への文字コード変換ユーティリティ
 -- @class table
 -- @name CP932Converter
+-- @access private
 CP932Converter = {};
 
 --
@@ -581,7 +582,6 @@ CP932Converter._unicode_to_cp932 = {
 -- UTF8 の文字列を CP932 の文字列に変換する
 -- @param utf8 (string) 変換前の文字列
 -- @return (string) 変換後の文字列
--- @name convertFromUTF8
 -- @access static
 function CP932Converter.convertFromUTF8( utf8 )
     local utf8codes = CP932Converter._getUnicodeBytesFromUTF8String( utf8 );

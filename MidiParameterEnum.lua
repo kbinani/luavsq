@@ -18,6 +18,7 @@ module( "luavsq" );
 -- VOCALOID で使用される NRPN を表す列挙子
 -- @class table
 -- @name MidiParameterEnum
+-- @access private
 MidiParameterEnum = {
 
     ---
@@ -577,7 +578,6 @@ MidiParameterEnum = {
 -- 指定したコントロールに対応する Voice Change Parameter ID の値を取得する
 -- @param curveName (string) コントロールカーブの名前
 -- @return (integer) Voice Change Parameter ID の値
--- @name getVoiceChangeParameterId
 -- @access static
 function MidiParameterEnum.getVoiceChangeParameterId( curveName )
     local lsb = 0x31;
@@ -631,7 +631,6 @@ end
 -- 指定された NRPN が、DATA LSB が必要なものかどうかを調べる
 -- @param nrpn (integer) 対象の NRPN
 -- @return (boolean) DATA LSB が必要であれば <code>true</code> を、そうでなければ <code>false</code> を返す
--- @name isDataLsbRequire
 -- @access static
 function MidiParameterEnum.isDataLsbRequire( nrpn )
     if( nrpn == MidiParameterEnum.CVM_NM_VERSION_AND_DEVICE or

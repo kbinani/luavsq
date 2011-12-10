@@ -59,7 +59,6 @@ function BPList.new( ... )
     -- @param minimum (integer) コントロールカーブの最小値
     -- @param maximum (integer) コントロールカーブの最大値
     -- @return (BPList)
-    -- @name _init_4
     -- @access private
     function this:_init_4( name, defaultValue, minimum, maximum )
         self._name = name;
@@ -103,7 +102,6 @@ function BPList.new( ... )
     ---
     -- コントロールカーブの名前を取得する
     -- @return (string) コントロールカーブの名前
-    -- @name getName
     function this:getName()
         if( self._name == nil )then
             self._name = "";
@@ -114,7 +112,6 @@ function BPList.new( ... )
     ---
     -- コントロールカーブの名前を設定する
     -- @param value (string) コントロールカーブの名前
-    -- @name setName
     function this:setName( value )
         if( value == nil )then
             self._name = "";
@@ -126,7 +123,6 @@ function BPList.new( ... )
     ---
     -- このリスト内で使用されている ID の最大値を取得する
     -- @return (integer) 使用されている ID の最大値
-    -- @name getMaxId
     function this:getMaxId()
         return self._maxId;
     end
@@ -134,7 +130,6 @@ function BPList.new( ... )
     ---
     -- コントロールカーブのデフォルト値を取得する
     -- @return (integer) コントロールカーブのデフォルト値
-    -- @name getDefault
     function this:getDefault()
         return self._defaultValue;
     end
@@ -142,7 +137,6 @@ function BPList.new( ... )
     ---
     -- コントロールカーブのデフォルト値を設定する
     -- @param value (integer) コントロールカーブのデフォルト値
-    -- @name setDefault
     function this:setDefault( value )
         self._defaultValue = value;
     end
@@ -200,7 +194,6 @@ function BPList.new( ... )
     ---
     -- コピーを作成する
     -- @return (BPList) このオブジェクトのコピー
-    -- @name clone
     function this:clone()
         local res = BPList.new( self._name, self._defaultValue, self._minValue, self._maxValue );
         res:_ensureBufferLength( self._length );
@@ -217,7 +210,6 @@ function BPList.new( ... )
     ---
     -- コントロールカーブの最大値を取得する
     -- @return (integer) コントロールカーブの最大値
-    -- @name getMaximum
     function this:getMaximum()
         return self._maxValue;
     end
@@ -225,7 +217,6 @@ function BPList.new( ... )
     ---
     -- コントロールカーブの最大値を設定する
     -- @param value (integer) コントロールカーブの最大値
-    -- @name setMaximum
     function this:setMaximum( value )
         self._maxValue = value;
     end
@@ -233,7 +224,6 @@ function BPList.new( ... )
     ---
     -- コントロールカーブの最小値を取得する
     -- @return (integer) コントロールカーブの最小値
-    -- @name getMinimum
     function this:getMinimum()
         return self._minValue;
     end
@@ -241,7 +231,6 @@ function BPList.new( ... )
     ---
     -- コントロールカーブの最小値を設定する
     -- @param value (integer) コントロールカーブの最小値
-    -- @name setMinimum
     function this:setMinimum( value )
         self._minValue = value;
     end
@@ -275,7 +264,6 @@ function BPList.new( ... )
     -- 指定された時刻にデータ点が存在するかどうかを調べる
     -- @param clock (integer) Tick 単位の時刻
     -- @return (boolean) データ点が存在すれば <code>ture</code> を、そうでなければ <code>false</code> を返す
-    -- @name isContainsKey
     function this:isContainsKey( clock )
         self:_ensureBufferLength( self._length );
         return (self:_find( clock ) >= 0);
@@ -328,7 +316,6 @@ function BPList.new( ... )
 
     ---
     -- 全てのデータ点を削除する
-    -- @name clear
     function this:clear()
         self._length = 0;
     end
@@ -337,7 +324,6 @@ function BPList.new( ... )
     -- データ点の値を取得する
     -- @param index (integer) 取得するデータ点のインデックス(最初のインデックスは0)
     -- @return (integer) データ点の値
-    -- @name getValue
     function this:getValue( index )
         return self._items[index + 1].value;
     end
@@ -346,7 +332,6 @@ function BPList.new( ... )
     -- データ点を取得する
     -- @param index (integer) 取得するデータ点のインデックス(最初のインデックスは0)
     -- @return (BP) データ点のインスタンス
-    -- @name get
     function this:get( index )
         return self._items[index + 1]:clone();
     end
@@ -355,7 +340,6 @@ function BPList.new( ... )
     -- データ点の時刻を取得する
     -- @param index (integer) 取得するデータ点のインデックス(最初のインデックスは0)
     -- @return (integer) データ点の Tick 単位の時刻
-    -- @name getKeyClock
     function this:getKeyClock( index )
         return self._clocks[index + 1];
     end
@@ -364,7 +348,6 @@ function BPList.new( ... )
     -- ID を基にデータ点の値を取得する
     -- @param id (integer) データ点の ID
     -- @return (integer) データ点の値
-    -- @name findValueFromId
     function this:findValueFromId( id )
         local i;
         for i = 1, self._length, 1 do
@@ -380,7 +363,6 @@ function BPList.new( ... )
     -- ID を基にデータ点を検索し、検索結果を取得する
     -- @param id (integer) データ点の ID
     -- @return (BPListSearchResult) 検索結果を格納したオブジェクト
-    -- @name findElement
     function this:findElement( id )
         local context = BPListSearchResult.new();
         local i;
@@ -403,7 +385,6 @@ function BPList.new( ... )
     -- 指定した ID のデータ点の値を設定する
     -- @param id (integer) データ点の ID
     -- @param value (integer) 設定するデータ点の値
-    -- @name setValueForId
     function this:setValueForId( id, value )
         local i;
         for i = 1, self._length, 1 do
@@ -419,7 +400,6 @@ function BPList.new( ... )
     -- @param stream (TextStream) 出力先のストリーム
     -- @param startClock (integer) Tick 単位の出力開始時刻
     -- @param header (string) 最初に出力するヘッダー文字列
-    -- @name print
     function this:print( stream, startClock, header )
         stream:writeLine( header );
         local lastvalue = self._defaultValue;
@@ -520,7 +500,6 @@ function BPList.new( ... )
     ---
     -- データ点の個数を返す
     -- @return (integer) データ点の個数
-    -- @name size
     function this:size()
         return self._length;
     end
@@ -528,7 +507,6 @@ function BPList.new( ... )
     ---
     -- データ点の Tick 単位の時刻を昇順に返す反復子を取得する
     -- @return (BPList.KeyClockIterator) 反復子のインスタンス
-    -- @name keyClockIterator
     function this:keyClockIterator()
         return BPList.KeyClockIterator.new( self );
     end
@@ -538,7 +516,6 @@ function BPList.new( ... )
     -- @param value (integer) Tick 単位の時刻
     -- @return (integer) データ点のインデックス(最初のインデックスは0)。データ点が見つからなかった場合は負の値を返す
     -- @access private
-    -- @name _find
     function this:_find( value )
         local i;
         for i = 1, self._length, 1 do
@@ -553,7 +530,6 @@ function BPList.new( ... )
     -- 並べ替え、既存の値との重複チェックを行わず、リストの末尾にデータ点を追加する
     -- @param clock (integer) Tick 単位の時刻
     -- @param value (integer) データ点の値
-    -- @name addWithoutSort
     function this:addWithoutSort( clock, value )
         self:_ensureBufferLength( self._length + 1 );
         self._clocks[self._length + 1] = clock;
@@ -568,7 +544,6 @@ function BPList.new( ... )
     -- @param clock (integer) データ点を追加する Tick 単位の時刻
     -- @param value (integer) データ点の値
     -- @return (integer) データ点の ID
-    -- @name add
     function this:add( clock, value )
         self:_ensureBufferLength( self._length );
         local index = self:_find( clock );
@@ -599,7 +574,6 @@ function BPList.new( ... )
     -- @param value (integer) データ点の値
     -- @param id (integer) データ点の ID
     -- @return (integer) データ点の ID
-    -- @name addWithId
     function this:addWithId( clock, value, id )
         self:_ensureBufferLength( self._length );
         local index = self:_find( clock );

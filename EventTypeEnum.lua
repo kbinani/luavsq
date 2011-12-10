@@ -45,7 +45,6 @@ EventTypeEnum = {
 -- 文字列に変換する
 -- @param value (EventTypeEnum) 指定された列挙子の文字列表現
 -- @return (string) 変換後の文字列
--- @name toString
 function EventTypeEnum.toString( value )
     if( value == EventTypeEnum.SINGER )then
         return "Singer";

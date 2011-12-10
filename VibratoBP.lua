@@ -60,7 +60,6 @@ function VibratoBP.new( ... )
     -- 順序を比較する
     -- @param item (VibratoBP) 比較対象のアイテム
     -- @return (integer) このインスタンスが比較対象よりも小さい場合は負の整数、等しい場合は 0、大きい場合は正の整数を返す
-    -- @name compareTo
     function this:compareTo( item )
         local v = self.x - item.x;
         if( v > 0.0 )then
@@ -85,7 +84,6 @@ end
 -- @param a (VibratoBP) 比較対象のオブジェクト
 -- @param b (VibratoBP) 比較対象のオブジェクト
 -- @return (boolean) <code>a</code> が <code>b</code> よりも小さい場合は <code>true</code>、そうでない場合は <code>false</code> を返す
--- @name compare
 -- @access static
 function VibratoBP.compare( a, b )
     return (a:compareTo( b ) < 0);

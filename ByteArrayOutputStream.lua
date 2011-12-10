@@ -26,7 +26,6 @@ ByteArrayOutputStream = {};
 ---
 -- 初期化を行う
 -- @return (ByteArrayOutputStream)
--- @name new
 -- @access static ctor
 function ByteArrayOutputStream.new()
     local this = {};
@@ -80,7 +79,6 @@ function ByteArrayOutputStream.new()
     ---
     -- バイト列を文字列に変換する
     -- @return (string) 変換された文字列
-    -- @name toString
     function this:toString()
         local result = "";
         local i;
@@ -93,7 +91,6 @@ function ByteArrayOutputStream.new()
     ---
     -- 現在のファイルポインタを取得する
     -- @return (integer) 現在のファイルポインタ
-    -- @name getPointer
     function this:getPointer()
         return self._pointer;
     end
@@ -101,14 +98,12 @@ function ByteArrayOutputStream.new()
     ---
     -- ファイルポインタを指定した位置に変更する
     -- @param position (integer) 新しいポインタ値
-    -- @name seek
     function this:seek( position )
         self._pointer = position;
     end
 
     ---
     -- ストリームを閉じる
-    -- @name close
     function this:close()
         --do nothing
     end

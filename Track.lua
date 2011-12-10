@@ -224,7 +224,6 @@ function Track.new( ... )
     -- @param name (string)
     -- @param singer (string)
     -- @access private
-    -- @name _initCor
     function this:_initCor( name, singer )
         self.common = Common.new( name, 179, 181, 123, 1, 1 );
         self._pit = BPList.new( "pit", 0, -8192, 8191 );
@@ -275,7 +274,6 @@ function Track.new( ... )
     -- 指定された種類のイベントのインデクスを順に返す反復子を取得する
     -- @param iteratorKind (EventList.IndexIteratorKindEnum) 反復子の種類
     -- @return (EventList.IndexIterator) 反復子
-    -- @name getIndexIterator
     function this:getIndexIterator( iteratorKind )
         return EventList.IndexIterator.new( self.events, iteratorKind );
     end
@@ -353,7 +351,6 @@ function Track.new( ... )
     ---
     -- トラックの名前を取得する
     -- @return (string) トラック名
-    -- @name getName
     function this:getName()
         if( self.common == nil )then
             return "Master Track";
@@ -365,7 +362,6 @@ function Track.new( ... )
     ---
     -- トラックの名前を設定する
     -- @param value (string) トラック名
-    -- @name setName
     function this:setName( value )
         if( self.common ~= nil )then
             self.common.name = value;
@@ -705,7 +701,6 @@ function Track.new( ... )
     -- 指定された名前のカーブを取得します
     -- @param curve (string) カーブ名
     -- @return (BPList) カーブ
-    -- @name getCurve
     function this:getCurve( curve )
         local search = curve:lower();
         if( search == "bre" )then
@@ -765,7 +760,6 @@ function Track.new( ... )
     -- 指定された名前のカーブを設定する
     -- @param curve (string) カーブ名
     -- @param value (BPList) 設定するカーブ
-    -- @name setCurve
     function this:setCurve( curve, value )
         local search = curve:lower();
         if( search == "bre" )then
@@ -822,7 +816,6 @@ function Track.new( ... )
     ---
     -- コピーを作成する
     -- @return (Track) このオブジェクトのコピー
-    -- @name clone
     function this:clone()
         local res = Track.new();
         res:setName( self:getName() );

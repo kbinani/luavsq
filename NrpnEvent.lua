@@ -21,6 +21,7 @@ module( "luavsq" );
 -- NRPN イベントを表すクラス
 -- @class table
 -- @name NrpnEvent
+-- @access private
 NrpnEvent = {};
 
 --
@@ -101,9 +102,8 @@ function NrpnEvent.new( ... )
     ---
     -- 親子関係によって入れ子になっている NRPN イベントを展開し、配列に変換する
     -- @return (table<NrpnEvent>) 展開後の NRPN イベントの配列
-    -- @name expand
     function this:expand()
-        local ret = {};--new Vector<NrpnEvent>();
+        local ret = {};
         if( self.hasLSB )then
             local v = NrpnEvent.new( self.clock, self.nrpn, self.dataMSB, self.dataLSB );
             v.isMSBOmittingRequired = self.isMSBOmittingRequired;
@@ -120,7 +120,7 @@ function NrpnEvent.new( ... )
                 local j;
                 for j = 1, #add, 1 do
                     table.insert( ret, add[j] );
-                end --ret.addAll( Arrays.asList( m_list.get( i ).expand() ) );
+                end
             end
         end
         return ret;
@@ -130,7 +130,6 @@ function NrpnEvent.new( ... )
     -- 順序を比較する
     -- @param item (NrpnEvent) 比較対象のアイテム
     -- @return (integer) このインスタンスが比較対象よりも小さい場合は負の整数、等しい場合は 0、大きい場合は正の整数を返す
-    -- @name compareTo
     function this:compareTo( item )
         if( self.clock == item.clock )then
             local thisNrpnMsb = (this.nrpn - (this.nrpn % 0x100)) / 0x100;
@@ -217,7 +216,6 @@ end
 -- @param a (NrpnEvent) 比較対象のオブジェクト
 -- @param b (NrpnEvent) 比較対象のオブジェクト
 -- @return (boolean) <code>a</code> が <code>b</code> よりも小さい場合は <code>true</code>、そうでない場合は <code>false</code> を返す
--- @name compare
 -- @access static
 function NrpnEvent.compare( a, b )
     if( a:compareTo( b ) < 0 )then
@@ -249,7 +247,6 @@ end
 -- NRPN イベントの配列を、{@link MidiEvent} の配列に変換する
 -- @param source (table<NrpnEvent>) NRPN イベントの配列
 -- @return (table) {@link MidiEvent} の配列
--- @name convert
 -- @access static
 function NrpnEvent.convert( source )
     local nrpn = source[1].nrpn;
