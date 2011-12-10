@@ -293,7 +293,7 @@ function EventList.new()
                 table.insert( handle, item.singerHandle );
                 item._singerHandleIndex = current_handle;
                 local lang = VoiceLanguageEnum.valueFromSingerName( item.singerHandle.ids );
-                add_quotation_mark = lang == VoiceLanguageEnum.Japanese;
+                add_quotation_mark = lang == VoiceLanguageEnum.JAPANESE;
             end
             -- LyricHandle
             if( item.lyricHandle ~= nil )then

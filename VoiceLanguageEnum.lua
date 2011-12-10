@@ -20,14 +20,14 @@ module( "luavsq" );
 -- @name VoiceLanguageEnum
 VoiceLanguageEnum = {
     ---
-    -- Japanese
+    -- 日本語
     -- @var integer
-    Japanese = 0,
+    JAPANESE = 0,
 
     ---
-    -- English
+    -- 英語
     -- @var integer
-    English = 1,
+    ENGLISH = 1,
 };
 
 ---
@@ -57,7 +57,7 @@ function VoiceLanguageEnum.valueFromSingerName( name )
         search == "miku_light" or
         search == "miku_vivid" or
         search == "miku_solid" )then
-        return VoiceLanguageEnum.Japanese;
+        return VoiceLanguageEnum.JAPANESE;
     elseif( search == "sweet_ann" or
         search == "prima" or
         search == "luka_eng" or
@@ -66,7 +66,7 @@ function VoiceLanguageEnum.valueFromSingerName( name )
         search == "leon" or
         search == "miriam" or
         search == "big_al" )then
-        return VoiceLanguageEnum.English;
+        return VoiceLanguageEnum.ENGLISH;
     end
-    return VoiceLanguageEnum.Japanese;
+    return VoiceLanguageEnum.JAPANESE;
 end
