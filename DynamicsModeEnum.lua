@@ -21,11 +21,11 @@ module( "luavsq" );
 DynamicsModeEnum = {
     ---
     -- DYNカーブが非表示になるモード(デフォルト)
-    -- @var integer
+    -- @var int
     STANDARD = 0,
 
     ---
     -- DYNカーブが表示されるモード(エキスパートモード)
-    -- @var integer
+    -- @var int
     EXPERT = 1
 };

@@ -22,10 +22,10 @@ MixerItem = {};
 
 ---
 -- 各パラメータを指定し、初期化を行う
--- @param feder (integer) Feder値
--- @param panpot (integer) Panpot値
--- @param mute (integer) Mute値
--- @param solo (integer) Solo値
+-- @param feder (int) Feder値
+-- @param panpot (int) Panpot値
+-- @param mute (int) Mute値
+-- @param solo (int) Solo値
 -- @return (MixerItem)
 -- @access static ctor
 function MixerItem.new( feder, panpot, mute, solo )
@@ -33,22 +33,22 @@ function MixerItem.new( feder, panpot, mute, solo )
 
     ---
     -- Feder値
-    -- @var integer
+    -- @var int
     this.feder = feder;
 
     ---
     -- Panpot値
-    -- @var integer
+    -- @var int
     this.panpot = panpot;
 
     ---
     -- Mute値
-    -- @var integer
+    -- @var int
     this.mute = mute;
 
     ---
     -- Solo値
-    -- @var integer
+    -- @var int
     this.solo = solo;
 
     function this:_init_4( feder, panpot, mute, solo )

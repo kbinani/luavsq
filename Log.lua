@@ -26,7 +26,7 @@ Log._fileHandle = nil;
 
 ---
 -- ログレベルを設定する
--- @param level (integer) ログを記録しない場合 0 以下の値を、記録する場合は 0 より大きい値を設定する
+-- @param level (int) ログを記録しない場合 0 以下の値を、記録する場合は 0 より大きい値を設定する
 -- @access static
 function Log.setLevel( level )
     Log._level = level;

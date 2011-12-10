@@ -48,7 +48,7 @@ function List.new( ... )
 
     ---
     -- 初期化を行う
-    -- @param count (integer) 初期のリスト要素数
+    -- @param count (int) 初期のリスト要素数
     -- @name new<!--2-->
     -- @access static ctor
     function this:_init_1( count )
@@ -56,7 +56,7 @@ function List.new( ... )
 
     ---
     -- リスト内の指定した位置にある要素を返す
-    -- @param index (integer) インデックス(最初のインデックスは0)
+    -- @param index (int) インデックス(最初のインデックスは0)
     -- @return (?) 指定された位置にある要素
     function this:get( index )
         return self[index];
@@ -64,7 +64,7 @@ function List.new( ... )
 
     ---
     -- 指定された位置にある要素を、指定の要素で置き換える
-    -- @param index (integer) インデックス(最初のインデックスは0)
+    -- @param index (int) インデックス(最初のインデックスは0)
     -- @param value (?) 置き換える要素
     function this:set( index, value )
         self[index] = value;
@@ -121,7 +121,7 @@ function List.new( ... )
 
     ---
     -- リスト内のデータの個数を取得する
-    -- @return (integer) データの個数
+    -- @return (int) データの個数
     function this:size()
         return #self._array;
     end

@@ -47,7 +47,7 @@ function Handle.new( ... )
 
     ---
     -- メタテキストに出力されるこのオブジェクトの ID
-    -- @var integer
+    -- @var int
     this.index = 0;
 
     ---
@@ -64,7 +64,7 @@ function Handle.new( ... )
 
     ---
     -- ハンドルのオリジナル
-    -- @var integer
+    -- @var int
     this.original = 0;
 
     this._caption = "";
@@ -76,12 +76,12 @@ function Handle.new( ... )
 
     ---
     -- 歌手の歌唱言語を表す番号(バンクセレクト)。歌手ハンドルでのみ使われる
-    -- @var integer
+    -- @var int
     this.language = 0;
 
     ---
     -- 歌手の種類を表す番号(プログラムチェンジ)。歌手ハンドルでのみ使われる
-    -- @var integer
+    -- @var int
     this.program = 0;
 
     this._duration = 0;
@@ -116,7 +116,7 @@ function Handle.new( ... )
     ---
     -- テキストストリームからハンドルの内容を読み込み初期化する
     -- @param stream (TextStream) 読み込み元のテキストストリーム
-    -- @param index (integer) index フィールドの値
+    -- @param index (int) <code>index</code> フィールドの値
     -- @param lastLine (table) 読み込んだ最後の行。テーブルの ["value"] に文字列が格納される
     -- @name new<!--2-->
     -- @return (Handle)
@@ -331,14 +331,14 @@ function Handle.new( ... )
 
     ---
     -- Tick 単位の長さを取得する
-    -- @return (integer)
+    -- @return (int)
     function this:getLength()
         return self._length;
     end
 
     ---
     -- 長さを設定する
-    -- @param value (integer) Tick単位の長さ
+    -- @param value (int) Tick単位の長さ
     function this:setLength( value )
         self._length = value;
     end
@@ -359,28 +359,28 @@ function Handle.new( ... )
 
     ---
     -- DYN の開始値を取得する
-    -- @return (integer) DYN の開始値
+    -- @return (int) DYN の開始値
     function this:getStartDyn()
         return self._startDyn;
     end
 
     ---
     -- DYN の開始値を設定する
-    -- @param value (integer) DYN の開始値
+    -- @param value (int) DYN の開始値
     function this:setStartDyn( value )
         self._startDyn = value;
     end
 
     ---
     -- DYN の終了値を取得する
-    -- @return (integer) DYN の終了値
+    -- @return (int) DYN の終了値
     function this:getEndDyn()
         return self._endDyn;
     end
 
     ---
     -- DYN の終了値を設定する
-    -- @param value (integer) DYN の終了値
+    -- @param value (int) DYN の終了値
     function this:setEndDyn( value )
         self._endDyn = value;
     end
@@ -401,28 +401,28 @@ function Handle.new( ... )
 
     ---
     -- Depth 値を取得する
-    -- @return (integer) Depth 値
+    -- @return (int) Depth 値
     function this:getDepth()
         return self._depth;
     end
 
     ---
     -- Depth 値を設定する
-    -- @param value (integer) Depth 値
+    -- @param value (int) Depth 値
     function this:setDepth( value )
         self._depth = value;
     end
 
     ---
     -- Duration 値を取得する
-    -- @return (integer) Duration 値
+    -- @return (int) Duration 値
     function this:getDuration()
         return self._duration;
     end
 
     ---
     -- Duration 値を設定する
-    -- @param value (integer) Duration 値
+    -- @param value (int) Duration 値
     function this:setDuration( value )
         self._duration = value;
     end
@@ -457,35 +457,35 @@ function Handle.new( ... )
 
     ---
     -- Rate の開始値を取得する
-    -- @return (integer) Rate の開始値
+    -- @return (int) Rate の開始値
     function this:getStartRate()
         return self._startRate;
     end
 
     ---
     -- Rate の開始値を設定する
-    -- @param value (integer) Rate の開始値
+    -- @param value (int) Rate の開始値
     function this:setStartRate( value )
         self._startRate = value;
     end
 
     ---
     -- Depth の開始値を取得する
-    -- @return (integer) Depth の開始値
+    -- @return (int) Depth の開始値
     function this:getStartDepth()
         return self._startDepth;
     end
 
     ---
     -- Depth の開始値を設定する
-    -- @param value (integer) Depth の開始値
+    -- @param value (int) Depth の開始値
     function this:setStartDepth( value )
         self._startDepth = value;
     end
 
     ---
     -- 指定した位置にある歌詞を取得する
-    -- @param index (integer) 取得する要素のインデックス(最初のインデックスは0)
+    -- @param index (int) 取得する要素のインデックス(最初のインデックスは0)
     -- @return (Lyric) 歌詞
     function this:getLyricAt( index )
         return self._lyrics[index + 1];
@@ -493,7 +493,7 @@ function Handle.new( ... )
 
     ---
     -- 指定した位置にある歌詞を指定した要素で置き換える
-    -- @param index (integer) 置き換える要素のインデックス(最初のインデックスは0)
+    -- @param index (int) 置き換える要素のインデックス(最初のインデックスは0)
     -- @param value (Lyric) 置き換える要素
     function this:setLyricAt( index, value )
         if( index + 1 >= #self._lyrics )then
@@ -508,7 +508,7 @@ function Handle.new( ... )
 
     ---
     -- 歌詞の個数を返す
-    -- @return (integer) 歌詞の個数
+    -- @return (int) 歌詞の個数
     function this:getLyricCount()
         return #self._lyrics;
     end
@@ -704,7 +704,7 @@ end
 ---
 -- ハンドル指定子（例えば"h#0123"という文字列）からハンドル番号を取得する
 -- @param s (string) ハンドル指定子
--- @return (integer) ハンドル番号
+-- @return (int) ハンドル番号
 -- @access static private
 function Handle.getHandleIndexFromString( s )
     local spl = Util.split( s, "#" );

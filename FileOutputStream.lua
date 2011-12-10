@@ -45,9 +45,9 @@ function FileOutputStream.new( path )
 
     ---
     -- 指定された配列の、指定した範囲のバイト値をストリームに書きこむ
-    -- @param array (table<integer>) 書きこむバイト列が格納された配列
-    -- @param startIndex (integer) 書き込み開始位置
-    -- @param length (integer) 書き込むバイト値の個数
+    -- @param array (table<int>) 書きこむバイト列が格納された配列
+    -- @param startIndex (int) 書き込み開始位置
+    -- @param length (int) 書き込むバイト値の個数
     -- @name write<!--2-->
     function this:_write_3( array, startIndex, length )
         local i;
@@ -58,7 +58,7 @@ function FileOutputStream.new( path )
 
     ---
     -- 指定されたバイト値をストリームに書きこむ
-    -- @param byte (integer) 書きこむバイト値
+    -- @param byte (int) 書きこむバイト値
     -- @name write<!--1-->
     function this:_write_1( byte )
         if( nil == byte )then
@@ -69,14 +69,14 @@ function FileOutputStream.new( path )
 
     ---
     -- 現在のファイルポインタを取得する
-    -- @return (integer) 現在のファイルポインタ
+    -- @return (int) 現在のファイルポインタ
     function this:getPointer()
         return self._fileHandle:seek();
     end
 
     ---
     -- ファイルポインタを指定した位置に移動する
-    -- @param position (integer) ファイルポインタ
+    -- @param position (int) ファイルポインタ
     function this:seek( position )
         self._fileHandle:seek( "set", position );
     end

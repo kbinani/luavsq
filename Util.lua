@@ -52,7 +52,7 @@ end
 
 ---
 -- 指定された個数の <code>false</code> 要素を含む配列を取得する
--- @param count (integer) 要素の個数
+-- @param count (int) 要素の個数
 -- @return (table) 作成した配列
 -- @access static
 function Util.array( count )
@@ -67,8 +67,8 @@ end
 ---
 -- 配列の中から、指定された要素を検索し、そのインデックスを取得する
 -- @param array (table) 検索対象の配列
--- @param value (object) 検索するオブジェクト
--- @return (integer) 要素が見つかったインデックス。見つからなかった場合負の値を返す
+-- @param value (?) 検索するオブジェクト
+-- @return (int) 要素が見つかったインデックス。見つからなかった場合負の値を返す
 -- @access static
 function Util.searchArray( array, value )
     if( nil == array )then
@@ -85,8 +85,8 @@ end
 
 ---
 -- バイト配列を、16 ビットの unsigned int 値を Big Endian とみなして数値に変換する
--- @param bytes (table<integer>) 変換元のバイト列
--- @return (integer) 変換後の数値
+-- @param bytes (table<int>) 変換元のバイト列
+-- @return (int) 変換後の数値
 -- @access static
 function Util.makeUInt16BE( bytes )
     return bytes[1] * 0x100 + bytes[2];
@@ -94,8 +94,8 @@ end
 
 ---
 -- バイト配列を、32 ビットの unsigned int 値を Big Endian とみなして数値に変換する
--- @param bytes (table<integer>) 変換元のバイト列
--- @return (integer) 変換後の数値
+-- @param bytes (table<int>) 変換元のバイト列
+-- @return (int) 変換後の数値
 -- @access static
 function Util.makeUInt32BE( bytes )
     return bytes[1] * 0x1000000 + bytes[2] * 0x10000 + bytes[3] * 0x100 + bytes[4];
@@ -103,8 +103,8 @@ end
 
 ---
 -- 16bit の unsigned int 値を Big Endian のバイト列に変換する
--- @param value (integer) 変換元の数値
--- @return (table<integer>) 変換後のバイト列
+-- @param value (int) 変換元の数値
+-- @return (table<int>) 変換後のバイト列
 -- @access static
 function Util.getBytesUInt16BE( value )
     local result = {};
@@ -116,8 +116,8 @@ end
 
 ---
 -- 32bit の unsigned int 値を Big Endian のバイト列に変換する
--- @param value (integer) 変換元の数値
--- @return (table<integer>) 変換後のバイト列
+-- @param value (int) 変換元の数値
+-- @return (table<int>) 変換後のバイト列
 -- @access static
 function Util.getBytesUInt32BE( data )
     local dat = {};
@@ -135,8 +135,8 @@ end
 ---
 -- 配列を、範囲を指定して並び替える
 -- @param array (table) 並び替えるテーブル
--- @param startIndex (number) 並び替える範囲の開始位置(先頭が0)
--- @param length (number) 並び替える範囲の長さ
+-- @param startIndex (int) 並び替える範囲の開始位置(先頭が0)
+-- @param length (int) 並び替える範囲の長さ
 -- @access static
 function Util.sort( array, startIndex, length )
     local spliced = {};
@@ -251,9 +251,9 @@ end
 
 ---
 -- 左シフト演算(64bitまでを考慮)
--- @param n (integer) 演算対象の数値
--- @param shift (integer) シフトするビット数
--- @return (integer) 演算結果
+-- @param n (int) 演算対象の数値
+-- @param shift (int) シフトするビット数
+-- @return (int) 演算結果
 -- @access static
 function Util.lshift( n, shift )
     n = math.floor( n );
@@ -269,9 +269,9 @@ end
 
 ---
 -- 右シフト演算
--- @param n (integer) 演算対象の数値
--- @param shift (integer) シフトするビット数
--- @return (integer) 演算結果
+-- @param n (int) 演算対象の数値
+-- @param shift (int) シフトするビット数
+-- @return (int) 演算結果
 -- @access static
 function Util.rshift( n, shift )
     n = math.floor( n );
@@ -285,7 +285,7 @@ end
 ---
 -- 文字列のバイトを取り出して配列にしたものを返す
 -- @param s (string) 変換元の文字列
--- @return (table<integer>) 変換後のバイト列
+-- @return (table<int>) 変換後のバイト列
 -- @access static
 function Util.stringToArray( s )
     local count = s:len();
@@ -322,7 +322,7 @@ end
 
 ---
 -- @param value (?) ダンプする変数
--- @param depth (integer) ダンプのネスト深さ
+-- @param depth (int) ダンプのネスト深さ
 -- @param state (table) ダンプ済みオブジェクトのテーブル
 -- @param option (table) ダンプ時の設定値
 -- @access static private

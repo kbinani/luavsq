@@ -64,7 +64,7 @@ function EventList.IndexIterator.new( list, iteratorKind )
 
     ---
     -- 反復子の次の要素を返す
-    -- @return (integer) 次の要素
+    -- @return (int) 次の要素
     function this:next()
         local nextPosition = self:_nextPosition();
         if( nextPosition > 0 )then
@@ -84,7 +84,7 @@ function EventList.IndexIterator.new( list, iteratorKind )
 
     ---
     -- 反復子の次の要素を探索する
-    -- @return (integer) 次のインデックス
+    -- @return (int) 次のインデックス
     -- @access private
     function this:_nextPosition()
         local count = self._list:size();

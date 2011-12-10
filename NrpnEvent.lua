@@ -33,22 +33,22 @@ function NrpnEvent.new( ... )
 
     ---
     -- Tick 単位の時刻
-    -- @var integer
+    -- @var int
     this.clock = 0;
 
     ---
     -- NRPN の値
-    -- @var integer
+    -- @var int
     this.nrpn = 0;
 
     ---
     -- DATA MSB
-    -- @var integer
+    -- @var int
     this.dataMSB = 0;
 
     ---
     -- DATA LSB
-    -- @var integer
+    -- @var int
     this.dataLSB = 0;
 
     ---
@@ -64,9 +64,9 @@ function NrpnEvent.new( ... )
 
     ---
     -- 時刻、NRPN、DATA MSB を指定し、初期化を行う
-    -- @param clock (integer) Tick 単位の時刻
-    -- @param nrpn (integer) NRPN
-    -- @param dataMsb (integer) DATA MSB
+    -- @param clock (int) Tick 単位の時刻
+    -- @param nrpn (int) NRPN
+    -- @param dataMsb (int) DATA MSB
     -- @return (NrpnEvent)
     -- @name new<!--1-->
     -- @access static ctor
@@ -82,10 +82,10 @@ function NrpnEvent.new( ... )
 
     ---
     -- 時刻、NRPN、DATA MSB、DATA LSB を指定し、初期化を行う
-    -- @param clock (integer) Tick 単位の時刻
-    -- @param nrpn (integer) NRPN
-    -- @param dataMsb (integer) DATA MSB
-    -- @param dataLsb (integer) DATA LSB
+    -- @param clock (int) Tick 単位の時刻
+    -- @param nrpn (int) NRPN
+    -- @param dataMsb (int) DATA MSB
+    -- @param dataLsb (int) DATA LSB
     -- @return (NrpnEvent)
     -- @name new<!--2-->
     -- @access static ctor
@@ -129,7 +129,7 @@ function NrpnEvent.new( ... )
     ---
     -- 順序を比較する
     -- @param item (NrpnEvent) 比較対象のアイテム
-    -- @return (integer) このインスタンスが比較対象よりも小さい場合は負の整数、等しい場合は 0、大きい場合は正の整数を返す
+    -- @return (int) このインスタンスが比較対象よりも小さい場合は負の整数、等しい場合は 0、大きい場合は正の整数を返す
     function this:compareTo( item )
         if( self.clock == item.clock )then
             local thisNrpnMsb = (this.nrpn - (this.nrpn % 0x100)) / 0x100;
@@ -160,8 +160,8 @@ function NrpnEvent.new( ... )
 
     ---
     -- NRPN、DATA MSB を指定し、イベントを追加する
-    -- @param nrpn (integer) NRPN
-    -- @param dataMsb (integer) DATA MSB
+    -- @param nrpn (int) NRPN
+    -- @param dataMsb (int) DATA MSB
     -- @name append<!--1-->
     function this:_append_2( nrpn, dataMsb )
         table.insert( self._list, NrpnEvent.new( self.clock, nrpn, dataMsb ) );
@@ -169,9 +169,9 @@ function NrpnEvent.new( ... )
 
     ---
     -- NRPN、DATA MSB、DATA LSB を指定し、イベントを追加する
-    -- @param nrpn (integer) NRPN
-    -- @param dataMsb (integer) DATA MSB
-    -- @param dataLsb (integer) DATA LSB
+    -- @param nrpn (int) NRPN
+    -- @param dataMsb (int) DATA MSB
+    -- @param dataLsb (int) DATA LSB
     -- @name append<!--2-->
     function this:_append_3_int_byte_byte( nrpn, dataMsb, dataLsb )
         table.insert( self._list, NrpnEvent.new( self.clock, nrpn, dataMsb, dataLsb ) );
@@ -179,8 +179,8 @@ function NrpnEvent.new( ... )
 
     ---
     -- NRPN、DATA MSB、MSB 省略フラグを指定し、イベントを追加する
-    -- @param nrpn (integer) NRPN
-    -- @param dataMsb (integer) DATA MSB
+    -- @param nrpn (int) NRPN
+    -- @param dataMsb (int) DATA MSB
     -- @param isMsbOmittingRequired (boolean) NRPN MSB を省略する場合は <code>true</code> を、そうでない場合は <code>false</code> を指定する
     -- @name append<!--3-->
     function this:_append_3_int_byte_bool( nrpn, dataMsb, isMsbOmittingRequired )
@@ -191,9 +191,9 @@ function NrpnEvent.new( ... )
 
     ---
     -- NRPN、DATA MSB、DATA LSB、MSB 省略フラグを指定し、イベントを追加する
-    -- @param nrpn (integer) NRPN
-    -- @param dataMsb (integer) DATA MSB
-    -- @param dataLsb (integer) DATA LSB
+    -- @param nrpn (int) NRPN
+    -- @param dataMsb (int) DATA MSB
+    -- @param dataLsb (int) DATA LSB
     -- @param isMsbOmittingRequired (boolean) NRPN MSB を省略する場合は <code>true</code> を、そうでない場合は <code>false</code> を指定する
     -- @name append<!--4-->
     function this:_append_4( nrpn, dataMsb, dataLsb, isMsbOmittingRequired )

@@ -611,7 +611,7 @@ end
 ---
 -- UTF8 の文字列を unicode のバイト列に変換する
 -- @access private
--- @param (string) s 変換前の文字列
+-- @param s (string) 変換前の文字列
 -- @return (table) 変換後の unicode のバイト列
 -- @access static private
 function CP932Converter._getUnicodeBytesFromUTF8String( s )

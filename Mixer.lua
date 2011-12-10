@@ -31,22 +31,22 @@ function Mixer.new( ... )
 
     ---
     -- MasterFader 値
-    -- @var integer
+    -- @var int
     this.masterFeder = 0;
 
     ---
     -- MasterMute 値
-    -- @var integer
+    -- @var int
     this.masterMute = 0;
 
     ---
     -- MasterPanpot 値
-    -- @var integer
+    -- @var int
     this.masterPanpot = 0;
 
     ---
     -- OutputMode 値
-    -- @var integer
+    -- @var int
     this.outputMode = 0;
 
     ---
@@ -56,10 +56,10 @@ function Mixer.new( ... )
 
     ---
     -- 各パラメータを指定し、初期化を行う
-    -- @param masterFeder (integer) MasterFader 値
-    -- @param masterPanpot (integer) MasterPanpot 値
-    -- @param masterMute (integer) MasterMute 値
-    -- @param outputMode (integer) OutputMode 値
+    -- @param masterFeder (int) MasterFader 値
+    -- @param masterPanpot (int) MasterPanpot 値
+    -- @param masterMute (int) MasterMute 値
+    -- @param outputMode (int) OutputMode 値
     -- @return (Mixer)
     -- @name new<!--2-->
     -- @access static ctor

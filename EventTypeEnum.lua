@@ -15,28 +15,28 @@
 module( "luavsq" );
 
 ---
--- Event の種類を表現する列挙子
+-- {@link Event} の種類を表現する列挙子
 -- @class table
 -- @name EventTypeEnum
 EventTypeEnum = {
     ---
     -- 歌手
-    -- @var integer
+    -- @var int
     SINGER = 0,
 
     ---
     -- 歌詞
-    -- @var integer
+    -- @var int
     NOTE = 1,
 
     ---
     -- アイコン
-    -- @var integer
+    -- @var int
     ICON = 2,
 
     ---
     -- 不明
-    -- @var integer
+    -- @var int
     UNKNOWN = -1
 
 };

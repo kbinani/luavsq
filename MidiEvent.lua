@@ -33,12 +33,12 @@ function MidiEvent.new()
 
     ---
     -- Tick 単位の時刻
-    -- @var integer
+    -- @var int
     this.clock = 0;
 
     ---
     -- MIDI イベントの先頭バイト
-    -- @var integer
+    -- @var int
     this.firstByte = 0;
 
     ---
@@ -64,7 +64,7 @@ function MidiEvent.new()
     ---
     -- 順序を比較する
     -- @param item (MidiEvent) 比較対象のアイテム
-    -- @return (integer) このインスタンスが比較対象よりも小さい場合は負の整数、等しい場合は 0、大きい場合は正の整数を返す
+    -- @return (int) このインスタンスが比較対象よりも小さい場合は負の整数、等しい場合は 0、大きい場合は正の整数を返す
     function this:compareTo( item )
         if( self.clock ~= item.clock )then
             return self.clock - item.clock;
@@ -110,9 +110,9 @@ end
 
 ---
 -- 拍子イベントを作成する
--- @param clock (integer) Tick 単位の時刻
--- @param numerator (integer) 拍子の分子の値
--- @param denominator (integer) 表紙の分母の値
+-- @param clock (int) Tick 単位の時刻
+-- @param numerator (int) 拍子の分子の値
+-- @param denominator (int) 表紙の分母の値
 -- @return (MidiEvent) 拍子イベント
 -- @access static
 function MidiEvent.generateTimeSigEvent( clock, numerator, denominator )
@@ -126,8 +126,8 @@ end
 
 ---
 -- テンポイベントを作成する
--- @param clock (integer) Tick 単位の時刻
--- @param tempo (integer) 四分音符のマイクロ秒単位の長さ
+-- @param clock (int) Tick 単位の時刻
+-- @param tempo (int) 四分音符のマイクロ秒単位の長さ
 -- @return (MidiEvent) テンポイベント
 -- @name generateTempoChangeEvent
 -- @access static
@@ -153,7 +153,7 @@ end
 ---
 -- 可変長のデルタタイムをストリームに出力する
 -- @param stream (? extends OutputStream) 出力先のストリーム
--- @param number (integer) デルタタイム
+-- @param number (int) デルタタイム
 -- @name writeDeltaClock
 -- @access static
 function MidiEvent.writeDeltaClock( stream, number )

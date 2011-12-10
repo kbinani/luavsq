@@ -95,9 +95,9 @@ function Common.new( ... )
     ---
     -- 初期化を行う
     -- @param name (string) トラック名
-    -- @param r (integer) 赤(意味は不明)
-    -- @param g (integer) 緑(意味は不明)
-    -- @param b (integer) 青(意味は不明)
+    -- @param r (int) 赤(意味は不明)
+    -- @param g (int) 緑(意味は不明)
+    -- @param b (int) 青(意味は不明)
     -- @param dynamicsMode (DynamicsModeEnum) シーケンスの Dynamics モード
     -- @param playMode (PlayModeEnum) シーケンスの Play モード
     -- @return (Common)

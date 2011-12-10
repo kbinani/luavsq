@@ -83,10 +83,10 @@ function Sequence.new( ... )
     ---
     -- 初期化を行う
     -- @param singer (string) 歌手名
-    -- @param preMeasure (integer) 小節単位のプリメジャー
-    -- @param numerator (integer) 拍子の分子の値
-    -- @param denominator (integer) 拍子の分母の値
-    -- @param tempo (integer) テンポ値。四分音符の長さのマイクロ秒単位の長さ
+    -- @param preMeasure (int) 小節単位のプリメジャー
+    -- @param numerator (int) 拍子の分子の値
+    -- @param denominator (int) 拍子の分母の値
+    -- @param tempo (int) テンポ値。四分音符の長さのマイクロ秒単位の長さ
     -- @return (Sequence)
     -- @name new
     -- @access static ctor
@@ -133,7 +133,7 @@ function Sequence.new( ... )
 
     ---
     -- テンポが一つも指定されていない場合の、基本テンポ値を取得する
-    -- @return (integer) テンポ値。四分音符の長さのマイクロ秒単位の長さ
+    -- @return (int) テンポ値。四分音符の長さのマイクロ秒単位の長さ
     function this:getBaseTempo()
         return Sequence.baseTempo;
     end
@@ -141,28 +141,28 @@ function Sequence.new( ... )
     ---
     -- Tick 単位の曲の長さを取得する
     -- シーケンスに変更を加えた場合、<code><a href="#updateTotalClocks">updateTotalClocks</a></code> を呼んでからこのメソッドを呼ぶこと
-    -- @return (integer) Tick 単位の曲の長さ
+    -- @return (int) Tick 単位の曲の長さ
     function this:getTotalClocks()
         return self._totalClocks;
     end
 
     ---
     -- プリメジャー値を取得する
-    -- @return (integer) 小節単位のプリメジャー長さ
+    -- @return (int) 小節単位のプリメジャー長さ
     function this:getPreMeasure()
         return self.master.preMeasure;
     end
 
     ---
     -- Tick 単位のプリメジャー部分の長さを取得する
-    -- @return (integer) Tick 単位のプリメジャー長さ
+    -- @return (int) Tick 単位のプリメジャー長さ
     function this:getPreMeasureClocks()
         return self:_calculatePreMeasureInClock();
     end
 
     ---
     -- プリメジャーの Tick 単位の長さを計算する
-    -- @return (integer) Tick 単位のプリメジャー長さ
+    -- @return (int) Tick 単位のプリメジャー長さ
     -- @access private
     function this:_calculatePreMeasureInClock()
         local pre_measure = self.master.preMeasure;
@@ -187,7 +187,7 @@ function Sequence.new( ... )
 
     ---
     -- 四分音符あたりの Tick 数を取得する
-    -- @return (integer) 四分音符一つあたりの Tick 数
+    -- @return (int) 四分音符一つあたりの Tick 数
     function this:getTickPerQuarter()
         return self._tickPerQuarter;
     end
@@ -221,10 +221,10 @@ function Sequence.new( ... )
 
     ---
     -- 指定した時刻における、プリセンド込の時刻と、ディレイを取得する
-    -- @param clock (integer) Tick 単位の時刻
-    -- @param msPreSend (integer) ミリ秒単位のプリセンド時間
-    -- @return (integer) プリセンド分のクロックを引いた Tick 単位の時刻
-    -- @return (integer) ミリ秒単位のプリセンド時間
+    -- @param clock (int) Tick 単位の時刻
+    -- @param msPreSend (int) ミリ秒単位のプリセンド時間
+    -- @return (int) プリセンド分のクロックを引いた Tick 単位の時刻
+    -- @return (int) ミリ秒単位のプリセンド時間
     -- @access private
     function this:_getActualClockAndDelay( clock, msPreSend )
         local clock_msec = self.tempoList:getSecFromClock( clock ) * 1000.0;
@@ -273,7 +273,7 @@ function Sequence.new( ... )
     ---
     -- ストリームに出力する
     -- @param stream (? extends OutputStream) 出力先のストリーム
-    -- @param msPreSend (integer) ミリ秒単位のプリセンドタイム
+    -- @param msPreSend (int) ミリ秒単位のプリセンドタイム
     -- @param encoding (string) マルチバイト文字のテキストエンコーディング(現在は Shift_JIS 固定で、引数は無視される)
     -- @name write<!--1-->
     function this:_write_3( stream, msPreSend, encoding )
@@ -283,7 +283,7 @@ function Sequence.new( ... )
     ---
     -- ストリームに出力する
     -- @param stream (? extends OutputStream) 出力先のストリーム
-    -- @param msPreSend (integer) ミリ秒単位のプリセンドタイム
+    -- @param msPreSend (int) ミリ秒単位のプリセンドタイム
     -- @param encoding (string) マルチバイト文字のテキストエンコーディング(現在は Shift_JIS 固定で、引数は無視される)
     -- @param printPitch (boolean) pitch を含めて出力するかどうか(現在は <code>false</code> 固定で、引数は無視される)
     -- @name write<!--2-->
@@ -472,9 +472,9 @@ end
 ---
 -- トラックをストリームに出力する
 -- @param sequence (Sequence) 出力するシーケンス
--- @param track (integer) 出力するトラックの番号
+-- @param track (int) 出力するトラックの番号
 -- @param stream (? extends OutputStream) 出力先のストリーム
--- @param msPreSend (integer) ミリ秒単位のプリセンド時間
+-- @param msPreSend (int) ミリ秒単位のプリセンド時間
 -- @param encoding (string) マルチバイト文字のテキストエンコーディング(現在は Shift_JIS 固定で、引数は無視される)
 -- @param printPitch (boolean) pitch を含めて出力するかどうか(現在は false 固定で、引数は無視される)
 -- @access static private
@@ -542,8 +542,8 @@ end
 ---
 -- トラックの Expression(DYN) の NRPN リストを作成する
 -- @param sequence (Sequence) 出力するシーケンス
--- @param track (integer) 出力するトラックの番号
--- @param msPreSend (integer) ミリ秒単位のプリセンド時間
+-- @param track (int) 出力するトラックの番号
+-- @param msPreSend (int) ミリ秒単位のプリセンド時間
 -- @return (table&lt;NrpnEvent&gt;) NrpnEvent の配列
 -- @access static private
 function Sequence._generateExpressionNRPN( sequence, track, msPreSend )
@@ -619,7 +619,7 @@ end
 -- トラック先頭のgenerateNRPN メソッドが担当する
 -- @param sequence (Sequence) 出力元のシーケンス
 -- @param singerEvent (Event) 出力する歌手変更イベント
--- @param msPreSend (integer) ミリ秒単位のプリセンド時間
+-- @param msPreSend (int) ミリ秒単位のプリセンド時間
 -- @return (table<NrpnEvent>) NrpnEvent の配列
 -- @access static private
 function Sequence._generateSingerNRPN( sequence, singerEvent, msPreSend )
@@ -656,18 +656,18 @@ end
 ---
 -- トラックの音符イベントから NRPN のリストを作成する
 -- @param sequence (Sequence) 出力元のシーケンス
--- @param track (integer) 出力するトラックの番号
+-- @param track (int) 出力するトラックの番号
 -- @param noteEvent (Event) 出力する音符イベント
--- @param msPreSend (integer) ミリ秒単位のプリセンド時間
--- @param noteLocation (integer) <ul>
+-- @param msPreSend (int) ミリ秒単位のプリセンド時間
+-- @param noteLocation (int) <ul>
 --                               <li>00:前後共に連続した音符がある
 --                               <li>01:後ろにのみ連続した音符がある
 --                               <li>02:前にのみ連続した音符がある
 --                               <li>03:前後どちらにも連続した音符が無い
 --                           </ul>
--- @param lastDelay (integer) 直前の音符イベントに指定された、ミリ秒単位のディレイ値。最初の音符イベントの場合は nil を指定する
+-- @param lastDelay (int) 直前の音符イベントに指定された、ミリ秒単位のディレイ値。最初の音符イベントの場合は nil を指定する
 -- @return (NrpnEvent) NrpnEvent
--- @return (integer) この音符に対して設定された、ミリ秒単位のディレイ値
+-- @return (int) この音符に対して設定された、ミリ秒単位のディレイ値
 -- @access static private
 function Sequence._generateNoteNRPN( sequence, track, noteEvent, msPreSend, noteLocation, lastDelay )
     local clock = noteEvent.clock;
@@ -826,8 +826,8 @@ end
 ---
 -- 指定したシーケンスの指定したトラックから、NRPN のリストを作成する
 -- @param sequence (Sequence) 出力元のシーケンス
--- @param track (integer) 出力するトラックの番号
--- @param msPreSend (integer) ミリ秒単位のプリセンド時間
+-- @param track (int) 出力するトラックの番号
+-- @param msPreSend (int) ミリ秒単位のプリセンド時間
 -- @return (table<NrpnEvent>) NrpnEvent の配列
 -- @access static private
 function Sequence._generateNRPN_3( sequence, track, msPreSend )
@@ -960,8 +960,8 @@ end
 ---
 -- 指定したシーケンスの指定したトラックから、PitchBend の NRPN リストを作成する
 -- @param sequence (Sequence) 出力元のシーケンス
--- @param track (integer) 出力するトラックの番号
--- @param msPreSend (integer) ミリ秒単位のプリセンド時間
+-- @param track (int) 出力するトラックの番号
+-- @param msPreSend (int) ミリ秒単位のプリセンド時間
 -- @return (table<NrpnEvent>) NrpnEvent の配列
 -- @access static private
 function Sequence._generatePitchBendNRPN( sequence, track, msPreSend )
@@ -1014,8 +1014,8 @@ end
 ---
 -- 指定したシーケンスの指定したトラックから、PitchBendSensitivity の NRPN リストを作成する
 -- @param sequence (Sequence) 出力元のシーケンス
--- @param track (integer) 出力するトラックの番号
--- @param msPreSend (integer) ミリ秒単位のプリセンド時間
+-- @param track (int) 出力するトラックの番号
+-- @param msPreSend (int) ミリ秒単位のプリセンド時間
 -- @return (table<NrpnEvent>) NrpnEvent の配列
 -- @access static private
 function Sequence._generatePitchBendSensitivityNRPN( sequence, track, msPreSend )
@@ -1055,7 +1055,7 @@ end
 -- トラックの音符イベントから、ビブラート出力用の NRPN のリストを作成する
 -- @param sequence (Sequence) 出力元のシーケンス
 -- @param noteEvent (Event) 出力する音符イベント
--- @param msPreSend (integer) ミリ秒単位のプリセンド時間
+-- @param msPreSend (int) ミリ秒単位のプリセンド時間
 -- @return (table<NrpnEvent>) NrpnEvent の配列
 -- @access static private
 function Sequence._generateVibratoNRPN( sequence, noteEvent, msPreSend )
@@ -1128,8 +1128,8 @@ end
 ---
 -- 指定したシーケンスの指定したトラックから、VoiceChangeParameter の NRPN リストを作成する
 -- @param sequence (Sequence) 出力元のシーケンス
--- @param track (integer) 出力するトラックの番号
--- @param msPreSend (integer) ミリ秒単位のプリセンド時間
+-- @param track (int) 出力するトラックの番号
+-- @param msPreSend (int) ミリ秒単位のプリセンド時間
 -- @return (table<NrpnEvent>) NrpnEvent の配列
 -- @access static private
 function Sequence._generateVoiceChangeParameterNRPN( sequence, track, msPreSend )
@@ -1168,9 +1168,9 @@ end
 -- @param dest (table) 追加先のテーブル
 -- @param list (BPList) Voice Change Parameter のデータ点が格納された BPList
 -- @param sequence (Sequence) シーケンス
--- @param msPreSend (integer) ミリ秒単位のプリセンド時間
--- @param lastDelay (integer) 直前の delay 値(ミリ秒単位)
--- @return (integer) delay 値(ミリ秒単位)
+-- @param msPreSend (int) ミリ秒単位のプリセンド時間
+-- @param lastDelay (int) 直前の delay 値(ミリ秒単位)
+-- @return (int) delay 値(ミリ秒単位)
 -- @access static private
 function Sequence._addVoiceChangeParameters( dest, list, sequence, msPreSend, lastDelay )
     local id = MidiParameterEnum.getVoiceChangeParameterId( list:getName() );
@@ -1205,9 +1205,9 @@ end
 
 ---
 -- DATA の値を MSB と LSB に分解する
--- @param value (integer) 分解する値
--- @return (integer) MSB の値
--- @return (integer) LSB の値
+-- @param value (int) 分解する値
+-- @return (int) MSB の値
+-- @return (int) LSB の値
 -- @access static private
 function Sequence._getMsbAndLsb( value )
     if( 0x3fff < value )then
@@ -1220,8 +1220,8 @@ end
 
 ---
 -- "DM:0001:"といった、VSQメタテキストの行の先頭につくヘッダー文字列のバイト列表現を取得する
--- @param count (integer) ヘッダーの番号
--- @return (table<integer>) バイト列
+-- @param count (int) ヘッダーの番号
+-- @return (table<int>) バイト列
 -- @access static private
 function Sequence._getLinePrefixBytes( count )
     local digits = Sequence._getHowManyDigits( count );
@@ -1242,8 +1242,8 @@ end
 
 ---
 -- 数値の 10 進数での桁数を取得する
--- @param number (integer) 検査対象の数値
--- @return (integer) 数値の 10 進数での桁数
+-- @param number (int) 検査対象の数値
+-- @return (int) 数値の 10 進数での桁数
 -- @access static private
 function Sequence._getHowManyDigits( number )
     number = math.abs( number );
@@ -1257,7 +1257,7 @@ end
 ---
 -- 16 ビットの unsigned int 値をビッグエンディアンでストリームに書きこむ
 -- @param stream (? extends OutputStream) 出力先のストリーム
--- @param data (integer) 出力する値
+-- @param data (int) 出力する値
 -- @access static private
 function Sequence._writeUnsignedShort( stream, data )
     local dat = Util.getBytesUInt16BE( data );
@@ -1267,7 +1267,7 @@ end
 ---
 -- 32 ビットの unsigned int 値をビッグエンディアンでストリームに書きこむ
 -- @param stream (? extends OutputStram) 出力先のストリーム
--- @param data (integer) 出力する値
+-- @param data (int) 出力する値
 -- @access static private
 function Sequence._writeUnsignedInt( stream, data )
     local dat = Util.getBytesUInt32BE( data );

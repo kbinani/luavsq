@@ -22,8 +22,8 @@ BP = {};
 
 ---
 -- コンストラクタ
--- @param value (integer) データ点の値
--- @param id (integer) データ点のユニーク ID
+-- @param value (int) データ点の値
+-- @param id (int) データ点のユニーク ID
 -- @return (BP) データ点のオブジェクト
 -- @access static ctor
 function BP.new( value, id )
@@ -31,12 +31,12 @@ function BP.new( value, id )
 
     ---
     -- データ点の値
-    -- @var integer
+    -- @var int
     this.value = value;
 
     ---
     -- データ点のユニーク ID
-    -- @var integer
+    -- @var int
     this.id = id;
 
     ---

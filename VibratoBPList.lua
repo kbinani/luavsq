@@ -67,7 +67,7 @@ function VibratoBPList.new( ... )
     ---
     -- 初期化を行う
     -- @param x (table<double>) x 軸の値のリスト
-    -- @param y (table<integer>) y 軸の値のリスト
+    -- @param y (table<int>) y 軸の値のリスト
     -- @return (VibratoBPList)
     -- @name new<!--2-->
     -- @access static ctor
@@ -89,8 +89,8 @@ function VibratoBPList.new( ... )
     ---
     -- 指定した位置のビブラートカーブの値を取得する
     -- @param x (double) 取得したい x 軸の値
-    -- @param defaultValue (integer) ビブラートカーブのデフォルト値
-    -- @return (integer) ビブラートカーブの値
+    -- @param defaultValue (int) ビブラートカーブのデフォルト値
+    -- @return (int) ビブラートカーブの値
     function this:getValueAt( x, defaultValue )
         if( #self._list <= 0 )then
             return defaultValue;
@@ -122,14 +122,14 @@ function VibratoBPList.new( ... )
 
     ---
     -- データ点の個数を返す
-    -- @return (integer) データ点の個数
+    -- @return (int) データ点の個数
     function this:size()
         return #self._list;
     end
 
     ---
     -- 指定したインデックスのデータ点を取得する
-    -- @param index (integer) 0から始まるインデックス
+    -- @param index (int) 0から始まるインデックス
     -- @return (VibratoBP) データ点
     function this:get( index )
         return self._list[index + 1];
@@ -137,7 +137,7 @@ function VibratoBPList.new( ... )
 
     ---
     -- 指定したインデックスのデータ点を設定する
-    -- @param index (integer) インデックス(最初のインデックスは0)
+    -- @param index (int) インデックス(最初のインデックスは0)
     -- @param value (VibratoBP) 設定するデータ点
     function this:set( index, value )
         self._list[index + 1] = value;

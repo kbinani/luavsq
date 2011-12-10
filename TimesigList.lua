@@ -32,7 +32,7 @@ function TimesigList.new()
 
     ---
     -- データ点の個数を取得する
-    -- @return (integer) データ点の個数
+    -- @return (int) データ点の個数
     function this:size()
         return self._list:size();
     end
@@ -53,7 +53,7 @@ function TimesigList.new()
 
     ---
     -- 指定したインデックスの拍子変更情報を取得する
-    -- @param index (integer) 取得するデータ点のインデックス(0から始まる)
+    -- @param index (int) 取得するデータ点のインデックス(0から始まる)
     -- @return (Timesig) 拍子変更情報
     function this:get( index )
         return self._list[index];
@@ -61,8 +61,8 @@ function TimesigList.new()
 
     ---
     -- 指定したインデックスの拍子変更情報を設定する
-    -- @param index (integer) インデックス(最初のインデックスは0)
-    -- @param value (Tempo) 設定するイベント
+    -- @param index (int) インデックス(最初のインデックスは0)
+    -- @param value (Timesig) 設定するイベント
     function this:set( index, value )
         self._list[index] = value;
     end
@@ -90,9 +90,9 @@ function TimesigList.new()
     end
 
     ---
-    -- 指定されたゲートタイムにおける拍子情報を取得する
-    -- @param clock (number) ゲートタイム
-    -- @return (Timesig) 指定されたゲートタイムでの拍子情報
+    -- 指定された時刻における拍子情報を取得する
+    -- @param clock (int) Tick 単位の時刻
+    -- @return (Timesig) 指定された時刻での拍子情報
     function this:getTimesigAt( clock )
         local ret = Timesig.new();
         ret.numerator = 4;
@@ -112,9 +112,9 @@ function TimesigList.new()
     end
 
     ---
-    -- 指定されたゲートタイムにおける拍子情報を取得する
-    -- @param clock (number) ゲートタイム
-    -- @return (Timesig) 指定されたゲートタイムでの拍子情報
+    -- 指定された時刻における拍子情報を取得する
+    -- @param clock (int) Tick 単位の時刻
+    -- @return (Timesig) 指定された時刻での拍子情報
     function this:findTimesigAt( clock )
         local index = 0;
         local c = self._list:size();
@@ -136,8 +136,8 @@ function TimesigList.new()
     ---
     -- 指定した小節の開始クロックを取得する。
     -- ここで使用する小節数は、プリメジャーを考慮しない。即ち、曲頭の小節が 0 となる
-    -- @param barCount (integer) 小節数
-    -- @return (integer) Tick 単位の時刻
+    -- @param barCount (int) 小節数
+    -- @return (int) Tick 単位の時刻
     function this:getClockFromBarCount( barCount )
         local index = 0;
         local c = self._list:size();
@@ -160,8 +160,8 @@ function TimesigList.new()
     ---
     -- 指定したクロックが、曲頭から何小節目に属しているかを調べる
     -- ここで使用する小節数は、プリメジャーを考慮しない。即ち、曲頭の小節が 0 となる
-    -- @param clock  (integer) Tick 単位の時刻
-    -- @return (integer) 小節数
+    -- @param clock  (int) Tick 単位の時刻
+    -- @return (int) 小節数
     function this:getBarCountFromClock( clock )
         local index = 0;
         local c = self._list:size();

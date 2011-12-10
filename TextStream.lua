@@ -35,14 +35,14 @@ function TextStream.new()
 
     ---
     -- 現在の読み書き位置を取得する
-    -- @return (integer) 現在の読み書き位置
+    -- @return (int) 現在の読み書き位置
     function this:getPointer()
         return self._position;
     end
 
     ---
     -- 現在の読み書き位置を設定する
-    -- @param value (integer) 設定する読み書き位置
+    -- @param value (int) 設定する読み書き位置
     function this:setPointer( value )
         self._position = value;
     end
@@ -85,7 +85,7 @@ function TextStream.new()
 
     ---
     -- 内部のバッファー容量を確保する
-    -- @param length (integer) 確保したいバッファー容量
+    -- @param length (int) 確保したいバッファー容量
     -- @access private
     function this:_ensureCapacity( _length )
         if( _length > #self._array )then

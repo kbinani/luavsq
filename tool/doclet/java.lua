@@ -14,18 +14,18 @@ local allClasses = {};
 function start( doc )
     printStylesheet();
     printIndex();
-    printOverviewSummary( doc );
     for i, fileName in ipairs( doc.files ) do
         local className = doc.files[fileName].tables[1];
-        if( not isPrivate( doc.files[fileName].tables[className].access) )then
+        if( options.noprivate ~= 1 or (options.noprivate == 1 and (not isPrivate( doc.files[fileName].tables[className].access ))) )then
             table.insert( allClasses, className );
         end
     end
 
+    printOverviewSummary( doc );
     printAllClasses( doc );
     for i, fileName in ipairs( doc.files ) do
         local className = doc.files[fileName].tables[1];
-        if( not isPrivate( doc.files[fileName].tables[className].access) )then
+        if( options.noprivate ~= 1 or (options.noprivate == 1 and (not isPrivate( doc.files[fileName].tables[className].access ))) )then
             printClassDoc( fileName, doc );
         end
     end
@@ -133,7 +133,11 @@ function printClassDocMethodSummary( f, methods, methodKind )
                 if( paramIndex > 1 )then
                     f:write( "," );
                 end
-                f:write( getLinkedTypeName( htmlspecialchars( argType ) ) .. "&nbsp;" .. paramName );
+                argType = getLinkedTypeName( htmlspecialchars( argType ) );
+                if( argType:len() > 0 )then
+                    argType = argType .. "&nbsp;";
+                end
+                f:write( argType .. paramName );
             end
             f:write( ")</code>\n" );
             f:write( "       <br>\n" );
@@ -206,7 +210,11 @@ function printClassDocMethodDetail( f, ctors, methodKind )
             if( paramIndex > 1 )then
                 f:write( ",\n" .. paramPrefixSpaces );
             end
-            f:write( getLinkedTypeName( htmlspecialchars( t ) ) .. "&nbsp;" .. paramName );
+            t = getLinkedTypeName( htmlspecialchars( t ) );
+            if( t:len() > 0 )then
+                t = t .. "&nbsp;";
+            end
+            f:write( t .. paramName );
         end
         f:write( ")</pre>\n" );
         f:write( "  <p>\n" );
@@ -260,7 +268,7 @@ function printAllClasses( doc )
     f:write( "      <td nowrap>\n" );
     for i, file in ipairs( doc.files ) do
         local className = doc.files[file].tables[1];
-        if( not isPrivate( doc.files[file].tables[className].access ) )then
+        if( options.noprivate ~= 1 or (options.noprivate == 1 and (not isPrivate( doc.files[file].tables[className].access ))) )then
             f:write( "        <font class=\"FrameItemFont\">\n" );
             f:write( "          <a href=\"" .. className .. ".html\" target=\"classFrame\">" );
             f:write( "          " .. className .. "\n" );
@@ -330,7 +338,7 @@ function printOverviewSummary( doc )
     local i, file;
     for i, file in ipairs( doc.files ) do
         local className = doc.files[file].tables[1];
-        if( not isPrivate( doc.files[file].tables[className].access ) )then
+        if( options.noprivate ~= 1 or (options.noprivate == 1 and (not isPrivate( doc.files[file].tables[className].access ))) )then
             local description = doc.files[file].tables[className].description;
             f:write( "    <tr bgcolor=\"white\" class=\"TableRowColor\">\n" );
             f:write( "      <td width=\"15%\">\n" );
@@ -544,10 +552,6 @@ function getType( comment )
     local c = comment:sub( endIndex + 1 );
     while( c:sub( 1, 1 ) == " " )do
         c = c:sub( 2 );
-    end
-
-    if( t == "" )then
-        t = "void";
     end
 
     return t, c;

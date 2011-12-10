@@ -218,7 +218,7 @@ function Lyric.new( ... )
 
     ---
     -- Consonant Adjustment を、整数配列で取得する
-    -- @return (table<integer>) Consonant Adjustment を格納した整数の配列
+    -- @return (table<int>) Consonant Adjustment を格納した整数の配列
     function this:getConsonantAdjustmentList()
         if( self._consonantAdjustment == nil )then
             if( self._phoneticSymbol == nil )then
@@ -241,7 +241,7 @@ function Lyric.new( ... )
 
     ---
     -- Consonant Adjustment を、整数配列形式で設定する
-    -- @param value (table<integer>) Consonant Adjustment を格納した整数の配列
+    -- @param value (table<int>) Consonant Adjustment を格納した整数の配列
     function this:setConsonantAdjustmentList( value )
         if( value == nil )then
             return;

@@ -50,14 +50,14 @@ function TempoList.new()
 
     ---
     -- リスト内のテンポ変更情報の個数を取得する
-    -- @return (integer) テンポ変更情報の個数
+    -- @return (int) テンポ変更情報の個数
     function this:size()
         return self._array:size();
     end
 
     ---
     -- 指定したインデックスのテンポ変更情報を取得する
-    -- @param index (integer) インデックス(最初のインデックスは0)
+    -- @param index (int) インデックス(最初のインデックスは0)
     -- @return (Tempo) テンポ変更情報
     function this:get( index )
         return self._array[index];
@@ -65,7 +65,7 @@ function TempoList.new()
 
     ---
     -- 指定したインデックスのテンポ変更情報を設定する
-    -- @param index (integer) インデックス(最初のインデックスは0)
+    -- @param index (int) インデックス(最初のインデックスは0)
     -- @param value (Tempo) 設定するイベント
     function this:set( index, value )
         self._array[index] = value;
@@ -153,8 +153,8 @@ function TempoList.new()
 
     ---
     -- 指定した時刻におけるテンポを取得する
-    -- @param clock (integer) Tick 単位の時刻
-    -- @return (integer) テンポ値。四分音符の長さをマイクロ秒単位で表した値
+    -- @param clock (int) Tick 単位の時刻
+    -- @return (int) テンポ値。四分音符の長さをマイクロ秒単位で表した値
     function this:getTempoAt( clock )
         local index = 0;
         local c = self:size();

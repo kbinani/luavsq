@@ -21,12 +21,12 @@ module( "luavsq" );
 VoiceLanguageEnum = {
     ---
     -- 日本語
-    -- @var integer
+    -- @var int
     JAPANESE = 0,
 
     ---
     -- 英語
-    -- @var integer
+    -- @var int
     ENGLISH = 1,
 };
 

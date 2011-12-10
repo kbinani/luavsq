@@ -25,31 +25,31 @@ end
 EventList.IndexIteratorKindEnum = {
     ---
     -- 全てのイベント
-    -- @var integer
+    -- @var int
     ALL = 0xffff,
 
     ---
     -- 歌手イベント
-    -- @var integer
+    -- @var int
     SINGER = 1,
 
     ---
     -- 音符イベント
-    -- @var integer
+    -- @var int
     NOTE = 2,
 
     ---
     -- クレッシェンドイベント
-    -- @var integer
+    -- @var int
     CRESCENDO = 4,
 
     ---
     -- デクレッシェンドイベント
-    -- @var integer
+    -- @var int
     DECRESCENDO = 8,
 
     ---
     -- 強弱記号イベント
-    -- @var integer
+    -- @var int
     DYNAFF = 16,
 }

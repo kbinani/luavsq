@@ -21,27 +21,27 @@ module( "luavsq" );
 HandleTypeEnum = {
     ---
     -- 歌詞ハンドル
-    -- @var integer
+    -- @var int
     LYRIC = 0,
 
     ---
     -- ビブラートハンドル
-    -- @var integer
+    -- @var int
     VIBRATO = 1,
 
     ---
     -- 歌手ハンドル
-    -- @var integer
+    -- @var int
     SINGER = 2,
 
     ---
     -- アタックハンドル
-    -- @var integer
+    -- @var int
     NOTE_HEAD = 3,
 
     ---
     -- Dynamics ハンドル
-    -- @var integer
+    -- @var int
     DYNAMICS = 4
 
 };

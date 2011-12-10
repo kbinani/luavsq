@@ -31,12 +31,12 @@ function Master.new( ... )
 
     ---
     -- プリメジャーの長さ(小節数)
-    -- @var integer
+    -- @var int
     this.preMeasure = 1;
 
     ---
     -- プリメジャーを指定し、初期化を行う
-    -- @param preMeasure (integer) プリメジャーの長さ(小節数)
+    -- @param preMeasure (int) プリメジャーの長さ(小節数)
     -- @return (Master)
     -- @name new<!--1-->
     -- @access static ctor

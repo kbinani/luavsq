@@ -29,12 +29,12 @@ function BPListSearchResult.new()
 
     ---
     -- データ点の Tick 単位の時刻
-    -- @var integer
+    -- @var int
     this.clock = 0;
 
     ---
     -- データ点のインデックス。最初のインデックスは 0
-    -- @var integer
+    -- @var int
     this.index = 0;
 
     ---

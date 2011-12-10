@@ -39,14 +39,14 @@ function EventList.new()
     this._events = {};
 
     ---
-    -- @var table<integer>
+    -- @var table<int>
     -- @access private
     this._ids = {};
 
     ---
     -- イベント ID を基にイベントを検索し、そのインデックスを返す
-    -- @param internalId (integer) 検索するイベント ID
-    -- @return (integer) 検索結果のインデックス(最初のインデックスは0)。イベントが見つからなければ負の値を返す
+    -- @param internalId (int) 検索するイベント ID
+    -- @return (int) 検索結果のインデックス(最初のインデックスは0)。イベントが見つからなければ負の値を返す
     function this:findIndexFromId( internalId )
         local c = #self._events;
         local i;
@@ -61,7 +61,7 @@ function EventList.new()
 
     ---
     -- イベント ID を基にイベントを検索し、そのオブジェクトを返す
-    -- @param internalId (integer) 検索するイベント ID
+    -- @param internalId (int) 検索するイベント ID
     -- @return (Event) 検索結果のイベント。イベントが見つからなければ <code>nil</code> を返す
     function this:findFromId( internalId )
         local index = self:findIndexFromId( internalId );
@@ -74,7 +74,7 @@ function EventList.new()
 
     ---
     -- 指定されたイベント ID をもつイベントのオブジェクトを置き換える。イベントが見つからなければ何もしない
-    -- @param internalId (integer) 検索するイベント ID
+    -- @param internalId (int) 検索するイベント ID
     -- @param value (Event) 置換するオブジェクト
     function this:setForId( internalId, value )
         local c = #self._events;
@@ -125,7 +125,7 @@ function EventList.new()
     ---
     -- イベントを追加する
     -- @param item (Event) 追加するオブジェクト
-    -- @return (integer) 追加したオブジェクトに割り振られたイベント ID
+    -- @return (int) 追加したオブジェクトに割り振られたイベント ID
     -- @name add<!--1-->
     function this:_add_1( item )
         local id = self:_getNextId( 0 );
@@ -142,8 +142,8 @@ function EventList.new()
     ---
     -- イベントを追加する
     -- @param item (Event) 追加するオブジェクト
-    -- @param internalId (integer) 追加するオブジェクトに割り振るイベント ID
-    -- @return (integer) オブジェクトに割り振られたイベント ID
+    -- @param internalId (int) 追加するオブジェクトに割り振るイベント ID
+    -- @return (int) オブジェクトに割り振られたイベント ID
     -- @name add<!--2-->
     function this:_add_2( item, internalId )
         self:_addCor( item, internalId );
@@ -154,7 +154,7 @@ function EventList.new()
     ---
     -- イベントを追加する
     -- @param item (Event) 追加するオブジェクト
-    -- @param internal_id (integer) 追加するオブジェクトに割り振るイベント ID
+    -- @param internal_id (int) 追加するオブジェクトに割り振るイベント ID
     -- @access private
     function this:_addCor( item, internalId )
         self:updateIdList();
@@ -165,7 +165,7 @@ function EventList.new()
 
     ---
     -- イベントを削除する
-    -- @param index (integer) 削除するイベントのインデックス(最初のインデックスは0)
+    -- @param index (int) 削除するイベントのインデックス(最初のインデックスは0)
     function this:removeAt( index )
         self:updateIdList();
         table.remove( self._events, index + 1 );
@@ -174,8 +174,8 @@ function EventList.new()
 
     ---
     -- イベントに割り振る ID を取得する
-    -- @param next (integer)
-    -- @return (integer)
+    -- @param next (int)
+    -- @return (int)
     -- @access private
     function this:_getNextId( next )
         self:updateIdList();
@@ -189,14 +189,14 @@ function EventList.new()
 
     ---
     -- イベントの個数を返す
-    -- @return (integer) データ点の個数
+    -- @return (int) データ点の個数
     function this:size()
         return #self._events;
     end
 
     ---
     -- 指定したインデックスのイベントを取得する
-    -- @param index (integer) インデックス(最初のインデックスは0)
+    -- @param index (int) インデックス(最初のインデックスは0)
     -- @return (Event) イベント
     function this:get( index )
         return self._events[index + 1];
@@ -204,7 +204,7 @@ function EventList.new()
 
     ---
     -- 指定したインデックスのイベントを設定する
-    -- @param index (integer) インデックス(最初のインデックスは0)
+    -- @param index (int) インデックス(最初のインデックスは0)
     -- @param value (Event) 設定するイベント
     function this:set( index, value )
         value.id = self._events[index + 1].id;
@@ -227,7 +227,7 @@ function EventList.new()
     ---
     -- イベントリストをテキストストリームに出力する
     -- @param stream (TextStream) 出力先のストリーム
-    -- @param eos (integer) EOS として出力する Tick 単位の時刻
+    -- @param eos (int) EOS として出力する Tick 単位の時刻
     -- @return (table<Handle>) リスト中のイベントに含まれるハンドルの一覧
     function this:write( stream, eos )
         local handles = self:_buildHandleList();

@@ -26,26 +26,26 @@ module( "luavsq" );
 ArticulationTypeEnum = {
     ---
     -- ビブラート
-    -- @var integer
+    -- @var int
     VIBRATO = 0,
 
     ---
     -- クレッシェンド、またはデクレッシェンド
-    -- @var integer
+    -- @var int
     CRESCENDO = 1,
 
     ---
     -- ピアノ、フォルテ等の強弱記号
-    -- @var integer
+    -- @var int
     DYNAFF = 2,
 
     ---
     -- アタック
-    -- @var integer
+    -- @var int
     NOTE_ATTACK = 3,
 
     ---
     -- NoteTransition(詳細不明)
-    -- @var integer
+    -- @var int
     NOTE_TRANSITION = 4,
 };

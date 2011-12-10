@@ -64,7 +64,7 @@ function BPList.KeyClockIterator.new( ... )
 
     ---
     -- 反復子の次の要素を返す
-    -- @return (integer) 次の要素
+    -- @return (int) 次の要素
     function this:next()
         self._pos = self._pos + 1;
         return self._list._clocks[self._pos];

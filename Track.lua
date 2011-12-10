@@ -534,8 +534,8 @@ function Track.new( ... )
     ---
     -- トラックのメタテキストを、テキストストリームに出力する
     -- @param stream (TextStream) 出力先のストリーム
-    -- @param eos (integer) イベントリストの末尾を表す番号
-    -- @param start (integer) Tick 単位の出力開始時刻
+    -- @param eos (int) イベントリストの末尾を表す番号
+    -- @param start (int) Tick 単位の出力開始時刻
     -- @name printMetaText<!--1-->
     function this:_printMetaText_3( stream, eos, start )
         self:_printMetaText_4( stream, eos, start, false );
@@ -544,8 +544,8 @@ function Track.new( ... )
     ---
     -- トラックのメタテキストを、テキストストリームに出力する
     -- @param stream (TextStream) 出力先のストリーム
-    -- @param eos (integer) イベントリストの末尾を表す番号
-    -- @param start (integer) Tick 単位の出力開始時刻
+    -- @param eos (int) イベントリストの末尾を表す番号
+    -- @param start (int) Tick 単位の出力開始時刻
     -- @param printPitch (boolean) pitch を含めて出力するかどうか(現在は <code>false</code> 固定で、引数は無視される)
     -- @name printMetaText<!--2-->
     function this:_printMetaText_4( stream, eos, start, printPitch )

@@ -21,16 +21,16 @@ module( "luavsq" );
 PlayModeEnum = {
     ---
     -- トラックはミュートされる(-1)
-    -- @var integer
+    -- @var int
     OFF = -1,
 
     ---
     -- トラックは合成された後再生される(0)
-    -- @var integer
+    -- @var int
     PLAY_AFTER_SYNTH = 0,
 
     ---
     -- トラックは合成しながら再生される(1)
-    -- @var integer
+    -- @var int
     PLAY_WITH_SYNTH = 1,
 };

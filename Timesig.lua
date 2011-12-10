@@ -29,30 +29,30 @@ function Timesig.new( ... )
 
     ---
     -- Tick 単位の時刻
-    -- @var integer
+    -- @var int
     -- @access private
     this._clock = 0;
 
     ---
     -- 拍子の分子
-    -- @var integer
+    -- @var int
     this.numerator = 4;
 
     ---
     -- 拍子の分母
-    -- @var integer
+    -- @var int
     this.denominator = 4;
 
     ---
     -- 何小節目か
-    -- @var integer
+    -- @var int
     this.barCount = 0;
 
     ---
     -- 初期化を行う
-    -- @param numerator (integer) 拍子の分子の値
-    -- @param denominator (integer) 拍子の分母値
-    -- @param barCount (integer) 小節数
+    -- @param numerator (int) 拍子の分子の値
+    -- @param denominator (int) 拍子の分母値
+    -- @param barCount (int) 小節数
     -- @return (Timesig)
     -- @name new
     -- @access static ctor
@@ -64,7 +64,7 @@ function Timesig.new( ... )
 
     ---
     -- Tick 単位の時刻を取得する
-    -- @return (integer) 単位の時刻
+    -- @return (int) 単位の時刻
     function this:getTick()
         return self._clock;
     end
@@ -88,7 +88,7 @@ function Timesig.new( ... )
     ---
     -- 順序を比較する
     -- @param item (Timesig) 比較対象のアイテム
-    -- @return (integer) このインスタンスが比較対象よりも小さい場合は負の整数、等しい場合は 0、大きい場合は正の整数を返す
+    -- @return (int) このインスタンスが比較対象よりも小さい場合は負の整数、等しい場合は 0、大きい場合は正の整数を返す
     function this:compareTo( item )
         return self.barCount - item.barCount;
     end

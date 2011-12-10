@@ -33,7 +33,7 @@ function VibratoBP.new( ... )
 
     ---
     -- データ点の Y 値
-    -- @var integer
+    -- @var int
     this.y = 0;
 
     ---
@@ -47,7 +47,7 @@ function VibratoBP.new( ... )
     ---
     -- 初期化を行う
     -- @param x (double) x 軸の値
-    -- @param y (integer) y 軸の値
+    -- @param y (int) y 軸の値
     -- @return (VibratoBP)
     -- @name new<!--2-->
     -- @access static ctor
@@ -59,7 +59,7 @@ function VibratoBP.new( ... )
     ---
     -- 順序を比較する
     -- @param item (VibratoBP) 比較対象のアイテム
-    -- @return (integer) このインスタンスが比較対象よりも小さい場合は負の整数、等しい場合は 0、大きい場合は正の整数を返す
+    -- @return (int) このインスタンスが比較対象よりも小さい場合は負の整数、等しい場合は 0、大きい場合は正の整数を返す
     function this:compareTo( item )
         local v = self.x - item.x;
         if( v > 0.0 )then

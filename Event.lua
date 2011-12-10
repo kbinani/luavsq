@@ -39,17 +39,17 @@ function Event.new( ... )
 
     ---
     -- 内部で使用するオブジェクト固有の ID
-    -- @var integer
+    -- @var int
     this.id = -1;
 
     ---
     -- Tick 単位の時刻
-    -- @var integer
+    -- @var int
     this.clock = 0;
 
     ---
     -- VSQ メタテキストに出力されるこのオブジェクトの ID
-    -- @var integer
+    -- @var int
     this.index = -1;
 
     this._singerHandleIndex = 0;
@@ -71,37 +71,37 @@ function Event.new( ... )
 
     ---
     -- ノート番号
-    -- @var integer
+    -- @var int
     this.note = 0;
 
     ---
     -- ベロシティ
-    -- @var integer
+    -- @var int
     this.dynamics = 0;
 
     ---
     -- ベンド深さ
-    -- @var integer
+    -- @var int
     this.pmBendDepth = 0;
 
     ---
     -- ベンド長さ
-    -- @var integer
+    -- @var int
     this.pmBendLength = 0;
 
     ---
     -- ポルタメント
-    -- @var integer
+    -- @var int
     this.pmbPortamentoUse = 0;
 
     ---
     -- ディケイ
-    -- @var integer
+    -- @var int
     this.demDecGainRate = 0;
 
     ---
     -- アクセント
-    -- @var integer
+    -- @var int
     this.demAccent = 0;
 
     ---
@@ -116,7 +116,7 @@ function Event.new( ... )
 
     ---
     -- イベント先頭から測った、ビブラートの開始位置(Tick 単位)
-    -- @var integer
+    -- @var int
     this.vibratoDelay = 0;
 
     ---
@@ -125,19 +125,19 @@ function Event.new( ... )
     this.noteHeadHandle = nil;
 
     ---
-    -- @var integer
+    -- @var int
     this.pMeanOnsetFirstNote = 10;
 
     ---
-    -- @var integer
+    -- @var int
     this.vMeanNoteTransition = 12;
 
     ---
-    -- @var integer
+    -- @var int
     this.d4mean = 24;
 
     ---
-    -- @var integer
+    -- @var int
     this.pMeanEndingNote = 12;
 
     ---
@@ -177,7 +177,7 @@ function Event.new( ... )
 
     ---
     -- 初期化を行う
-    -- @param clock (integer) Tick 単位の時刻
+    -- @param clock (int) Tick 単位の時刻
     -- @param eventType (EventTypeEnum) イベントの種類
     -- @return (Event)
     -- @name new<!--3-->
@@ -196,14 +196,14 @@ function Event.new( ... )
 
     ---
     -- 長さを取得する
-    -- @return (integer) 長さ
+    -- @return (int) 長さ
     function this:getLength()
         return self._length;
     end
 
     ---
     -- 長さを設定する
-    -- @param value (integer) 長さ
+    -- @param value (int) 長さ
     function this:setLength( value )
         self._length = value;
     end
@@ -601,7 +601,7 @@ function Event.new( ... )
     ---
     -- 順序を比較する
     -- @param item (Event) 比較対象のアイテム
-    -- @return (integer) このインスタンスが比較対象よりも小さい場合は負の整数、等しい場合は 0、大きい場合は正の整数を返す
+    -- @return (int) このインスタンスが比較対象よりも小さい場合は負の整数、等しい場合は 0、大きい場合は正の整数を返す
     function this:compareTo( item )
         local ret = self.clock - item.clock;
         if( ret == 0 )then

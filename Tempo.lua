@@ -29,12 +29,12 @@ function Tempo.new( ... )
 
     ---
     -- Tick 単位の時刻
-    -- @var integer
+    -- @var int
     this.clock = 0;
 
     ---
     -- テンポ値。四分音符の長さをマイクロ秒単位で表した値
-    -- @var integer
+    -- @var int
     this.tempo = 0;
 
     this._time = 0.0;
@@ -57,8 +57,8 @@ function Tempo.new( ... )
 
     ---
     -- 初期化を行う
-    -- @param clock (integer) Tick 単位の時刻
-    -- @param tempo (integer) テンポ値。四分音符の長さをマイクロ秒単位で表した値
+    -- @param clock (int) Tick 単位の時刻
+    -- @param tempo (int) テンポ値。四分音符の長さをマイクロ秒単位で表した値
     -- @return (Tempo)
     -- @name new
     -- @access static ctor
@@ -70,7 +70,7 @@ function Tempo.new( ... )
     ---
     -- 順序を比較する
     -- @param entry (Tempo) 比較対象のアイテム
-    -- @return (integer) このインスタンスが比較対象よりも小さい場合は負の整数、等しい場合は 0、大きい場合は正の整数を返す
+    -- @return (int) このインスタンスが比較対象よりも小さい場合は負の整数、等しい場合は 0、大きい場合は正の整数を返す
     function this:compareTo( entry )
         return self.clock - entry.clock;
     end
