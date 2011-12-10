@@ -5,6 +5,7 @@ local pairs = pairs;
 local type = type;
 local table = table;
 local io = io;
+local lfs = require( "lfs" );
 
 module "luadoc.doclet.java";
 
@@ -28,13 +29,13 @@ end
 function printClassDoc( fileName, docinfo )
     local htmlName = fileName:gsub( ".lua", ".html" );
     local doc = docinfo.files[fileName];
-    local f = io.open( options.output_dir .. "/" .. htmlName, "w" );
+    local f = lfs.open( options.output_dir .. "/files/" .. htmlName, "w" );
     local className = doc.tables[1];
     f:write( "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">\n" );
     f:write( "<html>\n" );
     f:write( "<head>\n" );
     f:write( "  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF8\">\n" );
-    f:write( "  <link rel=\"stylesheet\" type=\"text/css\" href=\"stylesheet.css\">\n" );
+    f:write( "  <link rel=\"stylesheet\" type=\"text/css\" href=\"../stylesheet.css\">\n" );
     f:write( "  <title>" .. className .. "</title>\n" );
     f:write( "  <script type=\"text/javascript\">\n" );
     f:write( "      function windowTitle()\n" );
@@ -48,7 +49,7 @@ function printClassDoc( fileName, docinfo )
     f:write( "    クラス " .. className .. "\n" );
     f:write( "  </h2>\n" );
     f:write( "  <p>\n" );
-    f:write( "    " .. getSummary( doc.tables[className].description ) .. "\n" );
+    f:write( "    " .. createLinks( getSummary( doc.tables[className].description ) ) .. "\n" );
     f:write( "  <p>\n" );
     f:write( "  <hr>\n" );
     f:write( "\n" );
@@ -93,7 +94,7 @@ function printClassDocFieldSummary( f, fields )
             f:write( "        <code><b><a href=\"#" .. field.name .. "\">" .. field.name .. "</a></b></code>\n" );
             f:write( "        <br>\n" );
             f:write( "        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n" );
-            f:write( "        " .. getSummary( field.description ) .. "\n" );
+            f:write( "        " .. createLinks( getSummary( field.description ) ) .. "\n" );
             f:write( "      </td>\n" );
             f:write( "    </tr>\n" );
         end
@@ -131,7 +132,7 @@ function printClassDocMethodSummary( f, methods, methodKind )
             end
             f:write( ")</code>\n" );
             f:write( "       <br>\n" );
-            f:write( "       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" .. getSummary( info.description ) .. "\n" );
+            f:write( "       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" .. createLinks( getSummary( info.description ) ) .. "\n" );
             f:write( "      </td>\n" );
             f:write( "    </tr>\n" );
         end
@@ -158,7 +159,7 @@ function printClassDocFieldDetail( f, fields )
             local access = getAccess( info.access, true );
             f:write( access .. " " .. getLinkedTypeName( htmlspecialchars( info.var ) ) .. " <b>" .. info.name .. "</b></pre>\n" );
             f:write( "  <dl>\n" );
-            f:write( "    <dd>" .. info.description .. "\n" );
+            f:write( "    <dd>" .. createLinks( info.description ) .. "\n" );
             f:write( "    <p>\n" );
             f:write( "    <dl>\n" );
             f:write( "    </dl>\n" );
@@ -205,7 +206,7 @@ function printClassDocMethodDetail( f, ctors, methodKind )
         f:write( ")</pre>\n" );
         f:write( "  <p>\n" );
         f:write( "  <dl>\n" );
-        f:write( "    <dd>" .. ctor.description .. "\n" );
+        f:write( "    <dd>" .. createLinks( ctor.description ) .. "\n" );
         f:write( "    <p>\n" );
         f:write( "  </dl>\n" );
         if( #ctor.param > 0 )then
@@ -225,7 +226,7 @@ function printClassDocMethodDetail( f, ctors, methodKind )
             f:write( "  <dd>\n" );
             f:write( "    <dl>\n" );
             f:write( "      <dt><b>戻り値:</b>\n" );
-            f:write( "        <dd>" .. c .. "" );
+            f:write( "        <dd>" .. createLinks( c ) .. "" );
             f:write( "    </dl>\n" );
             f:write( "  </dd>\n" );
         end
@@ -237,56 +238,50 @@ function printClassDocMethodDetail( f, ctors, methodKind )
 end
 
 function printAllClasses( doc )
-    local f = io.open( options.output_dir .. "/allclasses-frame.html", "w" );
-    f:write(
-[[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF8">
-  <link rel="stylesheet" type="text/css" href="stylesheet.css">
-</head>
-<body>
-  <font size="+1" class="FrameHeadingFont">
-    <b>すべてのクラス</b>
-  </font>
-  <br>
-  <table border="0" width="100%">
-    <tr>
-      <td nowrap>
-]] );
+    local f = lfs.open( options.output_dir .. "/files/allclasses-frame.html", "w" );
+    f:write( "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">\n" );
+    f:write( "<html>\n" );
+    f:write( "<head>\n" );
+    f:write( "  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF8\">\n" );
+    f:write( "  <link rel=\"stylesheet\" type=\"text/css\" href=\"../stylesheet.css\">\n" );
+    f:write( "</head>\n" );
+    f:write( "<body>\n" );
+    f:write( "  <font size=\"+1\" class=\"FrameHeadingFont\">\n" );
+    f:write( "    <b>すべてのクラス</b>\n" );
+    f:write( "  </font>\n" );
+    f:write( "  <br>\n" );
+    f:write( "  <table border=\"0\" width=\"100%\">\n" );
+    f:write( "    <tr>\n" );
+    f:write( "      <td nowrap>\n" );
     for i, file in ipairs( doc.files ) do
-        local htmlName = file:gsub( ".lua", ".html" );
+        local className = doc.files[file].tables[1];
         f:write( "        <font class=\"FrameItemFont\">\n" );
-        f:write( "          <a href=\"" .. htmlName .. "\" target=\"classFrame\">" );
-        f:write( "          " .. file .. "\n" );
+        f:write( "          <a href=\"" .. className .. ".html\" target=\"classFrame\">" );
+        f:write( "          " .. className .. "\n" );
         f:write( "          </a>\n" );
         f:write( "        </font>\n" );
         f:write( "        <br>\n" );
     end
-    f:write(
-[[
-      </td>
-    </tr>
-  </table>
-</body>
-</html>
-]] );
+    f:write( "      </td>\n" );
+    f:write( "    </tr>\n" );
+    f:write( "  </table>\n" );
+    f:write( "</body>\n" );
+    f:write( "</html>\n" );
     f:close();
 end
 
 function printIndex()
-    local f = io.open( options.output_dir .. "/index.html", "w" );
-    f:write(
-[[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-</head>
-<frameset cols="20%,80%" title="">
-  <frame src="allclasses-frame.html" name="packageFrame">
-  <frame src="overview-summary.html" name="classFrame" scrolling="yes">
-</frameset>
-</html>]] );
+    local f = lfs.open( options.output_dir .. "/index.html", "w" );
+    f:write( "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">\n" );
+    f:write( "<html>\n" );
+    f:write( "<head>\n" );
+    f:write( "  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n" );
+    f:write( "</head>\n" );
+    f:write( "<frameset cols=\"20%,80%\" title=\"\">\n" );
+    f:write( "  <frame src=\"files/allclasses-frame.html\" name=\"packageFrame\">\n" );
+    f:write( "  <frame src=\"files/overview-summary.html\" name=\"classFrame\" scrolling=\"yes\">\n" );
+    f:write( "</frameset>\n" );
+    f:write( "</html>\n" );
     f:close();
 end
 
@@ -300,12 +295,12 @@ function printOverviewSummary( doc )
         break;
     end
 
-    local f = io.open( options.output_dir .. "/overview-summary.html", "w" );
+    local f = lfs.open( options.output_dir .. "/files/overview-summary.html", "w" );
     f:write( "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">\n" );
     f:write( "<html>\n" );
     f:write( "<head>\n" );
     f:write( "  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF8\">\n" );
-    f:write( "  <link rel=\"stylesheet\" type=\"text/css\" href=\"stylesheet.css\">\n" );
+    f:write( "  <link rel=\"stylesheet\" type=\"text/css\" href=\"../stylesheet.css\">\n" );
     f:write( "  <title>" .. moduleName .. "</title>\n" );
     f:write( "  <script type=\"text/javascript\">\n" );
     f:write( "      function windowTitle()\n" );
@@ -316,7 +311,7 @@ function printOverviewSummary( doc )
     f:write( "</head>\n" );
     f:write( "<body onload=\"windowTitle();\">\n" );
     f:write( "  <h2>モジュール " .. moduleName .. "</h2>\n" );
-    f:write( "  <p>" .. description .. "</p>\n" );
+    f:write( "  <p>" .. createLinks( description ) .. "</p>\n" );
 
     f:write( "  <table border=\"1\" width=\"100%\" cellpadding=\"3\" cellspacing=\"0\">\n" );
     f:write( "    <tr bgcolor=\"#ccccff\" class=\"TableHeadingColor\">\n" );
@@ -334,7 +329,7 @@ function printOverviewSummary( doc )
         f:write( "        <b><a href=\"" .. className .. ".html\">" .. className .. "</a></b>\n" );
         f:write( "      </td>\n" );
         f:write( "      <td>\n" );
-        f:write( "        " .. description .. "\n" );
+        f:write( "        " .. createLinks( description ) .. "\n" );
         f:write( "      </td>\n" );
         f:write( "    </tr>\n" );
     end
@@ -347,58 +342,56 @@ function printOverviewSummary( doc )
 end
 
 function printStylesheet()
-    local f = io.open( options.output_dir .. "/stylesheet.css", "w" );
-    f:write( [[
-body{
-    background-color: #FFFFFF;
-    color:#000000;
-}
-
-h1{
-    font-size: 145%;
-}
-
-.TableHeadingColor{
-    background: #CCCCFF;
-    color:#000000;
-}
-
-.TableSubHeadingColor{
-    background: #EEEEFF;
-    color:#000000;
-}
-
-.TableRowColor{
-    background: #FFFFFF;
-    color:#000000;
-}
-
-.FrameTitleFont{
-    font-size: 100%;
-    font-family: Helvetica, Arial, sans-serif;
-    color:#000000;
-}
-
-.FrameHeadingFont{
-    font-size:  90%;
-    font-family: Helvetica, Arial, sans-serif;
-    color:#000000;
-}
-
-.FrameItemFont{
-    font-size:  90%;
-    font-family: Helvetica, Arial, sans-serif;
-    color:#000000;
-}
-
-.NavBarCell1    { background-color:#EEEEFF; color:#000000}
-.NavBarCell1Rev { background-color:#00008B; color:#FFFFFF}
-.NavBarFont1    { font-family: Arial, Helvetica, sans-serif; color:#000000;color:#000000;}
-.NavBarFont1Rev { font-family: Arial, Helvetica, sans-serif; color:#FFFFFF;color:#FFFFFF;}
-
-.NavBarCell2    { font-family: Arial, Helvetica, sans-serif; background-color:#FFFFFF; color:#000000}
-.NavBarCell3    { font-family: Arial, Helvetica, sans-serif; background-color:#FFFFFF; color:#000000}
-]] );
+    local f = lfs.open( options.output_dir .. "/stylesheet.css", "w" );
+    f:write( "body{\n" );
+    f:write( "    background-color: #FFFFFF;\n" );
+    f:write( "    color:#000000;\n" );
+    f:write( "}\n" );
+    f:write( "\n" );
+    f:write( "h1{\n" );
+    f:write( "    font-size: 145%;\n" );
+    f:write( "}\n" );
+    f:write( "\n" );
+    f:write( ".TableHeadingColor{\n" );
+    f:write( "    background: #CCCCFF;\n" );
+    f:write( "    color:#000000;\n" );
+    f:write( "}\n" );
+    f:write( "\n" );
+    f:write( ".TableSubHeadingColor{\n" );
+    f:write( "    background: #EEEEFF;\n" );
+    f:write( "    color:#000000;\n" );
+    f:write( "}\n" );
+    f:write( "\n" );
+    f:write( ".TableRowColor{\n" );
+    f:write( "    background: #FFFFFF;\n" );
+    f:write( "    color:#000000;\n" );
+    f:write( "}\n" );
+    f:write( "\n" );
+    f:write( ".FrameTitleFont{\n" );
+    f:write( "    font-size: 100%;\n" );
+    f:write( "    font-family: Helvetica, Arial, sans-serif;\n" );
+    f:write( "    color:#000000;\n" );
+    f:write( "}\n" );
+    f:write( "\n" );
+    f:write( ".FrameHeadingFont{\n" );
+    f:write( "    font-size:  90%;\n" );
+    f:write( "    font-family: Helvetica, Arial, sans-serif;\n" );
+    f:write( "    color:#000000;\n" );
+    f:write( "}\n" );
+    f:write( "\n" );
+    f:write( ".FrameItemFont{\n" );
+    f:write( "    font-size:  90%;\n" );
+    f:write( "    font-family: Helvetica, Arial, sans-serif;\n" );
+    f:write( "    color:#000000;\n" );
+    f:write( "}\n" );
+    f:write( "\n" );
+    f:write( ".NavBarCell1    { background-color:#EEEEFF; color:#000000}\n" );
+    f:write( ".NavBarCell1Rev { background-color:#00008B; color:#FFFFFF}\n" );
+    f:write( ".NavBarFont1    { font-family: Arial, Helvetica, sans-serif; color:#000000;color:#000000;}\n" );
+    f:write( ".NavBarFont1Rev { font-family: Arial, Helvetica, sans-serif; color:#FFFFFF;color:#FFFFFF;}\n" );
+    f:write( "\n" );
+    f:write( ".NavBarCell2    { font-family: Arial, Helvetica, sans-serif; background-color:#FFFFFF; color:#000000}\n" );
+    f:write( ".NavBarCell3    { font-family: Arial, Helvetica, sans-serif; background-color:#FFFFFF; color:#000000}\n" );
     f:close();
 end
 
@@ -623,6 +616,37 @@ function getSummary( summary )
         result = result:sub( 2 );
     end
     return result;
+end
+
+---
+-- {@link hoge} の hoge の部分にリンクを貼る
+function createLinks( text, classes )
+    if( classes == nil )then
+        classes = allClasses;
+    end
+    while( true )do
+        local startIndex, endIndex;
+        startIndex, endIndex = string.find( text, "{@link (.*)}", 1 );
+        if( startIndex == nil )then
+            break;
+        end
+        local link = text:sub( startIndex, endIndex );
+        local linkTarget = string.match( link, "{@link (.*)}" );
+        local i, className;
+        local found = false;
+        for i, className in ipairs( classes ) do
+            if( className == linkTarget )then
+                found = true;
+                break;
+            end
+        end
+        if( found )then
+            text = text:sub( 1, startIndex - 1 ) .. "<code><a href=\"" .. linkTarget .. ".html\">" .. linkTarget .. "</a></code>" .. text:sub( endIndex + 1 );
+        else
+            text = text:sub( 1, startIndex - 1 ) .. linkTarget .. text:sub( endIndex + 1 );
+        end
+    end
+    return text;
 end
 
 ---

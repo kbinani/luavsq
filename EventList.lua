@@ -19,7 +19,7 @@ local math = math;
 module( "luavsq" );
 
 ---
--- 固有 ID 付きの Event のリストを取り扱うクラス
+-- 固有 ID 付きの {@link Event} のリストを取り扱うクラス
 -- @class table
 -- @name EventList
 if( nil == EventList )then
@@ -64,7 +64,7 @@ function EventList.new()
     ---
     -- イベント ID を基にイベントを検索し、そのオブジェクトを返す
     -- @param internalId (integer) 検索するイベント ID
-    -- @return (Event) 検索結果のイベント。イベントが見つからなければ nil を返す
+    -- @return (Event) 検索結果のイベント。イベントが見つからなければ <code>nil</code> を返す
     -- @name findFromId
     function this:findFromId( internalId )
         local index = self:findIndexFromId( internalId );

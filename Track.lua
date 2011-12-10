@@ -550,7 +550,7 @@ function Track.new( ... )
     -- @param stream (TextStream) 出力先のストリーム
     -- @param eos (integer) イベントリストの末尾を表す番号
     -- @param start (integer) Tick 単位の出力開始時刻
-    -- @param printPitch (boolean) pitch を含めて出力するかどうか(現在は false 固定で、引数は無視される)
+    -- @param printPitch (boolean) pitch を含めて出力するかどうか(現在は <code>false</code> 固定で、引数は無視される)
     -- @name printMetaText<!--2-->
     function this:_printMetaText_4( stream, eos, start, printPitch )
         if( self.common ~= nil )then

@@ -15,7 +15,7 @@
 module( "luavsq" );
 
 ---
--- Mixer の slave 要素に格納されるアイテムを表すクラス
+-- {@link Mixer} の <code>slave</code> 要素に格納されるアイテムを表すクラス
 -- @class table
 -- @name MixerItem
 MixerItem = {};

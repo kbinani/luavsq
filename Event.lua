@@ -592,7 +592,7 @@ function Event.new( ... )
 
     ---
     -- このオブジェクトがイベントリストの末尾の要素( EOS )かどうかを取得する
-    -- @return (boolean) このオブジェクトが EOS 要素であれば true を、そうでなければ false を返す
+    -- @return (boolean) このオブジェクトが EOS 要素であれば <code>true</code> を、そうでなければ <code>false</code> を返す
     -- @name isEOS
     function this:isEOS()
         if( self.index == -1 )then
@@ -628,10 +628,10 @@ function Event.new( ... )
 end
 
 ---
--- 2 つの Event を比較する
+-- 2 つの {@link Event} を比較する
 -- @param a (Event) 比較対象のオブジェクト
 -- @param b (Event) 比較対象のオブジェクト
--- @return (boolean) a が b よりも小さい場合は true、そうでない場合は false を返す
+-- @return (boolean) <code>a</code> が <code>b</code> よりも小さい場合は <code>true</code>、そうでない場合は <code>false</code> を返す
 -- @name compare
 -- @access static
 function Event.compare( a, b )

@@ -274,7 +274,7 @@ function BPList.new( ... )
     ---
     -- 指定された時刻にデータ点が存在するかどうかを調べる
     -- @param clock (integer) Tick 単位の時刻
-    -- @return (boolean) データ点が存在すれば ture を、そうでなければ false を返す
+    -- @return (boolean) データ点が存在すれば <code>ture</code> を、そうでなければ <code>false</code> を返す
     -- @name isContainsKey
     function this:isContainsKey( clock )
         self:_ensureBufferLength( self._length );
@@ -401,7 +401,7 @@ function BPList.new( ... )
 
     ---
     -- 指定した ID のデータ点の値を設定する
-    -- @param id (integer)
+    -- @param id (integer) データ点の ID
     -- @param value (integer) 設定するデータ点の値
     -- @name setValueForId
     function this:setValueForId( id, value )

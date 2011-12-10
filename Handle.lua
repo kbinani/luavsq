@@ -302,7 +302,7 @@ function Handle.new( ... )
 
     ---
     -- このハンドルが強弱記号を表すものかどうかを表すブール値を取得する
-    -- @return (boolean) このオブジェクトが強弱記号を表すものであれば true を、そうでなければ false を返す
+    -- @return (boolean) このオブジェクトが強弱記号を表すものであれば <code>true</code> を、そうでなければ <code>false</code> を返す
     -- @name isDynaffType
     function this:isDynaffType()
         if( nil ~= self.iconId )then
@@ -314,7 +314,7 @@ function Handle.new( ... )
 
     ---
     -- このハンドルがクレッシェンドを表すものかどうかを表すブール値を取得する
-    -- @return (boolean) このオブジェクトがクレッシェンドを表すものであれば true を、そうでなければ false を返す
+    -- @return (boolean) このオブジェクトがクレッシェンドを表すものであれば <code>true</code> を、そうでなければ <code>false</code> を返す
     -- @name isCrescendType
     function this:isCrescendType()
         if( nil ~= self.iconId )then
@@ -326,7 +326,7 @@ function Handle.new( ... )
 
     ---
     -- このハンドルがデクレッシェンドを表すものかどうかを表すブール値を取得する
-    -- @return (boolean) このオブジェクトがデクレッシェンドを表すものであれば true を、そうでなければ false を返す
+    -- @return (boolean) このオブジェクトがデクレッシェンドを表すものであれば <code>true</code> を、そうでなければ <code>false</code> を返す
     -- @name isDecrescendType
     function this:isDecrescendType()
         if( nil ~= self.iconId )then
@@ -362,7 +362,7 @@ function Handle.new( ... )
 
     ---
     -- キャプションを設定する
-    -- @param value (string)
+    -- @param value (string) キャプション
     -- @name setCaption
     function this:setCaption( value )
         self._caption = value;

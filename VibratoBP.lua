@@ -81,10 +81,10 @@ function VibratoBP.new( ... )
 end
 
 ---
--- 2 つの VibratoBP を比較する
+-- 2 つの {@link VibratoBP} を比較する
 -- @param a (VibratoBP) 比較対象のオブジェクト
 -- @param b (VibratoBP) 比較対象のオブジェクト
--- @return (boolean) a が b よりも小さい場合は true、そうでない場合は false を返す
+-- @return (boolean) <code>a</code> が <code>b</code> よりも小さい場合は <code>true</code>、そうでない場合は <code>false</code> を返す
 -- @name compare
 -- @access static
 function VibratoBP.compare( a, b )

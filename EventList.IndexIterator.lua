@@ -78,8 +78,8 @@ function EventList.IndexIterator.new( list, iteratorKind )
     end
 
     ---
-    -- 反復子が次の要素を持つ場合に true を返す
-    -- @return (boolean) 反復子がさらに要素を持つ場合は true を、そうでなければ false を返す
+    -- 反復子が次の要素を持つ場合に <code>true</code> を返す
+    -- @return (boolean) 反復子がさらに要素を持つ場合は <code>true</code> を、そうでなければ <code>false</code> を返す
     -- @name hasNext
     function this:hasNext()
         return (self:_nextPosition() > 0);

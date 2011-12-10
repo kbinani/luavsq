@@ -142,7 +142,7 @@ function Sequence.new( ... )
 
     ---
     -- Tick 単位の曲の長さを取得する
-    -- シーケンスに変更を加えた場合、updateTotalClocks を読んでからこのメソッドを呼ぶこと
+    -- シーケンスに変更を加えた場合、<code><a href="#updateTotalClocks">updateTotalClocks</a></code> を読んでからこのメソッドを呼ぶこと
     -- @return (integer) Tick 単位の曲の長さ
     -- @name getTotalClocks
     function this:getTotalClocks()
@@ -294,7 +294,7 @@ function Sequence.new( ... )
     -- @param stream (?OutputStream) 出力先のストリーム
     -- @param msPreSend (integer) ミリ秒単位のプリセンドタイム
     -- @param encoding (string) マルチバイト文字のテキストエンコーディング(現在は Shift_JIS 固定で、引数は無視される)
-    -- @param printPitch (boolean) pitch を含めて出力するかどうか(現在は false 固定で、引数は無視される)
+    -- @param printPitch (boolean) pitch を含めて出力するかどうか(現在は <code>false</code> 固定で、引数は無視される)
     -- @name write<!--2-->
     function this:_write_4( stream, msPreSend, encoding, printPitch )
         self:updateTotalClocks();

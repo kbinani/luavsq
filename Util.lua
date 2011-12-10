@@ -27,7 +27,7 @@ module( "luavsq" );
 Util = {};
 
 ---
--- value で指定された文字列を、splitter で区切る
+-- <code>value</code> で指定された文字列を、<code>splitter</code> で区切る
 -- @param value (string) 区切られる文字列
 -- @param splitter (string) 区切り文字
 -- @return (table) 区切られた文字列のテーブル
@@ -52,7 +52,7 @@ function Util.split( value, splitter )
 end
 
 ---
--- 指定された個数の false 要素を含む配列を取得する
+-- 指定された個数の <code>false</code> 要素を含む配列を取得する
 -- @param count (integer) 要素の個数
 -- @return (table) 作成した配列
 -- @name array
@@ -315,8 +315,8 @@ end
 -- @param value (?) ダンプする変数
 -- @param option (table) ダンプ時の設定値
 -- <ul>
---   <li>hex: 数値を 16 進数表記にする場合 true を設定する
---   <li>func: 関数をダンプする場合 true を設定する
+--   <li>hex: 数値を 16 進数表記にする場合 <code>true</code> を設定する
+--   <li>func: 関数をダンプする場合 <code>true</code> を設定する
 -- </ul>
 -- @return (string) 変数のダンプ
 -- @name dump
@@ -420,7 +420,7 @@ end
 -- UTF8 の文字列を、1 文字ずつに分解した配列に変換します
 -- @param utf8 (string) UTF8 の文字列
 -- @return (table) 1 要素に 1 文字分の文字コードが入った配列
---                 例えば、utf8 = "0あ" の場合、戻り値は { { 0x30 }, { 0xE3, 0x81, 0x82 } }となる
+--                 例えば、<code>utf8 = "0あ"</code> の場合、戻り値は <code>{ { 0x30 }, { 0xE3, 0x81, 0x82 } }</code> となる
 -- @name explodeUTF8String
 -- @access static
 function Util.explodeUTF8String( utf8 )

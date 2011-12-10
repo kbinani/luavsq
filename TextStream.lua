@@ -79,7 +79,7 @@ function TextStream.new()
 
     ---
     -- テキストストリームが読み込み可能な状態かどうかを返す
-    -- @return (boolean) 読み込み可能であれば true を、そうでなければ false を返す
+    -- @return (boolean) 読み込み可能であれば <code>true</code> を、そうでなければ <code>false</code> を返す
     -- @name ready
     function this:ready()
         if( 0 <= self._position + 1 and self._position + 1 < self._length )then

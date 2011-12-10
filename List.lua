@@ -21,9 +21,9 @@ module( "luavsq" );
 -- リスト機能を提供する
 -- インデックスは0から始まる
 -- 例えば、長さ 3 のリストに順次アクセする場合次のようにすれば良い。
--- 配列の値として nil を入れることも出来る
---<pre>for i = 0, list:size() - 1, 1 do<br>
---    print( list[i] );<br>
+-- 配列の値として <code>nil</code> を入れることも出来る
+--<pre>&nbsp;for i = 0, list:size() - 1, 1 do<br>
+--&nbsp;&nbsp;&nbsp;&nbsp;print( list[i] );<br>
 --end</pre>
 -- @class table
 -- @name List
@@ -163,9 +163,9 @@ function List.new( ... )
 end
 
 ---
--- lua の table から、List のインスタンスを作成する
--- @param array (table) 作成元の table
--- @return (List) List のインスタンス
+-- lua の <code>table</code> から、{@link List} のインスタンスを作成する
+-- @param array (table) 作成元の <code>table</code>
+-- @return (List) {@link List} のインスタンス
 -- @name fromTable
 -- @access static
 function List.fromTable( array )

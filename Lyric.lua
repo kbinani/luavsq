@@ -156,9 +156,9 @@ function Lyric.new( ... )
     ---
     -- このオブジェクトと、指定されたオブジェクトが同じかどうかを調べる。
     -- 音声合成したときに影響のある範囲のフィールドしか比較されない。
-    -- たとえば、isProtectedがthisとitemで違っていても、他が同一であればtrueが返る。
+    -- たとえば、<code>isProtected</code> が <code>this</code> と <code>item</code> で違っていても、他が同一であれば <code>true</code> が返る。
     -- @param item (Lyric) 比較対象のオブジェクト
-    -- @return (boolean) 比較対象と同じであれば true を、そうでなければ false を返す
+    -- @return (boolean) 比較対象と同じであれば <code>true</code> を、そうでなければ <code>false</code> を返す
     -- @name equalsForSynth
     function this:equalsForSynth( item )
         if( self:getPhoneticSymbol() ~= item:getPhoneticSymbol() )then
@@ -173,7 +173,7 @@ function Lyric.new( ... )
     ---
     -- このオブジェクトのインスタンスと、指定されたオブジェクトが同じかどうかを調べる
     -- @param item (Lyric) 比較対象のオブジェクト
-    -- @return (boolean) 比較対象と同じであれば true を、そうでなければ false を返す
+    -- @return (boolean) 比較対象と同じであれば <code>true</code> を、そうでなければ <code>false</code> を返す
     -- @name equals
     function this:equals( item )
         if( not self:equalsForSynth( item ) )then

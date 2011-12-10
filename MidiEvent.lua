@@ -43,13 +43,13 @@ function MidiEvent.new()
 
     ---
     -- MIDI イベントのデータ。
-    -- メタイベントについては長さ値を保持せず、出力時に data フィールドの長さに応じた値を自動的に出力する
+    -- メタイベントについては長さ値を保持せず、出力時に <code>data</code> フィールドの長さに応じた値を自動的に出力する
     -- @var table
     this.data = {};
 
     ---
     -- MIDI データをストリームに出力する
-    -- @param (? extends OutputStream) stream 出力先のストリーム
+    -- @param stream (? extends OutputStream) 出力先のストリーム
     -- @name writeData
     function this:writeData( stream )
         stream:write( self.firstByte );
@@ -333,10 +333,10 @@ end
 ]]
 
 ---
--- 2 つの MidiEvent を比較する
+-- 2 つの {@link MidiEvent} を比較する
 -- @param a (MidiEvent) 比較対象のオブジェクト
 -- @param b (MidiEvent) 比較対象のオブジェクト
--- @return (boolean) a が b よりも小さい場合は true、そうでない場合は false を返す
+-- @return (boolean) <code>a</code> が <code>b</code> よりも小さい場合は <code>true</code>、そうでない場合は <code>false</code> を返す
 -- @name compare
 -- @access static
 function MidiEvent.compare( a, b )

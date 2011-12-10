@@ -10,3 +10,11 @@ function testGetLinkedTypeName()
     local expected = "<a href=\"table.html\">table</a>&lt;<a href=\"Handle.html\">Handle</a>&gt;";
     assert_equal( expected, actual );
 end
+
+function testCreateLinks()
+    local classes = { "Handle" };
+    local text = "foo {@link Handle} bar";
+    local actual = luadoc.doclet.java.createLinks( text, classes );
+    local expected = "foo <a href=\"Handle.html\">Handle</a> bar";
+    assert_equal( expected, actual );
+end

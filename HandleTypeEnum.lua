@@ -15,7 +15,7 @@
 module( "luavsq" );
 
 ---
--- ハンドルのタイプを表現する列挙子
+-- {@link Handle} の種類を表現する列挙子
 -- @class table
 -- @name HandleTypeEnum
 HandleTypeEnum = {

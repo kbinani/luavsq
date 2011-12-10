@@ -49,7 +49,7 @@ function TimesigTable.new()
 
     ---
     -- データ点を追加する
-    -- @param (TimesigTableItem) 追加する拍子変更情報
+    -- @param item (TimesigTableItem) 追加する拍子変更情報
     -- @name push
     function this:push( item )
         self._list:push( item );

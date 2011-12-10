@@ -630,7 +630,7 @@ end
 ---
 -- 指定された NRPN が、DATA LSB が必要なものかどうかを調べる
 -- @param nrpn (integer) 対象の NRPN
--- @return (boolean) DATA LSB が必要であれば true を、そうでなければ false を返す
+-- @return (boolean) DATA LSB が必要であれば <code>true</code> を、そうでなければ <code>false</code> を返す
 -- @name isDataLsbRequire
 -- @access static
 function MidiParameterEnum.isDataLsbRequire( nrpn )

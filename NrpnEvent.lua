@@ -182,7 +182,7 @@ function NrpnEvent.new( ... )
     -- NRPN、DATA MSB、MSB 省略フラグを指定し、イベントを追加する
     -- @param nrpn (integer) NRPN
     -- @param dataMsb (integer) DATA MSB
-    -- @param isMsbOmittingRequired (boolean) NRPN MSB を省略する場合は true を、そうでない場合は false を指定する
+    -- @param isMsbOmittingRequired (boolean) NRPN MSB を省略する場合は <code>true</code> を、そうでない場合は <code>false</code> を指定する
     -- @name append<!--3-->
     function this:_append_3_int_byte_bool( nrpn, dataMsb, isMsbOmittingRequired )
         local v = NrpnEvent.new( self.clock, nrpn, dataMsb );
@@ -195,7 +195,7 @@ function NrpnEvent.new( ... )
     -- @param nrpn (integer) NRPN
     -- @param dataMsb (integer) DATA MSB
     -- @param dataLsb (integer) DATA LSB
-    -- @param isMsbOmittingRequired (boolean) NRPN MSB を省略する場合は true を、そうでない場合は false を指定する
+    -- @param isMsbOmittingRequired (boolean) NRPN MSB を省略する場合は <code>true</code> を、そうでない場合は <code>false</code> を指定する
     -- @name append<!--4-->
     function this:_append_4( nrpn, dataMsb, dataLsb, isMsbOmittingRequired )
         local v = NrpnEvent.new( self.clock, nrpn, dataMsb, dataLsb );
@@ -213,10 +213,10 @@ function NrpnEvent.new( ... )
 end
 
 ---
--- 2 つの NrpnEvent を比較する
+-- 2 つの {@link NrpnEvent} を比較する
 -- @param a (NrpnEvent) 比較対象のオブジェクト
 -- @param b (NrpnEvent) 比較対象のオブジェクト
--- @return (boolean) a が b よりも小さい場合は true、そうでない場合は false を返す
+-- @return (boolean) <code>a</code> が <code>b</code> よりも小さい場合は <code>true</code>、そうでない場合は <code>false</code> を返す
 -- @name compare
 -- @access static
 function NrpnEvent.compare( a, b )
@@ -246,9 +246,9 @@ end
 ]]
 
 ---
--- NRPN イベントの配列を、MidiEvent の配列に変換する
+-- NRPN イベントの配列を、{@link MidiEvent} の配列に変換する
 -- @param source (table<NrpnEvent>) NRPN イベントの配列
--- @return (table) MidiEvent の配列
+-- @return (table) {@link MidiEvent} の配列
 -- @name convert
 -- @access static
 function NrpnEvent.convert( source )
