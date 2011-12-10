@@ -47,7 +47,7 @@ function Common.new( ... )
     ---
     -- ダイナミクスモード
     -- @var DynamicsModeEnum
-    this.dynamicsMode = DynamicsModeEnum.Expert;
+    this.dynamicsMode = DynamicsModeEnum.EXPERT;
 
     ---
     -- 再生モード

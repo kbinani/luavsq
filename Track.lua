@@ -303,7 +303,7 @@ function Track.new( ... )
         function this:setPlayMode( value )
             if( self.MetaText == nil ) return;
             if( self.common == nil )then
-                self.common = Common.new( "Miku", 128, 128, 128, DynamicsModeEnum.Expert, value );
+                self.common = Common.new( "Miku", 128, 128, 128, DynamicsModeEnum.EXPERT, value );
                 return;
             end
             if( value == PlayModeEnum.Off )then
@@ -333,7 +333,7 @@ function Track.new( ... )
         function this:setTrackOn( value )
             if( self.MetaText == nil ) return;
             if( self.common == nil )then
-                self.common = Common.new( "Miku", 128, 128, 128, DynamicsModeEnum.Expert, value ? PlayModeEnum.PlayWithSynth : PlayModeEnum.Off );
+                self.common = Common.new( "Miku", 128, 128, 128, DynamicsModeEnum.EXPERT, value ? PlayModeEnum.PlayWithSynth : PlayModeEnum.Off );
             end
             if( value )then
                 if( self.common.lastPlayMode ~= PlayModeEnum.PlayAfterSynth and

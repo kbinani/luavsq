@@ -373,7 +373,7 @@ function testPrintMetaText()
     track.common.version = "DSB301";
     track.common.name = "foo";
     track.common.color = "1,2,3";
-    track.common.dynamicsMode = luavsq.DynamicsModeEnum.Standard;
+    track.common.dynamicsMode = luavsq.DynamicsModeEnum.STANDARD;
     track.common.playMode = luavsq.PlayModeEnum.PlayWithSynth;
 
     local curves = {

@@ -22,10 +22,10 @@ DynamicsModeEnum = {
     ---
     -- DYNカーブが非表示になるモード(デフォルト)
     -- @var integer
-    Standard = 0,
+    STANDARD = 0,
 
     ---
     -- DYNカーブが表示されるモード(エキスパートモード)
     -- @var integer
-    Expert = 1
+    EXPERT = 1
 };

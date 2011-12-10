@@ -19,29 +19,29 @@ function testConstructFromStream()
     assert_equal( "DSB303", common.version );
     assert_equal( "Foo", common.name );
     assert_equal( "1,2,3", common.color );
-    assert_equal( luavsq.DynamicsModeEnum.Expert, common.dynamicsMode );
+    assert_equal( luavsq.DynamicsModeEnum.EXPERT, common.dynamicsMode );
     assert_equal( luavsq.PlayModeEnum.PlayWithSynth, common.playMode );
 end
 
 function testConstructFromArguments()
-    local common = luavsq.Common.new( "__foo__", 3, 4, 5, luavsq.DynamicsModeEnum.Standard, luavsq.PlayModeEnum.PlayAfterSynth );
+    local common = luavsq.Common.new( "__foo__", 3, 4, 5, luavsq.DynamicsModeEnum.STANDARD, luavsq.PlayModeEnum.PlayAfterSynth );
     assert_equal( "__foo__", common.name );
     assert_equal( "3,4,5", common.color );
-    assert_equal( luavsq.DynamicsModeEnum.Standard, common.dynamicsMode );
+    assert_equal( luavsq.DynamicsModeEnum.STANDARD, common.dynamicsMode );
     assert_equal( luavsq.PlayModeEnum.PlayAfterSynth, common.playMode );
 end
 
 function testClone()
-    local common = luavsq.Common.new( "__foo__", 3, 4, 5, luavsq.DynamicsModeEnum.Standard, luavsq.PlayModeEnum.PlayAfterSynth );
+    local common = luavsq.Common.new( "__foo__", 3, 4, 5, luavsq.DynamicsModeEnum.STANDARD, luavsq.PlayModeEnum.PlayAfterSynth );
     local copy = common:clone();
     assert_equal( "__foo__", copy.name );
     assert_equal( "3,4,5", copy.color );
-    assert_equal( luavsq.DynamicsModeEnum.Standard, copy.dynamicsMode );
+    assert_equal( luavsq.DynamicsModeEnum.STANDARD, copy.dynamicsMode );
     assert_equal( luavsq.PlayModeEnum.PlayAfterSynth, copy.playMode );
 end
 
 function testWrite()
-    local common = luavsq.Common.new( "__foo__", 3, 4, 5, luavsq.DynamicsModeEnum.Standard, luavsq.PlayModeEnum.PlayAfterSynth );
+    local common = luavsq.Common.new( "__foo__", 3, 4, 5, luavsq.DynamicsModeEnum.STANDARD, luavsq.PlayModeEnum.PlayAfterSynth );
     local stream = luavsq.TextStream.new();
     common:write( stream );
     local expected =
