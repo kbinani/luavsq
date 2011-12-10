@@ -14,6 +14,10 @@
 
 module( "luavsq" );
 
+if( nil == List )then
+    List = {};
+end
+
 ---
 -- リストの要素を先頭から順に返す反復子の実装
 -- @class table

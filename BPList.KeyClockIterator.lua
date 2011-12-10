@@ -14,6 +14,10 @@
 
 module( "luavsq" );
 
+if( nil == BPList )then
+    BPList = {};
+end
+
 ---
 -- コントロールカーブのデータ点の Tick 単位の時刻を順に返す反復子
 -- @class table

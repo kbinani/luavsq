@@ -16,6 +16,10 @@ local table = table;
 
 module( "luavsq" );
 
+if( nil == EventList )then
+    EventList = {};
+end
+
 ---
 -- イベントリストのアイテムを順に返す反復子
 -- @class table

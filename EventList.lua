@@ -22,7 +22,9 @@ module( "luavsq" );
 -- 固有 ID 付きの Event のリストを取り扱うクラス
 -- @class table
 -- @name EventList
-EventList = {};
+if( nil == EventList )then
+    EventList = {};
+end
 
 ---
 -- 初期化を行う

@@ -27,7 +27,9 @@ module( "luavsq" );
 --end</pre>
 -- @class table
 -- @name List
-List = {};
+if( nil == List )then
+    List = {};
+end
 
 --
 -- 初期化を行う

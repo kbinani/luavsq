@@ -21,7 +21,9 @@ module( "luavsq" );
 -- コントロールカーブのデータ点リストを表すクラス
 -- @class table
 -- @name BPList
-BPList = {};
+if( nil == BPList )then
+    BPList = {};
+end
 
 ---
 -- 初期化を行う
