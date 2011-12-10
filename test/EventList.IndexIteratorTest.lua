@@ -21,17 +21,17 @@ function test()
     list:add( singerEvent, 1 );
 
     local dynaffEvent = luavsq.Event.new( 480, luavsq.EventTypeEnum.ICON );
-    dynaffEvent.iconDynamicsHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Dynamics );
+    dynaffEvent.iconDynamicsHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.DYNAMICS );
     dynaffEvent.iconDynamicsHandle.iconId = "$05010001";
     list:add( dynaffEvent, 3 );
 
     local crescendoEvent = luavsq.Event.new( 240, luavsq.EventTypeEnum.ICON );
-    crescendoEvent.iconDynamicsHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Dynamics );
+    crescendoEvent.iconDynamicsHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.DYNAMICS );
     crescendoEvent.iconDynamicsHandle.iconId = "$05020001";
     list:add( crescendoEvent, 2 );
 
     local decrescendoEvent = luavsq.Event.new( 720, luavsq.EventTypeEnum.ICON );
-    decrescendoEvent.iconDynamicsHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Dynamics );
+    decrescendoEvent.iconDynamicsHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.DYNAMICS );
     decrescendoEvent.iconDynamicsHandle.iconId = "$05030001";
     list:add( decrescendoEvent, 4 );
 

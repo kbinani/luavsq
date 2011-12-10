@@ -263,7 +263,7 @@ function testGetIndexIteratorDynamics()
     assert_false( iterator:hasNext() );
 
     local event = luavsq.Event.new( 480, luavsq.EventTypeEnum.ICON );
-    event.iconDynamicsHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Dynamics );
+    event.iconDynamicsHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.DYNAMICS );
     event.iconDynamicsHandle.iconId = "$05019999";
     track.events:add( event, 10 );
     iterator = track:getIndexIterator( luavsq.EventList.IndexIteratorKindEnum.DYNAFF );
@@ -279,7 +279,7 @@ function testPrintMetaText()
     local track = luavsq.Track.new( "DummyTrackName", "DummySingerName" );
 
     local singerEvent = luavsq.Event.new( 0, luavsq.EventTypeEnum.SINGER );
-    singerEvent.singerHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Singer ); --h#0000
+    singerEvent.singerHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.SINGER ); --h#0000
     singerEvent.singerHandle.iconId = "$07010002";
     singerEvent.singerHandle.ids = "Miku";
     singerEvent.singerHandle.original = 1;
@@ -290,7 +290,7 @@ function testPrintMetaText()
 
     local crescendoEvent = luavsq.Event.new( 240, luavsq.EventTypeEnum.ICON );
     crescendoEvent.note = 64;
-    crescendoEvent.iconDynamicsHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Dynamics ); --h#0001
+    crescendoEvent.iconDynamicsHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.DYNAMICS ); --h#0001
     crescendoEvent.iconDynamicsHandle.iconId = "$05020001";
     crescendoEvent.iconDynamicsHandle.ids = "crescendo";
     crescendoEvent.iconDynamicsHandle.original = 1;
@@ -302,7 +302,7 @@ function testPrintMetaText()
 
     local dynaffEvent = luavsq.Event.new( 480, luavsq.EventTypeEnum.ICON );
     dynaffEvent.note = 65;
-    dynaffEvent.iconDynamicsHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Dynamics );--h#0002
+    dynaffEvent.iconDynamicsHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.DYNAMICS );--h#0002
     dynaffEvent.iconDynamicsHandle.iconId = "$05010001";
     dynaffEvent.iconDynamicsHandle.ids = "dynaff";
     dynaffEvent.iconDynamicsHandle.original = 2;
@@ -314,7 +314,7 @@ function testPrintMetaText()
 
     local decrescendoEvent = luavsq.Event.new( 720, luavsq.EventTypeEnum.ICON );
     decrescendoEvent.note = 66;
-    decrescendoEvent.iconDynamicsHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Dynamics );--h#0003
+    decrescendoEvent.iconDynamicsHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.DYNAMICS );--h#0003
     decrescendoEvent.iconDynamicsHandle.iconId = "$05030001";
     decrescendoEvent.iconDynamicsHandle.ids = "decrescendo";
     decrescendoEvent.iconDynamicsHandle.original = 3;
@@ -325,7 +325,7 @@ function testPrintMetaText()
     track.events:add( decrescendoEvent, 4 );
 
     local singerEvent2 = luavsq.Event.new( 1920, luavsq.EventTypeEnum.SINGER );
-    singerEvent2.singerHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Singer );--h#0004
+    singerEvent2.singerHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.SINGER );--h#0004
     singerEvent2.singerHandle.iconId = "$07020003";
     singerEvent2.singerHandle.ids = "Luka_EN";
     singerEvent2.singerHandle.original = 0x82;
@@ -343,9 +343,9 @@ function testPrintMetaText()
     noteEvent.demDecGainRate = 71;
     noteEvent.demAccent = 72;
     noteEvent:setLength( 480 );
-    noteEvent.lyricHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Lyric );
+    noteEvent.lyricHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.LYRIC );
     noteEvent.lyricHandle:setLyricAt( 0, luavsq.Lyric.new( "ら", "4 a" ) );--h#0005
-    noteEvent.vibratoHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Vibrato );--h#0006
+    noteEvent.vibratoHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.VIBRATO );--h#0006
     noteEvent.vibratoDelay = 73;
     noteEvent.vibratoHandle.iconId ="$04040004";
     noteEvent.vibratoHandle.ids = "vibrato";
@@ -354,7 +354,7 @@ function testPrintMetaText()
     noteEvent.vibratoHandle:setLength( 407 );
     noteEvent.vibratoHandle:setStartDepth( 13 );
     noteEvent.vibratoHandle:setStartRate( 14 );
-    noteEvent.noteHeadHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.NoteHead );--h#0007
+    noteEvent.noteHeadHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.NOTE_HEAD );--h#0007
     noteEvent.noteHeadHandle.iconId = "$05030000";
     noteEvent.noteHeadHandle.ids = "attack";
     noteEvent.noteHeadHandle.original = 15;

@@ -174,11 +174,11 @@ function testIterator()
     assert_false( iterator:hasNext() );
 
     local singerEvent = luavsq.Event.new( 0, luavsq.EventTypeEnum.SINGER );
-    singerEvent.singerHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Singer );
+    singerEvent.singerHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.SINGER );
     list:add( singerEvent, 1 );
 
     local crescendoEvent = luavsq.Event.new( 240, luavsq.EventTypeEnum.ICON );
-    crescendoEvent.iconDynamicsHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Dynamics );
+    crescendoEvent.iconDynamicsHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.DYNAMICS );
     crescendoEvent.iconDynamicsHandle.iconId = "$05020001";
     list:add( crescendoEvent, 2 );
 
@@ -194,34 +194,34 @@ function testWrite()
     local list = luavsq.EventList.new();
 
     local singerEvent = luavsq.Event.new( 0, luavsq.EventTypeEnum.SINGER );
-    singerEvent.singerHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Singer );
+    singerEvent.singerHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.SINGER );
     list:add( singerEvent, 1 );
 
     local crescendoEvent = luavsq.Event.new( 240, luavsq.EventTypeEnum.ICON );
-    crescendoEvent.iconDynamicsHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Dynamics );
+    crescendoEvent.iconDynamicsHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.DYNAMICS );
     crescendoEvent.iconDynamicsHandle.iconId = "$05020001";
     list:add( crescendoEvent, 2 );
 
     local dynaffEvent = luavsq.Event.new( 480, luavsq.EventTypeEnum.ICON );
-    dynaffEvent.iconDynamicsHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Dynamics );
+    dynaffEvent.iconDynamicsHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.DYNAMICS );
     dynaffEvent.iconDynamicsHandle.iconId = "$05010001";
     list:add( dynaffEvent, 3 );
 
     local decrescendoEvent = luavsq.Event.new( 720, luavsq.EventTypeEnum.ICON );
-    decrescendoEvent.iconDynamicsHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Dynamics );
+    decrescendoEvent.iconDynamicsHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.DYNAMICS );
     decrescendoEvent.iconDynamicsHandle.iconId = "$05030001";
     list:add( decrescendoEvent, 4 );
 
     local singerEvent2 = luavsq.Event.new( 1920, luavsq.EventTypeEnum.SINGER );
-    singerEvent2.singerHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Singer );
+    singerEvent2.singerHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.SINGER );
     list:add( singerEvent2, 5 );
 
     local noteEvent = luavsq.Event.new( 1920, luavsq.EventTypeEnum.NOTE );
     noteEvent:setLength( 480 );
-    noteEvent.lyricHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Lyric );
+    noteEvent.lyricHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.LYRIC );
     noteEvent.lyricHandle:setLyricAt( 0, luavsq.Lyric.new( "ら", "4 a" ) );
-    noteEvent.noteHeadHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.NoteHead );
-    noteEvent.vibratoHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Vibrato );
+    noteEvent.noteHeadHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.NOTE_HEAD );
+    noteEvent.vibratoHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.VIBRATO );
     list:add( noteEvent, 6 );
 
     local stream = luavsq.TextStream.new();
@@ -237,12 +237,12 @@ function testWrite()
     assert_equal( expected, stream:toString() );
 
     assert_equal( 8, #handles );
-    assert_equal( luavsq.HandleTypeEnum.Singer, handles[1]:getHandleType() );
-    assert_equal( luavsq.HandleTypeEnum.Dynamics, handles[2]:getHandleType() );
-    assert_equal( luavsq.HandleTypeEnum.Dynamics, handles[3]:getHandleType() );
-    assert_equal( luavsq.HandleTypeEnum.Dynamics, handles[4]:getHandleType() );
-    assert_equal( luavsq.HandleTypeEnum.Singer, handles[5]:getHandleType() );
-    assert_equal( luavsq.HandleTypeEnum.Lyric, handles[6]:getHandleType() );
-    assert_equal( luavsq.HandleTypeEnum.Vibrato, handles[7]:getHandleType() );
-    assert_equal( luavsq.HandleTypeEnum.NoteHead, handles[8]:getHandleType() );
+    assert_equal( luavsq.HandleTypeEnum.SINGER, handles[1]:getHandleType() );
+    assert_equal( luavsq.HandleTypeEnum.DYNAMICS, handles[2]:getHandleType() );
+    assert_equal( luavsq.HandleTypeEnum.DYNAMICS, handles[3]:getHandleType() );
+    assert_equal( luavsq.HandleTypeEnum.DYNAMICS, handles[4]:getHandleType() );
+    assert_equal( luavsq.HandleTypeEnum.SINGER, handles[5]:getHandleType() );
+    assert_equal( luavsq.HandleTypeEnum.LYRIC, handles[6]:getHandleType() );
+    assert_equal( luavsq.HandleTypeEnum.VIBRATO, handles[7]:getHandleType() );
+    assert_equal( luavsq.HandleTypeEnum.NOTE_HEAD, handles[8]:getHandleType() );
 end

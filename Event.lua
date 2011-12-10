@@ -186,9 +186,9 @@ function Event.new( ... )
         self.clock = clock;
         self.type = eventType;
         if( eventType == EventTypeEnum.SINGER )then
-            self.singerHandle = Handle.new( HandleTypeEnum.Singer );
+            self.singerHandle = Handle.new( HandleTypeEnum.SINGER );
         elseif( eventType == EventTypeEnum.NOTE )then
-            self.lyricHandle = Handle.new( HandleTypeEnum.Lyric );
+            self.lyricHandle = Handle.new( HandleTypeEnum.LYRIC );
             self.lyricHandle:setLyricAt( 0, Lyric.new( "a", "a" ) );
         end
         self.id = 0;

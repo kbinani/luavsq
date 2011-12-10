@@ -330,7 +330,7 @@ end
 function test_generateSingerNRPN()
     local sequence = luavsq.Sequence.new( "Miku", 1, 4, 4, 500000 );
     local singerEvent = luavsq.Event.new( 1920, luavsq.EventTypeEnum.SINGER );
-    singerEvent.singerHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Singer );
+    singerEvent.singerHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.SINGER );
     sequence.track:get( 1 ).events:add( singerEvent );
     local actual = luavsq.Sequence._generateSingerNRPN( sequence, singerEvent, 500 );
 
@@ -385,10 +385,10 @@ function test_generateNoteNRPN()
     noteEvent.demDecGainRate = 50;
     noteEvent.demAccent = 50;
     noteEvent.vibratoDelay = 240;
-    noteEvent.vibratoHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Vibrato );
+    noteEvent.vibratoHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.VIBRATO );
     noteEvent.vibratoHandle:setLength( 240 );
     noteEvent.vibratoHandle.iconId = "$04040005";
-    noteEvent.lyricHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Lyric );
+    noteEvent.lyricHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.LYRIC );
     noteEvent.lyricHandle:setLyricAt( 0, luavsq.Lyric.new( "あ", "a" ) );
     sequence.track:get( 1 ).common.version = "DSB3";
 
@@ -683,7 +683,7 @@ function test_generateVibratoNRPN()
     assert_equal( 0, #actual );
 
     -- ビブラートがある場合
-    noteEvent.vibratoHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Vibrato );
+    noteEvent.vibratoHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.VIBRATO );
     noteEvent:setLength( 480 );
     noteEvent.vibratoDelay = 240;
     noteEvent.vibratoHandle:setLength( 240 );

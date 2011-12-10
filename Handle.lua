@@ -42,7 +42,7 @@ Handle.ICONID_HEAD_DECRESCEND = "$0503";
 function Handle.new( ... )
     local arguments = { ... };
     local this = {};
-    this._type = HandleTypeEnum.Lyric;
+    this._type = HandleTypeEnum.LYRIC;
     this._articulation = nil;
 
     ---
@@ -102,13 +102,13 @@ function Handle.new( ... )
     -- @access static ctor
     function this:_init_1( type )
         self._type = type;
-        if( type == HandleTypeEnum.Dynamics )then
+        if( type == HandleTypeEnum.DYNAMICS )then
             self:_init_icon_dynamics();
-        elseif( type == HandleTypeEnum.NoteHead )then
+        elseif( type == HandleTypeEnum.NOTE_HEAD )then
             self._articulation = ArticulationTypeEnum.NOTE_ATTACK;
-        elseif( type == HandleTypeEnum.Vibrato )then
+        elseif( type == HandleTypeEnum.VIBRATO )then
             self:_init_vibrato();
-        elseif( type == HandleTypeEnum.Lyric )then
+        elseif( type == HandleTypeEnum.LYRIC )then
             self:_init_lyric();
         end
     end
@@ -127,7 +127,7 @@ function Handle.new( ... )
         local spl2;
 
         -- default値で埋める
-        self._type = HandleTypeEnum.Vibrato;
+        self._type = HandleTypeEnum.VIBRATO;
         self.iconId = "";
         self.ids = "normal";
         self._lyrics = { Lyric.new( "" ) };
@@ -161,7 +161,7 @@ function Handle.new( ... )
             spl = Util.split( lastLine.value, '=' );
             local search = spl[1];
             if( search == "Language" )then
-                self._type = HandleTypeEnum.Singer;
+                self._type = HandleTypeEnum.SINGER;
                 self.language = tonumber( spl[2], 10 );
             elseif( search == "Program" )then
                 self.program = tonumber( spl[2], 10 );
@@ -190,7 +190,7 @@ function Handle.new( ... )
             elseif( search == "DepthBPY" )then
                 tmpDepthBPY = spl[2];
             elseif( search == "StartRate" )then
-                self._type = HandleTypeEnum.Vibrato;
+                self._type = HandleTypeEnum.VIBRATO;
                 self._startRate = tonumber( spl[2], 10 );
             elseif( search == "RateBPNum" )then
                 tmpRateBPNum = spl[2];
@@ -199,15 +199,15 @@ function Handle.new( ... )
             elseif( search == "RateBPY" )then
                 tmpRateBPY = spl[2];
             elseif( search == "Duration" )then
-                self._type = HandleTypeEnum.NoteHead;
+                self._type = HandleTypeEnum.NOTE_HEAD;
                 self._duration = tonumber( spl[2], 10 );
             elseif( search == "Depth" )then
                 self._depth = tonumber( spl[2], 10 );
             elseif( search == "StartDyn" )then
-                self._type = HandleTypeEnum.Dynamics;
+                self._type = HandleTypeEnum.DYNAMICS;
                 self._startDyn = tonumber( spl[2], 10 );
             elseif( search == "EndDyn" )then
-                self._type = HandleTypeEnum.Dynamics;
+                self._type = HandleTypeEnum.DYNAMICS;
                 self._endDyn = tonumber( spl[2], 10 );
             elseif( search == "DynBPNum" )then
                 tmpDynBPNum = spl[2];
@@ -219,7 +219,7 @@ function Handle.new( ... )
                 local num = search:sub( 2, 2 );
                 if( nil ~= tonumber( num ) )then
                     local lyric = Lyric.new( spl[2] );
-                    self._type = HandleTypeEnum.Lyric;
+                    self._type = HandleTypeEnum.LYRIC;
                     local index = tonumber( num );
                     self._lyrics[index + 1] = lyric;
                 end
@@ -231,7 +231,7 @@ function Handle.new( ... )
         end
 
         -- RateBPX, RateBPYの設定
-        if( self._type == HandleTypeEnum.Vibrato )then
+        if( self._type == HandleTypeEnum.VIBRATO )then
             if( tmpRateBPNum ~= "" )then
                 self._rateBP = VibratoBPList.new( tmpRateBPNum, tmpRateBPX, tmpRateBPY );
             else
@@ -576,11 +576,11 @@ function Handle.new( ... )
     function this:toString()
         local result = "";
         result = result .. "[h#" .. string.format( "%04d", self.index ) .. "]";
-        if( self._type == HandleTypeEnum.Lyric )then
+        if( self._type == HandleTypeEnum.LYRIC )then
             for i = 1, #self._lyrics, 1 do
                 result = result .. "\n" .. "L" .. (i - 1) .. "=" .. self._lyrics[i]:toString( self.addQuotationMark );
             end
-        elseif( self._type == HandleTypeEnum.Vibrato )then
+        elseif( self._type == HandleTypeEnum.VIBRATO )then
             result = result .. "\n" .. "IconID=" .. self.iconId .. "\n";
             result = result .. "IDS=" .. self.ids .. "\n";
             result = result .. "Original=" .. self.original .. "\n";
@@ -611,7 +611,7 @@ function Handle.new( ... )
                     result = result .. "," .. self._rateBP:get( i ).y;
                 end
             end
-        elseif( self._type == HandleTypeEnum.Singer )then
+        elseif( self._type == HandleTypeEnum.SINGER )then
             result = result .. "\n" .. "IconID=" .. self.iconId .. "\n";
             result = result .. "IDS=" .. self.ids .. "\n";
             result = result .. "Original=" .. self.original .. "\n";
@@ -619,7 +619,7 @@ function Handle.new( ... )
             result = result .. "Length=" .. self._length .. "\n";
             result = result .. "Language=" .. self.language .. "\n";
             result = result .. "Program=" .. self.program;
-        elseif( self._type == HandleTypeEnum.NoteHead )then
+        elseif( self._type == HandleTypeEnum.NOTE_HEAD )then
             result = result .. "\n" .. "IconID=" .. self.iconId .. "\n";
             result = result .. "IDS=" .. self.ids .. "\n";
             result = result .. "Original=" .. self.original .. "\n";
@@ -627,7 +627,7 @@ function Handle.new( ... )
             result = result .. "Length=" .. self._length .. "\n";
             result = result .. "Duration=" .. self._duration .. "\n";
             result = result .. "Depth=" .. self._depth;
-        elseif( self._type == HandleTypeEnum.Dynamics )then
+        elseif( self._type == HandleTypeEnum.DYNAMICS )then
             result = result .. "\n" .. "IconID=" .. self.iconId .. "\n";
             result = result .. "IDS=" .. self.ids .. "\n";
             result = result .. "Original=" .. self.original .. "\n";
@@ -662,8 +662,8 @@ function Handle.new( ... )
     -- @return (Handle) このオブジェクトのコピー
     -- @name clone
     function this:clone()
-        if( self._type == HandleTypeEnum.Dynamics )then
-            local ret = Handle.new( HandleTypeEnum.Dynamics );
+        if( self._type == HandleTypeEnum.DYNAMICS )then
+            local ret = Handle.new( HandleTypeEnum.DYNAMICS );
             ret.iconId = self.iconId;
             ret.ids = self.ids;
             ret.original = self.original;
@@ -675,8 +675,8 @@ function Handle.new( ... )
             end
             ret:setLength( self:getLength() );
             return ret;
-        elseif( self._type == HandleTypeEnum.Lyric )then
-            local result = Handle.new( HandleTypeEnum.Lyric );
+        elseif( self._type == HandleTypeEnum.LYRIC )then
+            local result = Handle.new( HandleTypeEnum.LYRIC );
             result.index = self.index;
             result._lyrics = {};
             for i = 1, #self._lyrics, 1 do
@@ -684,8 +684,8 @@ function Handle.new( ... )
                 table.insert( result._lyrics, buf );
             end
             return result;
-        elseif( self._type == HandleTypeEnum.NoteHead )then
-            local result = Handle.new( HandleTypeEnum.NoteHead );
+        elseif( self._type == HandleTypeEnum.NOTE_HEAD )then
+            local result = Handle.new( HandleTypeEnum.NOTE_HEAD );
             result.index = self.index;
             result.iconId = self.iconId;
             result.ids = self.ids;
@@ -695,8 +695,8 @@ function Handle.new( ... )
             result:setDuration( self:getDuration() );
             result:setDepth( self:getDepth() );
             return result;
-        elseif( self._type == HandleTypeEnum.Singer )then
-            local ret = Handle.new( HandleTypeEnum.Singer );
+        elseif( self._type == HandleTypeEnum.SINGER )then
+            local ret = Handle.new( HandleTypeEnum.SINGER );
             ret._caption = self._caption;
             ret.iconId = self.iconId;
             ret.ids = self.ids;
@@ -706,8 +706,8 @@ function Handle.new( ... )
             ret.original = self.original;
             ret.program = self.program;
             return ret;
-        elseif( self._type == HandleTypeEnum.Vibrato )then
-            local result = Handle.new( HandleTypeEnum.Vibrato );
+        elseif( self._type == HandleTypeEnum.VIBRATO )then
+            local result = Handle.new( HandleTypeEnum.VIBRATO );
             result.index = self.index;
             result.iconId = self.iconId;
             result.ids = self.ids;

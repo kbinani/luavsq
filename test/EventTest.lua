@@ -118,10 +118,10 @@ function testWriteNoteWithOption()
     --現在、PreUtteranceとVoiceOverlapは扱わないようにしているので、
     --オプション全指定と、オプションが無い場合の動作が全くおなじになってしまっている。
     --ustEventをちゃんと処理するようになったら、TODOコメントのところを外すこと
-    event.lyricHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Lyric );
+    event.lyricHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.LYRIC );
     event.lyricHandle:setLyricAt( 0, luavsq.Lyric.new( "わ", "w a" ) );
-    event.vibratoHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Vibrato );
-    event.noteHeadHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.NoteHead );
+    event.vibratoHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.VIBRATO );
+    event.noteHeadHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.NOTE_HEAD );
     stream = luavsq.TextStream.new();
     event:write( stream, optionAll );
     expected =
@@ -207,7 +207,7 @@ function testClone()
     local event = getSingerEvent();
     event.clock = 40;
     event.id = 4;
-    event.singerHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Singer );
+    event.singerHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.SINGER );
     event.singerHandle.index = 12;
     local copy = event:clone();
     assert_equal( 40, copy.clock );
@@ -251,19 +251,19 @@ function testClone()
     assert_equal( 16, copy.d4mean );
     assert_equal( 17, copy.pMeanEndingNote );
 
-    local iconHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Singer );
+    local iconHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.SINGER );
     iconHandle:setCaption( "foo" );
     id.singerHandle = iconHandle;
-    local lyricHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Lyric );
+    local lyricHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.LYRIC );
     lyricHandle.index = 102;
     id.lyricHandle = lyricHandle;
-    local vibratoHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Vibrato );
+    local vibratoHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.VIBRATO );
     vibratoHandle.iconId = "aho";
     id.vibratoHandle = vibratoHandle;
-    local noteHeadHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.NoteHead );
+    local noteHeadHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.NOTE_HEAD );
     noteHeadHandle.ids = "baka";
     id.noteHeadHandle = noteHeadHandle;
-    local iconDynamicsHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Dynamics );
+    local iconDynamicsHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.DYNAMICS );
     iconDynamicsHandle:setStartDyn( 183635 );
     id.iconDynamicsHandle = iconDynamicsHandle;
 

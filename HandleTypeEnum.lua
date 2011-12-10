@@ -22,26 +22,26 @@ HandleTypeEnum = {
     ---
     -- 歌詞ハンドル
     -- @var integer
-    Lyric = 0,
+    LYRIC = 0,
 
     ---
     -- ビブラートハンドル
     -- @var integer
-    Vibrato = 1,
+    VIBRATO = 1,
 
     ---
     -- 歌手ハンドル
     -- @var integer
-    Singer = 2,
+    SINGER = 2,
 
     ---
     -- アタックハンドル
     -- @var integer
-    NoteHead = 3,
+    NOTE_HEAD = 3,
 
     ---
     -- Dynamics ハンドル
     -- @var integer
-    Dynamics = 4
+    DYNAMICS = 4
 
 };

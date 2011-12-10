@@ -81,17 +81,17 @@ function getCrescendoStream()
 end
 
 function testConstructIconDynamicsHandle()
-    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.Dynamics );
+    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.DYNAMICS );
     assert_equal( luavsq.ArticulationTypeEnum.DYNAFF, handle:getArticulation() );
 end
 
 function testConstructNoteHeadHandle()
-    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.NoteHead );
+    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.NOTE_HEAD );
     assert_equal( luavsq.ArticulationTypeEnum.NOTE_ATTACK, handle:getArticulation() );
 end
 
 function testIsDynaffType()
-    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.Dynamics );
+    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.DYNAMICS );
     handle.iconId = nil;
     assert_false( handle:isDynaffType() );
     handle.iconId = "$05000000";
@@ -101,7 +101,7 @@ function testIsDynaffType()
 end
 
 function testIsCrescendType()
-    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.Dynamics );
+    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.DYNAMICS );
     handle.iconId = nil;
     assert_false( handle:isCrescendType() );
     handle.iconId = "$05000000";
@@ -111,7 +111,7 @@ function testIsCrescendType()
 end
 
 function testIsDecrescendType()
-    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.Dynamics );
+    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.DYNAMICS );
     handle.iconId = nil;
     assert_false( handle:isDecrescendType() );
     handle.iconId = "$05000000";
@@ -121,7 +121,7 @@ function testIsDecrescendType()
 end
 
 function __testClone()
-    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.Dynamics );
+    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.DYNAMICS );
     handle.iconId = "$05010000";
     handle.ids = "foo";
     handle.original = 1;
@@ -147,13 +147,13 @@ function __testClone()
 end
 
 function testGetterAndSetterCaption()
-    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.Dynamics );
+    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.DYNAMICS );
     handle:setCaption( "foo" );
     assert_equal( "foo", handle:getCaption() );
 end
 
 function testGetterAndSetterStartDyn()
-    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.Dynamics );
+    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.DYNAMICS );
     local expected = 100;
     assert_not_equal( expected, handle:getStartDyn() );
     handle:setStartDyn( expected );
@@ -161,7 +161,7 @@ function testGetterAndSetterStartDyn()
 end
 
 function testGetterAndSetterEndDyn()
-    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.Dynamics );
+    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.DYNAMICS );
     local expected = 100;
     assert_not_equal( expected, handle:getEndDyn() );
     handle:setEndDyn( expected );
@@ -169,7 +169,7 @@ function testGetterAndSetterEndDyn()
 end
 
 function testGetterAndSetterDynBP()
-    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.Dynamics );
+    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.DYNAMICS );
     local dynBP = luavsq.VibratoBPList.new( { 0.0, 1.0 }, { 1, 2 } );
     handle:setDynBP( nil );
     assert_nil( handle:getDynBP() );
@@ -187,7 +187,7 @@ function testConstructLyricFromTextStreamStopWithEOF()
     local index = 100;
 
     local handle = luavsq.Handle.new( stream, index, lastLine );
-    assert_equal( luavsq.HandleTypeEnum.Lyric, handle:getHandleType() );
+    assert_equal( luavsq.HandleTypeEnum.LYRIC, handle:getHandleType() );
     assert_equal( index, handle.index );
     assert_equal( 2, handle:getLyricCount() );
 
@@ -219,7 +219,7 @@ function testConstructLyricFromTextStreamStopWithNextHandle()
     local index = 100;
 
     local handle = luavsq.Handle.new( stream, index, lastLine );
-    assert_equal( luavsq.HandleTypeEnum.Lyric, handle:getHandleType() );
+    assert_equal( luavsq.HandleTypeEnum.LYRIC, handle:getHandleType() );
     assert_equal( index, handle.index );
     assert_equal( 1, handle:getLyricCount() );
 
@@ -246,7 +246,7 @@ function testConstructVibratoFromTextStream()
     local index = 101;
     local handle = luavsq.Handle.new( stream, index, lastLine );
 
-    assert_equal( luavsq.HandleTypeEnum.Vibrato, handle:getHandleType() );
+    assert_equal( luavsq.HandleTypeEnum.VIBRATO, handle:getHandleType() );
     assert_equal( "$04040004", handle.iconId );
     assert_equal( "normal-da-yo", handle.ids );
     assert_equal( "キャプションです=あ", handle:getCaption() );
@@ -288,7 +288,7 @@ function testConstructSingerFromTextStream()
     local lastLine = { ["value"] = "" };
     local handle = luavsq.Handle.new( stream, index, lastLine );
     assert_equal( index, handle.index );
-    assert_equal( luavsq.HandleTypeEnum.Singer, handle:getHandleType() );
+    assert_equal( luavsq.HandleTypeEnum.SINGER, handle:getHandleType() );
     assert_equal( "$07010002", handle.iconId );
     assert_equal( "Miku3=God", handle.ids );
     assert_equal( 2, handle.original );
@@ -303,7 +303,7 @@ function testConstructAttackFromTextStream()
     local lastLine = { ["value"] = "" };
     local index = 204;
     local handle = luavsq.Handle.new( stream, index, lastLine );
-    assert_equal( luavsq.HandleTypeEnum.NoteHead, handle:getHandleType() );
+    assert_equal( luavsq.HandleTypeEnum.NOTE_HEAD, handle:getHandleType() );
     assert_equal( index, handle.index );
     assert_equal( "$01010002", handle.iconId );
     assert_equal( "accent", handle.ids );
@@ -320,7 +320,7 @@ function testConstructCrescendFromTextStream()
     local index = 204;
     local handle = luavsq.Handle.new( stream, index, lastLine );
     assert_equal( index, handle.index );
-    assert_equal( luavsq.HandleTypeEnum.Dynamics, handle:getHandleType() );
+    assert_equal( luavsq.HandleTypeEnum.DYNAMICS, handle:getHandleType() );
     assert_equal( "$05020001", handle.iconId );
     assert_equal( "Crescendo", handle.ids );
     assert_equal( 4, handle.original );
@@ -332,7 +332,7 @@ function testConstructCrescendFromTextStream()
 end
 
 function testGetterAndSetterLength()
-    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.Vibrato );
+    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.VIBRATO );
     local expected = 847;
     assert_not_equal( expected, handle:getLength() );
     handle:setLength( expected );
@@ -483,7 +483,7 @@ function testGetHandleIndexFromString()
 end
 
 function testGetterAndSetterDepth()
-    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.NoteHead );
+    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.NOTE_HEAD );
     local expected = 1234;
     assert_not_equal( expected, handle:getDepth() );
     handle:setDepth( expected );
@@ -491,7 +491,7 @@ function testGetterAndSetterDepth()
 end
 
 function testGetterAndSetterDuration()
-    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.NoteHead );
+    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.NOTE_HEAD );
     local expected = 947;
     assert_not_equal( expected, handle:getDuration() );
     handle:setDuration( expected );
@@ -499,14 +499,14 @@ function testGetterAndSetterDuration()
 end
 
 function testGetDisplayString()
-    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.NoteHead );
+    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.NOTE_HEAD );
     handle.ids = "goo";
     handle:setCaption( "gle" );
     assert_equal( "google", handle:getDisplayString() );
 end
 
 function testGetterAndSetterRateBP()
-    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.Vibrato );
+    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.VIBRATO );
     local rateBP = luavsq.VibratoBPList.new( { 0.0, 1.0 }, { 1, 128 } );
     assert_not_equal( "0=1,1=128", handle:getRateBP():getData() );
     handle:setRateBP( rateBP );
@@ -514,7 +514,7 @@ function testGetterAndSetterRateBP()
 end
 
 function testGetterAndSetterDepthBP()
-    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.Vibrato );
+    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.VIBRATO );
     local depthBP = luavsq.VibratoBPList.new( { 0.0, 1.0 }, { 1, 128 } );
     assert_not_equal( "0=1,1=128", handle:getDepthBP():getData() );
     handle:setDepthBP( depthBP );
@@ -522,7 +522,7 @@ function testGetterAndSetterDepthBP()
 end
 
 function testGetterAndSetterStartRate()
-    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.Vibrato );
+    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.VIBRATO );
     local expected = 12345;
     assert_not_equal( expected, handle:getStartRate() );
     handle:setStartRate( expected );
@@ -530,7 +530,7 @@ function testGetterAndSetterStartRate()
 end
 
 function testGetterAndSetterStartDepth()
-    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.Vibrato );
+    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.VIBRATO );
     local expected = 12345;
     assert_not_equal( expected, handle:getStartDepth() );
     handle:setStartDepth( expected );
@@ -538,7 +538,7 @@ function testGetterAndSetterStartDepth()
 end
 
 function testGetterAndSetterLyric()
-    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.Lyric );
+    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.LYRIC );
     handle:setLyricAt( 0, luavsq.Lyric.new( "は", "h a" ) );
     local lyric = luavsq.Lyric.new( "ら", "4 a" );
     handle:setLyricAt( 1, lyric );
@@ -547,7 +547,7 @@ function testGetterAndSetterLyric()
 end
 
 function testCloneIconDynamicsHandle()
-    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.Dynamics );
+    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.DYNAMICS );
     handle.iconId = "$05010000";
     handle.ids = "foo";
     handle.original = 1;
@@ -573,7 +573,7 @@ function testCloneIconDynamicsHandle()
 end
 
 function testCloneLyricHandle()
-    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.Lyric );
+    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.LYRIC );
     handle:setLyricAt( 0, luavsq.Lyric.new( "ら", "4 a" ) );
     handle.index = 10;
     local copy = handle:clone();
@@ -582,7 +582,7 @@ function testCloneLyricHandle()
 end
 
 function testCloneNoteHeadHandle()
-    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.NoteHead );
+    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.NOTE_HEAD );
     handle.index = 1;
     handle.iconId = "$05010000";
     handle.ids = "dwango";
@@ -604,7 +604,7 @@ function testCloneNoteHeadHandle()
 end
 
 function testCloneVibratoHandle()
-    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.Vibrato );
+    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.VIBRATO );
     handle.index = 1;
     handle.iconId = "hahaha";
     handle.ids = "baka";
@@ -629,7 +629,7 @@ function testCloneVibratoHandle()
 end
 
 function testCloneSingerHandle()
-    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.Singer );
+    local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.SINGER );
     handle:setCaption( "bar" );
     handle.iconId = "$07010001";
     handle.ids = "foo";
