@@ -1,26 +1,26 @@
 require( "lunit" );
-dofile( "../TimesigTableItem.lua" );
-module( "TimesigTableItemTest", package.seeall, lunit.testcase );
+dofile( "../Timesig.lua" );
+module( "TimesigTest", package.seeall, lunit.testcase );
 
 function testConstruct()
-    local item = luavsq.TimesigTableItem.new();
+    local item = luavsq.Timesig.new();
     assert_equal( 4, item.numerator );
     assert_equal( 4, item.denominator );
     assert_equal( 0, item.barCount );
 
-    item = luavsq.TimesigTableItem.new( 3, 4, 1 );
+    item = luavsq.Timesig.new( 3, 4, 1 );
     assert_equal( 3, item.numerator );
     assert_equal( 4, item.denominator );
     assert_equal( 1, item.barCount );
 end
 
 function testToString()
-    local item = luavsq.TimesigTableItem.new( 3, 4, 1 );
+    local item = luavsq.Timesig.new( 3, 4, 1 );
     assert_equal( "{Clock=0, Numerator=3, Denominator=4, BarCount=1}", item:toString() );
 end
 
 function testClone()
-    local item = luavsq.TimesigTableItem.new( 3, 4, 1 );
+    local item = luavsq.Timesig.new( 3, 4, 1 );
     local copy = item:clone();
     assert_equal( 3, copy.numerator );
     assert_equal( 4, copy.denominator );
@@ -28,8 +28,8 @@ function testClone()
 end
 
 function testCompareTo()
-    local a = luavsq.TimesigTableItem.new( 3, 4, 1 );
-    local b = luavsq.TimesigTableItem.new( 3, 4, 1 );
+    local a = luavsq.Timesig.new( 3, 4, 1 );
+    local b = luavsq.Timesig.new( 3, 4, 1 );
     assert_equal( 0, a:compareTo( b ) );
 
     -- barCount が異なる
@@ -44,21 +44,21 @@ function testCompareTo()
 end
 
 function testCompare()
-    local a = luavsq.TimesigTableItem.new( 3, 4, 1 );
-    local b = luavsq.TimesigTableItem.new( 3, 4, 1 );
+    local a = luavsq.Timesig.new( 3, 4, 1 );
+    local b = luavsq.Timesig.new( 3, 4, 1 );
     -- aとbが同じ序列
-    assert_false( luavsq.TimesigTableItem.compare( a, b ) );
-    assert_false( luavsq.TimesigTableItem.compare( b, a ) );
+    assert_false( luavsq.Timesig.compare( a, b ) );
+    assert_false( luavsq.Timesig.compare( b, a ) );
 
     -- barCount が異なる
     a.barCount = 2;
-    assert_false( luavsq.TimesigTableItem.compare( a, b ) );
-    assert_true( luavsq.TimesigTableItem.compare( b, a ) );
+    assert_false( luavsq.Timesig.compare( a, b ) );
+    assert_true( luavsq.Timesig.compare( b, a ) );
 
     -- barCount が同じだが、他が異なる
     -- この場合aとbは同じ序列
     a.barCount = 1;
     a.clock = 1;
-    assert_false( luavsq.TimesigTableItem.compare( a, b ) );
-    assert_false( luavsq.TimesigTableItem.compare( b, a ) );
+    assert_false( luavsq.Timesig.compare( a, b ) );
+    assert_false( luavsq.Timesig.compare( b, a ) );
 end

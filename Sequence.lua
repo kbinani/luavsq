@@ -53,13 +53,13 @@ function Sequence.new( ... )
 
     ---
     -- テンポ情報を保持したテーブル
-    -- @var TempoTable
-    this.tempoTable = nil;
+    -- @var TempoList
+    this.tempoList = nil;
 
     ---
     -- 拍子情報を保持したテーブル
-    -- @var TimesigTable
-    this.timesigTable = nil;
+    -- @var TimesigList
+    this.timesigList = nil;
 
     --
     -- 曲の長さを取得します。(クロック(4分音符は480クロック))
@@ -99,10 +99,10 @@ function Sequence.new( ... )
         self.master = Master.new( preMeasure );
         self.mixer = Mixer.new( 0, 0, 0, 0 );
         self.mixer.slave[1] = MixerItem.new( 0, 0, 0, 0 );
-        self.timesigTable = TimesigTable.new();
-        self.timesigTable:push( TimesigTableItem.new( numerator, denominator, 0 ) );
-        self.tempoTable = TempoTable.new();
-        self.tempoTable:push( TempoTableItem.new( 0, tempo ) );
+        self.timesigList = TimesigList.new();
+        self.timesigList:push( Timesig.new( numerator, denominator, 0 ) );
+        self.tempoList = TempoList.new();
+        self.tempoList:push( Tempo.new( 0, tempo ) );
     end
 
     ---
@@ -116,14 +116,14 @@ function Sequence.new( ... )
             ret.track:push( self.track[i]:clone() );
         end
 
-        ret.tempoTable = TempoTable.new();
-        for i = 0, self.tempoTable:size() - 1, 1 do
-            ret.tempoTable:push( self.tempoTable:get( i ):clone() );
+        ret.tempoList = TempoList.new();
+        for i = 0, self.tempoList:size() - 1, 1 do
+            ret.tempoList:push( self.tempoList:get( i ):clone() );
         end
 
-        ret.timesigTable = TimesigTable.new();
-        for i = 0, self.timesigTable:size() - 1, 1 do
-            ret.timesigTable:push( self.timesigTable:get( i ):clone() );
+        ret.timesigList = TimesigList.new();
+        for i = 0, self.timesigList:size() - 1, 1 do
+            ret.timesigList:push( self.timesigList:get( i ):clone() );
         end
         ret._totalClocks = self._totalClocks;
         ret.master = self.master:clone();
@@ -166,18 +166,18 @@ function Sequence.new( ... )
     -- @access private
     function this:_calculatePreMeasureInClock()
         local pre_measure = self.master.preMeasure;
-        local last_bar_count = self.timesigTable:get( 0 ).barCount;
-        local last_clock = self.timesigTable:get( 0 ):getTick();
-        local last_denominator = self.timesigTable:get( 0 ).denominator;
-        local last_numerator = self.timesigTable:get( 0 ).numerator;
-        for i = 1, self.timesigTable:size() - 1, 1 do
-            if( self.timesigTable:get( i ).barCount >= pre_measure )then
+        local last_bar_count = self.timesigList:get( 0 ).barCount;
+        local last_clock = self.timesigList:get( 0 ):getTick();
+        local last_denominator = self.timesigList:get( 0 ).denominator;
+        local last_numerator = self.timesigList:get( 0 ).numerator;
+        for i = 1, self.timesigList:size() - 1, 1 do
+            if( self.timesigList:get( i ).barCount >= pre_measure )then
                 break;
             else
-                last_bar_count = self.timesigTable:get( i ).barCount;
-                last_clock = self.timesigTable:get( i ):getTick();
-                last_denominator = self.timesigTable:get( i ).denominator;
-                last_numerator = self.timesigTable:get( i ).numerator;
+                last_bar_count = self.timesigList:get( i ).barCount;
+                last_clock = self.timesigList:get( i ):getTick();
+                last_denominator = self.timesigList:get( i ).denominator;
+                last_numerator = self.timesigList:get( i ).numerator;
             end
         end
 
@@ -227,16 +227,16 @@ function Sequence.new( ... )
     -- @return (integer) ミリ秒単位のプリセンド時間
     -- @access private
     function this:_getActualClockAndDelay( clock, msPreSend )
-        local clock_msec = self.tempoTable:getSecFromClock( clock ) * 1000.0;
+        local clock_msec = self.tempoList:getSecFromClock( clock ) * 1000.0;
 
         local actualClock;
         if( clock_msec - msPreSend <= 0 )then
             actualClock = 0;
         else
             local draft_clock_sec = (clock_msec - msPreSend) / 1000.0;
-            actualClock = math.floor( self.tempoTable:getClockFromSec( draft_clock_sec ) );
+            actualClock = math.floor( self.tempoList:getClockFromSec( draft_clock_sec ) );
         end
-        local delay = math.floor( clock_msec - self.tempoTable:getSecFromClock( actualClock ) * 1000.0 );
+        local delay = math.floor( clock_msec - self.tempoList:getSecFromClock( actualClock ) * 1000.0 );
         return actualClock, delay;
     end
 
@@ -246,13 +246,13 @@ function Sequence.new( ... )
         -- @param clock [int]
         -- @return [int]
         function this:getMaximumNoteLengthAt( clock )
-            local secAtStart = self.tempoTable:getSecFromClock( clock );
+            local secAtStart = self.tempoList:getSecFromClock( clock );
             local secAtEnd = secAtStart + Id.MAX_NOTE_MILLISEC_LENGTH / 1000.0;
-            local clockAtEnd = math.floor( self.tempoTable:getClockFromSec( secAtEnd ) - 1 );
-            secAtEnd = self.tempoTable:getSecFromClock( clockAtEnd );
+            local clockAtEnd = math.floor( self.tempoList:getClockFromSec( secAtEnd ) - 1 );
+            secAtEnd = self.tempoList:getSecFromClock( clockAtEnd );
             while ( math.floor( secAtEnd * 1000.0 ) - math.floor( secAtStart * 1000.0 ) <= Id.MAX_NOTE_MILLISEC_LENGTH )do
                 clockAtEnd = clockAtEnd + 1;
-                secAtEnd = self.tempoTable:getSecFromClock( clockAtEnd );
+                secAtEnd = self.tempoList:getSecFromClock( clockAtEnd );
             end
             clockAtEnd = clockAtEnd - 1;
             return clockAtEnd - clock;
@@ -322,12 +322,12 @@ function Sequence.new( ... )
         stream:write( Sequence._MASTER_TRACK, 1, #Sequence._MASTER_TRACK );
 
         local events = {};
-        local itr = self.timesigTable:iterator();
+        local itr = self.timesigList:iterator();
         while( itr:hasNext() )do
             local entry = itr:next();
             table.insert( events, MidiEvent.generateTimeSigEvent( entry:getTick(), entry.numerator, entry.denominator ) );
         end
-        itr = self.tempoTable.iterator();
+        itr = self.tempoList.iterator();
         while( itr:hasNext() )do
             local entry = itr:next();
             table.insert( events, MidiEvent.generateTempoChangeEvent( entry.clock, entry.tempo ) );
@@ -632,9 +632,9 @@ function Sequence._generateSingerNRPN( sequence, singerEvent, msPreSend )
         return {};
     end
 
-    local clock_msec = sequence.tempoTable:getSecFromClock( clock ) * 1000.0;
+    local clock_msec = sequence.tempoList:getSecFromClock( clock ) * 1000.0;
 
-    local msEnd = sequence.tempoTable:getSecFromClock( singerEvent.clock + singerEvent:getLength() ) * 1000.0;
+    local msEnd = sequence.tempoList:getSecFromClock( singerEvent.clock + singerEvent:getLength() ) * 1000.0;
     local duration = math.floor( math.ceil( msEnd - clock_msec ) );
 
     local duration0, duration1 = Sequence._getMsbAndLsb( duration );
@@ -704,8 +704,8 @@ function Sequence._generateNoteNRPN( sequence, track, noteEvent, msPreSend, note
     add:append( MidiParameterEnum.CVM_NM_VELOCITY, noteEvent.dynamics, true );
 
     -- Note Duration
-    local msEnd = sequence.tempoTable:getSecFromClock( clock + noteEvent:getLength() ) * 1000.0;
-    local clock_msec = sequence.tempoTable:getSecFromClock( clock ) * 1000.0;
+    local msEnd = sequence.tempoList:getSecFromClock( clock + noteEvent:getLength() ) * 1000.0;
+    local clock_msec = sequence.tempoList:getSecFromClock( clock ) * 1000.0;
     local duration = math.floor( msEnd - clock_msec );
     local duration0, duration1 = Sequence._getMsbAndLsb( duration );
     add:append( MidiParameterEnum.CVM_NM_NOTE_DURATION, duration0, duration1, true );

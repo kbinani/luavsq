@@ -12,10 +12,10 @@ dofile( "../Event.lua" );
 dofile( "../Master.lua" );
 dofile( "../Mixer.lua" );
 dofile( "../MixerItem.lua" );
-dofile( "../TimesigTable.lua" );
-dofile( "../TimesigTableItem.lua" );
-dofile( "../TempoTable.lua" );
-dofile( "../TempoTableItem.lua" );
+dofile( "../TimesigList.lua" );
+dofile( "../Timesig.lua" );
+dofile( "../TempoList.lua" );
+dofile( "../Tempo.lua" );
 dofile( "../ByteArrayOutputStream.lua" );
 dofile( "../Util.lua" );
 dofile( "../MidiEvent.lua" );
@@ -123,17 +123,17 @@ function isEqualToDefaultSequence( sequence )
     assert_equal( 0, sequence.mixer.slave[1].solo );
 
     -- timesigTable
-    assert_equal( 1, sequence.timesigTable:size() );
-    assert_equal( 0, sequence.timesigTable:get( 0 ):getTick() );
-    assert_equal( 4, sequence.timesigTable:get( 0 ).denominator );
-    assert_equal( 4, sequence.timesigTable:get( 0 ).numerator );
-    assert_equal( 0, sequence.timesigTable:get( 0 ).barCount );
+    assert_equal( 1, sequence.timesigList:size() );
+    assert_equal( 0, sequence.timesigList:get( 0 ):getTick() );
+    assert_equal( 4, sequence.timesigList:get( 0 ).denominator );
+    assert_equal( 4, sequence.timesigList:get( 0 ).numerator );
+    assert_equal( 0, sequence.timesigList:get( 0 ).barCount );
 
     -- tempoTable
-    assert_equal( 1, sequence.tempoTable:size() );
-    assert_equal( 0, sequence.tempoTable:get( 0 ).clock );
-    assert_equal( 500000, sequence.tempoTable:get( 0 ).tempo );
-    assert_equal( 0.0, sequence.tempoTable:get( 0 ):getTime() );
+    assert_equal( 1, sequence.tempoList:size() );
+    assert_equal( 0, sequence.tempoList:get( 0 ).clock );
+    assert_equal( 500000, sequence.tempoList:get( 0 ).tempo );
+    assert_equal( 0.0, sequence.tempoList:get( 0 ):getTime() );
 end
 
 function testConstruct()

@@ -1,5 +1,5 @@
 --[[
-  TempoTable.lua
+  TempoList.lua
   Copyright © 2011 kbinani
 
   This file is part of luavsq.
@@ -17,20 +17,20 @@ module( "luavsq" );
 ---
 -- テンポ情報を格納したテーブルを表すクラス
 -- @class table
--- @name TempoTable
-TempoTable = {};
+-- @name TempoList
+TempoList = {};
 
 ---
 -- 初期化を行う
--- @return (TempoTable)
+-- @return (TempoList)
 -- @access static ctor
-function TempoTable.new()
+function TempoList.new()
     local this = {};
     this._array = List.new();
 
     ---
     -- リスト内のテンポ変更イベントを順に返す反復子を取得する
-    -- @return (List.Iterator<TempoTableItem>) 反復子
+    -- @return (List.Iterator<Tempo>) 反復子
     function this:iterator()
         return this._array:iterator();
     end
@@ -38,12 +38,12 @@ function TempoTable.new()
     ---
     -- データ点を時刻順に並べ替える
     function this:sort()
-        self._array:sort( TempoTableItem.compare );
+        self._array:sort( Tempo.compare );
     end
 
     ---
     -- データ点を追加する
-    -- @param value (TempoTableItem) 追加するテンポ変更情報
+    -- @param value (Tempo) 追加するテンポ変更情報
     function this:push( value )
         self._array:push( value );
     end
@@ -58,7 +58,7 @@ function TempoTable.new()
     ---
     -- 指定したインデックスのテンポ変更情報を取得する
     -- @param index (integer) インデックス(最初のインデックスは0)
-    -- @return (TempoTableItem) テンポ変更情報
+    -- @return (Tempo) テンポ変更情報
     function this:get( index )
         return self._array[index];
     end
@@ -66,7 +66,7 @@ function TempoTable.new()
     ---
     -- 指定したインデックスのテンポ変更情報を設定する
     -- @param index (integer) インデックス(最初のインデックスは0)
-    -- @param value (TempoTableItem) 設定するイベント
+    -- @param value (Tempo) 設定するイベント
     function this:set( index, value )
         self._array[index] = value;
     end
@@ -77,12 +77,12 @@ function TempoTable.new()
     -- @return (double) Tick 単位の時刻
     function this:getClockFromSec( time )
         -- timeにおけるテンポを取得
-        local tempo = TempoTable.baseTempo;
+        local tempo = TempoList.baseTempo;
         local base_clock = 0;
         local base_time = 0.0;
         local c = self._array:size();
         if( c == 0 )then
-            tempo = TempoTable.baseTempo;
+            tempo = TempoList.baseTempo;
             base_clock = 0;
             base_time = 0.0;
         elseif( c == 1 )then
@@ -94,12 +94,12 @@ function TempoTable.new()
             for i = c - 1, 0, -1 do
                 local item = self._array[i];
                 if( item._time < time )then
-                    return item.clock + (time - item._time) * TempoTable.gatetimePerQuater * 1000000.0 / item.tempo;
+                    return item.clock + (time - item._time) * TempoList.gatetimePerQuater * 1000000.0 / item.tempo;
                 end
             end
         end
         local dt = time - base_time;
-        return base_clock + dt * TempoTable.gatetimePerQuater * 1000000.0 / tempo;
+        return base_clock + dt * TempoList.gatetimePerQuater * 1000000.0 / tempo;
     end
 
     ---
@@ -107,19 +107,19 @@ function TempoTable.new()
     function this:updateTempoInfo()
         local c = self._array:size();
         if( c == 0 )then
-            self._array:push( TempoTableItem.new( 0, TempoTable.baseTempo ) );
+            self._array:push( Tempo.new( 0, TempoList.baseTempo ) );
         end
-        self._array:sort( TempoTableItem.compare );
+        self._array:sort( Tempo.compare );
         local item0 = self._array[0];
         if( item0.clock ~= 0 )then
-            item0._time = TempoTable.baseTempo * item0.clock / (TempoTable.gatetimePerQuater * 1000000.0);
+            item0._time = TempoList.baseTempo * item0.clock / (TempoList.gatetimePerQuater * 1000000.0);
         else
             item0._time = 0.0;
         end
         local prev_time = item0._time;
         local prev_clock = item0.clock;
         local prev_tempo = item0.tempo;
-        local inv_tpq_sec = 1.0 / (TempoTable.gatetimePerQuater * 1000000.0);
+        local inv_tpq_sec = 1.0 / (TempoList.gatetimePerQuater * 1000000.0);
         local i;
         for i = 1, c - 1, 1 do
             local itemi = self._array[i];
@@ -147,7 +147,7 @@ function TempoTable.new()
             end
         end
 
-        local sec_per_clock = TempoTable.baseTempo * 1e-6 / 480.0;
+        local sec_per_clock = TempoList.baseTempo * 1e-6 / 480.0;
         return clock * sec_per_clock;
     end
 
@@ -171,5 +171,5 @@ function TempoTable.new()
     return this;
 end
 
-TempoTable.gatetimePerQuater = 480;
-TempoTable.baseTempo = 500000;
+TempoList.gatetimePerQuater = 480;
+TempoList.baseTempo = 500000;

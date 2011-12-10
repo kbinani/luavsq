@@ -1,5 +1,5 @@
 --[[
-  TimesigTableItem.lua
+  Timesig.lua
   Copyright © 2011 kbinani
 
   This file is part of luavsq.
@@ -17,13 +17,13 @@ module( "luavsq" );
 ---
 -- 拍子変更情報テーブル内の要素を表現するためのクラス
 -- @class table
--- @name TimesigTableItem
-TimesigTableItem = {};
+-- @name Timesig
+Timesig = {};
 
 --
 -- 初期化を行う
--- @return (TimesigTableItem)
-function TimesigTableItem.new( ... )
+-- @return (Timesig)
+function Timesig.new( ... )
     local this = {};
     local arguments = { ... };
 
@@ -53,7 +53,7 @@ function TimesigTableItem.new( ... )
     -- @param numerator (integer) 拍子の分子の値
     -- @param denominator (integer) 拍子の分母値
     -- @param barCount (integer) 小節数
-    -- @return (TimesigTableItem)
+    -- @return (Timesig)
     -- @name new
     -- @access static ctor
     function this:_init_3( numerator, denominator, barCount )
@@ -78,16 +78,16 @@ function TimesigTableItem.new( ... )
 
     ---
     -- コピーを作成する
-    -- @return (TimesigTableItem) このオブジェクトのコピー
+    -- @return (Timesig) このオブジェクトのコピー
     function this:clone()
-        local result = TimesigTableItem.new( self.numerator, self.denominator, self.barCount );
+        local result = Timesig.new( self.numerator, self.denominator, self.barCount );
         result._clock = self._clock;
         return result;
     end
 
     ---
     -- 順序を比較する
-    -- @param item (TimesigTableItem) 比較対象のアイテム
+    -- @param item (Timesig) 比較対象のアイテム
     -- @return (integer) このインスタンスが比較対象よりも小さい場合は負の整数、等しい場合は 0、大きい場合は正の整数を返す
     function this:compareTo( item )
         return self.barCount - item.barCount;
@@ -101,11 +101,11 @@ function TimesigTableItem.new( ... )
 end
 
 ---
--- 2 つの {@link TimesigTableItem} を比較する
--- @param a (TimesigTableItem) 比較対象のオブジェクト
--- @param b (TimesigTableItem) 比較対象のオブジェクト
+-- 2 つの {@link Timesig} を比較する
+-- @param a (Timesig) 比較対象のオブジェクト
+-- @param b (Timesig) 比較対象のオブジェクト
 -- @return (boolean) <code>a</code> が <code>b</code> よりも小さい場合は <code>true</code>、そうでない場合は <code>false</code> を返す
 -- @access static
-function TimesigTableItem.compare( a, b )
+function Timesig.compare( a, b )
     return (a:compareTo( b ) < 0);
 end

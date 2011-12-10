@@ -1,5 +1,5 @@
 --[[
-  TimesigTable.lua
+  TimesigList.lua
   Copyright © 2011 kbinani
 
   This file is part of luavsq.
@@ -19,14 +19,14 @@ module( "luavsq" );
 ---
 -- 拍子情報を格納したテーブルを表すクラス
 -- @class table
--- @name TimesigTable
-TimesigTable = {};
+-- @name TimesigList
+TimesigList = {};
 
 ---
 -- 初期化を行う
--- @return (TimesigTable)
+-- @return (TimesigList)
 -- @access static ctor
-function TimesigTable.new()
+function TimesigList.new()
     local this = {};
     this._list = List.new();
 
@@ -39,14 +39,14 @@ function TimesigTable.new()
 
     ---
     -- データ点を順に返す反復子を取得する
-    -- @return (List.Iterator<TimesigTableItem>) 反復子
+    -- @return (List.Iterator<Timesig>) 反復子
     function this:iterator()
         return self._list:iterator();
     end
 
     ---
     -- データ点を追加する
-    -- @param item (TimesigTableItem) 追加する拍子変更情報
+    -- @param item (Timesig) 追加する拍子変更情報
     function this:push( item )
         self._list:push( item );
     end
@@ -54,7 +54,7 @@ function TimesigTable.new()
     ---
     -- 指定したインデックスの拍子変更情報を取得する
     -- @param index (integer) 取得するデータ点のインデックス(0から始まる)
-    -- @return (TimesigTableItem) 拍子変更情報
+    -- @return (Timesig) 拍子変更情報
     function this:get( index )
         return self._list[index];
     end
@@ -62,7 +62,7 @@ function TimesigTable.new()
     ---
     -- 指定したインデックスの拍子変更情報を設定する
     -- @param index (integer) インデックス(最初のインデックスは0)
-    -- @param value (TempoTableItem) 設定するイベント
+    -- @param value (Tempo) 設定するイベント
     function this:set( index, value )
         self._list[index] = value;
     end
@@ -74,7 +74,7 @@ function TimesigTable.new()
             return;
         end
         self:get( 0 )._clock = 0;
-        self._list:sort( TimesigTableItem.compare );-- Collections.sort( this );
+        self._list:sort( Timesig.compare );-- Collections.sort( this );
         local count = self:size();
         local j;
         for j = 1, count - 1, 1 do
@@ -94,7 +94,7 @@ function TimesigTable.new()
     -- @param clock (number) ゲートタイム
     -- @return (Timesig) 指定されたゲートタイムでの拍子情報
     function this:getTimesigAt( clock )
-        local ret = TimesigTableItem.new();
+        local ret = Timesig.new();
         ret.numerator = 4;
         ret.denominator = 4;
         local index = 0;
@@ -114,7 +114,7 @@ function TimesigTable.new()
     ---
     -- 指定されたゲートタイムにおける拍子情報を取得する
     -- @param clock (number) ゲートタイム
-    -- @return (TimesigTableItem) 指定されたゲートタイムでの拍子情報
+    -- @return (Timesig) 指定されたゲートタイムでの拍子情報
     function this:findTimesigAt( clock )
         local index = 0;
         local c = self._list:size();
