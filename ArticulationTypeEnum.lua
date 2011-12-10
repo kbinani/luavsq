@@ -27,25 +27,25 @@ ArticulationTypeEnum = {
     ---
     -- ビブラート
     -- @var integer
-    Vibrato = 0,
+    VIBRATO = 0,
 
     ---
     -- クレッシェンド、またはデクレッシェンド
     -- @var integer
-    Crescendo = 1,
+    CRESCENDO = 1,
 
     ---
     -- ピアノ、フォルテ等の強弱記号
     -- @var integer
-    Dynaff = 2,
+    DYNAFF = 2,
 
     ---
     -- アタック
     -- @var integer
-    NoteAttack = 3,
+    NOTE_ATTACK = 3,
 
     ---
     -- NoteTransition(詳細不明)
     -- @var integer
-    NoteTransition = 4,
+    NOTE_TRANSITION = 4,
 };

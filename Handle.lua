@@ -105,7 +105,7 @@ function Handle.new( ... )
         if( type == HandleTypeEnum.Dynamics )then
             self:_init_icon_dynamics();
         elseif( type == HandleTypeEnum.NoteHead )then
-            self._articulation = ArticulationTypeEnum.NoteAttack;
+            self._articulation = ArticulationTypeEnum.NOTE_ATTACK;
         elseif( type == HandleTypeEnum.Vibrato )then
             self:_init_vibrato();
         elseif( type == HandleTypeEnum.Lyric )then
@@ -261,7 +261,7 @@ function Handle.new( ... )
     -- @access private
     -- @name _init_vibrato
     function this:_init_vibrato()
-        self._articulation = ArticulationTypeEnum.Vibrato;
+        self._articulation = ArticulationTypeEnum.VIBRATO;
         self.index = 0;
         self.iconId = "$04040000";
         self.ids = "";
@@ -277,7 +277,7 @@ function Handle.new( ... )
     -- @access private
     -- @name _init_icon_dynamics
     function this:_init_icon_dynamics()
-        self._articulation = ArticulationTypeEnum.Dynaff;
+        self._articulation = ArticulationTypeEnum.DYNAFF;
         self.iconId = "";
         self.ids = "";
         self.original = 0;

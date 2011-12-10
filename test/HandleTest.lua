@@ -82,12 +82,12 @@ end
 
 function testConstructIconDynamicsHandle()
     local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.Dynamics );
-    assert_equal( luavsq.ArticulationTypeEnum.Dynaff, handle:getArticulation() );
+    assert_equal( luavsq.ArticulationTypeEnum.DYNAFF, handle:getArticulation() );
 end
 
 function testConstructNoteHeadHandle()
     local handle = luavsq.Handle.new( luavsq.HandleTypeEnum.NoteHead );
-    assert_equal( luavsq.ArticulationTypeEnum.NoteAttack, handle:getArticulation() );
+    assert_equal( luavsq.ArticulationTypeEnum.NOTE_ATTACK, handle:getArticulation() );
 end
 
 function testIsDynaffType()
