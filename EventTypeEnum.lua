@@ -22,22 +22,22 @@ EventTypeEnum = {
     ---
     -- 歌手
     -- @var integer
-    Singer = 0,
+    SINGER = 0,
 
     ---
     -- 歌詞
     -- @var integer
-    Anote = 1,
+    NOTE = 1,
 
     ---
     -- アイコン
     -- @var integer
-    Aicon = 2,
+    ICON = 2,
 
     ---
     -- 不明
     -- @var integer
-    Unknown = -1
+    UNKNOWN = -1
 
 };
 
@@ -47,11 +47,11 @@ EventTypeEnum = {
 -- @return (string) 変換後の文字列
 -- @name toString
 function EventTypeEnum.toString( value )
-    if( value == EventTypeEnum.Singer )then
+    if( value == EventTypeEnum.SINGER )then
         return "Singer";
-    elseif( value == EventTypeEnum.Anote )then
+    elseif( value == EventTypeEnum.NOTE )then
         return "Anote";
-    elseif( value == EventTypeEnum.Aicon )then
+    elseif( value == EventTypeEnum.ICON )then
         return "Aicon";
     else
         return "Unknown";

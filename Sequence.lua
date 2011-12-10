@@ -872,7 +872,7 @@ function Sequence._generateNRPN_3( sequence, track, msPreSend )
     -- 最初の歌手を決める
     local singer_event = -1;
     for i = note_start, 0, -1 do
-        if( target.events:get( i ).type == EventTypeEnum.Singer )then
+        if( target.events:get( i ).type == EventTypeEnum.SINGER )then
             singer_event = i;
             break;
         end
@@ -917,7 +917,7 @@ function Sequence._generateNRPN_3( sequence, track, msPreSend )
     local last_note_end = 0;
     for i = note_start, note_end, 1 do
         local item = target.events:get( i );
-        if( item.type == EventTypeEnum.Anote )then
+        if( item.type == EventTypeEnum.NOTE )then
             local note_loc = 0x03;
             if( item.clock == last_note_end )then
                 note_loc = note_loc - 0x02;
@@ -929,7 +929,7 @@ function Sequence._generateNRPN_3( sequence, track, msPreSend )
             local j;
             for j = i + 1, event_count - 1, 1 do
                 local itemj = target.events:get( j );
-                if( itemj.type == EventTypeEnum.Anote )then
+                if( itemj.type == EventTypeEnum.NOTE )then
                     nextclock = itemj.clock;
                     break;
                 end
@@ -954,7 +954,7 @@ function Sequence._generateNRPN_3( sequence, track, msPreSend )
                 Sequence._generateVibratoNRPN( sequence, item, msPreSend )
             );
             last_note_end = item.clock + item:getLength();
-        elseif( item.type == EventTypeEnum.Singer )then
+        elseif( item.type == EventTypeEnum.SINGER )then
             if( i > note_start and i ~= singer_event )then
                 Sequence._array_add_all(
                     list,

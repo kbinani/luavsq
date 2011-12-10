@@ -20,8 +20,8 @@ end
 
 function testFindIndexFromId()
     local list = luavsq.EventList.new();
-    local a = luavsq.Event.new( 1, luavsq.EventTypeEnum.Anote );
-    local b = luavsq.Event.new( 0, luavsq.EventTypeEnum.Anote );
+    local a = luavsq.Event.new( 1, luavsq.EventTypeEnum.NOTE );
+    local b = luavsq.Event.new( 0, luavsq.EventTypeEnum.NOTE );
     list:add( a, 0 );
     list:add( b, 1 );
 
@@ -32,23 +32,23 @@ end
 
 function testFindFromId()
     local list = luavsq.EventList.new();
-    local a = luavsq.Event.new( 0, luavsq.EventTypeEnum.Anote );
-    local b = luavsq.Event.new( 0, luavsq.EventTypeEnum.Singer );
+    local a = luavsq.Event.new( 0, luavsq.EventTypeEnum.NOTE );
+    local b = luavsq.Event.new( 0, luavsq.EventTypeEnum.SINGER );
     list:add( a, 0 );
     list:add( b, 1 );
 
-    assert_equal( luavsq.EventTypeEnum.Anote, list:findFromId( 0 ).type );
-    assert_equal( luavsq.EventTypeEnum.Singer, list:findFromId( 1 ).type );
+    assert_equal( luavsq.EventTypeEnum.NOTE, list:findFromId( 0 ).type );
+    assert_equal( luavsq.EventTypeEnum.SINGER, list:findFromId( 1 ).type );
     assert_nil( list:findFromId( 1000 ) );
 end
 
 function testSetForId()
     local list = luavsq.EventList.new();
-    local event = luavsq.Event.new( 0, luavsq.EventTypeEnum.Anote );
+    local event = luavsq.Event.new( 0, luavsq.EventTypeEnum.NOTE );
     event.note = 60;
     event.id = 10;
 
-    local replace = luavsq.Event.new( 0, luavsq.EventTypeEnum.Anote );
+    local replace = luavsq.Event.new( 0, luavsq.EventTypeEnum.NOTE );
     replace.note = 90;
     replace.id = 100;
 
@@ -67,8 +67,8 @@ end
 
 function testSort()
     local list = luavsq.EventList.new();
-    local b = luavsq.Event.new( 480, luavsq.EventTypeEnum.Anote );
-    local a = luavsq.Event.new( 0, luavsq.EventTypeEnum.Anote );
+    local b = luavsq.Event.new( 480, luavsq.EventTypeEnum.NOTE );
+    local a = luavsq.Event.new( 0, luavsq.EventTypeEnum.NOTE );
     b.id = 14;
     a.id = 20;
     list._events = { b, a };
@@ -84,8 +84,8 @@ end
 
 function testClear()
     local list = luavsq.EventList.new();
-    local b = luavsq.Event.new( 480, luavsq.EventTypeEnum.Anote );
-    local a = luavsq.Event.new( 0, luavsq.EventTypeEnum.Anote );
+    local b = luavsq.Event.new( 480, luavsq.EventTypeEnum.NOTE );
+    local a = luavsq.Event.new( 0, luavsq.EventTypeEnum.NOTE );
     list:add( b, 14 );
     list:add( a, 20 );
 
@@ -103,8 +103,8 @@ end
 
 function testAddWithoutInternalId()
     local list = luavsq.EventList.new();
-    local a = luavsq.Event.new( 1, luavsq.EventTypeEnum.Anote );
-    local b = luavsq.Event.new( 0, luavsq.EventTypeEnum.Anote );
+    local a = luavsq.Event.new( 1, luavsq.EventTypeEnum.NOTE );
+    local b = luavsq.Event.new( 0, luavsq.EventTypeEnum.NOTE );
     local idOfA = list:add( a );
     local idOfB = list:add( b );
 
@@ -116,8 +116,8 @@ end
 
 function testAddWithInternalId()
     local list = luavsq.EventList.new();
-    local a = luavsq.Event.new( 0, luavsq.EventTypeEnum.Anote );
-    local b = luavsq.Event.new( 0, luavsq.EventTypeEnum.Anote );
+    local a = luavsq.Event.new( 0, luavsq.EventTypeEnum.NOTE );
+    local b = luavsq.Event.new( 0, luavsq.EventTypeEnum.NOTE );
     local idOfA = list:add( a, 100 );
     local idOfB = list:add( b, 2 );
     assert_equal( 100, idOfA );
@@ -128,8 +128,8 @@ end
 
 function testRemoveAt()
     local list = luavsq.EventList.new();
-    local a = luavsq.Event.new( 0, luavsq.EventTypeEnum.Anote );
-    local b = luavsq.Event.new( 0, luavsq.EventTypeEnum.Anote );
+    local a = luavsq.Event.new( 0, luavsq.EventTypeEnum.NOTE );
+    local b = luavsq.Event.new( 0, luavsq.EventTypeEnum.NOTE );
     list:add( a, 100 );
     list:add( b, 2 );
     assert_equal( 100, list:get( 0 ).id );
@@ -145,21 +145,21 @@ end
 function testSize()
     local list = luavsq.EventList.new();
     assert_equal( 0, list:size() );
-    local event = luavsq.Event.new( 0, luavsq.EventTypeEnum.Anote );
+    local event = luavsq.Event.new( 0, luavsq.EventTypeEnum.NOTE );
     list:add( event );
     assert_equal( 1, list:size() );
 end
 
 function testGetAndSetElement()
     local list = luavsq.EventList.new();
-    local a = luavsq.Event.new( 0, luavsq.EventTypeEnum.Anote );
-    local b = luavsq.Event.new( 0, luavsq.EventTypeEnum.Anote );
+    local a = luavsq.Event.new( 0, luavsq.EventTypeEnum.NOTE );
+    local b = luavsq.Event.new( 0, luavsq.EventTypeEnum.NOTE );
     list:add( a, 100 );
     list:add( b, 2 );
     assert_equal( 100, list:get( 0 ).id );
     assert_equal( 2, list:get( 1 ).id );
 
-    local c = luavsq.Event.new( 480, luavsq.EventTypeEnum.Anote );
+    local c = luavsq.Event.new( 480, luavsq.EventTypeEnum.NOTE );
     c.id = 99;
     list:set( 1, c );
 
@@ -173,11 +173,11 @@ function testIterator()
     local iterator = list:iterator();
     assert_false( iterator:hasNext() );
 
-    local singerEvent = luavsq.Event.new( 0, luavsq.EventTypeEnum.Singer );
+    local singerEvent = luavsq.Event.new( 0, luavsq.EventTypeEnum.SINGER );
     singerEvent.singerHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Singer );
     list:add( singerEvent, 1 );
 
-    local crescendoEvent = luavsq.Event.new( 240, luavsq.EventTypeEnum.Aicon );
+    local crescendoEvent = luavsq.Event.new( 240, luavsq.EventTypeEnum.ICON );
     crescendoEvent.iconDynamicsHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Dynamics );
     crescendoEvent.iconDynamicsHandle.iconId = "$05020001";
     list:add( crescendoEvent, 2 );
@@ -193,30 +193,30 @@ end
 function testWrite()
     local list = luavsq.EventList.new();
 
-    local singerEvent = luavsq.Event.new( 0, luavsq.EventTypeEnum.Singer );
+    local singerEvent = luavsq.Event.new( 0, luavsq.EventTypeEnum.SINGER );
     singerEvent.singerHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Singer );
     list:add( singerEvent, 1 );
 
-    local crescendoEvent = luavsq.Event.new( 240, luavsq.EventTypeEnum.Aicon );
+    local crescendoEvent = luavsq.Event.new( 240, luavsq.EventTypeEnum.ICON );
     crescendoEvent.iconDynamicsHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Dynamics );
     crescendoEvent.iconDynamicsHandle.iconId = "$05020001";
     list:add( crescendoEvent, 2 );
 
-    local dynaffEvent = luavsq.Event.new( 480, luavsq.EventTypeEnum.Aicon );
+    local dynaffEvent = luavsq.Event.new( 480, luavsq.EventTypeEnum.ICON );
     dynaffEvent.iconDynamicsHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Dynamics );
     dynaffEvent.iconDynamicsHandle.iconId = "$05010001";
     list:add( dynaffEvent, 3 );
 
-    local decrescendoEvent = luavsq.Event.new( 720, luavsq.EventTypeEnum.Aicon );
+    local decrescendoEvent = luavsq.Event.new( 720, luavsq.EventTypeEnum.ICON );
     decrescendoEvent.iconDynamicsHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Dynamics );
     decrescendoEvent.iconDynamicsHandle.iconId = "$05030001";
     list:add( decrescendoEvent, 4 );
 
-    local singerEvent2 = luavsq.Event.new( 1920, luavsq.EventTypeEnum.Singer );
+    local singerEvent2 = luavsq.Event.new( 1920, luavsq.EventTypeEnum.SINGER );
     singerEvent2.singerHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Singer );
     list:add( singerEvent2, 5 );
 
-    local noteEvent = luavsq.Event.new( 1920, luavsq.EventTypeEnum.Anote );
+    local noteEvent = luavsq.Event.new( 1920, luavsq.EventTypeEnum.NOTE );
     noteEvent:setLength( 480 );
     noteEvent.lyricHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Lyric );
     noteEvent.lyricHandle:setLyricAt( 0, luavsq.Lyric.new( "ら", "4 a" ) );

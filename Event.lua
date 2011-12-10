@@ -185,9 +185,9 @@ function Event.new( ... )
     function this:_init_2( clock, eventType )
         self.clock = clock;
         self.type = eventType;
-        if( eventType == EventTypeEnum.Singer )then
+        if( eventType == EventTypeEnum.SINGER )then
             self.singerHandle = Handle.new( HandleTypeEnum.Singer );
-        elseif( eventType == EventTypeEnum.Anote )then
+        elseif( eventType == EventTypeEnum.NOTE )then
             self.lyricHandle = Handle.new( HandleTypeEnum.Lyric );
             self.lyricHandle:setLyricAt( 0, Lyric.new( "a", "a" ) );
         end
@@ -367,12 +367,12 @@ function Event.new( ... )
                 if( self.vMeanNoteTransition ~= item.vMeanNoteTransition )then
                     return false;
                 end
-            elseif( self.type == EventTypeEnum.Singer )then
+            elseif( self.type == EventTypeEnum.SINGER )then
                 -- シンガーイベントの比較
                 if( self.singerHandle.program ~= item.singerHandle.program )then
                     return false;
                 end
-            elseif( self.type == EventTypeEnum.Aicon )then
+            elseif( self.type == EventTypeEnum.ICON )then
                 if( self.iconDynamicsHandle.iconId ~= item.iconDynamicsHandle.iconId )then
                     return false;
                 end
@@ -424,7 +424,7 @@ function Event.new( ... )
     function this:_write_2( stream, printTargets )
         stream:writeLine( "[ID#" .. string.format( "%04d", self.index ) .. "]" );
         stream:writeLine( "Type=" .. EventTypeEnum.toString( self.type ) );
-        if( self.type == EventTypeEnum.Anote )then
+        if( self.type == EventTypeEnum.NOTE )then
             if( Util.searchArray( printTargets, "Length" ) >= 1 )then
                 stream:writeLine( "Length=" .. self:getLength() );
             end
@@ -465,9 +465,9 @@ function Event.new( ... )
             if( self.noteHeadHandle ~= nil )then
                 stream:writeLine( "NoteHeadHandle=h#" .. string.format( "%04d", self._noteHeadHandleIndex ) );
             end
-        elseif( self.type == EventTypeEnum.Singer )then
+        elseif( self.type == EventTypeEnum.SINGER )then
             stream:writeLine( "IconHandle=h#" .. string.format( "%04d", self._singerHandleIndex ) );
-        elseif( self.type == EventTypeEnum.Aicon )then
+        elseif( self.type == EventTypeEnum.ICON )then
             stream:writeLine( "IconHandle=h#" .. string.format( "%04d", self._singerHandleIndex ) );
             stream:writeLine( "Note#=" .. self.note );
         end
@@ -528,7 +528,7 @@ function Event.new( ... )
         function this:_init_3( sr, value, last_line )
             local spl;
             self.index = value;
-            self.type = EventTypeEnum.Unknown;
+            self.type = EventTypeEnum.UNKNOWN;
             self._singerHandleIndex = -2;
             self._lyricHandleIndex = -1;
             self._vibratoHandleIndex = -1;
@@ -548,13 +548,13 @@ function Event.new( ... )
                 local search = spl[1];
                 if( search == "Type" )then
                     if( spl[2] == "Anote" )then
-                        self.type = EventTypeEnum.Anote;
+                        self.type = EventTypeEnum.NOTE;
                     elseif( spl[2] == "Singer" )then
-                        self.type = EventTypeEnum.Singer;
+                        self.type = EventTypeEnum.SINGER;
                     elseif( spl[2] == "Aicon" )then
-                        self.type = EventTypeEnum.Aicon;
+                        self.type = EventTypeEnum.ICON;
                     else
-                        self.type = EventTypeEnum.Unknown;
+                        self.type = EventTypeEnum.UNKNOWN;
                     end
                 elseif( search == "Length" )then
                     self:setLength( tonumber( spl[2], 10 ) );

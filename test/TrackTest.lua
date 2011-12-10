@@ -62,7 +62,7 @@ function testConstructNormalTrack()
     local track = luavsq.Track.new( "DummyTrackName", "DummySingerName" );
     assert_equal( "DummyTrackName", track:getName() );
     assert_equal( 1, track.events:size() );
-    assert_equal( luavsq.EventTypeEnum.Singer, track.events:get( 0 ).type );
+    assert_equal( luavsq.EventTypeEnum.SINGER, track.events:get( 0 ).type );
     assert_equal( "DummySingerName", track.events:get( 0 ).singerHandle.ids );
 
     assert_not_nil( track.common );
@@ -247,7 +247,7 @@ function testGetIndexIteratorNote()
     local iterator = track:getIndexIterator( luavsq.EventList.IndexIteratorKindEnum.NOTE );
     assert_false( iterator:hasNext() );
 
-    local event = luavsq.Event.new( 480, luavsq.EventTypeEnum.Anote );
+    local event = luavsq.Event.new( 480, luavsq.EventTypeEnum.NOTE );
     track.events:add( event, 10 );
     iterator = track:getIndexIterator( luavsq.EventList.IndexIteratorKindEnum.NOTE );
     assert_true( iterator:hasNext() );
@@ -262,7 +262,7 @@ function testGetIndexIteratorDynamics()
     local iterator = track:getIndexIterator( luavsq.EventList.IndexIteratorKindEnum.DYNAFF );
     assert_false( iterator:hasNext() );
 
-    local event = luavsq.Event.new( 480, luavsq.EventTypeEnum.Aicon );
+    local event = luavsq.Event.new( 480, luavsq.EventTypeEnum.ICON );
     event.iconDynamicsHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Dynamics );
     event.iconDynamicsHandle.iconId = "$05019999";
     track.events:add( event, 10 );
@@ -278,7 +278,7 @@ end
 function testPrintMetaText()
     local track = luavsq.Track.new( "DummyTrackName", "DummySingerName" );
 
-    local singerEvent = luavsq.Event.new( 0, luavsq.EventTypeEnum.Singer );
+    local singerEvent = luavsq.Event.new( 0, luavsq.EventTypeEnum.SINGER );
     singerEvent.singerHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Singer ); --h#0000
     singerEvent.singerHandle.iconId = "$07010002";
     singerEvent.singerHandle.ids = "Miku";
@@ -288,7 +288,7 @@ function testPrintMetaText()
     singerEvent.singerHandle.program = 2;
     track.events:set( 0, singerEvent );
 
-    local crescendoEvent = luavsq.Event.new( 240, luavsq.EventTypeEnum.Aicon );
+    local crescendoEvent = luavsq.Event.new( 240, luavsq.EventTypeEnum.ICON );
     crescendoEvent.note = 64;
     crescendoEvent.iconDynamicsHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Dynamics ); --h#0001
     crescendoEvent.iconDynamicsHandle.iconId = "$05020001";
@@ -300,7 +300,7 @@ function testPrintMetaText()
     crescendoEvent:setLength( 10 );
     track.events:add( crescendoEvent, 2 );
 
-    local dynaffEvent = luavsq.Event.new( 480, luavsq.EventTypeEnum.Aicon );
+    local dynaffEvent = luavsq.Event.new( 480, luavsq.EventTypeEnum.ICON );
     dynaffEvent.note = 65;
     dynaffEvent.iconDynamicsHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Dynamics );--h#0002
     dynaffEvent.iconDynamicsHandle.iconId = "$05010001";
@@ -312,7 +312,7 @@ function testPrintMetaText()
     dynaffEvent:setLength( 11 );
     track.events:add( dynaffEvent, 3 );
 
-    local decrescendoEvent = luavsq.Event.new( 720, luavsq.EventTypeEnum.Aicon );
+    local decrescendoEvent = luavsq.Event.new( 720, luavsq.EventTypeEnum.ICON );
     decrescendoEvent.note = 66;
     decrescendoEvent.iconDynamicsHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Dynamics );--h#0003
     decrescendoEvent.iconDynamicsHandle.iconId = "$05030001";
@@ -324,7 +324,7 @@ function testPrintMetaText()
     decrescendoEvent:setLength( 12 );
     track.events:add( decrescendoEvent, 4 );
 
-    local singerEvent2 = luavsq.Event.new( 1920, luavsq.EventTypeEnum.Singer );
+    local singerEvent2 = luavsq.Event.new( 1920, luavsq.EventTypeEnum.SINGER );
     singerEvent2.singerHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Singer );--h#0004
     singerEvent2.singerHandle.iconId = "$07020003";
     singerEvent2.singerHandle.ids = "Luka_EN";
@@ -334,7 +334,7 @@ function testPrintMetaText()
     singerEvent2.singerHandle.program = 3;
     track.events:add( singerEvent2, 5 );
 
-    local noteEvent = luavsq.Event.new( 1920, luavsq.EventTypeEnum.Anote );
+    local noteEvent = luavsq.Event.new( 1920, luavsq.EventTypeEnum.NOTE );
     noteEvent.note = 67;
     noteEvent.dynamics = 68;
     noteEvent.pmBendDepth = 69;
@@ -624,7 +624,7 @@ end
 
 function testClone()
     local track = luavsq.Track.new( "DummyTrackName", "DummySingerName" );
-    local event = luavsq.Event.new( 480, luavsq.EventTypeEnum.Anote );
+    local event = luavsq.Event.new( 480, luavsq.EventTypeEnum.NOTE );
     track.events:add( event );
     track:getCurve( "pit" ):add( 480, 100 );
     track.tag = "valueOfTag";
@@ -632,10 +632,10 @@ function testClone()
     local copy = track:clone();
     assert_equal( 2, copy.events:size() );
     assert_equal( 0, copy.events:get( 0 ).clock );
-    assert_equal( luavsq.EventTypeEnum.Singer, copy.events:get( 0 ).type );
+    assert_equal( luavsq.EventTypeEnum.SINGER, copy.events:get( 0 ).type );
     assert_equal( "DummySingerName", copy.events:get( 0 ).singerHandle.ids );
     assert_equal( 480, copy.events:get( 1 ).clock );
-    assert_equal( luavsq.EventTypeEnum.Anote, copy.events:get( 1 ).type );
+    assert_equal( luavsq.EventTypeEnum.NOTE, copy.events:get( 1 ).type );
     assert_equal( 1, copy:getCurve( "pit" ):size() );
     assert_equal( 480, copy:getCurve( "pit" ):getKeyClock( 0 ) );
     assert_equal( 100, copy:getCurve( "pit" ):get( 0 ).value );

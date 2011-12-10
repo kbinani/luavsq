@@ -11,7 +11,7 @@ dofile( "../HandleTypeEnum.lua" );
 module( "EventTest", package.seeall, lunit.testcase );
 
 function getNoteEvent()
-    local noteEvent = luavsq.Event.new( 0, luavsq.EventTypeEnum.Anote );
+    local noteEvent = luavsq.Event.new( 0, luavsq.EventTypeEnum.NOTE );
     noteEvent:setLength( 2 );
     noteEvent.note = 6;
     noteEvent.dynamics = 21;
@@ -33,7 +33,7 @@ function getNoteEvent()
 end
 
 function getSingerEvent()
-    local singerEvent = luavsq.Event.new( 0, luavsq.EventTypeEnum.Singer );
+    local singerEvent = luavsq.Event.new( 0, luavsq.EventTypeEnum.SINGER );
     singerEvent.singerHandle = nil;
     singerEvent._singerHandleIndex = 16;
     singerEvent.index = 15;
@@ -41,7 +41,7 @@ function getSingerEvent()
 end
 
 function getIconEvent()
-    local iconEvent = luavsq.Event.new( 0, luavsq.EventTypeEnum.Aicon );
+    local iconEvent = luavsq.Event.new( 0, luavsq.EventTypeEnum.ICON );
     iconEvent.singerHandle = nil;
     iconEvent._singerHandleIndex = 18;
     iconEvent.note = 19;
@@ -65,7 +65,7 @@ function testConstructWithLine()
 end
 
 function testConstructWithClockAndId()
-    local event = luavsq.Event.new( 1, luavsq.EventTypeEnum.Anote );
+    local event = luavsq.Event.new( 1, luavsq.EventTypeEnum.NOTE );
     event.note = 60;
     event.index = 12;
 
@@ -215,7 +215,7 @@ function testClone()
     assert_equal( 12, copy.singerHandle.index );
 --TODO: ustEventのclone
 
-    local id = luavsq.Event.new( 0, luavsq.EventTypeEnum.Anote );
+    local id = luavsq.Event.new( 0, luavsq.EventTypeEnum.NOTE );
     id.index = 1;
     id.note = 6;
     id.dynamics = 7;
@@ -237,7 +237,7 @@ function testClone()
 
     local copy = id:clone();
     assert_equal( 1, copy.index );
-    assert_equal( luavsq.EventTypeEnum.Anote, copy.type );
+    assert_equal( luavsq.EventTypeEnum.NOTE, copy.type );
     assert_equal( 6, copy.note );
     assert_equal( 7, copy.dynamics );
     assert_equal( 8, copy.pmBendDepth );
@@ -276,8 +276,8 @@ function testClone()
 end
 
 function testCompareTo()
-    local singerEvent = luavsq.Event.new( 1920, luavsq.EventTypeEnum.Singer );
-    local noteEvent = luavsq.Event.new( 1920, luavsq.EventTypeEnum.Anote );
+    local singerEvent = luavsq.Event.new( 1920, luavsq.EventTypeEnum.SINGER );
+    local noteEvent = luavsq.Event.new( 1920, luavsq.EventTypeEnum.NOTE );
     assert_equal( 0, singerEvent:compareTo( singerEvent ) );
     assert_true( 0 > singerEvent:compareTo( noteEvent ) );
     assert_true( 0 < noteEvent:compareTo( singerEvent ) );

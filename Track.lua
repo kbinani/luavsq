@@ -258,7 +258,7 @@ function Track.new( ... )
             }]]
         self.events = EventList.new();
 
-        local event = Event.new( 0, EventTypeEnum.Singer );
+        local event = Event.new( 0, EventTypeEnum.SINGER );
         local ish = Handle.new( HandleTypeEnum.Singer );
         ish.iconId = "$07010000";
         ish.ids = singer;
@@ -662,7 +662,7 @@ function Track.new( ... )
             local singers_size = #singers;
             if( singers_size <= 0 )then
                 default_id = Id.new();
-                default_id.type = EventTypeEnum.Singer;
+                default_id.type = EventTypeEnum.SINGER;
                 local singer_handle = Handle.new( HandleTypeEnum.Singer );
                 singer_handle.IconID = "$0701" + org.kbinani.PortUtil.sprintf( "%04X", 0 );
                 singer_handle.ids = "Unknown";
@@ -927,7 +927,7 @@ function Track.new( ... )
             local counter = 0;
             local i;
             for i = 0; i < self.events:size(); i++
-                if( self.events:getElement( i ).type == EventTypeEnum.Anote )then
+                if( self.events:getElement( i ).type == EventTypeEnum.NOTE )then
                     counter++;
                 end
             end

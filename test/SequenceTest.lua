@@ -105,7 +105,7 @@ function isEqualToDefaultSequence( sequence )
     assert_equal( "", track1.tag );
     assert_equal( 1, track1.events:size() );
     assert_equal( 0, track1.events:get( 0 ).clock );
-    assert_equal( luavsq.EventTypeEnum.Singer, track1.events:get( 0 ).type );
+    assert_equal( luavsq.EventTypeEnum.SINGER, track1.events:get( 0 ).type );
 
     -- master
     assert_equal( 1, sequence.master.preMeasure );
@@ -171,7 +171,7 @@ end
 function testUpdateTotalClocks()
     local sequence = luavsq.Sequence.new( "Miku", 1, 4, 4, 500000 );
     assert_equal( 1 * 480 * 4 / 4 * 4, sequence:getTotalClocks() );
-    local note = luavsq.Event.new( 1920, luavsq.EventTypeEnum.Anote );
+    local note = luavsq.Event.new( 1920, luavsq.EventTypeEnum.NOTE );
     note:setLength( 480 );
     note.note = 60;
     sequence.track[1].events:add( note );
@@ -249,7 +249,7 @@ function testWriteWithoutPitch()
         local list = sequence.track:get( 1 ):getCurve( curveName );
         list:add( 1920, 0 + i );
     end
-    local noteEvent = luavsq.Event.new( 1920, luavsq.EventTypeEnum.Anote );
+    local noteEvent = luavsq.Event.new( 1920, luavsq.EventTypeEnum.NOTE );
     sequence.track:get( 1 ).events:add( noteEvent );
 
     local stream = luavsq.ByteArrayOutputStream.new();
@@ -329,7 +329,7 @@ end
 
 function test_generateSingerNRPN()
     local sequence = luavsq.Sequence.new( "Miku", 1, 4, 4, 500000 );
-    local singerEvent = luavsq.Event.new( 1920, luavsq.EventTypeEnum.Singer );
+    local singerEvent = luavsq.Event.new( 1920, luavsq.EventTypeEnum.SINGER );
     singerEvent.singerHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.Singer );
     sequence.track:get( 1 ).events:add( singerEvent );
     local actual = luavsq.Sequence._generateSingerNRPN( sequence, singerEvent, 500 );
@@ -371,7 +371,7 @@ end
 
 function test_generateNoteNRPN()
     local sequence = luavsq.Sequence.new( "Miku", 1, 4, 4, 500000 );
-    local noteEvent = luavsq.Event.new( 1920, luavsq.EventTypeEnum.Anote );
+    local noteEvent = luavsq.Event.new( 1920, luavsq.EventTypeEnum.NOTE );
     noteEvent:setLength( 480 );
     noteEvent.note = 60;
     noteEvent.dynamics = 127;
@@ -675,7 +675,7 @@ end
 
 function test_generateVibratoNRPN()
     local sequence = luavsq.Sequence.new( "Miku", 1, 4, 4, 500000 );
-    local noteEvent = luavsq.Event.new( 480, luavsq.EventTypeEnum.Anote );
+    local noteEvent = luavsq.Event.new( 480, luavsq.EventTypeEnum.NOTE );
     noteEvent.vibratoHandle = nil;
 
     -- ビブラートがないため、NRPN が生成されない場合
