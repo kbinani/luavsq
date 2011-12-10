@@ -286,11 +286,11 @@ function Track.new( ... )
         -- @return [int] PlayMode.PlayAfterSynthまたはPlayMode.PlayWithSynth
         function this:getPlayMode()
             if( self.common == nil )then
-                return PlayModeEnum.PlayWithSynth;
+                return PlayModeEnum.PLAY_WITH_SYNTH;
             end
-            if( self.common.lastPlayMode ~= PlayModeEnum.PlayAfterSynth and
-                 self.common.lastPlayMode ~= PlayModeEnum.PlayWithSynth )then
-                self.common.lastPlayMode = PlayModeEnum.PlayWithSynth;
+            if( self.common.lastPlayMode ~= PlayModeEnum.PLAY_AFTER_SYNTH and
+                 self.common.lastPlayMode ~= PlayModeEnum.PLAY_WITH_SYNTH )then
+                self.common.lastPlayMode = PlayModeEnum.PLAY_WITH_SYNTH;
             end
             return self.common.lastPlayMode;
         end]]
@@ -306,8 +306,8 @@ function Track.new( ... )
                 self.common = Common.new( "Miku", 128, 128, 128, DynamicsModeEnum.EXPERT, value );
                 return;
             end
-            if( value == PlayModeEnum.Off )then
-                if( self.common.playMode ~= PlayModeEnum.Off )then
+            if( value == PlayModeEnum.OFF )then
+                if( self.common.playMode ~= PlayModeEnum.OFF )then
                     self.common.lastPlayMode = self.common.playMode;
                 end
             else
@@ -323,7 +323,7 @@ function Track.new( ... )
         function this:isTrackOn()
             if( self.MetaText == nil ) return true;
             if( self.common == nil ) return true;
-            return self.common.playMode ~= PlayModeEnum.Off;
+            return self.common.playMode ~= PlayModeEnum.OFF;
         end]]
 
     --[[
@@ -333,20 +333,20 @@ function Track.new( ... )
         function this:setTrackOn( value )
             if( self.MetaText == nil ) return;
             if( self.common == nil )then
-                self.common = Common.new( "Miku", 128, 128, 128, DynamicsModeEnum.EXPERT, value ? PlayModeEnum.PlayWithSynth : PlayModeEnum.Off );
+                self.common = Common.new( "Miku", 128, 128, 128, DynamicsModeEnum.EXPERT, value ? PlayModeEnum.PLAY_WITH_SYNTH : PlayModeEnum.OFF );
             end
             if( value )then
-                if( self.common.lastPlayMode ~= PlayModeEnum.PlayAfterSynth and
-                     self.common.lastPlayMode ~= PlayModeEnum.PlayWithSynth )then
-                    self.common.lastPlayMode = PlayModeEnum.PlayWithSynth;
+                if( self.common.lastPlayMode ~= PlayModeEnum.PLAY_AFTER_SYNTH and
+                     self.common.lastPlayMode ~= PlayModeEnum.PLAY_WITH_SYNTH )then
+                    self.common.lastPlayMode = PlayModeEnum.PLAY_WITH_SYNTH;
                 end
                 self.common.playMode = self.common.lastPlayMode;
             else
-                if( self.common.playMode == PlayModeEnum.PlayAfterSynth or
-                     self.common.playMode == PlayModeEnum.PlayWithSynth )then
+                if( self.common.playMode == PlayModeEnum.PLAY_AFTER_SYNTH or
+                     self.common.playMode == PlayModeEnum.PLAY_WITH_SYNTH )then
                     self.common.lastPlayMode = self.common.playMode;
                 end
-                self.common.playMode = PlayModeEnum.Off;
+                self.common.playMode = PlayModeEnum.OFF;
             end
         end]]
 

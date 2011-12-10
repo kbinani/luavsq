@@ -22,15 +22,15 @@ PlayModeEnum = {
     ---
     -- トラックはミュートされる(-1)
     -- @var integer
-    Off = -1,
+    OFF = -1,
 
     ---
     -- トラックは合成された後再生される(0)
     -- @var integer
-    PlayAfterSynth = 0,
+    PLAY_AFTER_SYNTH = 0,
 
     ---
     -- トラックは合成しながら再生される(1)
     -- @var integer
-    PlayWithSynth = 1,
+    PLAY_WITH_SYNTH = 1,
 };

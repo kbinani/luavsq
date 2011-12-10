@@ -52,10 +52,10 @@ function Common.new( ... )
     ---
     -- 再生モード
     -- @var PlayModeEnum
-    this.playMode = PlayModeEnum.PlayWithSynth;
+    this.playMode = PlayModeEnum.PLAY_WITH_SYNTH;
 
     -- PlayModeがOff(-1)にされる直前に，PlayAfterSynthかPlayWithSynthのどちらが指定されていたかを記憶しておく．
-    this._lastPlayMode = PlayModeEnum.PlayWithSynth;
+    this._lastPlayMode = PlayModeEnum.PLAY_WITH_SYNTH;
 
     ---
     -- 初期化を行う

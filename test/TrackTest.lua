@@ -374,7 +374,7 @@ function testPrintMetaText()
     track.common.name = "foo";
     track.common.color = "1,2,3";
     track.common.dynamicsMode = luavsq.DynamicsModeEnum.STANDARD;
-    track.common.playMode = luavsq.PlayModeEnum.PlayWithSynth;
+    track.common.playMode = luavsq.PlayModeEnum.PLAY_WITH_SYNTH;
 
     local curves = {
         "pit", "pbs", "dyn", "bre", "bri", "cle",
