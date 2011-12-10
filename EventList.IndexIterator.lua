@@ -50,13 +50,13 @@ function EventList.IndexIterator.new( list, iteratorKind )
     this._kindCrescend =
         Util.band(
             iteratorKind,
-            EventList.IndexIteratorKindEnum.CRESCEND
-        ) == EventList.IndexIteratorKindEnum.CRESCEND;
+            EventList.IndexIteratorKindEnum.CRESCENDO
+        ) == EventList.IndexIteratorKindEnum.CRESCENDO;
     this._kindDecrescend =
         Util.band(
             iteratorKind,
-            EventList.IndexIteratorKindEnum.DECRESCEND
-        ) == EventList.IndexIteratorKindEnum.DECRESCEND;
+            EventList.IndexIteratorKindEnum.DECRESCENDO
+        ) == EventList.IndexIteratorKindEnum.DECRESCENDO;
     this._kindDynaff =
         Util.band(
             iteratorKind,

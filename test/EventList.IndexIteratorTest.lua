@@ -63,7 +63,7 @@ function test()
     assert_equal( 3, event.id );
 
     --クレッシェンドのみのイテレータ
-    local crescendoIterator = luavsq.EventList.IndexIterator.new( list, luavsq.EventList.IndexIteratorKindEnum.CRESCEND );
+    local crescendoIterator = luavsq.EventList.IndexIterator.new( list, luavsq.EventList.IndexIteratorKindEnum.CRESCENDO );
     assert_true( crescendoIterator:hasNext() );
     assert_equal( 1, crescendoIterator:next() );
     assert_false( crescendoIterator:hasNext() );
@@ -71,7 +71,7 @@ function test()
     assert_equal( 240, event.clock );
     assert_equal( 2, event.id );
 
-    local decrescendoIterator = luavsq.EventList.IndexIterator.new( list, luavsq.EventList.IndexIteratorKindEnum.DECRESCEND );
+    local decrescendoIterator = luavsq.EventList.IndexIterator.new( list, luavsq.EventList.IndexIteratorKindEnum.DECRESCENDO );
     assert_true( decrescendoIterator:hasNext() );
     assert_equal( 3, decrescendoIterator:next() );
     assert_false( decrescendoIterator:hasNext() );
@@ -83,8 +83,8 @@ function test()
         luavsq.EventList.IndexIteratorKindEnum.NOTE,
         luavsq.EventList.IndexIteratorKindEnum.SINGER,
         luavsq.EventList.IndexIteratorKindEnum.DYNAFF,
-        luavsq.EventList.IndexIteratorKindEnum.CRESCEND,
-        luavsq.EventList.IndexIteratorKindEnum.DECRESCEND
+        luavsq.EventList.IndexIteratorKindEnum.CRESCENDO,
+        luavsq.EventList.IndexIteratorKindEnum.DECRESCENDO
     );
     local iteratorAll = luavsq.EventList.IndexIterator.new( list, kindAll );
     assert_true( iteratorAll:hasNext() );

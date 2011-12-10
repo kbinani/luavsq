@@ -41,12 +41,12 @@ EventList.IndexIteratorKindEnum = {
     ---
     -- クレッシェンドイベント
     -- @var integer
-    CRESCEND = 4,
+    CRESCENDO = 4,
 
     ---
     -- デクレッシェンドイベント
     -- @var integer
-    DECRESCEND = 8,
+    DECRESCENDO = 8,
 
     ---
     -- 強弱記号イベント
