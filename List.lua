@@ -37,6 +37,11 @@ end
 function List.new( ... )
     local this = {};
     local arguments = { ... };
+
+    ---
+    -- リストの元になる <code>table</code>
+    -- @var table
+    -- @access private
     this._array = {};
 
     ---

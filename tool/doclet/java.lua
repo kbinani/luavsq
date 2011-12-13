@@ -452,8 +452,8 @@ end
 -- @return (table) ソート後のテーブル
 function sortItems( items )
     local comparator = function( a, b )
-        local nameA = a.name;
-        local nameB = b.name;
+        local nameA = getShortName( a.name );
+        local nameB = getShortName( b.name );
         return nameA < nameB;
     end
 

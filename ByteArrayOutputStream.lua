@@ -29,7 +29,17 @@ ByteArrayOutputStream = {};
 -- @access static ctor
 function ByteArrayOutputStream.new()
     local this = {};
+
+    ---
+    -- 現在のファイルポインタ
+    -- @var int
+    -- @access private
     this._pointer = -1;
+
+    ---
+    -- 書き込み先のバイト列
+    -- @var table
+    -- @access private
     this._array = {};
 
     --

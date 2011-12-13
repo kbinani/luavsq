@@ -60,6 +60,11 @@ function NrpnEvent.new( ... )
     -- MSB の出力を省略するかどうか
     -- @var boolean
     this.isMSBOmittingRequired = false;
+
+    ---
+    -- 子イベントのリスト
+    -- @var table
+    -- @access private
     this._list = nil;
 
     ---

@@ -26,6 +26,11 @@ TempoList = {};
 -- @access static ctor
 function TempoList.new()
     local this = {};
+
+    ---
+    -- テンポ変更情報のリスト
+    -- @var List<Tempo>
+    -- @access private
     this._array = List.new();
 
     ---

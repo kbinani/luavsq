@@ -24,18 +24,26 @@ PhoneticSymbol = {};
 
 ---
 -- 日本語の母音発音記号
+-- @var string
+-- @access private static
 PhoneticSymbol._SYMBOL_VOWEL_JP = "\ta\ti\tM\te\to\t";
 
 ---
 -- 日本語の子音発音記号
+-- @var string
+-- @access private static
 PhoneticSymbol._SYMBOL_CONSONANT_JP = "\tk\tk'\tg\tg'\tN\tN'\ts\tS\tz\tZ\tdz\tdZ\tt\tt'\tts\ttS\td\td'\tn\tJ\th\th\\\tC\tp\\\tp\\'\tb\tb'\tp\tp'\tm\tm'\tj\t4\t4'\tw\tN\\\t";
 
 ---
 -- 英語の母音発音記号
+-- @var string
+-- @access private static
 PhoneticSymbol._SYMBOL_VOWEL_EN = "\t@\tV\te\te\tI\ti:\t{\tO:\tQ\tU\tu:\t@r\teI\taI\tOI\t@U\taU\tI@\te@\tU@\tO@\tQ@\t";
 
 ---
 -- 英語の子音発音記号
+-- @var string
+-- @access private static
 PhoneticSymbol._SYMBOL_CONSONANT_EN = "\tw\tj\tb\td\tg\tbh\tdh\tgh\tdZ\tv\tD\tz\tZ\tm\tn\tN\tr\tl\tl0\tp\tt\tk\tph\tth\tkh\ttS\tf\tT\ts\tS\th\tSil\tAsp\t";
 
 ---

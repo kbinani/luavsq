@@ -26,15 +26,41 @@ module( "luavsq" );
 -- @name Sequence
 Sequence = {};
 
+---
+-- テンポが省略された際の、基準となるテンポ値
+-- @var int
+-- @access private static
 Sequence.baseTempo = 500000;
+
+---
+-- MTRK ヘッダ
+-- @var table<int>
+-- @access private static
 Sequence._MTRK = { 0x4d, 0x54, 0x72, 0x6b };
+
+---
+-- MTHD ヘッダ
+-- @var table<int>
+-- @access private static
 Sequence._MTHD = { 0x4d, 0x54, 0x68, 0x64 };
+
+---
+-- Master Track のトラック名
+-- @var table<int>
+-- @access private static
 Sequence._MASTER_TRACK = { 0x4D, 0x61, 0x73, 0x74, 0x65, 0x72, 0x20, 0x54, 0x72, 0x61, 0x63, 0x6B };
+
+---
+-- カーブ名のリスト
+-- @var table<string>
+-- @access private static
 Sequence._CURVES = { "VEL", "DYN", "BRE", "BRI", "CLE", "OPE", "GEN", "POR", "PIT", "PBS" };
 
---
+---
 -- VOCALOID の NRPN を出力するかどうか
 -- @todo NRPN 出力関連の メソッドのテストが書けたらデフォルトで true にする
+-- @var boolean
+-- @access private static
 Sequence._WRITE_NRPN = false;
 
 --
@@ -44,6 +70,10 @@ function Sequence.new( ... )
     local this = {};
     local arguments = { ... };
 
+    ---
+    -- 四分音符 1 個あたりの Tick 数
+    -- @var int
+    -- @access private static
     this._tickPerQuarter = 480;
 
     ---
@@ -61,8 +91,10 @@ function Sequence.new( ... )
     -- @var TimesigList
     this.timesigList = nil;
 
-    --
-    -- 曲の長さを取得します。(クロック(4分音符は480クロック))
+    ---
+    -- Tick 単位の曲の長さ
+    -- @var int
+    -- @access private
     this._totalClocks = 0;
 
     ---

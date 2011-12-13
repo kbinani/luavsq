@@ -37,6 +37,10 @@ function Tempo.new( ... )
     -- @var int
     this.tempo = 0;
 
+    ---
+    -- テンポ変更の秒単位の時刻
+    -- @var double
+    -- @access private
     this._time = 0.0;
 
     ---

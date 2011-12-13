@@ -28,6 +28,11 @@ TimesigList = {};
 -- @access static ctor
 function TimesigList.new()
     local this = {};
+
+    ---
+    -- 拍子変更情報のリスト
+    -- @var List<Timesig>
+    -- @access private
     this._list = List.new();
 
     ---

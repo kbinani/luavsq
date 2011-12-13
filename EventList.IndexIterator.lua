@@ -32,30 +32,63 @@ EventList.IndexIterator = {};
 -- @access static ctor
 function EventList.IndexIterator.new( list, iteratorKind )
     local this = {};
+
     ---
-    -- @local [VsqEventList]
+    -- 反復子の元になるリスト
+    -- @var EventList
+    -- @access private
     this._list = list;
+
+    ---
+    -- 反復子の現在の位置
+    -- @var int
+    -- @access private
     this._pos = 0;
+
+    ---
+    -- 歌手イベントを対象に含めるかどうか
+    -- @var boolean
+    -- @access private
     this._kindSinger =
         Util.band(
             iteratorKind,
             EventList.IndexIteratorKindEnum.SINGER
         ) == EventList.IndexIteratorKindEnum.SINGER;
+
+    ---
+    -- 音符イベントを対象に含めるかどうか
+    -- @var boolean
+    -- @access private
     this._kindNote =
         Util.band(
             iteratorKind,
             EventList.IndexIteratorKindEnum.NOTE
         ) == EventList.IndexIteratorKindEnum.NOTE;
+
+    ---
+    -- クレッシェンドイベントを対象に含めるかどうか
+    -- @var boolean
+    -- @access private
     this._kindCrescend =
         Util.band(
             iteratorKind,
             EventList.IndexIteratorKindEnum.CRESCENDO
         ) == EventList.IndexIteratorKindEnum.CRESCENDO;
+
+    ---
+    -- デクレッシェンドイベントを対象に含めるかどうか
+    -- @var boolean
+    -- @access private
     this._kindDecrescend =
         Util.band(
             iteratorKind,
             EventList.IndexIteratorKindEnum.DECRESCENDO
         ) == EventList.IndexIteratorKindEnum.DECRESCENDO;
+
+    ---
+    -- 強弱記号イベントを対象に含めるかどうか
+    -- @var boolean
+    -- @access private
     this._kindDynaff =
         Util.band(
             iteratorKind,

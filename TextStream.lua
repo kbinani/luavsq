@@ -29,8 +29,23 @@ TextStream = {};
 -- @access static ctor
 function TextStream.new()
     local this = {};
+
+    ---
+    -- 書き込まれたデータを保持するバッファー
+    -- @var table
+    -- @access private
     this._array = {};
+
+    ---
+    -- データの現在の長さ
+    -- @var int
+    -- @access private
     this._length = 0;
+
+    ---
+    -- 現在の読み書き位置
+    -- @var int
+    -- @access private
     this._position = -1;
 
     ---

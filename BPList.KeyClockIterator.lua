@@ -32,13 +32,20 @@ BPList.KeyClockIterator = {};
 -- @access static ctor
 -- @class function
 
---
--- 初期化を行う
--- @return (BPList.KeyClockIterator)
 function BPList.KeyClockIterator.new( ... )
     local this = {};
     local arguments = { ... };
+
+    ---
+    -- 反復子の元になるリスト
+    -- @var table
+    -- @access private
     this._list = nil;
+
+    ---
+    -- 反復子の現在の位置
+    -- @var int
+    -- @access private
     this._pos = 0;
 
     ---

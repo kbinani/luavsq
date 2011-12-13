@@ -34,11 +34,13 @@ function EventList.new()
     local this = {};
 
     ---
+    -- イベントのリスト
     -- @var table<Event>
     -- @access private
     this._events = {};
 
     ---
+    -- イベントの ID のリスト
     -- @var table<int>
     -- @access private
     this._ids = {};

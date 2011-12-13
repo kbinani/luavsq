@@ -62,6 +62,10 @@ function Event.new( ... )
     -- @var Handle
     this.singerHandle = nil;
 
+    ---
+    -- Tick 単位のイベント長さ
+    -- @var int
+    -- @access private
     this._length = 0;
 
     ---

@@ -30,6 +30,11 @@ FileOutputStream = {};
 -- @access static ctor
 function FileOutputStream.new( path )
     local this = {};
+
+    ---
+    -- ファイルハンドル
+    -- @var userdata
+    -- @access private
     this._fileHandle = io.open( path, "wb" );
 
     --

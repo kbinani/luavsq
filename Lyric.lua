@@ -44,7 +44,16 @@ function Lyric.new( ... )
     -- @var boolean
     this.isProtected = false;
 
+    ---
+    -- 発音記号のリスト
+    -- @var table
+    -- @access private
     this._phoneticSymbol = { "a" };
+
+    ---
+    -- Consonant Adjustment のリスト
+    -- @var table
+    -- @access private
     this._consonantAdjustment = { 0 };
 
     ---

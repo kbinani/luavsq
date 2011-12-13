@@ -33,7 +33,17 @@ EventList.Iterator = {};
 -- @access static ctor
 function EventList.Iterator.new( list )
     local this = {};
+
+    ---
+    -- 反復子の元になるリスト
+    -- @var EventList
+    -- @access private
     this._list = list;
+
+    ---
+    -- 反復子の現在の位置
+    -- @var int
+    -- @access private
     this._pos = -1;
 
     ---

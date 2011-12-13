@@ -21,7 +21,16 @@ module( "luavsq" );
 -- @access private
 Log = {};
 
+---
+-- ログレベル
+-- @var int
+-- @access private static
 Log._level = 0;
+
+---
+-- ログファイルのファイルハンドル
+-- @var userdata
+-- @access private static
 Log._fileHandle = nil;
 
 ---
@@ -47,7 +56,7 @@ end
 ---
 -- 文字列をログに出力する。文字列の末尾に改行が追加される
 -- @param message (string) ログ出力する文字列
--- @access static
+-- @access private static
 function Log.println( message )
     if( Log._level > 0 )then
         local fp = Log._getFileHandle();
@@ -56,6 +65,10 @@ function Log.println( message )
     end
 end
 
+---
+-- ログファイルのファイルハンドルを取得する
+-- @return (userdata) ログファイルのファイルハンドル
+-- @access private static
 function Log._getFileHandle()
     if( Log._fileHandle == nil )then
         Log._fileHandle = io.open( "..\\luavsq.log", "a" );

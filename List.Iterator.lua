@@ -31,7 +31,17 @@ List.Iterator = {};
 -- @access static ctor
 function List.Iterator.new( list )
     local this = {};
+
+    ---
+    -- 反復子の元になるリスト
+    -- @var List
+    -- @access private
     this._list = list;
+
+    ---
+    -- 反復子の現在の位置
+    -- @var int
+    -- @access private
     this._pos = -1;
 
     ---

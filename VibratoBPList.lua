@@ -30,6 +30,11 @@ VibratoBPList = {};
 function VibratoBPList.new( ... )
     local arguments = { ... };
     local this = {};
+
+    ---
+    -- カーブのデータ点を保持するリスト
+    -- @var table<VibratoBP>
+    -- @access private
     this._list = {};
 
     ---

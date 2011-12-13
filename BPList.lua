@@ -36,20 +36,56 @@ end
 -- @access static ctor
 -- @class function
 
---
--- コンストラクタ
--- @return (BPList)
--- @access static private
 function BPList.new( ... )
     local this = {};
     local arguments = { ... };
+
+    ---
+    -- Tick 単位の時刻を格納したリスト
+    -- @var table
+    -- @access private
     this._clocks = nil;
+
+    ---
+    -- データ点の値と id のセットを格納した {@link BP} のリスト
+    -- @var table
+    -- @access private
     this._items = nil;
-    this._length = 0; -- clocks, itemsに入っているアイテムの個数
+
+    ---
+    -- 現在のリストの長さ
+    -- @var int
+    -- @access private
+    this._length = 0;
+
+    ---
+    -- コントロールカーブのデフォルト値
+    -- @var int
+    -- @access private
     this._defaultValue = 0;
+
+    ---
+    -- コントロールカーブの最大値
+    -- @var int
+    -- @access private
     this._maxValue = 127;
+
+    ---
+    -- コントロールカーブの最小値
+    -- @var int
+    -- @access private
     this._minValue = 0;
+
+    ---
+    -- このリスト内で使用されている ID の最大値
+    -- @var int
+    -- @access private
     this._maxId = 0;
+
+    ---
+    -- コントロールカーブの名前
+    -- @var string
+    -- @access private
     this._name = "";
 
     ---

@@ -56,63 +56,134 @@ function Track.new( ... )
 
     ---
     --  PIT。ピッチベンド(pitchBendBPList)。default=0
+    -- @var BPList
+    -- @access private
     this._pit = nil;
 
     ---
     --  PBS。ピッチベンドセンシティビティ(pitchBendSensBPList)。dfault=2
+    -- @var BPList
+    -- @access private
     this._pbs = nil;
 
     ---
     --  DYN。ダイナミクス(dynamicsBPList)。default=64
+    -- @var BPList
+    -- @access private
     this._dyn = nil;
 
     ---
     --  BRE。ブレシネス(epRResidualBPList)。default=0
+    -- @var BPList
+    -- @access private
     this._bre = nil;
 
     ---
     --  BRI。ブライトネス(epRESlopeBPList)。default=64
+    -- @var BPList
+    -- @access private
     this._bri = nil;
 
     ---
     --  CLE。クリアネス(epRESlopeDepthBPList)。default=0
+    -- @var BPList
+    -- @access private
     this._cle = nil;
 
+    ---
+    -- @var BPList
+    -- @access private
     this._reso1FreqBPList = nil;
+
+    ---
+    -- @var BPList
+    -- @access private
     this._reso2FreqBPList = nil;
+
+    ---
+    -- @var BPList
+    -- @access private
     this._reso3FreqBPList = nil;
+
+    ---
+    -- @var BPList
+    -- @access private
     this._reso4FreqBPList = nil;
+
+    ---
+    -- @var BPList
+    -- @access private
     this._reso1BWBPList = nil;
+
+    ---
+    -- @var BPList
+    -- @access private
     this._reso2BWBPList = nil;
+
+    ---
+    -- @var BPList
+    -- @access private
     this._reso3BWBPList = nil;
+
+    ---
+    -- @var BPList
+    -- @access private
     this._reso4BWBPList = nil;
+
+    ---
+    -- @var BPList
+    -- @access private
     this._reso1AmpBPList = nil;
+
+    ---
+    -- @var BPList
+    -- @access private
     this._reso2AmpBPList = nil;
+
+    ---
+    -- @var BPList
+    -- @access private
     this._reso3AmpBPList = nil;
+
+    ---
+    -- @var BPList
+    -- @access private
     this._reso4AmpBPList = nil;
 
     ---
     --  Harmonics。(EpRSineBPList)default = 64
+    -- @var BPList
+    -- @access private
     this._harmonics = nil;
 
     ---
     --  Effect2 Depth。
+    -- @var BPList
+    -- @access private
     this._fx2depth = nil;
 
     ---
     --  GEN。ジェンダーファクター(genderFactorBPList)。default=64
+    -- @var BPList
+    -- @access private
     this._gen = nil;
 
     ---
     -- POR。ポルタメントタイミング(portamentoTimingBPList)。default=64
+    -- @var BPList
+    -- @access private
     this._por = nil;
 
     ---
     --  OPE。オープニング(openingBPList)。default=127
+    -- @var BPList
+    -- @access private
     this._ope = nil;
 
     ---
     -- cent単位のピッチベンド。vsqに保存するときは、VsqFile#reflectPitchによってPIT, PBSに落とし込む。それらの範囲をオーバーしてたら知らん(cutoff)
+    -- @var BPList
+    -- @access private
     this._pitch = nil;
 
     ---

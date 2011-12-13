@@ -60,6 +60,10 @@ function Handle.new( ... )
     -- @var string
     this.ids = "";
 
+    ---
+    -- 歌詞一覧
+    -- @var table
+    -- @access private
     this._lyrics = {};
 
     ---
@@ -67,11 +71,40 @@ function Handle.new( ... )
     -- @var int
     this.original = 0;
 
+    ---
+    -- キャプション
+    -- @var string
+    -- @access private
     this._caption = "";
+
+    ---
+    -- 長さ
+    -- @var int
+    -- @access private
     this._length = 0;
+
+    ---
+    -- Depth の開始値
+    -- @var int
+    -- @access private
     this._startDepth = 0;
+
+    ---
+    -- Depth のカーブ
+    -- @var VibratoBPList
+    -- @access private
     this._depthBP = nil;
+
+    ---
+    -- Rate の開始値
+    -- @var int
+    -- @access private
     this._startRate = 0;
+
+    ---
+    -- Rate のカーブ
+    -- @var VibratoBPList
+    -- @access private
     this._rateBP = nil;
 
     ---
@@ -84,10 +117,34 @@ function Handle.new( ... )
     -- @var int
     this.program = 0;
 
+    ---
+    -- Duration
+    -- @var int
+    -- @access private
     this._duration = 0;
+
+    ---
+    -- Depth
+    -- @var int
+    -- @access private
     this._depth = 0;
+
+    ---
+    -- Dyn の開始値
+    -- @var int
+    -- @access private
     this._startDyn = 0;
+
+    ---
+    -- Dyn の終了値
+    -- @var int
+    -- @access private
     this._endDyn = 0;
+
+    ---
+    -- Dyn のカーブ
+    -- @var VibratoBPList
+    -- @access private
     this._dynBP = nil;
 
     ---
