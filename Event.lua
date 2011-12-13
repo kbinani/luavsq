@@ -52,11 +52,6 @@ function Event.new( ... )
     -- @var int
     this.index = -1;
 
-    this._singerHandleIndex = 0;
-    this._lyricHandleIndex = 0;
-    this._vibratoHandleIndex = 0;
-    this._noteHeadHandleIndex = 0;
-
     ---
     -- イベントの種類
     -- @var EventTypeEnum
@@ -454,19 +449,19 @@ function Event.new( ... )
                 stream:writeLine( "VoiceOverlap=" .. self.ustEvent.voiceOverlap );
             end
             if( self.lyricHandle ~= nil )then
-                stream:writeLine( "LyricHandle=h#" .. string.format( "%04d", self._lyricHandleIndex ) );
+                stream:writeLine( "LyricHandle=h#" .. string.format( "%04d", self.lyricHandle.index ) );
             end
             if( self.vibratoHandle ~= nil )then
-                stream:writeLine( "VibratoHandle=h#" .. string.format( "%04d", self._vibratoHandleIndex ) );
+                stream:writeLine( "VibratoHandle=h#" .. string.format( "%04d", self.vibratoHandle.index ) );
                 stream:writeLine( "VibratoDelay=" .. self.vibratoDelay );
             end
             if( self.noteHeadHandle ~= nil )then
-                stream:writeLine( "NoteHeadHandle=h#" .. string.format( "%04d", self._noteHeadHandleIndex ) );
+                stream:writeLine( "NoteHeadHandle=h#" .. string.format( "%04d", self.noteHeadHandle.index ) );
             end
         elseif( self.type == EventTypeEnum.SINGER )then
-            stream:writeLine( "IconHandle=h#" .. string.format( "%04d", self._singerHandleIndex ) );
+            stream:writeLine( "IconHandle=h#" .. string.format( "%04d", self.singerHandle.index ) );
         elseif( self.type == EventTypeEnum.ICON )then
-            stream:writeLine( "IconHandle=h#" .. string.format( "%04d", self._singerHandleIndex ) );
+            stream:writeLine( "IconHandle=h#" .. string.format( "%04d", self.iconDynamicsHandle.index ) );
             stream:writeLine( "Note#=" .. self.note );
         end
     end

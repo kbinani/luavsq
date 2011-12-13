@@ -23,27 +23,22 @@ function getNoteEvent()
     noteEvent.preUtterance = 9;
     noteEvent.voiceOverlap = 10;
     noteEvent.lyricHandle = nil;
-    noteEvent._lyricHandleIndex = 11;
     noteEvent.vibratoHandle = nil;
-    noteEvent._vibratoHandleIndex = 12;
     noteEvent.vibratoDelay = 13;
     noteEvent.noteHeadHandle = nil;
-    noteEvent._noteHeadHandleIndex = 14;
     return noteEvent;
 end
 
 function getSingerEvent()
     local singerEvent = luavsq.Event.new( 0, luavsq.EventTypeEnum.SINGER );
-    singerEvent.singerHandle = nil;
-    singerEvent._singerHandleIndex = 16;
-    singerEvent.index = 15;
+    singerEvent.singerHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.SINGER );
+    singerEvent.singerHandle.index = 16;
+    singerEvent.index = 16;
     return singerEvent;
 end
 
 function getIconEvent()
     local iconEvent = luavsq.Event.new( 0, luavsq.EventTypeEnum.ICON );
-    iconEvent.singerHandle = nil;
-    iconEvent._singerHandleIndex = 18;
     iconEvent.note = 19;
     iconEvent.index = 17;
     return iconEvent;
@@ -120,8 +115,11 @@ function testWriteNoteWithOption()
     --ustEventをちゃんと処理するようになったら、TODOコメントのところを外すこと
     event.lyricHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.LYRIC );
     event.lyricHandle:setLyricAt( 0, luavsq.Lyric.new( "わ", "w a" ) );
+    event.lyricHandle.index = 11;
     event.vibratoHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.VIBRATO );
+    event.vibratoHandle.index = 12;
     event.noteHeadHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.NOTE_HEAD );
+    event.noteHeadHandle.index = 14;
     stream = luavsq.TextStream.new();
     event:write( stream, optionAll );
     expected =
@@ -191,6 +189,8 @@ end
 
 function testWriteIcon()
     local event = getIconEvent();
+    event.iconDynamicsHandle = luavsq.Handle.new( luavsq.HandleTypeEnum.DYNAMICS );
+    event.iconDynamicsHandle.index = 18;
     event.clock = 2;
     event.index = 17;
     local stream = luavsq.TextStream.new();
