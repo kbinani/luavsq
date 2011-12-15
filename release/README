@@ -3,3 +3,8 @@ VOCALOID で使用されるシーケンスのデータ構造を保持するクラスと、
 Lua 用ライブラリです。
 
 API リファレンスは document ディレクトリにあります。
+
+配布物中の luavsq.lua は、クラスごとの lua ファイルを繋ぎあわせたものです。
+繋ぎ合わせる前の lua ファイルは svn リポジトリ上にあるので、必要であれば別途取得してください。
+svn リポジトリの URL は以下です。
+    http://svn.sourceforge.jp/svnroot/cadencii/luavsq/trunk
