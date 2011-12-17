@@ -20,7 +20,7 @@ release:
 	cp -R ../doc ../release/document
 	cp luavsq.lua ../release/
 	rm -f ../release/luavsq.zip
-	zip -r ../release/luavsq.zip ../release/*
+	cd ../release/ && zip -r luavsq.zip *
 
 clean:
 	rm luavsq.lua
