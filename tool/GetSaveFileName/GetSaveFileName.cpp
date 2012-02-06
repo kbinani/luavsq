@@ -96,10 +96,20 @@ bool isUtf8Supported( string version )
         int minor = atoi( versionNumbers[1].c_str() );
         int release = atoi( versionNumbers[2].c_str() );
         int build = atoi( versionNumbers[3].c_str() );
-        if( major >= 3 && minor >= 0 && release >= 4 ){
+        if( major > 3 ){
             return true;
-        }else{
+        }else if( major < 3 ){
             return false;
+        }else{
+            if( minor > 0 ){
+                return true;
+            }else{
+                if( release >= 4 ){
+                    return true;
+                }else if( release < 4 ){
+                    return false;
+                }
+            }
         }
     }else{
         return true;
