@@ -12,7 +12,6 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
 #pragma comment( lib, "lua5.1.lib" )
-#pragma comment( lib, "icuuc.lib" )
 #pragma comment( lib, "version.lib" )
 extern "C"{
     #include <lua.h>
