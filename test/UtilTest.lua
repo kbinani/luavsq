@@ -206,3 +206,10 @@ function testExplodeUTF8String()
     assert_equal( 0x80, actual[6][5] );
     assert_equal( 0x80, actual[6][6] );
 end
+
+function testExport()
+    local a = { keyA = "valueA", keyB = 1 };
+    local expected = "{keyA='valueA',keyB=1,}";
+    local actual = luavsq.Util.export( a );
+    assert_equal( expected, actual );
+end

@@ -403,6 +403,59 @@ function Util._dump( value, depth, state, option )
 end
 
 ---
+-- 変数の中身を、ソースコードとして読み込み可能な文字列にダンプする
+-- @param value (?) ダンプする変数
+-- @return (string) 変数のダンプ
+-- @access static
+function Util.export( value )
+    return Util._export( value );
+end
+
+---
+-- @param value (?) ダンプする変数
+-- @param depth (int) ダンプのネスト深さ
+-- @param state (table) ダンプ済みオブジェクトのテーブル
+-- @param option (table) ダンプ時の設定値
+-- @access static private
+function Util._export( value )
+    if( value == nil )then
+        return "nil";
+    elseif( type( value ) == "boolean" )then
+        if( value )then
+            return "true";
+        else
+            return "false";
+        end
+    elseif( type( value ) == "string" )then
+        return "'" .. value .. "'";
+    elseif( type( value ) == "function" )then
+        return "nil";-- do nothing
+    elseif( type( value ) == "userdata" )then
+        return "nil";-- do nothing
+    elseif( type( value ) == "number" )then
+        return "" .. value;
+    elseif( type( value ) ~= "table" )then
+        return "" .. value;
+    else
+        local str = "";
+        local count = 0;
+        for k, v in pairs( value ) do
+            if( type( v ) ~= "function" )then
+                local dumped = Util._export( v );
+                local key = "" .. k;
+                str = str .. key .. "=" .. dumped .. ",";
+                count = count + 1;
+            end
+        end
+        if( count > 0 )then
+            return "{" .. str .. "}"
+        else
+            return "{}";
+        end
+    end
+end
+
+---
 -- UTF8 の文字列を、1 文字ずつに分解した配列に変換します
 -- @param utf8 (string) UTF8 の文字列
 -- @return (table) 1 要素に 1 文字分の文字コードが入った配列
